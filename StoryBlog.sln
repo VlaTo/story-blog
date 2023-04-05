@@ -22,7 +22,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StoryBlog.Web.Microservices
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Элементы решения", "Элементы решения", "{D98D042A-7023-46F7-8A03-A5AC6E9E5793}"
 	ProjectSection(SolutionItems) = preProject
-		readme.txt = readme.txt
+		readme.md = readme.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Client", "Client", "{5AF2FD9B-52F2-4DBF-832E-8E571CDB15F8}"
@@ -45,9 +45,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StoryBlog.Web.Microservices
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StoryBlog.Web.Microservices.Comments.Shared", "src\Web\Microservices\Comments\StoryBlog.Web.Microservices.Comments.Shared\StoryBlog.Web.Microservices.Comments.Shared.csproj", "{87E5456C-009B-4128-BCE1-A12064927E22}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StoryBlog.Web.Microservices.Comments.WebApi", "src\Web\Microservices\Comments\StoryBlog.Web.Microservices.Comments.WebApi\StoryBlog.Web.Microservices.Comments.WebApi.csproj", "{581E0C4A-1AB8-4065-AEA5-5FC5AF48C699}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StoryBlog.Web.Microservices.Comments.WebApi", "src\Web\Microservices\Comments\StoryBlog.Web.Microservices.Comments.WebApi\StoryBlog.Web.Microservices.Comments.WebApi.csproj", "{581E0C4A-1AB8-4065-AEA5-5FC5AF48C699}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StoryBlog.Web.Microservices.Comments.Application", "src\Web\Microservices\Comments\StoryBlog.Web.Microservices.Comments.Application\StoryBlog.Web.Microservices.Comments.Application.csproj", "{A18C8722-50BC-423B-B2DF-D0D856CA9B31}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StoryBlog.Web.Microservices.Comments.Application", "src\Web\Microservices\Comments\StoryBlog.Web.Microservices.Comments.Application\StoryBlog.Web.Microservices.Comments.Application.csproj", "{A18C8722-50BC-423B-B2DF-D0D856CA9B31}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
