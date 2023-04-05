@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "noImplicitAny": false,
+    "noEmitOnError": true,
+    "removeComments": false,
+    "sourceMap": true,
+    "module": "AMD",
+    "outFile": "wwwroot/StoryBlog.Web.Blazor.Markdown.Editor.js",
+    "target": "es5"
+  },
+  "include": [
+    "Content/Scripts/**/*"
+  ]
+}

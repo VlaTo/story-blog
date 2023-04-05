@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.Configuration.Memory;
 using MudBlazor;
 using MudBlazor.Services;
+using StoryBlog.Web.Blazor.Markdown.Editor.Extensions;
 using StoryBlog.Web.Client.Blog;
 using StoryBlog.Web.Client.Blog.Clients;
 using StoryBlog.Web.Client.Blog.Clients.Interfaces;
@@ -36,6 +37,10 @@ builder.Services.AddScoped<ISlugClient, SlugHttpClient>();
 
 builder.Services.AddMudServices();
 builder.Services.AddMudMarkdownServices();
+builder.Services.AddMarkdownEditor(options =>
+{
+    ;
+});
 builder.Services.AddFluxor(options =>
 {
     options

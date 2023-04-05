@@ -1,6 +1,7 @@
 ﻿@page "/create"
 
 @using StoryBlog.Web.Client.Blog.Store
+@using StoryBlog.Web.Blazor.Markdown.Editor
 @inherits Fluxor.Blazor.Web.Components.FluxorComponent
 
 <MudText Typo=@Typo.h6>Create</MudText>
@@ -15,14 +16,17 @@ else
         <DataAnnotationsValidator/>
         <MudCard>
             <MudCardContent>
+                
                 <MudTextField
                     Label="Title"
                     HelperText="Blog title"
                     @bind-Value=@Model.Title
                     For=@(() => Model.Title)
-                    Variant=@Variant.Outlined/>
+                    Variant=@Variant.Outlined
+                />
+
                 <MudTextField
-                    @ref=slugComponent
+                    @ref=@slugComponent
                     Label="Slug"
                     HelperText="Blog slug"
                     @bind-Value=@Model.Slug
@@ -30,8 +34,19 @@ else
                     Variant=@Variant.Outlined
                     Adornment=@Adornment.End
                     AdornmentIcon=@Icons.Material.Filled.Refresh
-                    OnAdornmentClick=@OnGenerateSlug/>
-                <MudMarkdown Value=@Model.Text/>
+                    OnAdornmentClick=@OnGenerateSlug
+                />
+
+                <MarkdownEditor @bind-Value=@Text>
+
+                </MarkdownEditor>
+
+                @*<MudMarkdown 
+                    Value=@Model.Text 
+                    Styling=@Styling 
+                    CodeBlockTheme=@CodeBlockTheme.DraculaBase16 
+                />*@
+
             </MudCardContent>
             <MudCardActions>
                 <MudButton ButtonType=@ButtonType.Submit Variant=@Variant.Filled Color=@Color.Primary>Send</MudButton>

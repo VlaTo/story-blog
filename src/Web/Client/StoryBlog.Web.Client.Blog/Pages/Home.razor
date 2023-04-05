@@ -5,33 +5,33 @@
 
 <PageTitle>Home</PageTitle>
 
-@switch(Store.Value.StoreState)
+@switch (Store.Value.StoreState)
+{
+    case StoreState.Loading:
+    {
+        <text>Loading...</text>
+
+        break;
+    }
+
+    case StoreState.Success:
+    {
+        @foreach (var post in Store.Value.Posts)
         {
-            case StoreState.Loading:
-            {
-                <text>Loading...</text>
+            <MudPaper Square=true Class="storyblog-blog-view" Elevation=0>
+                <StoryBlogView Title=@post.Title data-test="test-value" Slug=@post.Slug>
 
-                break;
-            }
-
-            case StoreState.Success:
-            {
-                @foreach (var post in Store.Value.Posts)
-                {
-                    <MudPaper Square=true Class="mud-theme-primary" Elevation=0>
-                        <StoryBlogView Title=@post.Title data-test="test-value" Slug=@post.Slug>
-
-                        </StoryBlogView>
-                    </MudPaper>
-                }
-
-                break;
-            }
-
-            case StoreState.Failed:
-            {
-                <text>Loading...</text>
-
-                break;
-            }
+                </StoryBlogView>
+            </MudPaper>
         }
+
+        break;
+    }
+
+    case StoreState.Failed:
+    {
+        <text>Loading...</text>
+
+        break;
+    }
+}

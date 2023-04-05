@@ -49,6 +49,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StoryBlog.Web.Microservices
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StoryBlog.Web.Microservices.Comments.Application", "src\Web\Microservices\Comments\StoryBlog.Web.Microservices.Comments.Application\StoryBlog.Web.Microservices.Comments.Application.csproj", "{A18C8722-50BC-423B-B2DF-D0D856CA9B31}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StoryBlog.Web.Blazor.Markdown.Editor", "src\Web\Client\StoryBlog.Web.Blazor.Markdown.Editor\StoryBlog.Web.Blazor.Markdown.Editor.csproj", "{60DF985E-9BB4-469E-A21E-21DA692A2533}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -99,6 +101,10 @@ Global
 		{A18C8722-50BC-423B-B2DF-D0D856CA9B31}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A18C8722-50BC-423B-B2DF-D0D856CA9B31}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A18C8722-50BC-423B-B2DF-D0D856CA9B31}.Release|Any CPU.Build.0 = Release|Any CPU
+		{60DF985E-9BB4-469E-A21E-21DA692A2533}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{60DF985E-9BB4-469E-A21E-21DA692A2533}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{60DF985E-9BB4-469E-A21E-21DA692A2533}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{60DF985E-9BB4-469E-A21E-21DA692A2533}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -121,6 +127,7 @@ Global
 		{87E5456C-009B-4128-BCE1-A12064927E22} = {92ABFCC3-3CAA-46AB-8B04-20DE41555628}
 		{581E0C4A-1AB8-4065-AEA5-5FC5AF48C699} = {92ABFCC3-3CAA-46AB-8B04-20DE41555628}
 		{A18C8722-50BC-423B-B2DF-D0D856CA9B31} = {92ABFCC3-3CAA-46AB-8B04-20DE41555628}
+		{60DF985E-9BB4-469E-A21E-21DA692A2533} = {5AF2FD9B-52F2-4DBF-832E-8E571CDB15F8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D7123581-6A53-434A-BD68-656AB44693B4}

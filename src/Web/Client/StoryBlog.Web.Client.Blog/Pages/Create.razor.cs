@@ -39,12 +39,25 @@ public partial class Create
         set;
     }
 
+    private string? Text
+    {
+        get;
+        set;
+    }
+
+    private MudMarkdownStyling Styling
+    {
+        get;
+        set;
+    }
+
     private MudTextField<string> slugComponent;
 
     protected override void OnInitialized()
     {
         base.OnInitialized();
 
+        Styling = new MudMarkdownStyling();
         Model = new NewPostModel
         {
             Title = String.Empty,

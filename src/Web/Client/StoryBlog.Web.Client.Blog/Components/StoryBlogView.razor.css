@@ -1,3 +1,5 @@
-﻿.storyblog-blog-view {
-    /*background: var(--storyblog-palette-white);*/
+﻿.storyblog-blog-view-header-title {
 }
+    .storyblog-blog-view-header-title a {
+         color: var(--mud-palette-gray);
+    }

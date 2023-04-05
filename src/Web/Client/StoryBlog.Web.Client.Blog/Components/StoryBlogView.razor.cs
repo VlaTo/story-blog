@@ -7,7 +7,7 @@ namespace StoryBlog.Web.Client.Blog.Components;
 
 public partial class StoryBlogView
 {
-    protected string Classname => new CssBuilder("storyblog-blog-view")
+    /*protected string Classname => new CssBuilder("storyblog-blog-view")
         .AddClass("px-6")
         .AddClass("py-4")
         .AddClass("my-5")
@@ -19,7 +19,7 @@ public partial class StoryBlogView
     {
         get;
         set;
-    }
+    }*/
 
     [Parameter]
     public string Title
