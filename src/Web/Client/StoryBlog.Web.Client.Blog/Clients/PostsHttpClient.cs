@@ -114,15 +114,18 @@ internal sealed class PostsHttpClient : HttpClientBase, IPostsClient
             using (var response = await Client.SendAsync(request))
             {
                 var message = response.EnsureSuccessStatusCode();
-                var postLocation = message.Headers.Location;
 
                 using (var stream = await message.Content.ReadAsStreamAsync())
                 {
                     var createdPost = await JsonSerializer.DeserializeAsync<CreatedPostModel>(stream);
-                    
+
                     return new Models.CreatedPostModel
                     {
-
+                        Title = createdPost.Title,
+                        Slug = createdPost.Slug,
+                        Status = createdPost.Status,
+                        CreatedAt = createdPost.CreatedAt,
+                        Location = message.Headers.Location
                     };
                 }
             }
