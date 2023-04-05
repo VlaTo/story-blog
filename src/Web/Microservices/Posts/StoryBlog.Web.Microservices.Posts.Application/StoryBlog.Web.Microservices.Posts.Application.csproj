@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+	<ItemGroup>
+        <InternalsVisibleTo Include="TestProject1" />
+	</ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Configuration\" />
+    <Folder Include="Handlers\GetPosts\" />
+    <Folder Include="Contexts\" />
+    <Folder Include="Handlers\CreatePost\" />
+    <Folder Include="Handlers\GetPost\" />
+    <Folder Include="Handlers\EditPost\" />
+    <Folder Include="Handlers\GenerateSlug\" />
+    <Folder Include="Core\" />
+    <Folder Include="Handlers\GetPostReference\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="12.0.1" />
+    <PackageReference Include="MediatR" Version="12.0.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="7.0.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\StoryBlog.Web.Microservices.Posts.Domain\StoryBlog.Web.Microservices.Posts.Domain.csproj" />
+  </ItemGroup>
+
+</Project>

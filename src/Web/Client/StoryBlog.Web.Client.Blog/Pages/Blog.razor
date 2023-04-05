@@ -1,0 +1,45 @@
+﻿@page "/blog/{slug}"
+
+@using StoryBlog.Web.Client.Blog.Store
+@inherits Fluxor.Blazor.Web.Components.FluxorComponent
+
+@switch (Store.Value.StoreState)
+{
+    case StoreState.Empty:
+    {
+        break;
+    }
+
+    case StoreState.Loading:
+    {
+        <MudText>Loading...</MudText>
+
+        break;
+    }
+
+    case StoreState.Success:
+    {
+        var post = Store.Value.Post;
+
+        <PageTitle>@post!.Title</PageTitle>
+
+        <article>
+            <div>
+                <MudText Typo=@Typo.h4>@post!.Title</MudText>
+            </div>
+            <div>
+                <span>@post!.CreatedAt</span>
+            </div>
+        </article>
+
+        break;
+    }
+
+    case StoreState.Failed:
+    {
+        <MudAlert Severity=@Severity.Error>Cannot load post/comments</MudAlert>
+
+        break;
+    }
+}
+

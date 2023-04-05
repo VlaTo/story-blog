@@ -1,0 +1,128 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33502.453
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Web", "Web", "{5763783D-30E4-49E3-ADB8-FC44C5FAAD1C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Microservices", "Microservices", "{B9C10318-29DB-4DF4-AE58-BB77F8463668}"
+	ProjectSection(SolutionItems) = preProject
+		src\Web\Microservices\appsettings.authentication.json = src\Web\Microservices\appsettings.authentication.json
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Posts", "Posts", "{CC9FD65D-640E-4040-9434-F3B664F9C7C1}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StoryBlog.Web.Microservices.Posts.Domain", "src\Web\Microservices\Posts\StoryBlog.Web.Microservices.Posts.Domain\StoryBlog.Web.Microservices.Posts.Domain.csproj", "{3DA24201-22FA-4E28-AB18-4EA8FC0F731F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StoryBlog.Web.Microservices.Posts.Application", "src\Web\Microservices\Posts\StoryBlog.Web.Microservices.Posts.Application\StoryBlog.Web.Microservices.Posts.Application.csproj", "{0F5CB9DC-6554-4914-8B0B-6C75F0605DDA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StoryBlog.Web.Microservices.Posts.WebApi", "src\Web\Microservices\Posts\StoryBlog.Web.Microservices.Posts.WebApi\StoryBlog.Web.Microservices.Posts.WebApi.csproj", "{F6EB28F6-DAF6-446A-A64D-4FDD872D5A1A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StoryBlog.Web.Microservices.Posts.Infrastructure", "src\Web\Microservices\Posts\StoryBlog.Web.Microservices.Posts.Infrastructure\StoryBlog.Web.Microservices.Posts.Infrastructure.csproj", "{E22C44E9-A05A-43AF-8019-0593768F5C65}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Элементы решения", "Элементы решения", "{D98D042A-7023-46F7-8A03-A5AC6E9E5793}"
+	ProjectSection(SolutionItems) = preProject
+		readme.txt = readme.txt
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Client", "Client", "{5AF2FD9B-52F2-4DBF-832E-8E571CDB15F8}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StoryBlog.Web.Client.Blog", "src\Web\Client\StoryBlog.Web.Client.Blog\StoryBlog.Web.Client.Blog.csproj", "{0DD41329-D89A-4652-9850-186671BF7C5A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{CBB3278E-D470-4CD6-B2CD-08FDBF46C898}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestProject1", "src\Tests\TestProject1\TestProject1.csproj", "{0D72A413-8074-4AEE-86C4-DF7D018CB1E7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Identity", "Identity", "{48A31C6C-A4C8-47C7-B71C-289BD944875C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Identity", "Identity", "{5B6E0961-2C8C-49B7-8CEE-72E248418304}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StoryBlog.Web.Identity", "src\Web\Identity\StoryBlog.Web.Identity\StoryBlog.Web.Identity.csproj", "{A5A665F8-4ED9-45B6-9471-10EBAB6D9600}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Comments", "Comments", "{92ABFCC3-3CAA-46AB-8B04-20DE41555628}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StoryBlog.Web.Microservices.Posts.Shared", "src\Web\Microservices\Posts\StoryBlog.Web.Microservices.Posts.Shared\StoryBlog.Web.Microservices.Posts.Shared.csproj", "{7D92D517-5B81-49FC-A8B4-2973F771E8CE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StoryBlog.Web.Microservices.Comments.Shared", "src\Web\Microservices\Comments\StoryBlog.Web.Microservices.Comments.Shared\StoryBlog.Web.Microservices.Comments.Shared.csproj", "{87E5456C-009B-4128-BCE1-A12064927E22}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StoryBlog.Web.Microservices.Comments.WebApi", "src\Web\Microservices\Comments\StoryBlog.Web.Microservices.Comments.WebApi\StoryBlog.Web.Microservices.Comments.WebApi.csproj", "{581E0C4A-1AB8-4065-AEA5-5FC5AF48C699}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StoryBlog.Web.Microservices.Comments.Application", "src\Web\Microservices\Comments\StoryBlog.Web.Microservices.Comments.Application\StoryBlog.Web.Microservices.Comments.Application.csproj", "{A18C8722-50BC-423B-B2DF-D0D856CA9B31}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3DA24201-22FA-4E28-AB18-4EA8FC0F731F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3DA24201-22FA-4E28-AB18-4EA8FC0F731F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3DA24201-22FA-4E28-AB18-4EA8FC0F731F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3DA24201-22FA-4E28-AB18-4EA8FC0F731F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0F5CB9DC-6554-4914-8B0B-6C75F0605DDA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0F5CB9DC-6554-4914-8B0B-6C75F0605DDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0F5CB9DC-6554-4914-8B0B-6C75F0605DDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0F5CB9DC-6554-4914-8B0B-6C75F0605DDA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F6EB28F6-DAF6-446A-A64D-4FDD872D5A1A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F6EB28F6-DAF6-446A-A64D-4FDD872D5A1A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F6EB28F6-DAF6-446A-A64D-4FDD872D5A1A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F6EB28F6-DAF6-446A-A64D-4FDD872D5A1A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E22C44E9-A05A-43AF-8019-0593768F5C65}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E22C44E9-A05A-43AF-8019-0593768F5C65}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E22C44E9-A05A-43AF-8019-0593768F5C65}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E22C44E9-A05A-43AF-8019-0593768F5C65}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0DD41329-D89A-4652-9850-186671BF7C5A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0DD41329-D89A-4652-9850-186671BF7C5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0DD41329-D89A-4652-9850-186671BF7C5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0DD41329-D89A-4652-9850-186671BF7C5A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0D72A413-8074-4AEE-86C4-DF7D018CB1E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0D72A413-8074-4AEE-86C4-DF7D018CB1E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0D72A413-8074-4AEE-86C4-DF7D018CB1E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0D72A413-8074-4AEE-86C4-DF7D018CB1E7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A5A665F8-4ED9-45B6-9471-10EBAB6D9600}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A5A665F8-4ED9-45B6-9471-10EBAB6D9600}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A5A665F8-4ED9-45B6-9471-10EBAB6D9600}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A5A665F8-4ED9-45B6-9471-10EBAB6D9600}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7D92D517-5B81-49FC-A8B4-2973F771E8CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7D92D517-5B81-49FC-A8B4-2973F771E8CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7D92D517-5B81-49FC-A8B4-2973F771E8CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7D92D517-5B81-49FC-A8B4-2973F771E8CE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{87E5456C-009B-4128-BCE1-A12064927E22}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{87E5456C-009B-4128-BCE1-A12064927E22}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{87E5456C-009B-4128-BCE1-A12064927E22}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{87E5456C-009B-4128-BCE1-A12064927E22}.Release|Any CPU.Build.0 = Release|Any CPU
+		{581E0C4A-1AB8-4065-AEA5-5FC5AF48C699}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{581E0C4A-1AB8-4065-AEA5-5FC5AF48C699}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{581E0C4A-1AB8-4065-AEA5-5FC5AF48C699}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{581E0C4A-1AB8-4065-AEA5-5FC5AF48C699}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A18C8722-50BC-423B-B2DF-D0D856CA9B31}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A18C8722-50BC-423B-B2DF-D0D856CA9B31}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A18C8722-50BC-423B-B2DF-D0D856CA9B31}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A18C8722-50BC-423B-B2DF-D0D856CA9B31}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{B9C10318-29DB-4DF4-AE58-BB77F8463668} = {5763783D-30E4-49E3-ADB8-FC44C5FAAD1C}
+		{CC9FD65D-640E-4040-9434-F3B664F9C7C1} = {B9C10318-29DB-4DF4-AE58-BB77F8463668}
+		{3DA24201-22FA-4E28-AB18-4EA8FC0F731F} = {CC9FD65D-640E-4040-9434-F3B664F9C7C1}
+		{0F5CB9DC-6554-4914-8B0B-6C75F0605DDA} = {CC9FD65D-640E-4040-9434-F3B664F9C7C1}
+		{F6EB28F6-DAF6-446A-A64D-4FDD872D5A1A} = {CC9FD65D-640E-4040-9434-F3B664F9C7C1}
+		{E22C44E9-A05A-43AF-8019-0593768F5C65} = {CC9FD65D-640E-4040-9434-F3B664F9C7C1}
+		{5AF2FD9B-52F2-4DBF-832E-8E571CDB15F8} = {5763783D-30E4-49E3-ADB8-FC44C5FAAD1C}
+		{0DD41329-D89A-4652-9850-186671BF7C5A} = {5AF2FD9B-52F2-4DBF-832E-8E571CDB15F8}
+		{0D72A413-8074-4AEE-86C4-DF7D018CB1E7} = {CBB3278E-D470-4CD6-B2CD-08FDBF46C898}
+		{48A31C6C-A4C8-47C7-B71C-289BD944875C} = {B9C10318-29DB-4DF4-AE58-BB77F8463668}
+		{5B6E0961-2C8C-49B7-8CEE-72E248418304} = {5763783D-30E4-49E3-ADB8-FC44C5FAAD1C}
+		{A5A665F8-4ED9-45B6-9471-10EBAB6D9600} = {5B6E0961-2C8C-49B7-8CEE-72E248418304}
+		{92ABFCC3-3CAA-46AB-8B04-20DE41555628} = {B9C10318-29DB-4DF4-AE58-BB77F8463668}
+		{7D92D517-5B81-49FC-A8B4-2973F771E8CE} = {CC9FD65D-640E-4040-9434-F3B664F9C7C1}
+		{87E5456C-009B-4128-BCE1-A12064927E22} = {92ABFCC3-3CAA-46AB-8B04-20DE41555628}
+		{581E0C4A-1AB8-4065-AEA5-5FC5AF48C699} = {92ABFCC3-3CAA-46AB-8B04-20DE41555628}
+		{A18C8722-50BC-423B-B2DF-D0D856CA9B31} = {92ABFCC3-3CAA-46AB-8B04-20DE41555628}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D7123581-6A53-434A-BD68-656AB44693B4}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,31 @@
+﻿@inherits LayoutComponentBase
+
+<MudThemeProvider />
+<MudDialogProvider />
+<MudSnackbarProvider />
+
+<MudLayout>
+    <MudAppBar Elevation=1 Dense=true Fixed=true>
+        <MudSpacer/>
+    </MudAppBar>
+    <MudDrawer Elevation=1 Open=true>
+        <MudDrawerHeader>
+            <MudText Typo=@Typo.h5 Class="mt-1">Header</MudText>
+        </MudDrawerHeader>
+        <MudNavMenu>
+            <MudNavLink Href="" Match=@NavLinkMatch.All>Home</MudNavLink>
+            <MudNavLink Href="counter" Match=@NavLinkMatch.Prefix>Counter</MudNavLink>
+            <MudNavLink Href="create" Match=@NavLinkMatch.All>Write a post</MudNavLink>
+        </MudNavMenu>
+    </MudDrawer>
+    <MudMainContent Class="d-flex align-start">
+        <MudContainer Class="d-block flex-1" MaxWidth=@MaxWidth.Medium>
+            @Body
+        </MudContainer>
+        <MudContainer Class="d-block flex-1" MaxWidth=@MaxWidth.ExtraSmall>
+            <MudPaper Class="py-16 mud-theme-primary" Square=true Elevation=0>
+
+            </MudPaper>
+        </MudContainer>
+    </MudMainContent>
+</MudLayout>

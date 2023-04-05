@@ -1,0 +1,2 @@
+dotnet ef migrations add InitDatabase --context PostsDbContext --output-dir "Persistence\Migrations" --project "..\StoryBlog.Web.Microservices.Posts.Infrastructure" --no-build --verbose
+dotnet ef database update --context PostsDbContext --project "..\StoryBlog.Web.Microservices.Posts.Infrastructure" --no-build --verbose

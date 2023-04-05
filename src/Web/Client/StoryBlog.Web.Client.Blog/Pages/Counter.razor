@@ -1,0 +1,9 @@
+﻿@page "/counter"
+
+@inherits Fluxor.Blazor.Web.Components.FluxorComponent
+
+<PageTitle>Counter</PageTitle>
+
+<MudText Typo="Typo.h3" GutterBottom="true">Counter</MudText>
+<MudText Class="mb-4">Current count: @CouterState.Value.ClickCount</MudText>
+<MudButton Color="Color.Primary" Variant="Variant.Filled" @onclick="IncrementCounter">Click me</MudButton>

@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "StoryBlog.Web.Microservices.Posts.Domain": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:54268;http://localhost:54271"
+    }
+  }
+}

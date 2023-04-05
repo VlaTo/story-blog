@@ -1,0 +1,37 @@
+﻿@page "/"
+
+@using StoryBlog.Web.Client.Blog.Store
+@inherits Fluxor.Blazor.Web.Components.FluxorComponent
+
+<PageTitle>Home</PageTitle>
+
+@switch(Store.Value.StoreState)
+        {
+            case StoreState.Loading:
+            {
+                <text>Loading...</text>
+
+                break;
+            }
+
+            case StoreState.Success:
+            {
+                @foreach (var post in Store.Value.Posts)
+                {
+                    <MudPaper Square=true Class="mud-theme-primary" Elevation=0>
+                        <StoryBlogView Title=@post.Title data-test="test-value" Slug=@post.Slug>
+
+                        </StoryBlogView>
+                    </MudPaper>
+                }
+
+                break;
+            }
+
+            case StoreState.Failed:
+            {
+                <text>Loading...</text>
+
+                break;
+            }
+        }

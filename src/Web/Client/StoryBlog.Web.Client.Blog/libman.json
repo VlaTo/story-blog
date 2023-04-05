@@ -1,0 +1,16 @@
+{
+  "version": "1.0",
+  "defaultProvider": "cdnjs",
+  "libraries": [
+    {
+      "library": "roboto-fontface@0.10.0",
+      "provider": "unpkg",
+      "destination": "wwwroot/fonts/roboto"
+    },
+    {
+      "library": "@openfonts/montserrat_cyrillic@1.44.2",
+      "provider": "jsdelivr",
+      "destination": "wwwroot/fonts/montserrat"
+    }
+  ]
+}
