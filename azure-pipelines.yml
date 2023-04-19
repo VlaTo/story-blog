@@ -34,7 +34,7 @@ steps:
     configuration: '$(buildConfiguration)'
     testSelector: 'testAssemblies'
     testAssemblyVer2: |
-      **\*UnitTest*.dll
+      **\TestProject*.dll
       !**\*TestAdapter.dll
       !**\obj\**
     searchFolder: '$(System.DefaultWorkingDirectory)'
