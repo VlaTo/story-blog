@@ -7,6 +7,14 @@ html, body {
     background: #F0F3F4;
 }
 
+
+
+.storyblog-box {
+    background: var(--storyblog-palette-white);
+}
+
+
+
 .content {
     padding-top: 1.1rem;
 }

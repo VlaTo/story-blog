@@ -37,8 +37,22 @@ else
                     OnAdornmentClick=@OnGenerateSlug
                 />
 
-                <MarkdownEditor @bind-Value=@Text>
-
+                <MarkdownEditor Class="mt-4" AutoFocus=@true test-value="1" temp="temp" @bind-Text=@Text>
+                    <Toolbar>
+                        <ToolbarGroup>
+                            <ToolbarActionButton EditorAction=@EditorAction.Undo />
+                            <ToolbarActionButton EditorAction=@EditorAction.Redo />
+                        </ToolbarGroup>
+                        <ToolbarGroup>
+                            <ToolbarActionButton EditorAction=@EditorAction.Bold />
+                            <ToolbarActionButton EditorAction=@EditorAction.Italic />
+                            <ToolbarActionButton EditorAction=@EditorAction.Underline />
+                        </ToolbarGroup>
+                        <ToolbarGroup>
+                            <ToolbarButton/>
+                            <ToolbarButton/>
+                        </ToolbarGroup>
+                    </Toolbar>
                 </MarkdownEditor>
 
                 @*<MudMarkdown 

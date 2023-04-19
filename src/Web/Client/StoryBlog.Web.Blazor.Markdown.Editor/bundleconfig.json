@@ -1,0 +1,8 @@
+[
+  {
+    "outputFileName": "wwwroot/StoryBlog.Web.Blazor.Markdown.Editor.js",
+    "inputFiles": [
+      "Content/Scripts/**/*.js"
+    ]
+  }
+]

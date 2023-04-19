@@ -1,13 +1,10 @@
 ﻿[
   {
     "outputFile": "wwwroot/StoryBlog.Web.Blazor.Markdown.Editor.min.css",
-    "inputFile": "Content/Styles/Editor.less",
+    "inputFile": "Content/Less/Editor.less",
     "includeInProject": true,
     "minify": {
       "enabled": true
-    },
-    "options": {
-      "sourceMap": true
     }
   }
 ]

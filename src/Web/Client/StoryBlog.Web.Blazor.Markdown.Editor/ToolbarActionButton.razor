@@ -1,0 +1,7 @@
+﻿@inherits ToolbarButton
+
+<button type="button" class=@Classname disabled=@Disabled role="button" aria-disabled=@Disabled.ToString() @onclick=@OnClickCallback>
+    <svg class="md-editor-toolbar-button-icon" viewBox="0 0 20 20">
+        <path d=@GetGlyph() />
+    </svg>
+</button>

@@ -57,6 +57,7 @@ public partial class Create
     {
         base.OnInitialized();
 
+        Text = "This component is defined in the <strong>StoryBlog.Web.Blazor.Markdown.Editor</strong> library.";
         Styling = new MudMarkdownStyling();
         Model = new NewPostModel
         {

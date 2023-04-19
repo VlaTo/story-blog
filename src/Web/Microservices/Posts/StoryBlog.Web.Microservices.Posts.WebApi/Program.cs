@@ -1,7 +1,10 @@
-
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Versioning;
+using SlimMessageBus.Host;
+using SlimMessageBus.Host.NamedPipe;
+using SlimMessageBus.Host.Serialization.SystemTextJson;
+using StoryBlog.Web.Common.Events;
 using StoryBlog.Web.Identity.Extensions;
 using StoryBlog.Web.Microservices.Posts.Application.Extensions;
 using StoryBlog.Web.Microservices.Posts.Application.Handlers;
@@ -12,10 +15,10 @@ using StoryBlog.Web.Microservices.Posts.WebApi.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Configuration.AddJsonFile("appsettings.authentication.json", optional: true);
+builder.Configuration.AddJsonFile("appsettings.authentication.json", optional: true, reloadOnChange: true);
 
 builder.Services.AddInfrastructureServices();
-builder.Services.AddInfrastructureDbContext(builder.Configuration, "PostsDb");
+builder.Services.AddInfrastructureDbContext(builder.Configuration, "Database");
 builder.Services.AddScoped<IPostLocationProvider, PostLocationProvider>();
 builder.Services.AddApplicationServices();
 builder.Services
@@ -30,6 +33,19 @@ builder.Services.AddAutoMapper(configuration =>
     configuration.AddApplicationMappingProfiles();
     configuration.AddWebApiMappingProfiles();
 });
+builder.Services.AddSlimMessageBus(buses => buses
+    .AddChildBus("default", bus => bus
+        .Produce<BlogPostEvent>(x => x.DefaultTopic("blog-post"))
+        .WithProviderNamedPipes(settings =>
+        {
+            settings.Instances = 3;
+        })
+    )
+    .AddJsonSerializer()
+    .AddAspNet()
+);
+builder.Services.AddNamedPipeMessageBus();
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(policy =>

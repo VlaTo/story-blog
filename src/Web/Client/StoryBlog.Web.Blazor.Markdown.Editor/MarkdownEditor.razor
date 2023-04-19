@@ -1,3 +1,16 @@
-﻿<div class="md-editor">
-    This component is defined in the <strong>StoryBlog.Web.Blazor.Markdown.Editor</strong> library.
+﻿@inherits Core.Components.EditorComponent
+
+<div class=@Classname @attributes=@UserAttributes>
+    <div class="md-editor-toolbar md-editor-toolbar-horizontal" role="toolbar">
+        <CascadingValue Name="Editor" Value=@this>
+            @Toolbar
+        </CascadingValue>
+    </div>
+    <div class="md-editor-content">
+        <div @ref=@editorElement class="md-editor-textarea" role="textbox" dir="ltr" lang="en" aria-label="Editor editing area" contenteditable="true" spellcheck="false"
+             @onblur=@(async e => await OnBlurAsync(e))
+             @onfocus=@(async e => await OnFocusAsync(e))
+             @onchange=@(async e => await OnChangeAsync(e))>
+        </div>
+    </div>
 </div>

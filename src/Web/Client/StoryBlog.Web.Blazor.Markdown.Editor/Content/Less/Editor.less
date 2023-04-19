@@ -1,0 +1,74 @@
+﻿@import "Defaults.less";
+
+.md-editor {
+    position: initial;
+    text-align: left;
+    border: 1px solid var(---md-editor-palette-gray);
+    border-radius: var(--md-editor-default-borderradius);
+    display: block;
+    box-sizing: border-box;
+    background-image: url("background.png");
+
+    .md-editor-toolbar {
+        background-color: #FFFFFF;
+        border-top-left-radius: var(--md-editor-default-borderradius);
+        border-top-right-radius: var(--md-editor-default-borderradius);
+        border-bottom: 1px solid var(---md-editor-palette-gray);
+        float: none;
+        height: auto;
+        width: auto;
+        padding: 4px;
+        max-width: none;
+        position: static;
+        display: flex;
+        flex: 0 0 auto;
+        flex-shrink: 0;
+        flex-wrap: wrap;
+
+
+        .md-editor-toolbar-group {
+            width: fit-content;
+
+            &:not(:last-child)::after {
+                display: inline-block;
+                content: '';
+                background-color: var(--md-editor-palette-tool-hover);
+                width: 1px;
+                //height: 100%;
+                margin-right: 8px;
+            }
+
+            .md-editor-toolbar-item {
+            }
+
+            .md-editor-toolbar-button {
+            }
+        }
+
+        .md-editor-toolbar-item {
+            height: 32px;
+        }
+
+        .md-editor-toolbar-button {
+            width: 32px;
+            padding: 4px;
+
+            &:hover {
+                background-color: var(--md-editor-palette-tool-hover);
+            }
+
+            .md-editor-toolbar-button-icon {
+            }
+        }
+    }
+
+    .md-editor-toolbar-horizontal {
+    }
+
+    .md-editor-content {
+
+        .md-editor-textarea {
+            margin: 8px;
+        }
+    }
+}
