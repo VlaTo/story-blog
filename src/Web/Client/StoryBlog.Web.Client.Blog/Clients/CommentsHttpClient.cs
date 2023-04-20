@@ -17,7 +17,7 @@ internal sealed class CommentsHttpClient : HttpClientBase, ICommentsClient
         this.options = options.Value;
     }
 
-    public async Task<CommentsListResponse?> GetCommentsAsync(Guid postKey)
+    public async Task<ListAllResponse?> GetCommentsAsync(Guid postKey)
     {
         var basePath = new Uri(options.Endpoints.Comments.BasePath, UriKind.Absolute);
         var relativeUri = new Uri(postKey.ToString("D"), UriKind.Relative);
@@ -37,7 +37,7 @@ internal sealed class CommentsHttpClient : HttpClientBase, ICommentsClient
 
                 using (var stream = await message.Content.ReadAsStreamAsync())
                 {
-                    return await JsonSerializer.DeserializeAsync<CommentsListResponse>(stream);
+                    return await JsonSerializer.DeserializeAsync<ListAllResponse>(stream);
                 }
             }
         }

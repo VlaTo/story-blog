@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using StoryBlog.Web.Microservices.Posts.Domain.Interfaces;
+using StoryBlog.Web.Common.Domain;
 using StoryBlog.Web.Microservices.Posts.Infrastructure.Persistence;
 
 namespace StoryBlog.Web.Microservices.Posts.Infrastructure.Extensions;

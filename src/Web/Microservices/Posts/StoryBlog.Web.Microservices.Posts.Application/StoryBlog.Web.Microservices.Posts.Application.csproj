@@ -27,10 +27,12 @@
     <PackageReference Include="MediatR" Version="12.0.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="7.0.5" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.0" />
-    <PackageReference Include="SlimMessageBus" Version="2.0.0" />
+    <PackageReference Include="SlimMessageBus" Version="2.0.1" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Common\StoryBlog.Web.Common.Application\StoryBlog.Web.Common.Application.csproj" />
+    <ProjectReference Include="..\..\..\Common\StoryBlog.Web.Common.Domain\StoryBlog.Web.Common.Domain.csproj" />
     <ProjectReference Include="..\..\..\Common\StoryBlog.Web.Common\StoryBlog.Web.Common.csproj" />
     <ProjectReference Include="..\StoryBlog.Web.Microservices.Posts.Domain\StoryBlog.Web.Microservices.Posts.Domain.csproj" />
   </ItemGroup>

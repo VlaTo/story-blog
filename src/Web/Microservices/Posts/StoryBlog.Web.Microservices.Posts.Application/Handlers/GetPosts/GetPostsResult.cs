@@ -1,4 +1,5 @@
-﻿using StoryBlog.Web.Microservices.Posts.Application.Models;
+﻿using StoryBlog.Web.Common.Application;
+using StoryBlog.Web.Microservices.Posts.Application.Models;
 
 namespace StoryBlog.Web.Microservices.Posts.Application.Handlers.GetPosts;
 

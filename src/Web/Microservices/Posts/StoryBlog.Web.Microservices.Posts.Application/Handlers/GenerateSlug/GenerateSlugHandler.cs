@@ -1,9 +1,10 @@
 ﻿using System.Text;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using StoryBlog.Web.Common.Application;
+using StoryBlog.Web.Common.Domain;
 using StoryBlog.Web.Microservices.Posts.Application.Core;
 using StoryBlog.Web.Microservices.Posts.Application.Services;
-using StoryBlog.Web.Microservices.Posts.Domain.Interfaces;
 using StoryBlog.Web.Microservices.Posts.Domain.Specifications;
 
 namespace StoryBlog.Web.Microservices.Posts.Application.Handlers.GenerateSlug;

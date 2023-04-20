@@ -2,6 +2,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using StoryBlog.Web.Microservices.Comments.Application.Handlers.GetComments;
 using StoryBlog.Web.Microservices.Comments.Shared.Models;
 
 namespace StoryBlog.Web.Microservices.Comments.WebApi.Controllers;
@@ -33,33 +34,25 @@ public sealed class CommentsController : Controller
     /// Lists available posts to user.
     /// </summary>
     /// <returns></returns>
-    [ProducesResponseType(typeof(CommentsListResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ListAllResponse), StatusCodes.Status200OK)]
     [ProducesErrorResponseType(typeof(void))]
     [HttpGet("{key:guid:required}")]
-    public Task<IActionResult> ListAll([FromRoute] Guid key, [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 30)
+    public async Task<IActionResult> ListAll([FromRoute] Guid key, [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 30)
     {
-        /*var query = new GetPostsQuery(pageNumber, pageSize, includeAll: true);
+        var query = new GetCommentsQuery(key, pageNumber, pageSize, includeAll: true);
         var result = await mediator.Send(query);
 
         if (result.IsSuccess())
         {
-            var models = mapper.Map<IReadOnlyCollection<PostModel>>(result.Posts);
+            var comments = mapper.Map<IReadOnlyList<CommentModel>>(result.Comments);
             return Ok(new ListAllResponse
             {
-                Posts = models,
+                Comments = comments,
                 PageNumber = pageNumber,
                 PageSize = pageSize
             });
         }
 
-        return BadRequest();*/
-
-        var result = Ok(new CommentsListResponse
-        {
-            PageNumber = pageNumber,
-            PageSize = pageSize
-        });
-
-        return Task.FromResult<IActionResult>(result);
+        return BadRequest();
     }
 }

@@ -1,7 +1,8 @@
 ﻿using AutoMapper;
 using MediatR;
+using StoryBlog.Web.Common.Application;
+using StoryBlog.Web.Common.Domain;
 using StoryBlog.Web.Microservices.Posts.Application.Models;
-using StoryBlog.Web.Microservices.Posts.Domain.Interfaces;
 using StoryBlog.Web.Microservices.Posts.Domain.Specifications;
 
 namespace StoryBlog.Web.Microservices.Posts.Application.Handlers.GetPosts;

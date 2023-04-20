@@ -5,18 +5,21 @@ using SlimMessageBus.Host.NamedPipe;
 using SlimMessageBus.Host.Serialization.SystemTextJson;
 using StoryBlog.Web.Common.Events;
 using StoryBlog.Web.Identity.Extensions;
+using StoryBlog.Web.Microservices.Comments.Application.Contexts;
 using StoryBlog.Web.Microservices.Comments.Application.Extensions;
-using StoryBlog.Web.Microservices.Comments.Application.Handlers;
 using StoryBlog.Web.Microservices.Comments.Application.MessageBus.Handlers;
+using StoryBlog.Web.Microservices.Comments.Infrastructure.Extensions;
 using StoryBlog.Web.Microservices.Comments.WebApi.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration.AddJsonFile("appsettings.authentication.json", optional: true);
 
+builder.Services.AddInfrastructureServices();
+builder.Services.AddInfrastructureDbContext(builder.Configuration, "Database");
 builder.Services.AddMediatR(options =>
 {
-    options.RegisterServicesFromAssembly(typeof(HandlerBase).Assembly);
+    options.RegisterServicesFromAssembly(typeof(ICommentsDbContext).Assembly);
 });
 builder.Services.AddAutoMapper(configuration =>
 {

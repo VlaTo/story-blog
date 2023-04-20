@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.ValueGeneration;
+using StoryBlog.Web.Common.Infrastructure.Converters;
 using StoryBlog.Web.Microservices.Posts.Domain.Entities;
 
 namespace StoryBlog.Web.Microservices.Posts.Infrastructure.Configuration;

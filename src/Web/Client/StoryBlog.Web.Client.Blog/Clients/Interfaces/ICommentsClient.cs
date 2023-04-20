@@ -4,7 +4,7 @@ namespace StoryBlog.Web.Client.Blog.Clients.Interfaces;
 
 public interface ICommentsClient
 {
-    Task<CommentsListResponse?> GetCommentsAsync(Guid postKey);
+    Task<ListAllResponse?> GetCommentsAsync(Guid postKey);
 
     Task<CommentModel?> GetCommentAsync(Guid commentKey);
 }

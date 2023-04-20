@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Common\StoryBlog.Web.Common.Infrastructure\StoryBlog.Web.Common.Infrastructure.csproj" />
     <ProjectReference Include="..\StoryBlog.Web.Microservices.Posts.Application\StoryBlog.Web.Microservices.Posts.Application.csproj" />
   </ItemGroup>
 

@@ -6,8 +6,8 @@ using SlimMessageBus.Host.NamedPipe;
 using SlimMessageBus.Host.Serialization.SystemTextJson;
 using StoryBlog.Web.Common.Events;
 using StoryBlog.Web.Identity.Extensions;
+using StoryBlog.Web.Microservices.Posts.Application.Contexts;
 using StoryBlog.Web.Microservices.Posts.Application.Extensions;
-using StoryBlog.Web.Microservices.Posts.Application.Handlers;
 using StoryBlog.Web.Microservices.Posts.Infrastructure.Extensions;
 using StoryBlog.Web.Microservices.Posts.WebApi.Configuration;
 using StoryBlog.Web.Microservices.Posts.WebApi.Core;
@@ -26,7 +26,7 @@ builder.Services
     .BindConfiguration(PostLocationProviderOptions.SectionName);
 builder.Services.AddMediatR(options =>
 {
-    options.RegisterServicesFromAssembly(typeof(HandlerBase).Assembly);
+    options.RegisterServicesFromAssembly(typeof(IPostsDbContext).Assembly);
 });
 builder.Services.AddAutoMapper(configuration =>
 {

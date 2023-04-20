@@ -1,7 +1,9 @@
 ﻿using StoryBlog.Web.Microservices.Posts.Domain.Entities;
-using StoryBlog.Web.Microservices.Posts.Domain.Interfaces;
-using StoryBlog.Web.Microservices.Posts.Domain.Repositories;
 using System.Collections;
+using StoryBlog.Web.Common.Domain;
+using StoryBlog.Web.Common.Domain.Entities;
+using StoryBlog.Web.Common.Domain.Repositories;
+using StoryBlog.Web.Common.Infrastructure.Repositories;
 
 namespace StoryBlog.Web.Microservices.Posts.Infrastructure.Persistence;
 
@@ -28,19 +30,19 @@ public sealed class UnitOfWork : IUnitOfWork
 
     public IGenericRepository<TEntity> GetRepository<TEntity>() where TEntity : IEntity
     {
-        var key = typeof(TEntity);
+        var entityType = typeof(TEntity);
         object? instance;
 
-        if (repositories.ContainsKey(key))
+        if (repositories.ContainsKey(entityType))
         {
-            instance = repositories[key];
+            instance = repositories[entityType];
         }
         else
         {
-            var repositoryType = typeof(GenericRepository<>).MakeGenericType(key);
+            var repositoryType = typeof(GenericRepository<,>).MakeGenericType(entityType, typeof(PostsDbContext));
             
             instance = Activator.CreateInstance(repositoryType, context);
-            repositories.Add(key, instance);
+            repositories.Add(entityType, instance);
         }
 
         if (instance is IGenericRepository<TEntity> repository)

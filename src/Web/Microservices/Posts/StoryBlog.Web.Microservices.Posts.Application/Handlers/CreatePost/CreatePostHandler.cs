@@ -1,9 +1,9 @@
 ﻿using Microsoft.Extensions.Logging;
 using SlimMessageBus;
+using StoryBlog.Web.Common.Domain;
 using StoryBlog.Web.Common.Events;
 using StoryBlog.Web.Microservices.Posts.Application.Extensions;
 using StoryBlog.Web.Microservices.Posts.Domain.Entities;
-using StoryBlog.Web.Microservices.Posts.Domain.Interfaces;
 
 namespace StoryBlog.Web.Microservices.Posts.Application.Handlers.CreatePost;
 
@@ -39,7 +39,7 @@ public sealed class CreatePostHandler : MediatR.IRequestHandler<CreatePostComman
         await using (var repository = context.GetRepository<Post>())
         {
             await repository.AddAsync(post, cancellationToken);
-            await context.CommitAsync(cancellationToken);
+            await repository.SaveChangesAsync(cancellationToken);
         }
 
         await messageBus.Publish(new BlogPostEvent(post.Key, BlogPostAction.Submitted), cancellationToken: cancellationToken);

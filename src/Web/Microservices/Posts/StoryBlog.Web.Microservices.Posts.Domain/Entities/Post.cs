@@ -1,4 +1,6 @@
-﻿namespace StoryBlog.Web.Microservices.Posts.Domain.Entities;
+﻿using StoryBlog.Web.Common.Domain.Entities;
+
+namespace StoryBlog.Web.Microservices.Posts.Domain.Entities;
 
 public class Post : Entity, IHasId<long>
 {

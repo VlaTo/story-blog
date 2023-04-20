@@ -1,6 +1,8 @@
-﻿namespace StoryBlog.Web.Microservices.Posts.Domain.Specifications;
+﻿using StoryBlog.Web.Common.Domain.Specifications;
 
-public class AllAvailablePostsSpecification : SpecificationBase<Entities.Post>
+namespace StoryBlog.Web.Microservices.Posts.Domain.Specifications;
+
+public sealed class AllAvailablePostsSpecification : SpecificationBase<Entities.Post>
 {
     public AllAvailablePostsSpecification(int pageNumber, int pageSize)
     {

@@ -16,16 +16,16 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="SlimMessageBus.Host.AspNetCore" Version="2.0.0" />
-    <PackageReference Include="SlimMessageBus.Host.Serialization.SystemTextJson" Version="2.0.0" />
+    <PackageReference Include="SlimMessageBus.Host.AspNetCore" Version="2.1.1" />
+    <PackageReference Include="SlimMessageBus.Host.Serialization.SystemTextJson" Version="2.0.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\Identity\StoryBlog.Web.Identity\StoryBlog.Web.Identity.csproj" />
-    <ProjectReference Include="..\..\..\MessageBus\NamedPipeMessageBus\StoryBlog.MessageBug.NamedPipeMessageBus\StoryBlog.MessageBug.NamedPipeMessageBus.csproj" />
     <ProjectReference Include="..\..\..\NamedPipeMessageBus\SlimMessageBus.Host.NamedPipe\SlimMessageBus.Host.NamedPipe.csproj" />
     <ProjectReference Include="..\StoryBlog.Web.Microservices.Comments.Application\StoryBlog.Web.Microservices.Comments.Application.csproj" />
+    <ProjectReference Include="..\StoryBlog.Web.Microservices.Comments.Infrastructure\StoryBlog.Web.Microservices.Comments.Infrastructure.csproj" />
     <ProjectReference Include="..\StoryBlog.Web.Microservices.Comments.Shared\StoryBlog.Web.Microservices.Comments.Shared.csproj" />
   </ItemGroup>
 
