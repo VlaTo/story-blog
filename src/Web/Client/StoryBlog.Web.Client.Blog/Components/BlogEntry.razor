@@ -1,0 +1,16 @@
+﻿<article class="storyblog-blog-entry px-6 py-4 my-5" @attributes=@UserAttributes>
+    <div class="storyblog-blog-entry-header">
+        <div class="storyblog-blog-entry-header-title">
+            <a class="mud-typography mud-link mud-link-underline-none mud-typography-h6 cursor-pointer" @onclick=@OnTitleClick>@Title</a>
+        </div>
+        <div class="storyblog-blog-entry-header-actions d-flex">
+            @HeaderContent
+        </div>
+    </div>
+    <div class="storyblog-blog-entry-content">
+        @ChildContent
+    </div>
+    <div class="storyblog-blog-entry-footer">
+
+    </div>
+</article>

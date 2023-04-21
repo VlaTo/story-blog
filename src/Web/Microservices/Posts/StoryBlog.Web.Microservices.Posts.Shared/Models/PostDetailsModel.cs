@@ -21,4 +21,12 @@ public class PostDetailsModel
         get;
         set;
     }
+
+    [DataMember]
+    [JsonPropertyName(nameof(Text))]
+    public string Text
+    {
+        get;
+        set;
+    }
 }

@@ -17,7 +17,7 @@ namespace StoryBlog.Web.Microservices.Posts.Infrastructure.Persistence.Migration
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.4")
+                .HasAnnotation("ProductVersion", "7.0.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -68,7 +68,7 @@ namespace StoryBlog.Web.Microservices.Posts.Infrastructure.Persistence.Migration
 
             modelBuilder.Entity("StoryBlog.Web.Microservices.Posts.Domain.Entities.Post", b =>
                 {
-                    b.OwnsOne("StoryBlog.Web.Microservices.Posts.Domain.Entities.Key", "Key", b1 =>
+                    b.OwnsOne("StoryBlog.Web.Microservices.Posts.Domain.Entities.Slug", "Slug", b1 =>
                         {
                             b1.Property<long>("PostId")
                                 .HasColumnType("bigint");
@@ -91,7 +91,7 @@ namespace StoryBlog.Web.Microservices.Posts.Infrastructure.Persistence.Migration
                             b1.Navigation("Post");
                         });
 
-                    b.Navigation("Key")
+                    b.Navigation("Slug")
                         .IsRequired();
                 });
 #pragma warning restore 612, 618

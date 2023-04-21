@@ -5,14 +5,14 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using StoryBlog.Web.Microservices.Comments.Infrastructure.Persistence;
+using StoryBlog.Web.Microservices.Posts.Infrastructure.Persistence;
 
 #nullable disable
 
-namespace StoryBlog.Web.Microservices.Comments.Infrastructure.Persistence.Migrations
+namespace StoryBlog.Web.Microservices.Posts.Infrastructure.Persistence.Migrations
 {
-    [DbContext(typeof(CommentsDbContext))]
-    [Migration("20230420090338_InitDatabase")]
+    [DbContext(typeof(PostsDbContext))]
+    [Migration("20230421074043_InitDatabase")]
     partial class InitDatabase
     {
         /// <inheritdoc />
@@ -25,7 +25,7 @@ namespace StoryBlog.Web.Microservices.Comments.Infrastructure.Persistence.Migrat
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("StoryBlog.Web.Microservices.Comments.Domain.Entities.Comment", b =>
+            modelBuilder.Entity("StoryBlog.Web.Microservices.Posts.Domain.Entities.Post", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -51,44 +51,51 @@ namespace StoryBlog.Web.Microservices.Comments.Infrastructure.Persistence.Migrat
                         .ValueGeneratedOnUpdate()
                         .HasColumnType("datetime2");
 
-                    b.Property<long?>("ParentId")
-                        .IsRequired()
-                        .HasColumnType("bigint");
-
-                    b.Property<Guid>("PostKey")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
-                    b.Property<string>("Text")
+                    b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(1024)
                         .HasColumnType("nvarchar(1024)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ParentId");
+                    b.HasIndex("Key")
+                        .IsUnique();
 
-                    b.HasIndex("PostKey");
+                    b.HasIndex("Title");
 
-                    b.ToTable("Comments", (string)null);
+                    b.ToTable("Posts", (string)null);
                 });
 
-            modelBuilder.Entity("StoryBlog.Web.Microservices.Comments.Domain.Entities.Comment", b =>
+            modelBuilder.Entity("StoryBlog.Web.Microservices.Posts.Domain.Entities.Post", b =>
                 {
-                    b.HasOne("StoryBlog.Web.Microservices.Comments.Domain.Entities.Comment", "Parent")
-                        .WithMany("Comments")
-                        .HasForeignKey("ParentId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                    b.OwnsOne("StoryBlog.Web.Microservices.Posts.Domain.Entities.Slug", "Slug", b1 =>
+                        {
+                            b1.Property<long>("PostId")
+                                .HasColumnType("bigint");
+
+                            b1.Property<string>("Text")
+                                .IsRequired()
+                                .HasMaxLength(200)
+                                .HasColumnType("nvarchar(200)");
+
+                            b1.HasKey("PostId");
+
+                            b1.HasIndex("Text")
+                                .IsUnique();
+
+                            b1.ToTable("Slugs", (string)null);
+
+                            b1.WithOwner("Post")
+                                .HasForeignKey("PostId");
+
+                            b1.Navigation("Post");
+                        });
+
+                    b.Navigation("Slug")
                         .IsRequired();
-
-                    b.Navigation("Parent");
-                });
-
-            modelBuilder.Entity("StoryBlog.Web.Microservices.Comments.Domain.Entities.Comment", b =>
-                {
-                    b.Navigation("Comments");
                 });
 #pragma warning restore 612, 618
         }

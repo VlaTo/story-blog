@@ -18,10 +18,22 @@
     {
         @foreach (var post in Store.Value.Posts)
         {
-            <MudPaper Square=true Class="storyblog-blog-view" Elevation=0>
-                <StoryBlogView Title=@post.Title data-test="test-value" Slug=@post.Slug>
-
-                </StoryBlogView>
+            <MudPaper Square=true Class="storyblog-home-blog" Elevation=0>
+                <BlogEntry Title=@post.Title data-test="test-value" Slug=@post.Slug>
+                    <HeaderContent>
+                        <div class="d-block mr-2">
+                            <MudIcon Icon=@Icons.Material.Filled.CalendarMonth />
+                            <DateTimeView Class="text-disabled" Mode=@DateTimeMode.RelativeFromCurrent DateTime=@post.CreatedAt />
+                        </div>
+                        <div>
+                            <MudIcon Icon=@Icons.Material.Filled.Person />
+                            <span>Unknown</span>
+                        </div>
+                    </HeaderContent>
+                    <ChildContent>
+                        @post.Text
+                    </ChildContent>
+                </BlogEntry>
             </MudPaper>
         }
 

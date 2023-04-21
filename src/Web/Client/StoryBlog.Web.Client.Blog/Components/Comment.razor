@@ -1,0 +1,26 @@
+﻿<div class=@Classname @attributes=@UserAttributes>
+    <div class="storyblog-comment-header">
+
+    </div>
+    <div class="storyblog-comment-content">
+        @ChildContent
+    </div>
+    @if (null != Comments)
+    {
+        <div class="storyblog-comment-comments ml-2">
+            @for (var index = 0; index < Comments.Count; index++)
+            {
+                var comment = Comments[index];
+
+                <Comment Key=@comment.Key Comments=@comment.Comments Class="pa-1">
+                    <ChildContent>
+                        @comment.Text
+                    </ChildContent>
+                </Comment>
+            }
+        </div>
+    }
+    <div class="storyblog-comment-footer">
+
+    </div>
+</div>

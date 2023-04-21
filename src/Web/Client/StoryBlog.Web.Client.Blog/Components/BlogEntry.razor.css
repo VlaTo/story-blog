@@ -1,0 +1,26 @@
+﻿.storyblog-blog-entry {
+}
+
+    .storyblog-blog-entry .storyblog-blog-entry-header {
+        /**/
+    }
+
+        .storyblog-blog-entry .storyblog-blog-entry-header .storyblog-blog-entry-header-title {
+            /**/
+        }
+
+            .storyblog-blog-entry .storyblog-blog-entry-header .storyblog-blog-entry-header-title a {
+                 color: var(--mud-palette-gray);
+            }
+
+        .storyblog-blog-entry .storyblog-blog-entry-header .storyblog-blog-entry-header-actions {
+            /**/
+        }
+
+    .storyblog-blog-entry .storyblog-blog-entry-content {
+         /**/
+    }
+
+    .storyblog-blog-entry .storyblog-blog-entry-footer {
+         /**/
+    }

@@ -11,6 +11,7 @@ internal static class AutoMapperConfigurationExpressionExtensions
             .ForMember(destination => destination.Key, source => source.MapFrom(x => x.Key))
             .ForMember(destination => destination.Title, source => source.MapFrom(x => x.Title))
             .ForMember(destination => destination.Slug, source => source.MapFrom(x => x.Slug))
+            .ForMember(destination => destination.Text, source => source.MapFrom(x => x.Text))
             .ForMember(destination => destination.Status, source => source.MapFrom(x => x.Status))
             .ForMember(destination => destination.CreatedAt, source => source.MapFrom(x => x.CreatedAt))
             ;

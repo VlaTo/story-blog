@@ -49,7 +49,6 @@ namespace StoryBlog.Web.Microservices.Comments.Infrastructure.Persistence.Migrat
                         .HasColumnType("datetime2");
 
                     b.Property<long?>("ParentId")
-                        .IsRequired()
                         .HasColumnType("bigint");
 
                     b.Property<Guid>("PostKey")

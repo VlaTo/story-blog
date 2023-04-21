@@ -64,6 +64,54 @@ namespace StoryBlog.Web.Microservices.Posts.Infrastructure.Persistence.Migration
                 table: "Slugs",
                 column: "Text",
                 unique: true);
+
+            migrationBuilder.InsertData(
+                "Posts",
+                new[] { "Id", "Key", "Title", "IsPublic", "Status", "CreateAt" },
+                new object[]
+                {
+                    1, // Id
+                    Guid.Parse("8eb975fc-74d2-4be1-bd95-f25ea308bd3b"), // Key
+                    "Lorem Ipsum dolor sit amet 8eb975fc-74d2-4be1-bd95-f25ea308bd3b",
+                    true,
+                    1,
+                    new DateTime(2023, 4, 21, 10, 17, 0)
+                }
+            );
+
+            migrationBuilder.InsertData(
+                "Slugs",
+                new[] { "PostId", "Text" },
+                new object[]
+                {
+                    1, // Id
+                    "lorem-ipsum-dolor-sit-amet-8eb975fc-74d2-4be1-bd95-f25ea308bd3b"
+                }
+            );
+
+            migrationBuilder.InsertData(
+                "Posts",
+                new[] { "Id", "Key", "Title", "IsPublic", "Status", "CreateAt" },
+                new object[]
+                {
+                    2, // Id
+                    Guid.Parse("3e406eae-11f4-4dee-98f4-921f9be80bb3"), // Key
+                    "Lorem Ipsum dolor sit amet 3e406eae-11f4-4dee-98f4-921f9be80bb3",
+                    true,
+                    1,
+                    new DateTime(2023, 4, 21, 10, 19, 0)
+                }
+            );
+
+            migrationBuilder.InsertData(
+                "Slugs",
+                new[] { "PostId", "Text" },
+                new object[]
+                {
+                    2, // Id
+                    "lorem-ipsum-dolor-sit-amet-3e406eae-11f4-4dee-98f4-921f9be80bb3"
+                }
+            );
         }
 
         /// <inheritdoc />

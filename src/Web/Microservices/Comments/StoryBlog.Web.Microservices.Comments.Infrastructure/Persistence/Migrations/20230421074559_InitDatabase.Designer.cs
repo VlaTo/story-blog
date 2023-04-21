@@ -5,14 +5,14 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using StoryBlog.Web.Microservices.Posts.Infrastructure.Persistence;
+using StoryBlog.Web.Microservices.Comments.Infrastructure.Persistence;
 
 #nullable disable
 
-namespace StoryBlog.Web.Microservices.Posts.Infrastructure.Persistence.Migrations
+namespace StoryBlog.Web.Microservices.Comments.Infrastructure.Persistence.Migrations
 {
-    [DbContext(typeof(PostsDbContext))]
-    [Migration("20230323150504_InitDatabase")]
+    [DbContext(typeof(CommentsDbContext))]
+    [Migration("20230421074559_InitDatabase")]
     partial class InitDatabase
     {
         /// <inheritdoc />
@@ -20,12 +20,12 @@ namespace StoryBlog.Web.Microservices.Posts.Infrastructure.Persistence.Migration
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.4")
+                .HasAnnotation("ProductVersion", "7.0.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("StoryBlog.Web.Microservices.Posts.Domain.Entities.Post", b =>
+            modelBuilder.Entity("StoryBlog.Web.Microservices.Comments.Domain.Entities.Comment", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -51,51 +51,43 @@ namespace StoryBlog.Web.Microservices.Posts.Infrastructure.Persistence.Migration
                         .ValueGeneratedOnUpdate()
                         .HasColumnType("datetime2");
 
+                    b.Property<long?>("ParentId")
+                        .HasColumnType("bigint");
+
+                    b.Property<Guid>("PostKey")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
-                    b.Property<string>("Title")
+                    b.Property<string>("Text")
                         .IsRequired()
                         .HasMaxLength(1024)
                         .HasColumnType("nvarchar(1024)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Key")
-                        .IsUnique();
+                    b.HasIndex("ParentId");
 
-                    b.HasIndex("Title");
+                    b.HasIndex("PostKey");
 
-                    b.ToTable("Posts", (string)null);
+                    b.ToTable("Comments", (string)null);
                 });
 
-            modelBuilder.Entity("StoryBlog.Web.Microservices.Posts.Domain.Entities.Post", b =>
+            modelBuilder.Entity("StoryBlog.Web.Microservices.Comments.Domain.Entities.Comment", b =>
                 {
-                    b.OwnsOne("StoryBlog.Web.Microservices.Posts.Domain.Entities.Key", "Key", b1 =>
-                        {
-                            b1.Property<long>("PostId")
-                                .HasColumnType("bigint");
-
-                            b1.Property<string>("Text")
-                                .IsRequired()
-                                .HasMaxLength(200)
-                                .HasColumnType("nvarchar(200)");
-
-                            b1.HasKey("PostId");
-
-                            b1.HasIndex("Text")
-                                .IsUnique();
-
-                            b1.ToTable("Slugs", (string)null);
-
-                            b1.WithOwner("Post")
-                                .HasForeignKey("PostId");
-
-                            b1.Navigation("Post");
-                        });
-
-                    b.Navigation("Key")
+                    b.HasOne("StoryBlog.Web.Microservices.Comments.Domain.Entities.Comment", "Parent")
+                        .WithMany("Comments")
+                        .HasForeignKey("ParentId")
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
+
+                    b.Navigation("Parent");
+                });
+
+            modelBuilder.Entity("StoryBlog.Web.Microservices.Comments.Domain.Entities.Comment", b =>
+                {
+                    b.Navigation("Comments");
                 });
 #pragma warning restore 612, 618
         }

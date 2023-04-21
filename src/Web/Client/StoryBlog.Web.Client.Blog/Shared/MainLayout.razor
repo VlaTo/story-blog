@@ -1,6 +1,6 @@
 ﻿@inherits LayoutComponentBase
 
-<MudThemeProvider />
+<MudThemeProvider Theme=@theme />
 <MudDialogProvider />
 <MudSnackbarProvider />
 
@@ -19,7 +19,7 @@
         </MudNavMenu>
     </MudDrawer>
     <MudMainContent Class="d-flex align-start">
-        <MudContainer Class="d-block flex-1" MaxWidth=@MaxWidth.Large>
+        <MudContainer Class="d-block flex-2" MaxWidth=@MaxWidth.ExtraLarge>
             @Body
         </MudContainer>
         <MudContainer Class="d-block flex-1" MaxWidth=@MaxWidth.ExtraSmall>

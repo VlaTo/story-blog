@@ -27,7 +27,7 @@ public sealed class GetCommentsHandler : HandlerBase, IRequestHandler<GetComment
 
         await using (var repository = context.GetRepository<Domain.Entities.Comment>())
         {
-            var specification = new FindRootCommentsForPostSpecification(request.PostKey, includeAll: true);
+            var specification = new FindRootCommentsForPostSpecification(request.PostKey, request.PageNumber, request.PageSize, includeAll: true);
             comments = await repository.QueryAsync(specification, cancellationToken);
         }
 

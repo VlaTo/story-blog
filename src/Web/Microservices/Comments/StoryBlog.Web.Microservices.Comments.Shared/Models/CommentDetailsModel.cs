@@ -19,4 +19,18 @@ public class CommentDetailsModel
         get;
         set;
     }
+
+    [JsonPropertyName(nameof(Status))]
+    public CommentModelStatus Status
+    {
+        get;
+        set;
+    }
+
+    [JsonPropertyName(nameof(CreatedAt))]
+    public DateTime CreatedAt
+    {
+        get;
+        set;
+    }
 }

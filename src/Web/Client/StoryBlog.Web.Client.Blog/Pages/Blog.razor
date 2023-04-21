@@ -19,17 +19,39 @@
 
     case StoreState.Success:
     {
-        var post = Store.Value.Post;
+        var post = Store.Value.Post!;
+        var comments = Store.Value.Comments;
 
-        <PageTitle>@post!.Title</PageTitle>
+        <PageTitle>@post.Title</PageTitle>
 
         <article>
             <div>
-                <MudText Typo=@Typo.h4>@post!.Title</MudText>
+                <MudText Typo=@Typo.h4>@post.Title</MudText>
             </div>
             <div>
-                <span>@post!.CreatedAt</span>
+                <span>@post.CreatedAt</span>
             </div>
+            <div>
+                <MudMarkdown Value=@post.Text />
+            </div>
+            
+            @if (null == comments || 0 == comments.Count)
+            {
+                <div>No comments yet</div>
+            }
+            else
+            {
+                <div class="storyblog-blog pa-4">
+                    @foreach (var comment in comments)
+                    {
+                        <Comment Key=@comment.Key Comments=@comment.Comments Class="pa-2">
+                            <ChildContent>
+                                @comment.Text
+                            </ChildContent>
+                        </Comment>
+                    }
+                </div>
+            }
         </article>
 
         break;

@@ -10,9 +10,9 @@ public static class AutoMapperConfigurationExpressionExtensions
         expression.CreateMap<Application.Models.Comment, CommentModel>()
             .ForMember(destination => destination.Key, source => source.MapFrom(x => x.Key))
             .ForMember(destination => destination.Text, source => source.MapFrom(x => x.Text))
-            //.ForMember(destination => destination.Slug, source => source.MapFrom(x => x.Slug))
-            //.ForMember(destination => destination.Status, source => source.MapFrom(x => x.Status))
-            //.ForMember(destination => destination.CreatedAt, source => source.MapFrom(x => x.CreatedAt))
+            .ForMember(destination => destination.Comments, source => source.MapFrom(x => x.Comments))
+            .ForMember(destination => destination.Status, source => source.MapFrom(x => x.Status))
+            .ForMember(destination => destination.CreatedAt, source => source.MapFrom(x => x.CreatedAt))
             ;
 
         return expression;

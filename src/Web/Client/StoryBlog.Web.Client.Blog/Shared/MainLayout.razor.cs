@@ -4,7 +4,18 @@ namespace StoryBlog.Web.Client.Blog.Shared;
 
 public partial class MainLayout
 {
-    public MainLayout()
+    private readonly MudTheme theme = new()
     {
-    }
+        Palette = new Palette
+        {
+            Primary = Colors.Grey.Default
+        },
+        Typography = new Typography
+        {
+            Default = new Default
+            {
+                FontFamily = new[] { "Montserrat", "Roboto", "sans-serif" }
+            }
+        }
+    };
 }

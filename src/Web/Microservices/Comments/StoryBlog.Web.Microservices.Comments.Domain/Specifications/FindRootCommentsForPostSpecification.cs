@@ -4,20 +4,22 @@ namespace StoryBlog.Web.Microservices.Comments.Domain.Specifications;
 
 public sealed class FindRootCommentsForPostSpecification : SpecificationBase<Entities.Comment>
 {
-    public FindRootCommentsForPostSpecification(Guid postKey, bool includeAll = false)
+    public FindRootCommentsForPostSpecification(Guid postKey, int pageNumber = -1, int pageSize = 0, bool includeAll = false)
     {
-        Criteria = entity => entity.PostKey == postKey && null == entity.DeletedAt;
+        Criteria = entity => entity.PostKey == postKey && null == entity.ParentId && null == entity.DeletedAt;
 
         if (includeAll)
         {
             Includes.Add(x => x.Comments);
-            Includes.Add(x => x.Parent);
+            //Includes.Add(x => x.Parent);
         }
 
         OrderBy.Add(entity => entity.CreateAt);
-        
-        //OrderBy.Add(entity => entity.Title);
-        //Skip = (pageNumber - 1) * pageSize;
-        //Take = pageSize;
+
+        if (0 < pageNumber)
+        {
+            Skip = (pageNumber - 1) * pageSize;
+            Take = pageSize;
+        }
     }
 }

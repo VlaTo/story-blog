@@ -18,7 +18,8 @@ internal sealed class CommentEntityConfiguration : IEntityTypeConfiguration<Comm
             .ValueGeneratedOnAdd()
             .IsRequired();
 
-        builder.Property(x => x.ParentId);
+        builder.Property(x => x.ParentId)
+            .IsRequired(false);
 
         builder.Property(x => x.PostKey)
             .IsRequired();
@@ -45,7 +46,8 @@ internal sealed class CommentEntityConfiguration : IEntityTypeConfiguration<Comm
         builder.HasIndex(x => x.PostKey);
         builder.HasIndex(x => x.ParentId);
 
-        builder.HasOne(x => x.Parent)
+        builder
+            .HasOne(x => x.Parent)
             .WithMany(x => x.Comments)
             .HasForeignKey(x => x.ParentId)
             .HasPrincipalKey(x => x.Id)
