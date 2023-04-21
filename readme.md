@@ -1,6 +1,7 @@
 # Story Blog sample web application
 
 [![Build Status](https://dev.azure.com/tolmachewladimir/tolmachewladimir/_apis/build/status/VlaTo.story-blog?branchName=master)](https://dev.azure.com/tolmachewladimir/tolmachewladimir/_build/latest?definitionId=5&branchName=master)
+[![.NET](https://github.com/VlaTo/story-blog/actions/workflows/dotnet.yml/badge.svg?branch=master)](https://github.com/VlaTo/story-blog/actions/workflows/dotnet.yml)
 
 ## Working with Database
 
