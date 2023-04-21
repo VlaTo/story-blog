@@ -8,11 +8,13 @@
 ```
 dotnet ef migrations add InitDatabase --context CommentsDbContext --output-dir "Persistence\Migrations" --project "..\StoryBlog.Web.Microservices.Comments.Infrastructure" --no-build --verbose
 dotnet ef database update --context CommentsDbContext --project "..\StoryBlog.Web.Microservices.Comments.Infrastructure" --no-build --verbose
+```
 
 ### Posts Database
 ```
 dotnet ef migrations add InitDatabase --context PostsDbContext --output-dir "Persistence\Migrations" --project "..\StoryBlog.Web.Microservices.Posts.Infrastructure" --no-build --verbose
 dotnet ef database update --context PostsDbContext --project "..\StoryBlog.Web.Microservices.Posts.Infrastructure" --no-build --verbose
+```
 
 ### Libraries
 1. Mediatr

@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using StoryBlog.Web.Blazor.Markdown.Editor.Core;
-using StoryBlog.Web.Blazor.Markdown.Editor.Core.Components;
 using StoryBlog.Web.Blazor.Markdown.Editor.Core.Extensions;
 using StoryBlog.Web.Blazor.Markdown.Editor.Core.Interop;
 
@@ -11,6 +10,7 @@ public partial class MarkdownEditor
 {
     private static readonly ClassBuilder<MarkdownEditor> classBuilder;
     private ElementReference editorElement;
+    private IJavaScriptMarkdownEditor? editor; 
 
     [Parameter]
     public string? Class
@@ -108,7 +108,8 @@ public partial class MarkdownEditor
         if (FirstRender)
         {
             var selector = $".md-editor div[_bl_{editorElement.Id}]";
-            var editor = await EditorJavaScriptInterop.CreateEditorAsync(selector);
+            
+            editor = await EditorJavaScriptInterop.CreateEditorAsync(selector);
 
             if (String.IsNullOrEmpty(Text))
             {
@@ -131,15 +132,22 @@ public partial class MarkdownEditor
 
     protected override async ValueTask OnBlurAsync(FocusEventArgs e)
     {
+        Text = await editor!.GetTextAsync();
+        
+        //await TextChanged.InvokeAsync(Text);
+
         if (IsDirty)
         {
+            IsDirty = false;
             await TextChanged.InvokeAsync(Text);
         }
     }
 
-    protected async ValueTask OnChangeAsync(ChangeEventArgs e)
+    protected ValueTask OnInputAsync(ChangeEventArgs e)
     {
-        ;
+        IsDirty = true;
+
+        return ValueTask.CompletedTask;
     }
 
     protected async ValueTask OnBeforeInputAsync(EventArgs e)

@@ -13,8 +13,9 @@ internal sealed class JavaScriptMarkdownEditor : IJavaScriptMarkdownEditor
         this.identifier = identifier;
     }
 
-    public async ValueTask SetTextAsync(string value)
-    {
-        await jsRuntime.InvokeVoidAsync(identifier + ".setText", value);
-    }
+    public ValueTask SetTextAsync(string value) =>
+        jsRuntime.InvokeVoidAsync(identifier + ".setText", value);
+
+    public ValueTask<string> GetTextAsync() =>
+        jsRuntime.InvokeAsync<string>(identifier + ".getText");
 }

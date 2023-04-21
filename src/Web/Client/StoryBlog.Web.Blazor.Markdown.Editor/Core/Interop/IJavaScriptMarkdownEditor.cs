@@ -3,4 +3,6 @@
 public interface IJavaScriptMarkdownEditor
 {
     ValueTask SetTextAsync(string value);
+    
+    ValueTask<string> GetTextAsync();
 }

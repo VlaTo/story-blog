@@ -41,16 +41,23 @@
             }
             else
             {
-                <div class="storyblog-blog pa-4">
-                    @foreach (var comment in comments)
-                    {
-                        <Comment Key=@comment.Key Comments=@comment.Comments Class="pa-2">
-                            <ChildContent>
-                                @comment.Text
-                            </ChildContent>
-                        </Comment>
-                    }
-                </div>
+                <MudPaper Square=true Elevation=0 Class="storyblog-blog pa-2">
+                    <div>
+                        <MudText Typo=@Typo.h6>Comments:</MudText>
+                    </div>
+                    <div>
+                        <CascadingValue Name="EditorCoordinator" Value=@EditorCoordinator>
+                            @foreach (var comment in comments)
+                            {
+                                <Comment Key=@comment.Key CreatedDateTime=@comment.CreatedAt Comments=@comment.Comments Class="pa-2">
+                                    <ChildContent>
+                                        @comment.Text
+                                    </ChildContent>
+                                </Comment>
+                            }
+                        </CascadingValue>
+                    </div>
+                </MudPaper>
             }
         </article>
 

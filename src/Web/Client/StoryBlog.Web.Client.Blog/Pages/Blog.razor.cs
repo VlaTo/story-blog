@@ -1,5 +1,6 @@
 ﻿using Fluxor;
 using Microsoft.AspNetCore.Components;
+using StoryBlog.Web.Client.Blog.Core;
 using StoryBlog.Web.Client.Blog.Store.BlogUseCase;
 
 namespace StoryBlog.Web.Client.Blog.Pages;
@@ -22,6 +23,13 @@ public partial class Blog
 
     [Inject]
     private IDispatcher Dispatcher
+    {
+        get;
+        set;
+    }
+
+    [Inject]
+    private ICommentEditorCoordinator EditorCoordinator
     {
         get;
         set;

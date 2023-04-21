@@ -9,6 +9,7 @@ using StoryBlog.Web.Client.Blog;
 using StoryBlog.Web.Client.Blog.Clients;
 using StoryBlog.Web.Client.Blog.Clients.Interfaces;
 using StoryBlog.Web.Client.Blog.Configuration;
+using StoryBlog.Web.Client.Blog.Core;
 using StoryBlog.Web.Client.Blog.Middlewares;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
@@ -30,6 +31,8 @@ builder.Services
     {
         builder.Configuration.Bind(HttpClientOptions.SectionName, options);
     });
+
+builder.Services.AddScoped<ICommentEditorCoordinator, CommentEditorCoordinator>();
 
 builder.Services.AddScoped<IPostsClient, PostsHttpClient>();
 builder.Services.AddScoped<ICommentsClient, CommentsHttpClient>();

@@ -13,5 +13,11 @@
          * @param value: string
          */
         setText(value: string): void;
+
+        /**
+         * @method getText
+         * @return string
+         */
+        getText(): string;
     }
 }

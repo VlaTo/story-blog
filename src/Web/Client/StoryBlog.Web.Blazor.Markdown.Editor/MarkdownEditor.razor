@@ -10,7 +10,7 @@
         <div @ref=@editorElement class="md-editor-textarea" role="textbox" dir="ltr" lang="en" aria-label="Editor editing area" contenteditable="true" spellcheck="false"
              @onblur=@(async e => await OnBlurAsync(e))
              @onfocus=@(async e => await OnFocusAsync(e))
-             @onchange=@(async e => await OnChangeAsync(e))>
+             @oninput=@(async e => await OnInputAsync(e))>
         </div>
     </div>
 </div>

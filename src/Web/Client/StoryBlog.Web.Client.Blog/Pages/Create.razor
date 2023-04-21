@@ -37,7 +37,7 @@ else
                     OnAdornmentClick=@OnGenerateSlug
                 />
 
-                <MarkdownEditor Class="mt-4" AutoFocus=@true test-value="1" temp="temp" @bind-Text=@Text>
+                <MarkdownEditor Class="mt-4" AutoFocus=@true @bind-Text=@Text>
                     <Toolbar>
                         <ToolbarGroup>
                             <ToolbarActionButton EditorAction=@EditorAction.Undo />
@@ -54,12 +54,6 @@ else
                         </ToolbarGroup>
                     </Toolbar>
                 </MarkdownEditor>
-
-                @*<MudMarkdown 
-                    Value=@Model.Text 
-                    Styling=@Styling 
-                    CodeBlockTheme=@CodeBlockTheme.DraculaBase16 
-                />*@
 
             </MudCardContent>
             <MudCardActions>

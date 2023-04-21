@@ -1,10 +1,37 @@
 ﻿<div class=@Classname @attributes=@UserAttributes>
-    <div class="storyblog-comment-header">
-
+    <div class="storyblog-comment-header d-flex flex-row align-center">
+        <div class="d-inline-flex align-center">
+            <MudIcon Icon=@Icons.Material.Filled.CalendarMonth />
+            <DateTimeView DateTime=@CreatedDateTime Mode=@DateTimeMode.RelativeFromCurrent/>
+        </div>
+        <MudSpacer/>
+        <MudIconButton ButtonType=@ButtonType.Button Icon=@Icons.Material.Filled.Reply Size=@Size.Small Command=@Reply />
     </div>
     <div class="storyblog-comment-content">
         @ChildContent
     </div>
+    
+    @if (Mode.Reply == mode)
+    {
+        <MarkdownEditor Class="mt-4" AutoFocus=@true @bind-Text=@CommentReply>
+            <Toolbar>
+                <ToolbarGroup>
+                    <ToolbarActionButton EditorAction=@EditorAction.Undo />
+                    <ToolbarActionButton EditorAction=@EditorAction.Redo />
+                </ToolbarGroup>
+                <ToolbarGroup>
+                    <ToolbarActionButton EditorAction=@EditorAction.Bold />
+                    <ToolbarActionButton EditorAction=@EditorAction.Italic />
+                    <ToolbarActionButton EditorAction=@EditorAction.Underline />
+                </ToolbarGroup>
+            </Toolbar>
+        </MarkdownEditor>
+
+        <div style="background: #20b2aa; height: 200px; width: 100%;" class="d-flex">
+            <MudIconButton ButtonType=@ButtonType.Button Icon=@Icons.Material.Filled.Close Size=@Size.Small Command=@CancelReply />
+        </div>
+    }
+    
     @if (null != Comments)
     {
         <div class="storyblog-comment-comments ml-2">
@@ -12,7 +39,7 @@
             {
                 var comment = Comments[index];
 
-                <Comment Key=@comment.Key Comments=@comment.Comments Class="pa-1">
+                <Comment Key=@comment.Key CreatedDateTime=@comment.CreatedAt Comments=@comment.Comments Class="pa-1">
                     <ChildContent>
                         @comment.Text
                     </ChildContent>
@@ -20,6 +47,7 @@
             }
         </div>
     }
+    
     <div class="storyblog-comment-footer">
 
     </div>

@@ -23,7 +23,7 @@ public class EditorComponent : ComponentBase, IMarkdownEditorContext, IAsyncDisp
     protected bool IsDirty
     {
         get; 
-        private set;
+        private protected set;
     }
 
     protected EditorComponent()
