@@ -6,95 +6,29 @@ namespace StoryBlog.Web.Client.Blog.Store.BlogUseCase;
 /// <summary>
 /// 
 /// </summary>
-public sealed class FetchPostReferenceAction    
-{
-    public string Slug
-    {
-        get;
-    }
-
-    public FetchPostReferenceAction(string slug)
-    {
-        Slug = slug;
-    }
-}
+public sealed record FetchPostReferenceAction(string Slug);
 
 /// <summary>
 /// 
 /// </summary>
-public sealed class FetchPostAction    
-{
-    public Guid Key
-    {
-        get;
-    }
-
-    public FetchPostAction(Guid key)
-    {
-        Key = key;
-    }
-}
+public sealed record FetchPostAction(Guid Key);
 
 /// <summary>
 /// 
 /// </summary>
-public sealed class FetchPostReadyAction
-{
-    public Guid Key
-    {
-        get;
-    }
-
-    public PostModel Post
-    {
-        get;
-    }
-
-    public FetchPostReadyAction(Guid key, PostModel post)
-    {
-        Key = key;
-        Post = post;
-    }
-}
+public sealed record FetchPostReadyAction(Guid Key, PostModel Post);
 
 /// <summary>
 /// 
 /// </summary>
-public sealed class FetchPostFailedAction
-{
-    public FetchPostFailedAction()
-    {
-    }
-}
+public sealed record FetchPostFailedAction();
 
 /// <summary>
 /// 
 /// </summary>
-public sealed class FetchCommentsReadyAction
-{
-    public Guid PostKey
-    {
-        get;
-    }
-
-    public IReadOnlyCollection<CommentModel> Comments
-    {
-        get;
-    }
-
-    public FetchCommentsReadyAction(Guid postKey, IReadOnlyCollection<CommentModel> comments)
-    {
-        PostKey = postKey;
-        Comments = comments;
-    }
-}
+public sealed record FetchCommentsReadyAction(Guid PostKey, IReadOnlyCollection<CommentModel> Comments);
 
 /// <summary>
 /// 
 /// </summary>
-public sealed class FetchCommentsFailedAction
-{
-    public FetchCommentsFailedAction()
-    {
-    }
-}
+public sealed record FetchCommentsFailedAction();

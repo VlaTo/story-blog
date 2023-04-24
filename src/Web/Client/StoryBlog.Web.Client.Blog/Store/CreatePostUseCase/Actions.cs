@@ -5,111 +5,29 @@ namespace StoryBlog.Web.Client.Blog.Store.CreatePostUseCase;
 /// <summary>
 /// 
 /// </summary>
-public sealed class GenerateSlugAction
-{
-    public string Title
-    {
-        get;
-    }
-
-    public GenerateSlugAction(string title)
-    {
-        Title = title;
-    }
-}
+public sealed record GenerateSlugAction(string Title);
 
 /// <summary>
 /// 
 /// </summary>
-public sealed class GeneratedSlugReadyAction
-{
-    public string Title
-    {
-        get;
-    }
-
-    public string Slug
-    {
-        get;
-    }
-
-    public GeneratedSlugReadyAction(string title, string slug)
-    {
-        Title = title;
-        Slug = slug;
-    }
-}
+public sealed record GeneratedSlugReadyAction(string Title, string Slug);
 
 /// <summary>
 /// 
 /// </summary>
-public sealed class GenerateSlugFailedAction
-{
-    public string Title
-    {
-        get;
-    }
-
-    public GenerateSlugFailedAction(string title)
-    {
-        Title = title;
-    }
-}
+public sealed record GenerateSlugFailedAction(string Title);
 
 /// <summary>
 /// 
 /// </summary>
-public sealed class CreatePostAction
-{
-    public string Title
-    {
-        get;
-    }
-
-    public string Slug
-    {
-        get;
-    }
-
-    public CreatePostAction(string title, string slug)
-    {
-        Title = title;
-        Slug = slug;
-    }
-}
+public sealed record CreatePostAction(string Title, string Slug);
 
 /// <summary>
 /// 
 /// </summary>
-public sealed class CreatedPostReadyAction
-{
-    public string Title
-    {
-        get;
-    }
-
-    public string Slug
-    {
-        get;
-    }
-
-    public CreatedPostReadyAction(
-        string title,
-        string slug,
-        PostModelStatus status,
-        DateTime createdAt)
-    {
-        Title = title;
-        Slug = slug;
-    }
-}
+public sealed record CreatedPostReadyAction(string Title, string Slug, PostModelStatus Status, DateTime CreatedAt);
 
 /// <summary>
 /// 
 /// </summary>
-public sealed class CreatePostFailedAction
-{
-    public CreatePostFailedAction()
-    {
-    }
-}
+public sealed record CreatePostFailedAction();

@@ -1,18 +1,20 @@
-<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <ServiceWorkerAssetsManifest>service-worker-assets.js</ServiceWorkerAssetsManifest>
+	<BlazorWebAssemblyLoadAllGlobalizationData>true</BlazorWebAssemblyLoadAllGlobalizationData>
   </PropertyGroup>
-
+	
   <ItemGroup>
     <PackageReference Include="Fluxor.Blazor.Web" Version="5.7.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="7.0.5" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="7.0.5" PrivateAssets="all" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Extensions.Localization" Version="7.0.5" />
     <PackageReference Include="MudBlazor" Version="6.2.2" />
     <PackageReference Include="MudBlazor.Markdown" Version="0.1.0" />
   </ItemGroup>
@@ -25,7 +27,9 @@
     <Folder Include="Middlewares\" />
     <Folder Include="Store\BlogUseCase\" />
     <Folder Include="Store\CreatePostUseCase\" />
+    <Folder Include="Store\CreateCommentUseCase\" />
     <Folder Include="wwwroot\img\" />
+    <Folder Include="Extensions\" />
   </ItemGroup>
 
   <ItemGroup>

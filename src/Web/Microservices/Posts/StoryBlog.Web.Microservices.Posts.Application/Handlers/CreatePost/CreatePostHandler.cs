@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using SlimMessageBus;
+using StoryBlog.Web.Common.Application;
 using StoryBlog.Web.Common.Domain;
 using StoryBlog.Web.Common.Events;
 using StoryBlog.Web.Microservices.Posts.Application.Extensions;
@@ -7,7 +8,7 @@ using StoryBlog.Web.Microservices.Posts.Domain.Entities;
 
 namespace StoryBlog.Web.Microservices.Posts.Application.Handlers.CreatePost;
 
-public sealed class CreatePostHandler : MediatR.IRequestHandler<CreatePostCommand, Guid?>
+public sealed class CreatePostHandler : HandlerBase, MediatR.IRequestHandler<CreatePostCommand, Guid?>
 {
     private readonly IUnitOfWork context;
     private readonly IMessageBus messageBus;

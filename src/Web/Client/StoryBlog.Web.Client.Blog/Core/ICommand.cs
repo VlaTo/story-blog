@@ -2,9 +2,9 @@
 
 public interface ICommand<T>
 {
-    event EventHandler<T>? CanExecuteChanged;
+    event EventHandler<T> CanExecuteChanged;
 
-    bool CanExecute(T? parameter);
+    bool CanExecute(T parameter);
 
-    void Execute(T? parameter);
+    void Execute(T parameter);
 }

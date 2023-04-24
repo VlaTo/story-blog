@@ -49,7 +49,7 @@
                         <CascadingValue Name="EditorCoordinator" Value=@EditorCoordinator>
                             @foreach (var comment in comments)
                             {
-                                <Comment Key=@comment.Key CreatedDateTime=@comment.CreatedAt Comments=@comment.Comments Class="pa-2">
+                                <Comment Key=@comment.Key PostKey=@post.Key CreatedDateTime=@comment.CreatedAt Comments=@comment.Comments Class="pa-2" SendReplyCommand=@SendReply>
                                     <ChildContent>
                                         @comment.Text
                                     </ChildContent>

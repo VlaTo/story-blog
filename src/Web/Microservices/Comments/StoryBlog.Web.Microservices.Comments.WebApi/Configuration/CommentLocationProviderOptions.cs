@@ -1,6 +1,6 @@
-﻿namespace StoryBlog.Web.Microservices.Posts.WebApi.Configuration;
+﻿namespace StoryBlog.Web.Microservices.Comments.WebApi.Configuration;
 
-public sealed class PostLocationProviderOptions
+public class CommentLocationProviderOptions
 {
     internal const string SectionName = "LocationProvider";
 

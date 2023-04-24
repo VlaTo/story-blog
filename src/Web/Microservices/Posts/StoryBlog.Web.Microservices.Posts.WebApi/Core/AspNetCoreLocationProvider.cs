@@ -5,12 +5,12 @@ using StoryBlog.Web.Microservices.Posts.WebApi.Configuration;
 
 namespace StoryBlog.Web.Microservices.Posts.WebApi.Core;
 
-internal sealed class PostLocationProvider : IPostLocationProvider
+internal sealed class AspNetCoreLocationProvider : ILocationProvider
 {
     private readonly IUrlHelperFactory urlHelperFactory;
     private readonly PostLocationProviderOptions options;
 
-    public PostLocationProvider(IUrlHelperFactory urlHelperFactory, IOptions<PostLocationProviderOptions> options)
+    public AspNetCoreLocationProvider(IUrlHelperFactory urlHelperFactory, IOptions<PostLocationProviderOptions> options)
     {
         this.urlHelperFactory = urlHelperFactory;
         this.options = options.Value;

@@ -1,7 +1,12 @@
-﻿using Fluxor;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Security.Principal;
+using System.Windows.Input;
+using Fluxor;
 using Microsoft.AspNetCore.Components;
+using StoryBlog.Web.Client.Blog.Components;
 using StoryBlog.Web.Client.Blog.Core;
 using StoryBlog.Web.Client.Blog.Store.BlogUseCase;
+using StoryBlog.Web.Client.Blog.Store.CreateCommentUseCase;
 
 namespace StoryBlog.Web.Client.Blog.Pages;
 
@@ -35,14 +40,36 @@ public partial class Blog
         set;
     }
 
+    private ICommand<Comment> SendReply
+    {
+        get;
+    }
+
+    public Blog()
+    {
+        SendReply = new DelegateCommand<Comment>(DoSendReply);
+    }
+
+    public override Task SetParametersAsync(ParameterView parameters)
+    {
+        return base.SetParametersAsync(parameters);
+    }
+
     protected override void OnInitialized()
     {
         base.OnInitialized();
         Dispatcher.Dispatch(new FetchPostReferenceAction(Slug));
     }
 
-    public override Task SetParametersAsync(ParameterView parameters)
+    private void DoSendReply(Comment parameter)
     {
-        return base.SetParametersAsync(parameters);
+        var action = new CreateCommentAction(
+            parameter.PostKey,
+            parameter.ParentKey,
+            parameter.CommentReply!,
+            DateTime.UtcNow
+        );
+
+        Dispatcher.Dispatch(action);
     }
 }

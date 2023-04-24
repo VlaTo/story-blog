@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Localization;
 using MudBlazor.Utilities;
 
 namespace StoryBlog.Web.Client.Blog.Components;
@@ -44,6 +45,13 @@ public partial class DateTimeView
         set;
     }
 
+    [Inject]
+    internal IStringLocalizer<DateTimeView> Localizer
+    {
+        get;
+        set;
+    }
+
     public DateTimeView()
     {
         Mode = DateTimeMode.DateOnly;
@@ -57,28 +65,30 @@ public partial class DateTimeView
             {
                 case DateTimeMode.DateOnly:
                 {
-                    return DateTime.Value.ToShortDateString();
+                    return DateTime.Value.ToShortDateString(); // d
                 }
 
                 case DateTimeMode.TimeOnly:
                 {
-                    return DateTime.Value.ToShortTimeString();
+                    return DateTime.Value.ToShortTimeString(); // t
                 }
 
                 case DateTimeMode.RelativeFromCurrent:
                 {
                     var now = System.DateTime.UtcNow;
-
-                    if (now.Date == DateTime.Value.Date)
-                    {
-                        return DateTime.Value.ToShortTimeString();
-                    }
-
-                    return DateTime.Value.ToString("g");
+                    return FormatDateTime(
+                        now.Date == DateTime.Value.Date ? "TodayDateTimeFormat" : "GeneralDateTimeFormat"
+                    );
                 }
             }
         }
 
         return String.Empty;
+    }
+
+    private string FormatDateTime(string formatKey)
+    {
+        var format = Localizer[formatKey];
+        return String.Format(format, DateTime!.Value);
     }
 }

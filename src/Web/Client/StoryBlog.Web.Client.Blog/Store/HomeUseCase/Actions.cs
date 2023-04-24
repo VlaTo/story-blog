@@ -38,7 +38,7 @@ public class PostsPageAction
         get;
     }
 
-    protected PostsPageAction(int pageNumber, int pageSize)
+    public PostsPageAction(int pageNumber, int pageSize)
     {
         PageNumber = pageNumber;
         PageSize = pageSize;

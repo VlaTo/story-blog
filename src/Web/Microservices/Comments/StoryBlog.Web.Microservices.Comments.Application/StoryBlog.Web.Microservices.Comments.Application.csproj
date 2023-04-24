@@ -16,9 +16,10 @@
   <ItemGroup>
     <Folder Include="Extensions\" />
     <Folder Include="Handlers\GetComments\" />
+    <Folder Include="Handlers\CreateComment\" />
+    <Folder Include="Handlers\GetComment\" />
     <Folder Include="MessageBus\Handlers\" />
     <Folder Include="Contexts\" />
-    <Folder Include="Models\" />
   </ItemGroup>
 
   <ItemGroup>

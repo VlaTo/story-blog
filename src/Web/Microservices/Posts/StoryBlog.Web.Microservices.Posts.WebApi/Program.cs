@@ -19,7 +19,7 @@ builder.Configuration.AddJsonFile("appsettings.authentication.json", optional: t
 
 builder.Services.AddInfrastructureServices();
 builder.Services.AddInfrastructureDbContext(builder.Configuration, "Database");
-builder.Services.AddScoped<IPostLocationProvider, PostLocationProvider>();
+builder.Services.AddScoped<ILocationProvider, AspNetCoreLocationProvider>();
 builder.Services.AddApplicationServices();
 builder.Services
     .AddOptions<PostLocationProviderOptions>()

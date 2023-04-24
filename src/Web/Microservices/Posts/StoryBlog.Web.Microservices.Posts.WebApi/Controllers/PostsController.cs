@@ -21,13 +21,13 @@ public class PostsController : Controller
 {
     private readonly IMediator mediator;
     private readonly IMapper mapper;
-    private readonly IPostLocationProvider locationProvider;
+    private readonly ILocationProvider locationProvider;
     private readonly ILogger<PostsController> logger;
 
     public PostsController(
         IMediator mediator,
         IMapper mapper,
-        IPostLocationProvider locationProvider,
+        ILocationProvider locationProvider,
         ILogger<PostsController> logger)
     {
         this.mediator = mediator;

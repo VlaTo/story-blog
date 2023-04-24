@@ -28,16 +28,19 @@ public sealed class DelegateCommand : DelegateCommandBase
     protected override void Execute(object? parameter) => Execute();
 }
 
-public sealed class DelegateCommand<T> : DelegateCommandBase
+public sealed class DelegateCommand<T> : DelegateCommandBase, ICommand<T>
 {
     private readonly Action<T> executeMethod;
     private readonly Func<T, bool> canExecuteMethod;
+
+    public event EventHandler<T> CanExecuteChanged;
 
     public DelegateCommand(Action<T> executeMethod, Func<T, bool>? canExecuteMethod = null)
     {
         this.executeMethod = executeMethod;
         this.canExecuteMethod = canExecuteMethod ?? Stub<T>.True;
     }
+
     public bool CanExecute(T parameter)
     {
         var handler = canExecuteMethod;

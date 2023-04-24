@@ -24,7 +24,6 @@
 
   <ItemGroup>
     <Folder Include="Configuration\AutoMapper\Profiles\" />
-    <Folder Include="Core\" />
     <Folder Include="Data\" />
     <Folder Include="Services\" />
     <Folder Include="Extensions\" />

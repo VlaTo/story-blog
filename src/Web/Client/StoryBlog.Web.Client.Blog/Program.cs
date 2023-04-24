@@ -50,6 +50,7 @@ builder.Services.AddFluxor(options =>
         .ScanAssemblies(typeof(App).Assembly)
         .AddMiddleware<FluxorLoggingMiddleware>();
 });
+builder.Services.AddLocalization();
 builder.Services.AddScoped(provider => new HttpClient
 {
     BaseAddress = new Uri(builder.HostEnvironment.BaseAddress)

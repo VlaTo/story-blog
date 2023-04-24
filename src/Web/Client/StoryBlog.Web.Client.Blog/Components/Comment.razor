@@ -5,7 +5,7 @@
             <DateTimeView DateTime=@CreatedDateTime Mode=@DateTimeMode.RelativeFromCurrent/>
         </div>
         <MudSpacer/>
-        <MudIconButton ButtonType=@ButtonType.Button Icon=@Icons.Material.Filled.Reply Size=@Size.Small Command=@Reply />
+        <MudIconButton ButtonType=@ButtonType.Button Icon=@Icons.Material.Filled.Reply Size=@Size.Small Command=@OpenReply />
     </div>
     <div class="storyblog-comment-content">
         @ChildContent
@@ -13,22 +13,25 @@
     
     @if (Mode.Reply == mode)
     {
-        <MarkdownEditor Class="mt-4" AutoFocus=@true @bind-Text=@CommentReply>
-            <Toolbar>
-                <ToolbarGroup>
-                    <ToolbarActionButton EditorAction=@EditorAction.Undo />
-                    <ToolbarActionButton EditorAction=@EditorAction.Redo />
-                </ToolbarGroup>
-                <ToolbarGroup>
-                    <ToolbarActionButton EditorAction=@EditorAction.Bold />
-                    <ToolbarActionButton EditorAction=@EditorAction.Italic />
-                    <ToolbarActionButton EditorAction=@EditorAction.Underline />
-                </ToolbarGroup>
-            </Toolbar>
-        </MarkdownEditor>
+        <div class="storyblog-comment-reply">
+            <MarkdownEditor Class="mt-4" AutoFocus=@true @bind-Text=@CommentReply>
+                <Toolbar>
+                    <ToolbarGroup>
+                        <ToolbarActionButton EditorAction=@EditorAction.Undo />
+                        <ToolbarActionButton EditorAction=@EditorAction.Redo />
+                    </ToolbarGroup>
+                    <ToolbarGroup>
+                        <ToolbarActionButton EditorAction=@EditorAction.Bold />
+                        <ToolbarActionButton EditorAction=@EditorAction.Italic />
+                        <ToolbarActionButton EditorAction=@EditorAction.Underline />
+                    </ToolbarGroup>
+                </Toolbar>
+            </MarkdownEditor>
 
-        <div style="background: #20b2aa; height: 200px; width: 100%;" class="d-flex">
-            <MudIconButton ButtonType=@ButtonType.Button Icon=@Icons.Material.Filled.Close Size=@Size.Small Command=@CancelReply />
+            <div class="storyblog-comment-reply-actions">
+                <MudButton ButtonType=@ButtonType.Button Icon=@Icons.Material.Filled.Cancel Size=@Size.Small Command=@CancelReply>@Localizer["ButtonCancelReply"]</MudButton>
+                <MudButton ButtonType=@ButtonType.Button Icon=@Icons.Material.Filled.Send Size=@Size.Small Command=@SendReply>@Localizer["ButtonSendReply"]</MudButton>
+            </div>
         </div>
     }
     
@@ -39,7 +42,7 @@
             {
                 var comment = Comments[index];
 
-                <Comment Key=@comment.Key CreatedDateTime=@comment.CreatedAt Comments=@comment.Comments Class="pa-1">
+                <Comment Key=@comment.Key ParentKey=@Key PostKey=@PostKey CreatedDateTime=@comment.CreatedAt Comments=@comment.Comments Class="pa-1">
                     <ChildContent>
                         @comment.Text
                     </ChildContent>
