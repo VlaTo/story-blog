@@ -8,6 +8,7 @@ using StoryBlog.Web.Common.Events;
 using StoryBlog.Web.Identity.Extensions;
 using StoryBlog.Web.Microservices.Posts.Application.Contexts;
 using StoryBlog.Web.Microservices.Posts.Application.Extensions;
+using StoryBlog.Web.Microservices.Posts.Application.MessageBus.Handlers;
 using StoryBlog.Web.Microservices.Posts.Infrastructure.Extensions;
 using StoryBlog.Web.Microservices.Posts.WebApi.Configuration;
 using StoryBlog.Web.Microservices.Posts.WebApi.Core;
@@ -34,13 +35,25 @@ builder.Services.AddAutoMapper(configuration =>
     configuration.AddWebApiMappingProfiles();
 });
 builder.Services.AddSlimMessageBus(buses => buses
-    .AddChildBus("default", bus => bus
-        .Produce<BlogPostEvent>(x => x.DefaultTopic("blog-post"))
-        .WithProviderNamedPipes(settings =>
-        {
-            settings.Instances = 3;
-        })
-    )
+    .AddChildBus("default", bus =>
+    {
+        bus
+            .Consume<BlogCommentEvent>(x => x
+                .Topic("blog-comment")
+                .PerMessageScopeEnabled(true)
+                .WithConsumer<BlogCommentEventHandler>()
+            )
+            .AutoStartConsumersEnabled(true)
+            .WithProviderNamedPipes();
+
+        bus
+            .Produce<BlogPostEvent>(x => x.DefaultTopic("blog-post"))
+            .WithProviderNamedPipes(settings =>
+            {
+                settings.Instances = 1;
+            });
+
+    })
     .AddJsonSerializer()
     .AddAspNet()
 );

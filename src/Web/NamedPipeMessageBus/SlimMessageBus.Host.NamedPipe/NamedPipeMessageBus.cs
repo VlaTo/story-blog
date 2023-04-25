@@ -101,9 +101,12 @@ namespace SlimMessageBus.Host.NamedPipe
                 tasks.Add(processor.ExecuteAsync(CancellationToken.None, Settings.ServiceProvider));
             }
 
-            foreach (var processor in consumers.ToArray())
+            if (Settings.AutoStartConsumers)
             {
-                tasks.Add(processor.ExecuteAsync(CancellationToken.None, Settings.ServiceProvider));
+                foreach (var processor in consumers.ToArray())
+                {
+                    tasks.Add(processor.ExecuteAsync(CancellationToken.None, Settings.ServiceProvider));
+                }
             }
 
             executingTask = Task.WhenAll(tasks);

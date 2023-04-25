@@ -42,7 +42,7 @@
             {
                 var comment = Comments[index];
 
-                <Comment Key=@comment.Key ParentKey=@Key PostKey=@PostKey CreatedDateTime=@comment.CreatedAt Comments=@comment.Comments Class="pa-1">
+                <Comment Key=@comment.Key ParentKey=@Key PostKey=@PostKey CreatedDateTime=@comment.CreatedAt Comments=@comment.Comments Class="pa-1" SendReplyCommand=@SendReplyCommand>
                     <ChildContent>
                         @comment.Text
                     </ChildContent>

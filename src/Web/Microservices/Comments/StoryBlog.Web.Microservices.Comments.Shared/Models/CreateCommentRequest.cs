@@ -26,11 +26,4 @@ public sealed class CreateCommentRequest
         get;
         set;
     }
-
-    [Required]
-    public DateTime DateTime
-    {
-        get;
-        set;
-    }
 }

@@ -44,13 +44,34 @@ internal sealed class PostEntityConfiguration : IEntityTypeConfiguration<Post>
                     .WithOwner(x => x.Post)
                     .HasForeignKey(x => x.PostId);
 
-                slug.Property(x => x.Text)
+                slug
+                    .Property(x => x.Text)
                     .HasMaxLength(200)
                     .IsRequired();
 
-                slug.HasIndex(x => x.Text).IsUnique(unique: true);
+                slug
+                    .HasIndex(x => x.Text)
+                    .IsUnique(unique: true);
 
                 slug.ToTable("Slugs");
+            });
+
+        builder.OwnsOne(
+            x => x.CommentsCounter,
+            counter =>
+            {
+                counter
+                    .WithOwner(x => x.Post)
+                    .HasForeignKey(x => x.PostId);
+
+                counter.Property(x => x.Counter)
+                    .IsRequired();
+
+                counter
+                    .HasIndex(x => x.PostId)
+                    .IsUnique(unique: true);
+
+                counter.ToTable("CommentsCounters");
             });
 
         builder.HasKey(x => x.Id);

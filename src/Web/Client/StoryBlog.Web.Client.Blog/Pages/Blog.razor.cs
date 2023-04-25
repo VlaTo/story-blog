@@ -65,9 +65,8 @@ public partial class Blog
     {
         var action = new CreateCommentAction(
             parameter.PostKey,
-            parameter.ParentKey,
-            parameter.CommentReply!,
-            DateTime.UtcNow
+            parameter.Key,
+            parameter.CommentReply!
         );
 
         Dispatcher.Dispatch(action);

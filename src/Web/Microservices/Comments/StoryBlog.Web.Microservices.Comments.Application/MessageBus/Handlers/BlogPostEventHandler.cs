@@ -6,12 +6,14 @@ using StoryBlog.Web.Microservices.Comments.Domain.Specifications;
 
 namespace StoryBlog.Web.Microservices.Comments.Application.MessageBus.Handlers;
 
-public sealed class BlogPostSubmittedEventHandler : IConsumer<BlogPostEvent>
+public sealed class BlogPostEventHandler : IConsumer<BlogPostEvent>
 {
     private readonly IUnitOfWork context;
-    private readonly ILogger<BlogPostSubmittedEventHandler> logger;
+    private readonly ILogger<BlogPostEventHandler> logger;
 
-    public BlogPostSubmittedEventHandler(IUnitOfWork context, ILogger<BlogPostSubmittedEventHandler> logger)
+    public BlogPostEventHandler(
+        IUnitOfWork context,
+        ILogger<BlogPostEventHandler> logger)
     {
         this.context = context;
         this.logger = logger;

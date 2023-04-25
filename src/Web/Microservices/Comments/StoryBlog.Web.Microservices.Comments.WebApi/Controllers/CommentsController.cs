@@ -76,8 +76,12 @@ public sealed class CommentsController : Controller
             return BadRequest();
         }
 
-        var createCommentDetails = new Application.Models.CreateCommentDetails(
-        );
+        var createCommentDetails = new Application.Models.CreateCommentDetails
+        {
+            PostKey = request.PostKey,
+            ParentKey = request.ParentKey,
+            Text = request.Text
+        };
 
         var command = new CreateCommentCommand(createCommentDetails, User);
         var createdCommentKey = await mediator.Send(command).ConfigureAwait(false);

@@ -1,32 +1,26 @@
-﻿using StoryBlog.Web.Microservices.Posts.Domain.Entities;
-using System.Collections;
+﻿using System.Collections;
+using Microsoft.EntityFrameworkCore;
 using StoryBlog.Web.Common.Domain;
 using StoryBlog.Web.Common.Domain.Entities;
 using StoryBlog.Web.Common.Domain.Repositories;
 using StoryBlog.Web.Common.Infrastructure.Repositories;
 
-namespace StoryBlog.Web.Microservices.Posts.Infrastructure.Persistence;
+namespace StoryBlog.Web.Common.Infrastructure;
 
-public sealed class UnitOfWork : IUnitOfWork
+public sealed class UnitOfWork<T> : IUnitOfWork
+    where T : GenericDbContext
 {
     private readonly Hashtable repositories;
-    private readonly PostsDbContext context;
+    private T? context;
+    private bool disposed;
 
-    public UnitOfWork(PostsDbContext context)
+    public UnitOfWork(T context)
     {
         this.context = context;
         repositories = new Hashtable();
     }
 
-    public ValueTask DisposeAsync()
-    {
-        if (context.ChangeTracker.HasChanges())
-        {
-            ;
-        }
-        
-        return ValueTask.CompletedTask;
-    }
+    public ValueTask DisposeAsync() => DisposeAsync(true);
 
     public IGenericRepository<TEntity> GetRepository<TEntity>() where TEntity : IEntity
     {
@@ -39,8 +33,8 @@ public sealed class UnitOfWork : IUnitOfWork
         }
         else
         {
-            var repositoryType = typeof(GenericRepository<,>).MakeGenericType(entityType, typeof(PostsDbContext));
-            
+            var repositoryType = typeof(GenericRepository<,>).MakeGenericType(entityType, typeof(T));
+
             instance = Activator.CreateInstance(repositoryType, context);
             repositories.Add(entityType, instance);
         }
@@ -55,6 +49,31 @@ public sealed class UnitOfWork : IUnitOfWork
 
     public Task CommitAsync(CancellationToken cancellationToken = default)
     {
-        return context.SaveChangesAsync(cancellationToken);
+        return context!.SaveChangesAsync(cancellationToken);
+    }
+
+    private async ValueTask DisposeAsync(bool dispose)
+    {
+        if (disposed)
+        {
+            return ;
+        }
+
+        try
+        {
+            if (dispose)
+            {
+                if (context!.ChangeTracker.HasChanges())
+                {
+                    await context!.RollbackAsync();
+                }
+
+                context = null;
+            }
+        }
+        finally
+        {
+            disposed = true;
+        }
     }
 }

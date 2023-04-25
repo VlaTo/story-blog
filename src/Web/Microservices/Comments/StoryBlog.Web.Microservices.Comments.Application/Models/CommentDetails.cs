@@ -10,6 +10,12 @@ public class CommentDetails
         set;
     }
 
+    public Guid? ParentKey
+    {
+        get;
+        set;
+    }
+
     public Guid PostKey
     {
         get;

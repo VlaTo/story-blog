@@ -10,6 +10,7 @@ public static class AutoMapperConfigurationExpressionExtensions
         expression.CreateMap<Domain.Entities.Comment, Comment>()
             .ForMember(destination => destination.Key, source => source.MapFrom(x => x.Key))
             .ForMember(destination => destination.PostKey, source => source.MapFrom(x => x.PostKey))
+            .ForMember(destination => destination.ParentKey, source => source.MapFrom(x => x.Parent.Key))
             .ForMember(destination => destination.Text, source => source.MapFrom(x => x.Text))
             .ForMember(destination => destination.Comments, source => source.MapFrom(x => x.Comments))
             .ForMember(destination => destination.Status, source => source.MapFrom(x => x.Status))

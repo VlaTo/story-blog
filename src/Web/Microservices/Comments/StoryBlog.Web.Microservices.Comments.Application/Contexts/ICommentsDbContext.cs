@@ -1,15 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using StoryBlog.Web.Common.Application;
 using StoryBlog.Web.Microservices.Comments.Domain.Entities;
 
 namespace StoryBlog.Web.Microservices.Comments.Application.Contexts;
 
-public interface ICommentsDbContext : IAsyncDisposable
+public interface ICommentsDbContext : IAsyncDisposable, IGenericDbContext
 {
-    public DbSet<Comment> Comments
+    DbSet<Comment> Comments
     {
         get;
     }
-
-    public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
-
 }

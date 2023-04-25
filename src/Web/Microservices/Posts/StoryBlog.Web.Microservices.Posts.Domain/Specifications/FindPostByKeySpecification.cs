@@ -9,5 +9,6 @@ public sealed class FindPostByKeySpecification : SpecificationBase<Post>
     {
         Criteria = entity => entity.Key == key;
         Includes.Add(entity => entity.Slug);
+        Includes.Add(entity => entity.CommentsCounter);
     }
 }

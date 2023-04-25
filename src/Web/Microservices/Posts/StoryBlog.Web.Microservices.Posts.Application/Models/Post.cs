@@ -22,6 +22,12 @@ public sealed class Post : PostDetails
         set;
     }
 
+    public long CommentsCount
+    {
+        get;
+        set;
+    }
+
     public DateTime CreatedAt
     {
         get;

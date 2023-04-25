@@ -13,6 +13,20 @@ public class CommentDetailsModel
         set;
     }
 
+    [JsonPropertyName(nameof(PostKey))]
+    public Guid PostKey
+    {
+        get;
+        set;
+    }
+
+    [JsonPropertyName(nameof(ParentKey))]
+    public Guid? ParentKey
+    {
+        get;
+        set;
+    }
+
     [JsonPropertyName(nameof(Text))]
     public string Text
     {

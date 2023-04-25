@@ -1,14 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using StoryBlog.Web.Common.Application;
 using StoryBlog.Web.Microservices.Posts.Domain.Entities;
 
 namespace StoryBlog.Web.Microservices.Posts.Application.Contexts;
 
-public interface IPostsDbContext : IAsyncDisposable
+public interface IPostsDbContext : IAsyncDisposable, IGenericDbContext
 {
-    public DbSet<Post> Posts
+    DbSet<Post> Posts
     {
         get;
     }
-
-    public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

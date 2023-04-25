@@ -34,13 +34,24 @@ builder.Services.AddAutoMapper(configuration =>
     configuration.AddWebApiMappingProfiles();
 });
 builder.Services.AddSlimMessageBus(buses => buses
-    .AddChildBus("default", bus => bus
-        .Consume<BlogPostEvent>(x => x
-            .Topic("blog-post")
-            .WithConsumer<BlogPostSubmittedEventHandler>()
-        )
-        .WithProviderNamedPipes()
-    )
+    .AddChildBus("default", bus =>
+    {
+        bus
+            .Consume<BlogPostEvent>(x => x
+                .Topic("blog-post")
+                .PerMessageScopeEnabled(true)
+                .WithConsumer<BlogPostEventHandler>()
+            )
+            .AutoStartConsumersEnabled(true)
+            .WithProviderNamedPipes();
+
+        bus
+            .Produce<BlogCommentEvent>(x => x.DefaultTopic("blog-comment"))
+            .WithProviderNamedPipes(settings =>
+            {
+                settings.Instances = 1;
+            });
+    })
     .AddJsonSerializer()
     .AddAspNet()
 );

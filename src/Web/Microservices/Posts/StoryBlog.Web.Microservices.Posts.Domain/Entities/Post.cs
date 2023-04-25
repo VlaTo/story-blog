@@ -28,6 +28,12 @@ public class Post : Entity, IHasId<long>
         set;
     }
 
+    public CommentsCounter CommentsCounter
+    {
+        get;
+        set;
+    }
+
     public bool IsPublic
     {
         get;

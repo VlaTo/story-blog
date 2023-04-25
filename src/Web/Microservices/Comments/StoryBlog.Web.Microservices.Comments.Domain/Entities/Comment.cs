@@ -47,7 +47,7 @@ public sealed class Comment : Entity, IHasId<long>
         set;
     }
 
-    public Comment Parent
+    public Comment? Parent
     {
         get;
         set;

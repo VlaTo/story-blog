@@ -12,6 +12,7 @@ public static class AutoMapperConfigurationExpressionExtensions
             .ForMember(destination => destination.Title, source => source.MapFrom(x => x.Title))
             .ForMember(destination => destination.Slug, source => source.MapFrom(x => x.Slug.Text))
             .ForMember(destination => destination.Status, source => source.MapFrom(x => x.Status))
+            .ForMember(destination => destination.CommentsCount, source => source.MapFrom(x => x.CommentsCounter.Counter))
             .ForMember(destination => destination.CreatedAt, source => source.MapFrom(x => x.CreateAt))
             ;
 

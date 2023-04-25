@@ -23,6 +23,14 @@ public class PostModel : PostDetailsModel
     }
 
     [DataMember]
+    [JsonPropertyName(nameof(CommentsCount))]
+    public long CommentsCount
+    {
+        get;
+        set;
+    }
+
+    [DataMember]
     [JsonPropertyName(nameof(CreatedAt))]
     public DateTime CreatedAt
     {

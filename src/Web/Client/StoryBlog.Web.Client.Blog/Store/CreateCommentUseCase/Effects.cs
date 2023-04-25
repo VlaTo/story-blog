@@ -16,7 +16,7 @@ public class CreateCommentActionEffect : Effect<CreateCommentAction>
     {
         try
         {
-            await client.CreateCommentAsync(action.PostKey, action.Text, action.DateTime);
+            await client.CreateCommentAsync(action.PostKey, action.ParentKey, action.Text);
 
             //dispatcher.Dispatch(new );
         }

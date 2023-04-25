@@ -1,4 +1,5 @@
 ﻿using StoryBlog.Web.Microservices.Comments.Shared.Models;
+using CreatedCommentModel = StoryBlog.Web.Client.Blog.Models.CreatedCommentModel;
 
 namespace StoryBlog.Web.Client.Blog.Clients.Interfaces;
 
@@ -8,5 +9,5 @@ public interface ICommentsClient
 
     Task<CommentModel?> GetCommentAsync(Guid commentKey);
 
-    Task CreateCommentAsync(Guid postKey, Guid? parentKey, string text, DateTime dateTime);
+    Task<CreatedCommentModel?> CreateCommentAsync(Guid postKey, Guid? parentKey, string text);
 }

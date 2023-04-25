@@ -15,6 +15,15 @@ public static class AutoMapperConfigurationExpressionExtensions
             .ForMember(destination => destination.CreatedAt, source => source.MapFrom(x => x.CreatedAt))
             ;
 
+        expression.CreateMap<Application.Models.Comment, CreatedCommentModel>()
+            .ForMember(destination => destination.Key, source => source.MapFrom(x => x.Key))
+            .ForMember(destination => destination.PostKey, source => source.MapFrom(x => x.PostKey))
+            .ForMember(destination => destination.PostKey, source => source.MapFrom(x => x.ParentKey))
+            .ForMember(destination => destination.Text, source => source.MapFrom(x => x.Text))
+            .ForMember(destination => destination.Status, source => source.MapFrom(x => x.Status))
+            .ForMember(destination => destination.CreatedAt, source => source.MapFrom(x => x.CreatedAt))
+            ;
+
         return expression;
     }
 }

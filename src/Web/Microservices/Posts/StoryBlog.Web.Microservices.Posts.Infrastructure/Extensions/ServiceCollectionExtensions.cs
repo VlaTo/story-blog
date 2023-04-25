@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using StoryBlog.Web.Common.Domain;
+using StoryBlog.Web.Common.Infrastructure;
 using StoryBlog.Web.Microservices.Posts.Infrastructure.Persistence;
 
 namespace StoryBlog.Web.Microservices.Posts.Infrastructure.Extensions;
@@ -10,7 +11,7 @@ public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddInfrastructureServices(this IServiceCollection services)
     {
-        services.AddTransient<IUnitOfWork, UnitOfWork>();
+        services.AddScoped<IUnitOfWork, UnitOfWork<PostsDbContext>>();
 
         return services;
     }

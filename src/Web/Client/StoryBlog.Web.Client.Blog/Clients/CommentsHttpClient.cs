@@ -6,6 +6,7 @@ using StoryBlog.Web.Microservices.Comments.Shared.Models;
 using System.Diagnostics;
 using System.Net.Http.Json;
 using System.Text.Json;
+using StoryBlog.Web.Client.Blog.Models;
 
 namespace StoryBlog.Web.Client.Blog.Clients;
 
@@ -73,7 +74,7 @@ internal sealed class CommentsHttpClient : HttpClientBase, ICommentsClient
         }
     }
 
-    public async Task CreateCommentAsync(Guid postKey, Guid? parentKey, string text, DateTime dateTime)
+    public async Task<Models.CreatedCommentModel?> CreateCommentAsync(Guid postKey, Guid? parentKey, string text)
     {
         var request = new HttpRequestMessage(HttpMethod.Post, options.Endpoints.Comments.BasePath);
 
@@ -89,8 +90,7 @@ internal sealed class CommentsHttpClient : HttpClientBase, ICommentsClient
         {
             PostKey = postKey,
             ParentKey = parentKey,
-            Text = text,
-            DateTime = dateTime
+            Text = text
         });
 
         try
@@ -101,7 +101,19 @@ internal sealed class CommentsHttpClient : HttpClientBase, ICommentsClient
 
                 using (var stream = await message.Content.ReadAsStreamAsync())
                 {
-                    await JsonSerializer.DeserializeAsync<CommentModel>(stream);
+                    var createdComment = await JsonSerializer.DeserializeAsync<CommentModel>(stream);
+
+                    if (null != createdComment)
+                    {
+                        return new Models.CreatedCommentModel(
+                            createdComment.Key,
+                            createdComment.PostKey,
+                            createdComment.ParentKey,
+                            createdComment.Text,
+                            createdComment.Status,
+                            createdComment.CreatedAt
+                        );
+                    }
                 }
             }
         }
@@ -109,5 +121,7 @@ internal sealed class CommentsHttpClient : HttpClientBase, ICommentsClient
         {
             Debug.WriteLine(exception);
         }
+
+        return null;
     }
 }

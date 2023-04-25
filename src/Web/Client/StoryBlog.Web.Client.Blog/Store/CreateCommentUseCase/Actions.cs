@@ -5,4 +5,4 @@
 /// </summary>
 /// <param name="Text"></param>
 /// <param name="DateTime"></param>
-public sealed record CreateCommentAction(Guid PostKey, Guid? ParentKey, string Text, DateTime DateTime);
+public sealed record CreateCommentAction(Guid PostKey, Guid? ParentKey, string Text);

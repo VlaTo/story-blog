@@ -20,6 +20,7 @@
     <Folder Include="Handlers\GenerateSlug\" />
     <Folder Include="Core\" />
     <Folder Include="Handlers\GetPostReference\" />
+    <Folder Include="MessageBus\Handlers\" />
   </ItemGroup>
 
   <ItemGroup>

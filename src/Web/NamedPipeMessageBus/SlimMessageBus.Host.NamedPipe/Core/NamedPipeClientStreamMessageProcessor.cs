@@ -72,9 +72,8 @@ internal sealed class NamedPipeClientStreamMessageProcessor : IAsyncDisposable
 
                                 if (null != method)
                                 {
-
-                                    var consumer = ActivatorUtilities.GetServiceOrCreateInstance(serviceProvider,
-                                        ConsumerSettings!.ConsumerType);
+                                    var scope = CreateAsyncServiceScope(serviceProvider!);
+                                    var consumer = ActivatorUtilities.GetServiceOrCreateInstance(scope.ServiceProvider, ConsumerSettings!.ConsumerType);
 
                                     if (null == consumer)
                                     {
@@ -100,9 +99,9 @@ internal sealed class NamedPipeClientStreamMessageProcessor : IAsyncDisposable
         {
             ;
         }
-        catch (Exception)
+        catch (Exception exception)
         {
-            ;
+            logger.LogError(exception, nameof(NamedPipeClientStreamMessageProcessor));
         }
         finally
         {
@@ -110,8 +109,36 @@ internal sealed class NamedPipeClientStreamMessageProcessor : IAsyncDisposable
         }
     }
 
-    public ValueTask DisposeAsync()
+    public ValueTask DisposeAsync() => ValueTask.CompletedTask;
+
+    private AsyncServiceScope CreateAsyncServiceScope(IServiceProvider serviceProvider)
     {
-        throw new NotImplementedException();
+        if (ConsumerSettings?.IsMessageScopeEnabled ?? false)
+        {
+            return serviceProvider.CreateAsyncScope();
+        }
+
+        return new AsyncServiceScope(new EmptyServiceScope(serviceProvider));
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    private sealed class EmptyServiceScope : IServiceScope
+    {
+        public IServiceProvider ServiceProvider
+        {
+            get;
+        }
+
+        public EmptyServiceScope(IServiceProvider serviceProvider)
+        {
+            ServiceProvider = serviceProvider;
+        }
+
+        public void Dispose()
+        {
+            ;
+        }
     }
 }
