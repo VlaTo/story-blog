@@ -67,6 +67,8 @@ builder.Services.AddCors(options =>
             .AllowAnyHeader();
     });
 });
+builder.Services.AddStoryBlogAuthentication();
+builder.Services.AddControllers();
 builder.Services.AddApiVersioning(options =>
 {
     options.DefaultApiVersion = new ApiVersion(1, 0, "alpha");
@@ -76,15 +78,14 @@ builder.Services.AddApiVersioning(options =>
 });
 builder.Services.AddVersionedApiExplorer(options =>
 {
-    options.GroupNameFormat = "'v 'VVVV";
+    options.GroupNameFormat = "'v'VVVV";
     options.SubstituteApiVersionInUrl = true;
     options.SubstitutionFormat = "VVVV";
 });
-
-builder.Services.AddStoryBlogAuthentication();
-builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.ConfigureOptions<ConfigureSwaggerOptions>();
 
 var app = builder.Build();
 

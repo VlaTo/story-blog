@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using StoryBlog.Web.Microservices.Comments.Shared.Models;
 using StoryBlog.Web.Microservices.Comments.WebApi.Core;
@@ -9,7 +8,7 @@ using StoryBlog.Web.Microservices.Comments.WebApi.Core;
 namespace StoryBlog.Web.Microservices.Comments.WebApi.Controllers;
 
 /// <summary>
-/// 
+/// Endpoint to manage blog post comment operations.
 /// </summary>
 [ApiVersion("1.0-alpha")]
 [AllowAnonymous]
@@ -32,25 +31,38 @@ public class CommentController : ControllerBase
     }
 
     /// <summary>
-    /// 
+    /// Gets comment <see cref="CommentModel" /> with <paramref name="key"/> specified.
     /// </summary>
-    /// <param name="key"></param>
-    /// <returns></returns>
+    /// <param name="key">Comment key to retrieve.</param>
+    /// <returns>The <see cref="CommentModel" />.</returns>
     [ProducesResponseType(typeof(CommentModel), StatusCodes.Status200OK)]
     [HttpGet("{key:guid:required}", Name = RouteNames.GetCommentRouteKey)]
-    public async Task<IActionResult> GetComment([FromRoute] Guid key)
+    public Task<IActionResult> GetComment([FromRoute] Guid key)
     {
-        /*var query = new GetPostQuery(key, User);
-        var postResult = await mediator.Send(query).ConfigureAwait(false);
+        throw new NotImplementedException();
+    }
 
-        if (postResult.IsSuccess())
-        {
-            var model = mapper.Map<PostModel>(postResult.Post);
-            return Ok(model);
-        }*/
+    /// <summary>
+    /// Gets comment <see cref="CommentModel" /> with <paramref name="key"/> specified.
+    /// </summary>
+    /// <param name="key">Comment key to retrieve.</param>
+    /// <returns>The <see cref="CommentModel" />.</returns>
+    //[ProducesResponseType(typeof(CommentModel), StatusCodes.Status200OK)]
+    [HttpPut("{key:guid:required}")]
+    public Task<IActionResult> UpdateComment([FromRoute] Guid key)
+    {
+        throw new NotImplementedException();
+    }
 
-        logger.LogDebug($"Post not found for slug: {key}");
-
-        return BadRequest();
+    /// <summary>
+    /// Gets comment <see cref="CommentModel" /> with <paramref name="key"/> specified.
+    /// </summary>
+    /// <param name="key">Comment key to retrieve.</param>
+    /// <returns>The <see cref="CommentModel" />.</returns>
+    //[ProducesResponseType(typeof(CommentModel), StatusCodes.Status200OK)]
+    [HttpDelete("{key:guid:required}")]
+    public Task<IActionResult> DeleteComment([FromRoute] Guid key)
+    {
+        throw new NotImplementedException();
     }
 }

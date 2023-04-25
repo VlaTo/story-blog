@@ -80,7 +80,7 @@ builder.Services.AddApiVersioning(options =>
 });
 builder.Services.AddVersionedApiExplorer(options =>
 {
-    options.GroupNameFormat = "'v 'VVVV";
+    options.GroupNameFormat = "'v'VVVV";
     options.SubstituteApiVersionInUrl = true;
     options.SubstitutionFormat = "VVVV";
 });
