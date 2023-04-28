@@ -117,19 +117,7 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="ButtonCancelReply" xml:space="preserve">
-    <value>Cancel</value>
-  </data>
-  <data name="ButtonOpenReply" xml:space="preserve">
-    <value>Reply</value>
-  </data>
-  <data name="ButtonSendReply" xml:space="preserve">
-    <value>Send</value>
-  </data>
-  <data name="ToggleCollapseComments" xml:space="preserve">
-    <value>Hide comments</value>
-  </data>
-  <data name="ToggleExpandComments" xml:space="preserve">
-    <value>Read comments</value>
+  <data name="CommentsHeaderLabel" xml:space="preserve">
+    <value>Comments:</value>
   </data>
 </root>

@@ -2,5 +2,5 @@
 
 public interface IJavaScriptInterop : IAsyncDisposable
 {
-    ValueTask<IJavaScriptMarkdownEditor> CreateEditorAsync(string selector);
+    ValueTask<IJavaScriptMarkdownEditor> CreateEditorAsync(string selector, string uniqueKey);
 }

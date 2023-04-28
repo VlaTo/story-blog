@@ -44,7 +44,7 @@ public sealed class BlogPostEventHandler : IConsumer<BlogPostEvent>
 
         await using (var repository = context.GetRepository<Domain.Entities.Comment>())
         {
-            var specification = new FindRootCommentsForPostSpecification(postKey, includeAll: false);
+            var specification = new FindRootCommentsForPost(postKey, -1, 0);
             var comments = await repository.QueryAsync(specification, CancellationToken.None);
 
             if (0 < comments.Length)

@@ -42,11 +42,13 @@ public sealed class CommentsController : Controller
     /// <returns></returns>
     [ProducesResponseType(typeof(ListAllResponse), StatusCodes.Status200OK)]
     [ProducesErrorResponseType(typeof(void))]
-    [HttpGet("{key:guid:required}")]
-    public async Task<IActionResult> ListAll([FromRoute] Guid key, [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 30)
+    [HttpGet("{postKey:guid:required}")]
+    public async Task<IActionResult> ListAll([FromRoute] Guid postKey, [FromQuery] Guid? parentKey = null, [FromQuery] int pageNumber = -1, [FromQuery] int pageSize = 0)
     {
-        var query = new GetCommentsQuery(key, pageNumber, pageSize, includeAll: true);
+        var query = new GetCommentsQuery(postKey, parentKey, pageNumber, pageSize, includeAll: true);
         var result = await mediator.Send(query);
+
+        await Task.Delay(TimeSpan.FromSeconds(5.0d));
 
         if (result.IsSuccess())
         {

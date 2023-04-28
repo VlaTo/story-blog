@@ -3,10 +3,10 @@ using StoryBlog.Web.Microservices.Comments.Domain.Entities;
 
 namespace StoryBlog.Web.Microservices.Comments.Domain.Specifications;
 
-public sealed class FindCommentSpecification : SpecificationBase<Comment>
+public sealed class FindComment : SpecificationBase<Comment>
 {
-    public FindCommentSpecification(Guid key)
+    public FindComment(Guid commentKey)
     {
-        Criteria = entity => entity.Key == key;
+        Criteria = entity => entity.Key == commentKey;
     }
 }

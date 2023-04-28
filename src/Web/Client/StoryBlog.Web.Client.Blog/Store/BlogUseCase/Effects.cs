@@ -3,9 +3,12 @@ using StoryBlog.Web.Client.Blog.Clients.Interfaces;
 
 namespace StoryBlog.Web.Client.Blog.Store.BlogUseCase;
 
+#region Blog action effects
+
 /// <summary>
 /// 
 /// </summary>
+// ReSharper disable once UnusedMember.Global
 public sealed class FetchPostReferenceActionEffect : Effect<FetchPostReferenceAction>
 {
     private readonly ISlugClient client;
@@ -17,24 +20,32 @@ public sealed class FetchPostReferenceActionEffect : Effect<FetchPostReferenceAc
 
     public override async Task HandleAsync(FetchPostReferenceAction action, IDispatcher dispatcher)
     {
-        var postReference = await client.FetchPostReferenceAsync(action.Slug);
-
-        if (null != postReference)
+        try
         {
-            var fetchPostAction = new FetchPostAction(postReference.Key);
-            
-            dispatcher.Dispatch(fetchPostAction);
-            
-            return;
-        }
+            var postReference = await client.FetchPostReferenceAsync(action.Slug);
 
-        dispatcher.Dispatch(new FetchPostFailedAction());
+            if (null != postReference)
+            {
+                var fetchPostAction = new FetchPostAction(postReference.Key);
+
+                dispatcher.Dispatch(fetchPostAction);
+
+                return;
+            }
+
+            dispatcher.Dispatch(new FetchPostFailedAction());
+        }
+        catch
+        {
+            dispatcher.Dispatch(new FetchPostFailedAction());
+        }
     }
 }
 
 /// <summary>
 /// 
 /// </summary>
+// ReSharper disable once UnusedMember.Global
 public sealed class FetchPostEffect : Effect<FetchPostAction>
 {
     private readonly IPostsClient client;
@@ -46,43 +57,115 @@ public sealed class FetchPostEffect : Effect<FetchPostAction>
 
     public override async Task HandleAsync(FetchPostAction action, IDispatcher dispatcher)
     {
-        var post = await client.GetPostAsync(action.Key);
-
-        if (null != post)
+        try
         {
-            dispatcher.Dispatch(new FetchPostReadyAction(action.Key, post));
-            return;
-        }
+            var post = await client.GetPostAsync(action.Key);
 
-        dispatcher.Dispatch(new FetchPostFailedAction());
+            if (null != post)
+            {
+                dispatcher.Dispatch(new FetchPostReadyAction(action.Key, post));
+                
+                return;
+            }
+
+            dispatcher.Dispatch(new FetchPostFailedAction());
+        }
+        catch
+        {
+            dispatcher.Dispatch(new FetchPostFailedAction());
+        }
+    }
+}
+
+#endregion
+
+#region Comments action effects
+
+/// <summary>
+/// 
+/// </summary>
+// ReSharper disable once UnusedMember.Global
+public sealed class FetchPostReadyEffect : Effect<FetchPostReadyAction>
+{
+    public override Task HandleAsync(FetchPostReadyAction action, IDispatcher dispatcher)
+    {
+        dispatcher.Dispatch(new FetchRootCommentsAction(action.Key, 1, 30));
+        return Task.CompletedTask;
     }
 }
 
 /// <summary>
 /// 
 /// </summary>
-public sealed class FetchCommentsEffect : Effect<FetchPostReadyAction>
+// ReSharper disable once UnusedMember.Global
+public sealed class FetchRootCommentsEffect : Effect<FetchRootCommentsAction>
 {
     private readonly ICommentsClient client;
 
-    public FetchCommentsEffect(ICommentsClient client)
+    public FetchRootCommentsEffect(ICommentsClient client)
     {
         this.client = client;
     }
 
-    public override async Task HandleAsync(FetchPostReadyAction action, IDispatcher dispatcher)
+    public override async Task HandleAsync(FetchRootCommentsAction action, IDispatcher dispatcher)
     {
-        var comments = await client.GetCommentsAsync(action.Key);
-
-        if (null != comments)
+        try
         {
-            var commentsReadyAction = new FetchCommentsReadyAction(action.Key, comments.Comments);
+            var comments = await client.GetRootCommentsAsync(action.PostKey, action.PageNumber, action.PageSize);
 
-            dispatcher.Dispatch(commentsReadyAction);
+            if (null != comments)
+            {
+                var commentsReadyAction = new FetchRootCommentsReadyAction(action.PostKey, action.PageNumber, action.PageSize, comments.Comments);
 
-            return;
+                dispatcher.Dispatch(commentsReadyAction);
+
+                return;
+            }
+
+            dispatcher.Dispatch(new FetchCommentsFailedAction(action.PostKey, null));
         }
-
-        dispatcher.Dispatch(new FetchCommentsFailedAction());
+        catch
+        {
+            dispatcher.Dispatch(new FetchCommentsFailedAction(action.PostKey, null));
+        }
     }
 }
+
+/// <summary>
+/// 
+/// </summary>
+// ReSharper disable once UnusedMember.Global
+public sealed class FetchChildCommentsEffect : Effect<FetchChildCommentsAction>
+{
+    private readonly ICommentsClient client;
+
+    public FetchChildCommentsEffect(ICommentsClient client)
+    {
+        this.client = client;
+    }
+
+    public override async Task HandleAsync(FetchChildCommentsAction action, IDispatcher dispatcher)
+    {
+        try
+        {
+            var comments = await client.GetChildCommentsAsync(action.PostKey, action.ParentKey);
+
+            if (null != comments)
+            {
+                var commentsReadyAction = new FetchChildCommentsReadyAction(action.PostKey, action.ParentKey, comments);
+
+                dispatcher.Dispatch(commentsReadyAction);
+
+                return;
+            }
+
+            dispatcher.Dispatch(new FetchCommentsFailedAction(action.PostKey, action.ParentKey));
+        }
+        catch
+        {
+            dispatcher.Dispatch(new FetchCommentsFailedAction(action.PostKey, action.ParentKey));
+        }
+    }
+}
+
+#endregion

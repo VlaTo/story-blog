@@ -1,16 +1,46 @@
-﻿using System.Windows.Input;
-using Microsoft.AspNetCore.Components;
+﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.Localization;
 using MudBlazor.Utilities;
 using StoryBlog.Web.Client.Blog.Core;
-using StoryBlog.Web.Microservices.Comments.Shared.Models;
 
 namespace StoryBlog.Web.Client.Blog.Components;
 
-public partial class Comment : ICommentEditor, ICommentEditorObserver, IDisposable
+/// <summary>
+/// 
+/// </summary>
+public sealed class CommentReplyEventArgs : EventArgs
+{
+    public Guid Key
+    {
+        get;
+    }
+
+    public Guid PostKey
+    {
+        get;
+    }
+
+    public Guid? ParentKey
+    {
+        get;
+    }
+
+    public CommentReplyEventArgs(Guid key, Guid postKey, Guid? parentKey)
+    {
+        Key = key;
+        PostKey = postKey;
+        ParentKey = parentKey;
+    }
+}
+
+/// <summary>
+/// 
+/// </summary>
+public partial class Comment : ICommentsObserver, IDisposable
 {
     private IDisposable? editorSubscription;
-    private Mode mode;
+    private ReplyState replyState;
 
     protected string Classname => new CssBuilder("storyblog-blog-comment")
         .AddClass(Class)
@@ -59,13 +89,13 @@ public partial class Comment : ICommentEditor, ICommentEditorObserver, IDisposab
     }
 
     [Parameter]
-    public IReadOnlyList<CommentModel>? Comments
+    public bool IsCommentsExpanded
     {
         get;
         set;
     }
 
-    public string? CommentReply
+    public string? ReplyText
     {
         get;
         private set;
@@ -79,54 +109,30 @@ public partial class Comment : ICommentEditor, ICommentEditorObserver, IDisposab
     }
 
     [Parameter]
-    public ICommand<Comment>? SendReplyCommand
+    public CommentsCollection Comments
     {
         get;
         set;
     }
 
-    [Parameter]
-    public EventCallback<Comment> OnSendReplyClick
-    {
-        get;
-        set;
-    }
-
-    [CascadingParameter(Name = nameof(EditorCoordinator))]
-    private ICommentEditorCoordinator EditorCoordinator
+    [CascadingParameter(Name = Components.Comments.CoordinatorParameterName)]
+    private ICommentsCoordinator Coordinator
     {
         get;
         set;
     }
 
     [Inject]
-    internal IStringLocalizer<Comment> Localizer
+    private IStringLocalizer<Comment> Localizer
     {
         get;
         set;
     }
 
-    private ICommand OpenReply
-    {
-        get;
-    }
-
-    private ICommand CancelReply
-    {
-        get;
-    }
-
-    private ICommand SendReply
-    {
-        get;
-    }
-
     public Comment()
     {
-        mode = Mode.Reading;
-        OpenReply = new DelegateCommand(DoReply);
-        CancelReply = new DelegateCommand(DoCancelReply);
-        SendReply = new DelegateCommand(DoSendReply);
+        replyState = ReplyState.Closed;
+        Comments = new CommentsCollection(CommentsCollectionState.Unknown, null);
     }
 
     void IDisposable.Dispose()
@@ -135,16 +141,11 @@ public partial class Comment : ICommentEditor, ICommentEditorObserver, IDisposab
         editorSubscription = null;
     }
 
-    void ICommentEditorObserver.OnEditorEventRaised(ICommentEditor editor)
+    void ICommentsObserver.OnOpenReplyComposer()
     {
-        if (ReferenceEquals(editor, this))
+        if (ReplyState.Composing == replyState)
         {
-            return ;
-        }
-
-        if (Mode.Reply == mode)
-        {
-            DoCancelReply();
+            DoCancelReplyComposer(new MouseEventArgs());
         }
     }
 
@@ -152,84 +153,78 @@ public partial class Comment : ICommentEditor, ICommentEditorObserver, IDisposab
     {
         base.OnInitialized();
 
-        editorSubscription = EditorCoordinator.Subscribe(this);
+        editorSubscription = Coordinator.Subscribe(this);
     }
 
-    private void DoReply()
+    #region Reply compose callbacks
+
+    private void DoOpenReplyComposer(MouseEventArgs _)
     {
-        if (Mode.Reply == mode)
+        if (ReplyState.Composing == replyState)
         {
             return ;
         }
 
-        mode = Mode.Reply;
+        replyState = ReplyState.Composing;
 
-        EditorCoordinator.RaiseEditorEvent(this);
+        StateHasChanged();
+
+        Coordinator.NotifyReplyComposerOpened(this);
+    }
+
+    private void DoCancelReplyComposer(MouseEventArgs _)
+    {
+        if (ReplyState.Composing != replyState)
+        {
+            return ;
+        }
+
+        replyState = ReplyState.Closed;
 
         StateHasChanged();
     }
-
-    private void DoCancelReply()
+    
+    private async Task DoSendReply(MouseEventArgs _)
     {
-        if (Mode.Reply != mode)
+        if (ReplyState.Composing != replyState)
         {
-            return ;
+            return;
         }
 
-        mode = Mode.Reading;
+        replyState = ReplyState.Publishing;
 
+        StateHasChanged();
+
+        await Coordinator.PublishReplyAsync(PostKey, Key, ReplyText!);
+        
+        replyState = ReplyState.Success;
+        
         StateHasChanged();
     }
 
-    private void DoSendReply()
+    #endregion
+
+    private async Task DoToggleComments(MouseEventArgs _)
     {
-        if (Mode.Reply != mode)
+        var expand = false == IsCommentsExpanded;
+
+        if (expand && CommentsCollectionState.Unknown == Comments.State)
         {
-            return ;
+            await Coordinator.FetchCommentsAsync(PostKey, Key);
         }
 
-        RaiseSendReplyCommand();
-        RaiseSendReplyClick();
-    }
-
-    private void RaiseSendReplyCommand()
-    {
-        var command = SendReplyCommand;
-
-        if (null != command)
-        {
-            command.Execute(this);
-        }
-    }
-
-    private void RaiseSendReplyClick()
-    {
-        var handler = OnSendReplyClick;
-
-        if (handler.HasDelegate)
-        {
-            var synchronizationContext = SynchronizationContext.Current ?? new SynchronizationContext();
-            TaskRunner.Instance.QueueTask(
-                handler.InvokeAsync(this),
-                synchronizationContext,
-                OnSendReplyClickComplete,
-                CancellationToken.None
-            );
-        }
-    }
-
-    private void OnSendReplyClickComplete()
-    {
-        ;
+        IsCommentsExpanded = expand;
     }
 
     /// <summary>
     /// 
     /// </summary>
-    private enum Mode
+    private enum ReplyState
     {
-        Reading,
-        Reply,
-        Editing
+        Failed = -1,
+        Closed,
+        Composing,
+        Publishing,
+        Success
     }
 }

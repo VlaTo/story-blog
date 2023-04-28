@@ -16,10 +16,10 @@ internal sealed class JavaScriptInterop : IJavaScriptInterop
         );
     }
 
-    public async ValueTask<IJavaScriptMarkdownEditor> CreateEditorAsync(string selector)
+    public async ValueTask<IJavaScriptMarkdownEditor> CreateEditorAsync(string selector, string uniqueKey)
     {
         var module = await moduleTask.Value;
-        var key = await module.InvokeAsync<string>("createEditor", selector);
+        var key = await module.InvokeAsync<string>("createEditor", selector, uniqueKey);
         return new JavaScriptMarkdownEditor(module, $"editors.{key}");
     }
 

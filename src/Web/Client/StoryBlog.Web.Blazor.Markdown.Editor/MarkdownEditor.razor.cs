@@ -108,8 +108,9 @@ public partial class MarkdownEditor
         if (FirstRender)
         {
             var selector = $".md-editor div[_bl_{editorElement.Id}]";
-            
-            editor = await EditorJavaScriptInterop.CreateEditorAsync(selector);
+            var uniqueEditorKey = Guid.NewGuid().ToString("N");
+
+            editor = await EditorJavaScriptInterop.CreateEditorAsync(selector, uniqueEditorKey);
 
             if (String.IsNullOrEmpty(Text))
             {

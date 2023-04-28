@@ -1,0 +1,20 @@
+﻿.storyblog-expansion-panel {
+
+}
+
+    .storyblog-expansion-panel .storyblog-expansion-panel-header {
+
+    }
+
+    .storyblog-expansion-panel .storyblog-expansion-panel-header .expanded {
+
+    }
+
+    .storyblog-expansion-panel .storyblog-expansion-panel-content {
+        height: 0;
+        overflow: hidden;
+    }
+
+        .storyblog-expansion-panel .storyblog-expansion-panel-content .expanded {
+            overflow: initial;
+        }

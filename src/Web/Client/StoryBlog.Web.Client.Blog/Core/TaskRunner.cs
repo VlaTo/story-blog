@@ -22,11 +22,12 @@ internal sealed class TaskRunner
         Instance = new TaskRunner();
     }
 
-    public void QueueTask(Task task, SynchronizationContext? synchronizationContext, Action completeCallback, CancellationToken cancellationToken)
+    public void QueueTask(Task task, SynchronizationContext? synchronizationContext = null, Action? completeCallback = null, CancellationToken cancellationToken = default)
     {
         lock (gate)
         {
-            var completion = new NotifyTaskCompletion(task, synchronizationContext, completeCallback, cancellationToken);
+            var context = synchronizationContext ?? new SynchronizationContext();
+            var completion = new NotifyTaskCompletion(task, context, completeCallback, cancellationToken);
             
             collection.Add(completion);
             completion.RunAsync().FireAndForget();
@@ -39,7 +40,7 @@ internal sealed class TaskRunner
     private sealed class NotifyTaskCompletion
     {
         private readonly SynchronizationContext synchronizationContext;
-        private readonly Action completeCallback;
+        private readonly Action? completeCallback;
         private readonly CancellationToken cancellationToken;
 
         public Task Task
@@ -50,7 +51,7 @@ internal sealed class TaskRunner
         public NotifyTaskCompletion(
             Task task,
             SynchronizationContext synchronizationContext,
-            Action completeCallback,
+            Action? completeCallback,
             CancellationToken cancellationToken)
         {
             this.synchronizationContext = synchronizationContext;
@@ -64,7 +65,7 @@ internal sealed class TaskRunner
         {
             try
             {
-                await Task;
+                await Task.Run(() => Task, cancellationToken);
             }
             catch
             {
@@ -76,9 +77,14 @@ internal sealed class TaskRunner
             }
         }
 
-        private void OnTaskComplete(object? state)
+        private void OnTaskComplete(object? _)
         {
-            completeCallback.Invoke();
+            var handler = completeCallback;
+
+            if (null != handler)
+            {
+                handler.Invoke();
+            }
         }
     }
 }

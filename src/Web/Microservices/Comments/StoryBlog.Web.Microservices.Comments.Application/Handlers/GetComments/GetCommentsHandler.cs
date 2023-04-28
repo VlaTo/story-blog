@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.Extensions.Logging;
 using StoryBlog.Web.Common.Application;
 using StoryBlog.Web.Common.Domain;
+using StoryBlog.Web.Common.Domain.Specifications;
 using StoryBlog.Web.Microservices.Comments.Application.Models;
 using StoryBlog.Web.Microservices.Comments.Domain.Specifications;
 
@@ -24,10 +25,12 @@ public sealed class GetCommentsHandler : HandlerBase, IRequestHandler<GetComment
     public async Task<GetCommentsResult> Handle(GetCommentsQuery request, CancellationToken cancellationToken)
     {
         IReadOnlyList<Domain.Entities.Comment>? comments;
+        ISpecification<Domain.Entities.Comment> specification = null == request.ParentKey
+            ? new FindRootCommentsForPost(request.PostKey, request.PageNumber, request.PageSize)
+            : new FindChildrenCommentsForPost(request.PostKey, request.ParentKey!.Value);
 
         await using (var repository = context.GetRepository<Domain.Entities.Comment>())
         {
-            var specification = new FindRootCommentsForPostSpecification(request.PostKey, request.PageNumber, request.PageSize, includeAll: true);
             comments = await repository.QueryAsync(specification, cancellationToken);
         }
 

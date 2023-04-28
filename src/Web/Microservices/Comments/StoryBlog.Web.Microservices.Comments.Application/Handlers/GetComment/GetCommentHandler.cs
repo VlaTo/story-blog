@@ -28,7 +28,7 @@ public sealed class GetCommentHandler : HandlerBase, IRequestHandler<GetCommentQ
     {
         await using (var repository = context.GetRepository<Comment>())
         {
-            var specification = new FindCommentSpecification(request.Key);
+            var specification = new FindComment(request.Key);
             var comment = await repository.FindAsync(specification, cancellationToken: cancellationToken);
 
             if (null != comment)

@@ -3,7 +3,7 @@
 @using StoryBlog.Web.Client.Blog.Store
 @inherits Fluxor.Blazor.Web.Components.FluxorComponent
 
-@switch (Store.Value.StoreState)
+@switch (PostStore.Value.StoreState)
 {
     case StoreState.Empty:
     {
@@ -19,8 +19,7 @@
 
     case StoreState.Success:
     {
-        var post = Store.Value.Post!;
-        var comments = Store.Value.Comments;
+        var post = PostStore.Value.Post!;
 
         <PageTitle>@post.Title</PageTitle>
 
@@ -34,30 +33,54 @@
             <div>
                 <MudMarkdown Value=@post.Text />
             </div>
-            
-            @if (null == comments || 0 == comments.Count)
-            {
-                <div>No comments yet</div>
-            }
-            else
-            {
-                <MudPaper Square=true Elevation=0 Class="storyblog-blog pa-2">
-                    <div>
-                        <MudText Typo=@Typo.h6>Comments:</MudText>
-                    </div>
-                    <div>
-                        <CascadingValue Name="EditorCoordinator" Value=@EditorCoordinator>
-                            @foreach (var comment in comments)
-                            {
-                                <Comment Key=@comment.Key PostKey=@post.Key CreatedDateTime=@comment.CreatedAt Comments=@comment.Comments Class="pa-2" SendReplyCommand=@SendReply>
-                                    <ChildContent>
-                                        @comment.Text
-                                    </ChildContent>
-                                </Comment>
-                            }
-                        </CascadingValue>
-                    </div>
-                </MudPaper>
+
+            @{
+                var store = CommentsStore.Value;
+
+                switch (store.StoreState)
+                {
+                    case StoreState.Loading:
+                    {
+                        <div>Loading...</div>
+
+                        break;
+                    }
+
+                    case StoreState.Success:
+                    {
+                        <MudPaper Square=true Elevation=0 Class="storyblog-blog pa-2">
+                            <div>
+                                <MudText Typo=@Typo.h6>@Localizer["CommentsHeaderLabel"]</MudText>
+                            </div>
+                            <Comments OnFetchComments=@DoFetchComments>
+                                @foreach (var comment in store.Comments)
+                                {
+                                    <Comment Key=@comment.Key PostKey=@post.Key Comments=@comment.Comments CreatedDateTime=@comment.CreateAt Class="pa-2">
+                                        <ChildContent>
+                                            @comment.Text
+                                        </ChildContent>
+                                    </Comment>
+                                }
+                            </Comments>
+                        </MudPaper>
+
+                        break;
+                    }
+
+                    case StoreState.Empty:
+                    {
+                        <div>No comments yet</div>
+                        
+                        break;
+                    }
+
+                    case StoreState.Failed:
+                    {
+                        <div>No comments yet</div>
+        
+                        break;
+                    }
+                }
             }
         </article>
 

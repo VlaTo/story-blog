@@ -1,55 +1,123 @@
-﻿<div class=@Classname @attributes=@UserAttributes>
+﻿@using System.Diagnostics
+@using StoryBlog.Web.Client.Blog.Core
+<div class=@Classname @attributes=@UserAttributes>
     <div class="storyblog-comment-header d-flex flex-row align-center">
         <div class="d-inline-flex align-center">
             <MudIcon Icon=@Icons.Material.Filled.CalendarMonth />
             <DateTimeView DateTime=@CreatedDateTime Mode=@DateTimeMode.RelativeFromCurrent/>
         </div>
-        <MudSpacer/>
-        <MudIconButton ButtonType=@ButtonType.Button Icon=@Icons.Material.Filled.Reply Size=@Size.Small Command=@OpenReply />
     </div>
-    <div class="storyblog-comment-content">
+    <div class="storyblog-comment-content pa-2">
         @ChildContent
     </div>
-    
-    @if (Mode.Reply == mode)
-    {
-        <div class="storyblog-comment-reply">
-            <MarkdownEditor Class="mt-4" AutoFocus=@true @bind-Text=@CommentReply>
-                <Toolbar>
-                    <ToolbarGroup>
-                        <ToolbarActionButton EditorAction=@EditorAction.Undo />
-                        <ToolbarActionButton EditorAction=@EditorAction.Redo />
-                    </ToolbarGroup>
-                    <ToolbarGroup>
-                        <ToolbarActionButton EditorAction=@EditorAction.Bold />
-                        <ToolbarActionButton EditorAction=@EditorAction.Italic />
-                        <ToolbarActionButton EditorAction=@EditorAction.Underline />
-                    </ToolbarGroup>
-                </Toolbar>
-            </MarkdownEditor>
-
-            <div class="storyblog-comment-reply-actions">
-                <MudButton ButtonType=@ButtonType.Button Icon=@Icons.Material.Filled.Cancel Size=@Size.Small Command=@CancelReply>@Localizer["ButtonCancelReply"]</MudButton>
-                <MudButton ButtonType=@ButtonType.Button Icon=@Icons.Material.Filled.Send Size=@Size.Small Command=@SendReply>@Localizer["ButtonSendReply"]</MudButton>
-            </div>
-        </div>
-    }
-    
-    @if (null != Comments)
-    {
-        <div class="storyblog-comment-comments ml-2">
-            @for (var index = 0; index < Comments.Count; index++)
+    <div class="storyblog-comment-actions d-flex align-end">
+        <MudButton
+            ButtonType=@ButtonType.Button
+            Disabled=@(CommentsCollectionState.Loading == Comments.State)
+            Size=@Size.Small
+            OnClick=@DoToggleComments>
+            @if (CommentsCollectionState.Loading == Comments.State)
             {
-                var comment = Comments[index];
-
-                <Comment Key=@comment.Key ParentKey=@Key PostKey=@PostKey CreatedDateTime=@comment.CreatedAt Comments=@comment.Comments Class="pa-1" SendReplyCommand=@SendReplyCommand>
-                    <ChildContent>
-                        @comment.Text
-                    </ChildContent>
-                </Comment>
+                <MudProgressCircular Class="ms-n1" Size=@Size.Small Indeterminate=true />
+                <MudText Class="ms-2">@Localizer["ButtonExpandLoading"]</MudText>
             }
-        </div>
+            else
+            {
+                <MudIcon Icon=@(IsCommentsExpanded? Icons.Material.Filled.ExpandLess : Icons.Material.Filled.ExpandMore)></MudIcon>
+                <MudText>@Localizer["ButtonExpandComments"]</MudText>
+            }
+        </MudButton>
+        <MudButton
+            ButtonType=@ButtonType.Button
+            StartIcon=@Icons.Material.Filled.Reply
+            Disabled=@(ReplyState.Publishing == replyState)
+            IconSize=@Size.Small
+            Size=@Size.Small
+            OnClick=@DoOpenReplyComposer>
+            @Localizer["ButtonOpenReply"]
+        </MudButton>
+    </div>
+    
+    @switch(replyState)
+    {
+        case ReplyState.Failed:
+        case ReplyState.Composing:
+        {
+            <div class="storyblog-comment-reply">
+                <MarkdownEditor Class="mt-4" AutoFocus=@true @bind-Text=@ReplyText>
+                    <Toolbar>
+                        <ToolbarGroup>
+                            <ToolbarActionButton EditorAction=@EditorAction.Undo />
+                            <ToolbarActionButton EditorAction=@EditorAction.Redo />
+                        </ToolbarGroup>
+                        <ToolbarGroup>
+                            <ToolbarActionButton EditorAction=@EditorAction.Bold />
+                            <ToolbarActionButton EditorAction=@EditorAction.Italic />
+                            <ToolbarActionButton EditorAction=@EditorAction.Underline />
+                        </ToolbarGroup>
+                    </Toolbar>
+                </MarkdownEditor>
+
+                <div class="storyblog-comment-reply-actions">
+                    <MudButton ButtonType=@ButtonType.Button Icon=@Icons.Material.Filled.Cancel Size=@Size.Small OnClick=@DoCancelReplyComposer>@Localizer["ButtonCancelReply"]</MudButton>
+                    <MudButton ButtonType=@ButtonType.Button Icon=@Icons.Material.Filled.Send Size=@Size.Small OnClick=@DoSendReply>@Localizer["ButtonSendReply"]</MudButton>
+                </div>
+            </div>
+
+            break;
+        }
+
+        case ReplyState.Publishing:
+        {
+            <MudText>Publishing...</MudText>
+            break;
+        }
+
+        case ReplyState.Closed:
+        {
+            break;
+        }
     }
+    
+    <ExpansionPanel NoTitle=true Class="storyblog-comment-comments pl-2 my-2" @bind-IsExpanded=@IsCommentsExpanded>
+        @switch (Comments.State)
+        {
+            case CommentsCollectionState.Loading:
+            {
+                <MudText>Loading...</MudText>
+                break;
+            }
+
+            case CommentsCollectionState.Success:
+            {
+                if (Comments is { Count: > 0 })
+                {
+                    @for (var index = 0; index < Comments.Count; index++)
+                    {
+                        var comment = Comments[index];
+
+                        <Comment Key=@comment.Key ParentKey=@Key PostKey=@PostKey CreatedDateTime=@comment.CreateAt Comments=@comment.Comments Class="pa-1">
+                            <ChildContent>
+                                @comment.Text
+                            </ChildContent>
+                        </Comment>
+                    }
+                }
+                else
+                {
+                    <MudText Typo=@Typo.caption Color=@Color.Tertiary>No comments yet</MudText>
+                }
+
+                break;
+            }
+
+            case CommentsCollectionState.Failed:
+            {
+                <MudText>Failed...</MudText>
+                break;
+            }
+        }
+    </ExpansionPanel>
     
     <div class="storyblog-comment-footer">
 

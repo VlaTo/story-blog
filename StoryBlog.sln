@@ -59,15 +59,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NamedPipeMessageBus", "Name
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SlimMessageBus.Host.NamedPipe", "src\Web\NamedPipeMessageBus\SlimMessageBus.Host.NamedPipe\SlimMessageBus.Host.NamedPipe.csproj", "{2C64368F-8132-4898-95E8-B234D206C2A4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StoryBlog.Web.Microservices.Comments.Domain", "src\Web\Microservices\Comments\StoryBlog.Web.Microservices.Comments.Domain\StoryBlog.Web.Microservices.Comments.Domain.csproj", "{56EDC32B-8DE4-42C3-A7AC-FAADA11DFAF0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StoryBlog.Web.Microservices.Comments.Domain", "src\Web\Microservices\Comments\StoryBlog.Web.Microservices.Comments.Domain\StoryBlog.Web.Microservices.Comments.Domain.csproj", "{56EDC32B-8DE4-42C3-A7AC-FAADA11DFAF0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StoryBlog.Web.Microservices.Comments.Infrastructure", "src\Web\Microservices\Comments\StoryBlog.Web.Microservices.Comments.Infrastructure\StoryBlog.Web.Microservices.Comments.Infrastructure.csproj", "{DF802D16-D9BA-4370-A409-F4D5205E88D0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StoryBlog.Web.Microservices.Comments.Infrastructure", "src\Web\Microservices\Comments\StoryBlog.Web.Microservices.Comments.Infrastructure\StoryBlog.Web.Microservices.Comments.Infrastructure.csproj", "{DF802D16-D9BA-4370-A409-F4D5205E88D0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StoryBlog.Web.Common.Infrastructure", "src\Web\Common\StoryBlog.Web.Common.Infrastructure\StoryBlog.Web.Common.Infrastructure.csproj", "{41C36EA1-8A11-4DA2-91AC-7690B2C15E8B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StoryBlog.Web.Common.Infrastructure", "src\Web\Common\StoryBlog.Web.Common.Infrastructure\StoryBlog.Web.Common.Infrastructure.csproj", "{41C36EA1-8A11-4DA2-91AC-7690B2C15E8B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StoryBlog.Web.Common.Domain", "src\Web\Common\StoryBlog.Web.Common.Domain\StoryBlog.Web.Common.Domain.csproj", "{1E08DB2A-DF21-4309-9075-D2E0FFE4C11F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StoryBlog.Web.Common.Domain", "src\Web\Common\StoryBlog.Web.Common.Domain\StoryBlog.Web.Common.Domain.csproj", "{1E08DB2A-DF21-4309-9075-D2E0FFE4C11F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StoryBlog.Web.Common.Application", "src\Web\Common\StoryBlog.Web.Common.Application\StoryBlog.Web.Common.Application.csproj", "{3B154CB9-AC86-4CDD-A669-A3D860BC822F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StoryBlog.Web.Common.Application", "src\Web\Common\StoryBlog.Web.Common.Application\StoryBlog.Web.Common.Application.csproj", "{3B154CB9-AC86-4CDD-A669-A3D860BC822F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

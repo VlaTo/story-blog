@@ -8,7 +8,7 @@ public sealed class ListAllResponse
 {
     [DataMember]
     [JsonPropertyName(nameof(Comments))]
-    public IReadOnlyCollection<CommentModel> Comments
+    public IReadOnlyList<CommentModel> Comments
     {
         get;
         set;

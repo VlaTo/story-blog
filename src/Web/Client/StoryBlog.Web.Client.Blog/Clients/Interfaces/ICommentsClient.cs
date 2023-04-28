@@ -1,11 +1,12 @@
 ﻿using StoryBlog.Web.Microservices.Comments.Shared.Models;
-using CreatedCommentModel = StoryBlog.Web.Client.Blog.Models.CreatedCommentModel;
 
 namespace StoryBlog.Web.Client.Blog.Clients.Interfaces;
 
 public interface ICommentsClient
 {
-    Task<ListAllResponse?> GetCommentsAsync(Guid postKey);
+    Task<ListAllResponse?> GetRootCommentsAsync(Guid postKey, int pageNumber, int pageSize);
+
+    Task<IReadOnlyList<CommentModel>?> GetChildCommentsAsync(Guid postKey, Guid parentKey);
 
     Task<CommentModel?> GetCommentAsync(Guid commentKey);
 

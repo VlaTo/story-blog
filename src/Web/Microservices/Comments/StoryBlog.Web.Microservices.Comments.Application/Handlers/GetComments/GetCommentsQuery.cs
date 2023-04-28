@@ -9,6 +9,11 @@ public sealed class GetCommentsQuery : IRequest<GetCommentsResult>
         get;
     }
 
+    public Guid? ParentKey
+    {
+        get;
+    }
+
     public int PageNumber
     {
         get;
@@ -19,9 +24,10 @@ public sealed class GetCommentsQuery : IRequest<GetCommentsResult>
         get;
     }
 
-    public GetCommentsQuery(Guid postKey, int pageNumber, int pageSize, bool includeAll = false)
+    public GetCommentsQuery(Guid postKey, Guid? parentKey, int pageNumber, int pageSize, bool includeAll = false)
     {
         PostKey = postKey;
+        ParentKey = parentKey;
         PageNumber = pageNumber;
         PageSize = pageSize;
     }

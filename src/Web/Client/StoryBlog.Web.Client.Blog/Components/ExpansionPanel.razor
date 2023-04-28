@@ -1,0 +1,18 @@
+﻿<div class=@Classname @attributes=@UserAttributes>
+    @if (NoTitle)
+    {
+        <div class="storyblog-expansion-panel-header" @onclick=@DoHeaderClick>
+            @if (null != TitleContent)
+            {
+                @TitleContent
+            }
+            else
+            {
+                @Title
+            }
+        </div>
+    }
+    <div class=@ContentPanelClassname style=@Stylename>
+        @ChildContent
+    </div>
+</div>

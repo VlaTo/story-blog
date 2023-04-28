@@ -1,8 +1,6 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using System.Security.Principal;
-using System.Windows.Input;
-using Fluxor;
+﻿using Fluxor;
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Localization;
 using StoryBlog.Web.Client.Blog.Components;
 using StoryBlog.Web.Client.Blog.Core;
 using StoryBlog.Web.Client.Blog.Store.BlogUseCase;
@@ -12,6 +10,8 @@ namespace StoryBlog.Web.Client.Blog.Pages;
 
 public partial class Blog
 {
+    //private readonly Queue<FetchCommentsEventArgs> queue;
+
     [Parameter]
     public string Slug
     {
@@ -20,7 +20,14 @@ public partial class Blog
     }
 
     [Inject]
-    public IState<BlogState> Store
+    public IState<BlogState> PostStore
+    {
+        get;
+        set;
+    }
+
+    [Inject]
+    public IState<CommentsState> CommentsStore
     {
         get;
         set;
@@ -34,7 +41,7 @@ public partial class Blog
     }
 
     [Inject]
-    private ICommentEditorCoordinator EditorCoordinator
+    private IStringLocalizer<Blog> Localizer
     {
         get;
         set;
@@ -47,17 +54,20 @@ public partial class Blog
 
     public Blog()
     {
+        //queue = new Queue<FetchCommentsEventArgs>();
         SendReply = new DelegateCommand<Comment>(DoSendReply);
     }
 
-    public override Task SetParametersAsync(ParameterView parameters)
+    /*public override Task SetParametersAsync(ParameterView parameters)
     {
         return base.SetParametersAsync(parameters);
-    }
+    }*/
 
     protected override void OnInitialized()
     {
         base.OnInitialized();
+        
+        //CommentsStore.StateChanged += DoCommentsStoreStateChanged;
         Dispatcher.Dispatch(new FetchPostReferenceAction(Slug));
     }
 
@@ -66,9 +76,42 @@ public partial class Blog
         var action = new CreateCommentAction(
             parameter.PostKey,
             parameter.Key,
-            parameter.CommentReply!
+            parameter.ReplyText!
         );
 
         Dispatcher.Dispatch(action);
     }
+
+    private void DoFetchComments(FetchCommentsEventArgs e)
+    {
+        Dispatcher.Dispatch(new FetchChildCommentsAction(e.PostKey, e.ParentKey));
+    }
+
+    /*private void DoCommentsStoreStateChanged(object? sender, EventArgs e)
+    {
+        var store = CommentsStore.Value;
+
+        if (CommentsKind.Children == store.Kind)
+        {
+            if (queue.TryPeek(out var eventArgs))
+            {
+                if (store.PostKey == eventArgs.PostKey && store.ParentKey == eventArgs.ParentKey)
+                {
+                    eventArgs.Result.SetResult(store.Comments);
+                }
+                else
+                {
+                    throw new Exception();
+                }
+            }
+            else
+            {
+                throw new Exception();
+            }
+        }
+        else
+        {
+            ;
+        }
+    }*/
 }
