@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using MudBlazor.Utilities;
 using StoryBlog.Web.Client.Blog.Core;
-using StoryBlog.Web.Client.Blog.Models;
 
 namespace StoryBlog.Web.Client.Blog.Components;
 
@@ -10,20 +9,42 @@ namespace StoryBlog.Web.Client.Blog.Components;
 /// </summary>
 public sealed class FetchCommentsEventArgs : EventArgs
 {
-    public Guid PostKey
-    {
-        get;
-    }
-
     public Guid ParentKey
     {
         get;
     }
 
-    public FetchCommentsEventArgs(Guid postKey, Guid parentKey)
+    public FetchCommentsEventArgs(Guid parentKey)
     {
-        PostKey = postKey;
         ParentKey = parentKey;
+    }
+}
+
+/// <summary>
+/// 
+/// </summary>
+public sealed class PublishReplyEventArgs : EventArgs
+{
+    public Guid ParentKey
+    {
+        get;
+    }
+
+    public string CorrelationId
+    {
+        get;
+    }
+
+    public string Reply
+    {
+        get;
+    }
+
+    public PublishReplyEventArgs(Guid parentKey, string reply, string correlationId)
+    {
+        ParentKey = parentKey;
+        Reply = reply;
+        CorrelationId = correlationId;
     }
 }
 
@@ -68,6 +89,13 @@ public partial class Comments : ICommentsCoordinator
         set;
     }
 
+    [Parameter]
+    public EventCallback<PublishReplyEventArgs> OnPublishReply
+    {
+        get;
+        set;
+    }
+
     public Comments()
     {
         disposables = new List<Disposable<ICommentsObserver>>();
@@ -103,15 +131,21 @@ public partial class Comments : ICommentsCoordinator
         }
     }
 
-    Task ICommentsCoordinator.FetchCommentsAsync(Guid postKey, Guid parentKey)
+    Task ICommentsCoordinator.FetchCommentsAsync(Guid parentKey)
     {
         var handler = OnFetchComments;
-        return handler.InvokeAsync(new FetchCommentsEventArgs(postKey, parentKey));
+        return handler.InvokeAsync(new FetchCommentsEventArgs(parentKey));
     }
 
-    Task ICommentsCoordinator.PublishReplyAsync(Guid postKey, Guid parentKey, string reply)
+    async Task ICommentsCoordinator.PublishReplyAsync(Guid parentKey, string reply)
     {
-        return Task.Delay(TimeSpan.FromSeconds(5.0d));
+        var handler = OnPublishReply;
+
+        if (handler.HasDelegate)
+        {
+            var correlationId = Guid.NewGuid().ToString("N");
+            await handler.InvokeAsync(new PublishReplyEventArgs(parentKey, reply, correlationId));
+        }
     }
 
     #endregion

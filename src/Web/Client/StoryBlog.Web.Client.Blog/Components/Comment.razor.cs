@@ -9,38 +9,9 @@ namespace StoryBlog.Web.Client.Blog.Components;
 /// <summary>
 /// 
 /// </summary>
-public sealed class CommentReplyEventArgs : EventArgs
-{
-    public Guid Key
-    {
-        get;
-    }
-
-    public Guid PostKey
-    {
-        get;
-    }
-
-    public Guid? ParentKey
-    {
-        get;
-    }
-
-    public CommentReplyEventArgs(Guid key, Guid postKey, Guid? parentKey)
-    {
-        Key = key;
-        PostKey = postKey;
-        ParentKey = parentKey;
-    }
-}
-
-/// <summary>
-/// 
-/// </summary>
 public partial class Comment : ICommentsObserver, IDisposable
 {
     private IDisposable? editorSubscription;
-    private ReplyState replyState;
 
     protected string Classname => new CssBuilder("storyblog-blog-comment")
         .AddClass(Class)
@@ -68,13 +39,6 @@ public partial class Comment : ICommentsObserver, IDisposable
     }
 
     [Parameter]
-    public Guid PostKey
-    {
-        get;
-        set;
-    }
-
-    [Parameter]
     public DateTime CreatedDateTime
     {
         get;
@@ -90,6 +54,13 @@ public partial class Comment : ICommentsObserver, IDisposable
 
     [Parameter]
     public bool IsCommentsExpanded
+    {
+        get;
+        set;
+    }
+
+    [Parameter]
+    public bool IsReplyComposerOpened
     {
         get;
         set;
@@ -131,7 +102,6 @@ public partial class Comment : ICommentsObserver, IDisposable
 
     public Comment()
     {
-        replyState = ReplyState.Closed;
         Comments = new CommentsCollection(CommentsCollectionState.Unknown, null);
     }
 
@@ -143,7 +113,7 @@ public partial class Comment : ICommentsObserver, IDisposable
 
     void ICommentsObserver.OnOpenReplyComposer()
     {
-        if (ReplyState.Composing == replyState)
+        if (IsReplyComposerOpened)
         {
             DoCancelReplyComposer(new MouseEventArgs());
         }
@@ -160,12 +130,12 @@ public partial class Comment : ICommentsObserver, IDisposable
 
     private void DoOpenReplyComposer(MouseEventArgs _)
     {
-        if (ReplyState.Composing == replyState)
+        if (IsReplyComposerOpened)
         {
             return ;
         }
 
-        replyState = ReplyState.Composing;
+        IsReplyComposerOpened=true;
 
         StateHasChanged();
 
@@ -174,32 +144,23 @@ public partial class Comment : ICommentsObserver, IDisposable
 
     private void DoCancelReplyComposer(MouseEventArgs _)
     {
-        if (ReplyState.Composing != replyState)
+        if (false == IsReplyComposerOpened)
         {
             return ;
         }
 
-        replyState = ReplyState.Closed;
+        IsReplyComposerOpened = false;
 
         StateHasChanged();
     }
     
     private async Task DoSendReply(MouseEventArgs _)
     {
-        if (ReplyState.Composing != replyState)
+        if (IsReplyComposerOpened)
         {
-            return;
+            var reply = ReplyText!;
+            await Coordinator.PublishReplyAsync(Key, reply);
         }
-
-        replyState = ReplyState.Publishing;
-
-        StateHasChanged();
-
-        await Coordinator.PublishReplyAsync(PostKey, Key, ReplyText!);
-        
-        replyState = ReplyState.Success;
-        
-        StateHasChanged();
     }
 
     #endregion
@@ -210,21 +171,9 @@ public partial class Comment : ICommentsObserver, IDisposable
 
         if (expand && CommentsCollectionState.Unknown == Comments.State)
         {
-            await Coordinator.FetchCommentsAsync(PostKey, Key);
+            await Coordinator.FetchCommentsAsync(Key);
         }
 
         IsCommentsExpanded = expand;
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    private enum ReplyState
-    {
-        Failed = -1,
-        Closed,
-        Composing,
-        Publishing,
-        Success
     }
 }

@@ -2,7 +2,7 @@
 
 namespace StoryBlog.Web.Client.Blog.Models;
 
-public sealed class CommentModel
+public class CommentModel : ICommentBase
 {
     public Guid Key
     {
@@ -34,7 +34,13 @@ public sealed class CommentModel
         get;
     }
 
-    public CommentModel(Guid key, Guid postKey, Guid? parentKey, string text, CommentsCollection comments, DateTime createAt)
+    public CommentModel(
+        Guid key,
+        Guid postKey,
+        Guid? parentKey,
+        string text,
+        CommentsCollection comments,
+        DateTime createAt)
     {
         Key = key;
         PostKey = postKey;

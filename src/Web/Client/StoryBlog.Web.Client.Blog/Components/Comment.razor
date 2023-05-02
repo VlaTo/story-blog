@@ -1,5 +1,6 @@
 ﻿@using System.Diagnostics
 @using StoryBlog.Web.Client.Blog.Core
+@using StoryBlog.Web.Client.Blog.Models
 <div class=@Classname @attributes=@UserAttributes>
     <div class="storyblog-comment-header d-flex flex-row align-center">
         <div class="d-inline-flex align-center">
@@ -30,7 +31,6 @@
         <MudButton
             ButtonType=@ButtonType.Button
             StartIcon=@Icons.Material.Filled.Reply
-            Disabled=@(ReplyState.Publishing == replyState)
             IconSize=@Size.Small
             Size=@Size.Small
             OnClick=@DoOpenReplyComposer>
@@ -38,45 +38,28 @@
         </MudButton>
     </div>
     
-    @switch(replyState)
+    @if (IsReplyComposerOpened)
     {
-        case ReplyState.Failed:
-        case ReplyState.Composing:
-        {
-            <div class="storyblog-comment-reply">
-                <MarkdownEditor Class="mt-4" AutoFocus=@true @bind-Text=@ReplyText>
-                    <Toolbar>
-                        <ToolbarGroup>
-                            <ToolbarActionButton EditorAction=@EditorAction.Undo />
-                            <ToolbarActionButton EditorAction=@EditorAction.Redo />
-                        </ToolbarGroup>
-                        <ToolbarGroup>
-                            <ToolbarActionButton EditorAction=@EditorAction.Bold />
-                            <ToolbarActionButton EditorAction=@EditorAction.Italic />
-                            <ToolbarActionButton EditorAction=@EditorAction.Underline />
-                        </ToolbarGroup>
-                    </Toolbar>
-                </MarkdownEditor>
+        <div class="storyblog-comment-reply">
+            <MarkdownEditor Class="mt-4" AutoFocus=true @bind-Text=@ReplyText>
+                <Toolbar>
+                    <ToolbarGroup>
+                        <ToolbarActionButton EditorAction=@EditorAction.Undo/>
+                        <ToolbarActionButton EditorAction=@EditorAction.Redo/>
+                    </ToolbarGroup>
+                    <ToolbarGroup>
+                        <ToolbarActionButton EditorAction=@EditorAction.Bold/>
+                        <ToolbarActionButton EditorAction=@EditorAction.Italic/>
+                        <ToolbarActionButton EditorAction=@EditorAction.Underline/>
+                    </ToolbarGroup>
+                </Toolbar>
+            </MarkdownEditor>
 
-                <div class="storyblog-comment-reply-actions">
-                    <MudButton ButtonType=@ButtonType.Button Icon=@Icons.Material.Filled.Cancel Size=@Size.Small OnClick=@DoCancelReplyComposer>@Localizer["ButtonCancelReply"]</MudButton>
-                    <MudButton ButtonType=@ButtonType.Button Icon=@Icons.Material.Filled.Send Size=@Size.Small OnClick=@DoSendReply>@Localizer["ButtonSendReply"]</MudButton>
-                </div>
+            <div class="storyblog-comment-reply-actions">
+                <MudButton ButtonType=@ButtonType.Button Icon=@Icons.Material.Filled.Cancel Size=@Size.Small OnClick=@DoCancelReplyComposer>@Localizer["ButtonCancelReply"]</MudButton>
+                <MudButton ButtonType=@ButtonType.Button Icon=@Icons.Material.Filled.Send Size=@Size.Small OnClick=@DoSendReply>@Localizer["ButtonSendReply"]</MudButton>
             </div>
-
-            break;
-        }
-
-        case ReplyState.Publishing:
-        {
-            <MudText>Publishing...</MudText>
-            break;
-        }
-
-        case ReplyState.Closed:
-        {
-            break;
-        }
+        </div>
     }
     
     <ExpansionPanel NoTitle=true Class="storyblog-comment-comments pl-2 my-2" @bind-IsExpanded=@IsCommentsExpanded>
@@ -94,13 +77,18 @@
                 {
                     @for (var index = 0; index < Comments.Count; index++)
                     {
-                        var comment = Comments[index];
-
-                        <Comment Key=@comment.Key ParentKey=@Key PostKey=@PostKey CreatedDateTime=@comment.CreateAt Comments=@comment.Comments Class="pa-1">
-                            <ChildContent>
-                                @comment.Text
-                            </ChildContent>
-                        </Comment>
+                        if (Comments[index] is CommentModel comment)
+                        {
+                            <Comment Key=@comment.Key ParentKey=@Key CreatedDateTime=@comment.CreateAt Comments=@comment.Comments Class="pa-1">
+                                <ChildContent>
+                                    @comment.Text
+                                </ChildContent>
+                            </Comment>
+                        }
+                        else if (Comments[index] is CommentReplyModel reply)
+                        {
+                            <MudText>@reply.CorrelationId</MudText>
+                        }
                     }
                 }
                 else

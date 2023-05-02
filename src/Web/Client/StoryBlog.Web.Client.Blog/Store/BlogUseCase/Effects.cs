@@ -168,4 +168,41 @@ public sealed class FetchChildCommentsEffect : Effect<FetchChildCommentsAction>
     }
 }
 
+/// <summary>
+/// 
+/// </summary>
+// ReSharper disable once UnusedMember.Global
+public sealed class PublishReplyEffect : Effect<PublishReplyAction>
+{
+    private readonly ICommentsClient client;
+
+    public PublishReplyEffect(ICommentsClient client)
+    {
+        this.client = client;
+    }
+
+    public override async Task HandleAsync(PublishReplyAction action, IDispatcher dispatcher)
+    {
+        try
+        {
+            var comment = await client.CreateCommentAsync(action.PostKey, action.ParentKey, action.Reply);
+
+            if (null != comment)
+            {
+                var commentsReadyAction = new PublishReplySuccessAction(comment, action.CorrelationId);
+
+                dispatcher.Dispatch(commentsReadyAction);
+
+                return;
+            }
+
+            dispatcher.Dispatch(new PublishReplyFailedAction(action.PostKey, action.ParentKey, action.CorrelationId));
+        }
+        catch
+        {
+            dispatcher.Dispatch(new PublishReplyFailedAction(action.PostKey, action.ParentKey, action.CorrelationId));
+        }
+    }
+}
+
 #endregion

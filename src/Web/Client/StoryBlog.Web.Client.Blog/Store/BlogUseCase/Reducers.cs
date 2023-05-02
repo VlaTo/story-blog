@@ -37,7 +37,7 @@ public sealed class FetchPostFailedReducer : Reducer<BlogState, FetchPostFailedA
 public sealed class FetchRootCommentsReducer : Reducer<CommentsState, FetchRootCommentsAction>
 {
     public override CommentsState Reduce(CommentsState state, FetchRootCommentsAction action) =>
-        new(StoreState.Loading, action.PostKey, Array.Empty<CommentModel>(), action.PageNumber, action.PageSize);
+        new(action.PostKey, CommentsCollection.Unknown, action.PageNumber, action.PageSize);
 }
 
 // ReSharper disable once UnusedMember.Global
@@ -52,7 +52,9 @@ public sealed class FetchRootCommentsReadyReducer : Reducer<CommentsState, Fetch
             comments[index] = action.Comments[index].MapComment(CommentsCollection.Unknown);
         }
 
-        return new(StoreState.Success, action.PostKey, comments, action.PageNumber, action.PageSize);
+        var commentsCollection = new CommentsCollection(CommentsCollectionState.Success, comments);
+
+        return new(action.PostKey, commentsCollection, action.PageNumber, action.PageSize);
     }
 }
 
@@ -61,39 +63,38 @@ public sealed class FetchChildCommentsReducer : Reducer<CommentsState, FetchChil
 {
     public override CommentsState Reduce(CommentsState state, FetchChildCommentsAction action)
     {
-        var comments = MapReplaceComments(state.Comments, action);
-        return new(StoreState.Success, action.PostKey, action.ParentKey, comments);
+        var comments = MapReplace(state.Comments, action);
+        return new(state.PostKey, comments, state.PageNumber, state.PageSize);
     }
 
-    private static IReadOnlyList<CommentModel> MapReplaceComments(
-        IReadOnlyList<CommentModel> sourceComments,
-        FetchChildCommentsAction action)
+    private static CommentsCollection MapReplace(CommentsCollection sourceComments, FetchChildCommentsAction action)
     {
-        var result = new CommentModel[sourceComments.Count];
+        var result = new ICommentBase[sourceComments.Count];
 
         for (var sourceIndex = 0; sourceIndex < sourceComments.Count; sourceIndex++)
         {
-            var source = sourceComments[sourceIndex];
-            var comments = source.Comments;
-
-            if (source.PostKey == action.PostKey && source.Key == action.ParentKey)
+            if (sourceComments[sourceIndex] is CommentModel source)
             {
-                comments = new CommentsCollection(CommentsCollectionState.Loading, null);
-            }
-            else if (0 < source.Comments.Count)
-            {
-                comments = MapReplaceChildComments(source.Comments, action);
+                var comments = source.Comments;
+
+                if (source.Key == action.ParentKey)
+                {
+                    comments = new CommentsCollection(CommentsCollectionState.Loading, CommentsCollection.Unknown);
+                }
+                else if (0 < source.Comments.Count)
+                {
+                    comments = MapReplace(source.Comments, action);
+                }
+
+                result[sourceIndex] = source.MapReplace(comments);
+
+                continue;
             }
 
-            result[sourceIndex] = source.ReplaceComments(comments);
+            result[sourceIndex] = sourceComments[sourceIndex];
         }
 
-        return result;
-    }
-
-    private static CommentsCollection MapReplaceChildComments(CommentsCollection sourceComments, FetchChildCommentsAction action)
-    {
-        return new CommentsCollection(sourceComments.State, MapReplaceComments(sourceComments, action));
+        return new CommentsCollection(sourceComments.State, result);
     }
 }
 
@@ -102,54 +103,210 @@ public sealed class FetchChildCommentsReadyReducer : Reducer<CommentsState, Fetc
 {
     public override CommentsState Reduce(CommentsState state, FetchChildCommentsReadyAction action)
     {
-        var comments = MapReplaceComments(state.Comments, action);
-        return new(StoreState.Success, action.PostKey, action.ParentKey, comments);
+        var comments = MapReplace(state.Comments, action);
+        return new(action.PostKey, comments, state.PageNumber, state.PageSize);
     }
 
-    private static IReadOnlyList<CommentModel> MapReplaceComments(
-        IReadOnlyList<CommentModel> sourceComments,
-        FetchChildCommentsReadyAction action)
+    private static CommentsCollection MapReplace(CommentsCollection sourceComments, FetchChildCommentsReadyAction action)
     {
-        var result = new CommentModel[sourceComments.Count];
+        var result = new ICommentBase[sourceComments.Count];
 
         for (var sourceIndex = 0; sourceIndex < sourceComments.Count; sourceIndex++)
         {
-            var source = sourceComments[sourceIndex];
-            var comments = source.Comments;
-
-            if (source.PostKey == action.PostKey && source.Key == action.ParentKey)
+            if (sourceComments[sourceIndex] is CommentModel source)
             {
-                var childComments = new CommentModel[action.Comments.Count];
+                var comments = source.Comments;
 
-                for (var index = 0; index < action.Comments.Count; index++)
+                if (source.Key == action.ParentKey)
                 {
-                    childComments[index] = action.Comments[index].MapComment(CommentsCollection.Unknown);
+                    var childComments = new CommentModel[action.Comments.Count];
+
+                    for (var index = 0; index < action.Comments.Count; index++)
+                    {
+                        childComments[index] = action.Comments[index].MapComment(CommentsCollection.Unknown);
+                    }
+
+                    comments = new CommentsCollection(CommentsCollectionState.Success, childComments);
+                }
+                else if (0 < source.Comments.Count)
+                {
+                    comments = MapReplace(source.Comments, action);
                 }
 
-                comments = new CommentsCollection(CommentsCollectionState.Success, childComments);
-            }
-            else if (0 < source.Comments.Count)
-            {
-                comments = MapReplaceChildComments(source.Comments, action);
+                result[sourceIndex] = source.MapReplace(comments);
+
+                continue;
             }
 
-            result[sourceIndex] = source.ReplaceComments(comments);
+            result[sourceIndex] = sourceComments[sourceIndex];
         }
 
-        return result;
-    }
-
-    private static CommentsCollection MapReplaceChildComments(CommentsCollection sourceComments, FetchChildCommentsReadyAction action)
-    {
-        return new CommentsCollection(sourceComments.State, MapReplaceComments(sourceComments, action));
+        return new CommentsCollection(sourceComments.State, result);
     }
 }
 
 // ReSharper disable once UnusedMember.Global
 public sealed class FetchCommentsFailedReducer : Reducer<CommentsState, FetchCommentsFailedAction>
 {
-    public override CommentsState Reduce(CommentsState state, FetchCommentsFailedAction action) =>
-        new(StoreState.Success, action.PostKey, action.ParentKey, Array.Empty<CommentModel>());
+    public override CommentsState Reduce(CommentsState state, FetchCommentsFailedAction action)
+    {
+        var comments = MapReplace(state.Comments, action);
+        return new(action.PostKey, comments, state.PageNumber, state.PageSize);
+    }
+
+    private static CommentsCollection MapReplace(CommentsCollection sourceComments, FetchCommentsFailedAction action)
+    {
+        var result = new ICommentBase[sourceComments.Count];
+
+        for (var sourceIndex = 0; sourceIndex < sourceComments.Count; sourceIndex++)
+        {
+            if (sourceComments[sourceIndex] is CommentModel source)
+            {
+                var comments = source.Comments;
+
+                if (source.Key == action.ParentKey)
+                {
+                    comments = new CommentsCollection(CommentsCollectionState.Failed, CommentsCollection.Unknown);
+                }
+                else if (0 < source.Comments.Count)
+                {
+                    comments = MapReplace(source.Comments, action);
+                }
+
+                result[sourceIndex] = source.MapReplace(comments);
+
+                continue;
+            }
+            
+            result[sourceIndex] = sourceComments[sourceIndex];
+        }
+
+        return new CommentsCollection(sourceComments.State, result);
+    }
+}
+
+// ReSharper disable once UnusedMember.Global
+public sealed class PublishReplyReducer : Reducer<CommentsState, PublishReplyAction>
+{
+    public override CommentsState Reduce(CommentsState state, PublishReplyAction action)
+    {
+        var comments = MapReplace(state.Comments, action);
+        return new(state.PostKey, comments, state.PageNumber, state.PageSize);
+    }
+
+    private static CommentsCollection MapReplace(CommentsCollection sourceComments, PublishReplyAction action)
+    {
+        var result = new ICommentBase[sourceComments.Count];
+
+        for (var sourceIndex = 0; sourceIndex < sourceComments.Count; sourceIndex++)
+        {
+            if (sourceComments[sourceIndex] is CommentModel source)
+            {
+                var comments = source.Comments;
+
+                if (source.Key == action.ParentKey)
+                {
+                    var commentReply = new CommentReplyModel(action.ParentKey, action.CorrelationId, CommentReplyResult.Publishing, DateTime.MinValue);
+                    comments = source.Comments.Append(commentReply, CommentsCollectionState.Loading);
+                }
+                else if (0 < source.Comments.Count)
+                {
+                    comments = MapReplace(source.Comments, action);
+                }
+
+                result[sourceIndex] = source.MapReplace(comments);
+
+                continue;
+            }
+
+            result[sourceIndex] = sourceComments[sourceIndex];
+        }
+
+        return new CommentsCollection(sourceComments.State, result);
+    }
+}
+
+// ReSharper disable once UnusedMember.Global
+public sealed class PublishReplySuccessReducer : Reducer<CommentsState, PublishReplySuccessAction>
+{
+    public override CommentsState Reduce(CommentsState state, PublishReplySuccessAction action)
+    {
+        var comments = MapReplace(state.Comments, action);
+        return new(state.PostKey, comments, state.PageNumber, state.PageSize);
+    }
+
+    private static CommentsCollection MapReplace(CommentsCollection sourceComments, PublishReplySuccessAction action)
+    {
+        var result = new ICommentBase[sourceComments.Count];
+        var state = sourceComments.State;
+
+        for (var sourceIndex = 0; sourceIndex < sourceComments.Count; sourceIndex++)
+        {
+            if (sourceComments[sourceIndex] is CommentReplyModel reply)
+            {
+                if (reply.CorrelationId == action.CorrelationId)
+                {
+                    state = CommentsCollectionState.Success;
+                    result[sourceIndex] = new CommentModel(
+                        action.Comment.Key,
+                        action.Comment.PostKey,
+                        action.Comment.ParentKey,
+                        action.Comment.Text,
+                        CommentsCollection.Unknown,
+                        action.Comment.CreatedAt
+                    );
+                }
+                else
+                {
+                    result[sourceIndex] = reply;
+                }
+            }
+            else if(sourceComments[sourceIndex] is CommentModel comment)
+            {
+                result[sourceIndex] = comment.MapReplace(MapReplace(comment.Comments, action));
+            }
+            else
+            {
+                result[sourceIndex] = sourceComments[sourceIndex];
+            }
+        }
+
+        return new CommentsCollection(state, result);
+    }
+}
+
+// ReSharper disable once UnusedMember.Global
+public sealed class PublishReplyFailedReducer : Reducer<CommentsState, PublishReplyFailedAction>
+{
+    public override CommentsState Reduce(CommentsState state, PublishReplyFailedAction action)
+    {
+        var comments = MapReplace(state.Comments, action);
+        return new(state.PostKey, comments, state.PageNumber, state.PageSize);
+    }
+
+    private static CommentsCollection MapReplace(CommentsCollection sourceComments, PublishReplyFailedAction action)
+    {
+        var result = new ICommentBase[sourceComments.Count];
+
+        for (var sourceIndex = 0; sourceIndex < sourceComments.Count; sourceIndex++)
+        {
+            if (sourceComments[sourceIndex] is CommentReplyModel reply && reply.CorrelationId == action.CorrelationId)
+            {
+                result[sourceIndex] = new CommentReplyModel(
+                    action.ParentKey,
+                    reply.CorrelationId,
+                    CommentReplyResult.Failed,
+                    reply.CreateAt
+                );
+            }
+            else
+            {
+                result[sourceIndex] = sourceComments[sourceIndex];
+            }
+        }
+
+        return new CommentsCollection(sourceComments.State, result);
+    }
 }
 
 #endregion

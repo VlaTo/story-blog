@@ -10,6 +10,6 @@ internal static class CommentModelExtensions
         CommentsCollection commentsCollection) =>
         new(source.Key, source.PostKey, source.ParentKey, source.Text, commentsCollection, source.CreatedAt);
 
-    public static CommentModel ReplaceComments(this CommentModel source, CommentsCollection commentsCollection) =>
+    public static CommentModel MapReplace(this CommentModel source, CommentsCollection commentsCollection) =>
         new(source.Key, source.PostKey, source.ParentKey, source.Text, commentsCollection, source.CreateAt);
 }

@@ -6,7 +6,7 @@ public interface ICommentsCoordinator
 
     void NotifyReplyComposerOpened(ICommentsObserver observer);
 
-    Task FetchCommentsAsync(Guid postKey, Guid parentKey);
+    Task FetchCommentsAsync(Guid parentKey);
 
-    Task PublishReplyAsync(Guid postKey, Guid parentKey, string reply);
+    Task PublishReplyAsync(Guid parentKey, string reply);
 }

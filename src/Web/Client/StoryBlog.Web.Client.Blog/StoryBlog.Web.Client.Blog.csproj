@@ -27,7 +27,6 @@
     <Folder Include="Middlewares\" />
     <Folder Include="Store\BlogUseCase\" />
     <Folder Include="Store\CreatePostUseCase\" />
-    <Folder Include="Store\CreateCommentUseCase\" />
     <Folder Include="wwwroot\img\" />
     <Folder Include="Extensions\" />
   </ItemGroup>
