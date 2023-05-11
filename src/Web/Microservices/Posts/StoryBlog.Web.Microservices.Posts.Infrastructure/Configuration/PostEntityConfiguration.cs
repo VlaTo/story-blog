@@ -22,6 +22,28 @@ internal sealed class PostEntityConfiguration : IEntityTypeConfiguration<Post>
             .HasMaxLength(1024)
             .IsRequired();
 
+        builder.OwnsOne(
+            x => x.Content,
+            content =>
+            {
+                content
+                    .WithOwner(x => x.Post)
+                    .HasForeignKey(x => x.PostId);
+
+                content
+                    .Property(x => x.Text)
+                    .HasColumnType("ntext")
+                    .IsRequired();
+
+                content
+                    .Property(x => x.Brief)
+                    .HasColumnType("nvarchar")
+                    .HasMaxLength(1024)
+                    .IsRequired();
+
+                content.ToTable("Contents");
+            });
+
         builder.Property(x => x.IsPublic);
         
         builder.Property(x => x.Status);

@@ -5,12 +5,12 @@ namespace StoryBlog.Web.Microservices.Posts.Application.Handlers.GetPosts;
 
 public sealed class GetPostsResult : AbstractResult
 {
-    public IReadOnlyList<Post>? Posts
+    public IReadOnlyList<Brief>? Posts
     {
         get;
     }
 
-    public GetPostsResult(IReadOnlyList<Post>? posts)
+    public GetPostsResult(IReadOnlyList<Brief>? posts)
     {
         Posts = posts;
     }

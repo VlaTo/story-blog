@@ -21,17 +21,12 @@
             <MudPaper Square=true Class="storyblog-home-blog" Elevation=0>
                 <BlogEntry Title=@post.Title data-test="test-value" Slug=@post.Slug>
                     <HeaderContent>
-                        <div class="d-block mr-2">
-                            <MudIcon Icon=@Icons.Material.Filled.CalendarMonth />
-                            <DateTimeView Class="text-disabled" Mode=@DateTimeMode.RelativeFromCurrent DateTime=@post.CreatedAt />
+                        <div class="mr-2">
+                            <strong>Unknown</strong>
                         </div>
+                        <DateTimeView Class="mr-2" Typo=@Typo.caption Mode=@DateTimeMode.RelativeFromCurrent DateTime=@post.CreatedAt />
                         <div>
-                            <MudIcon Icon=@Icons.Material.Filled.Person />
-                            <span>Unknown</span>
-                        </div>
-                        <div>
-                            <MudIcon Icon=@Icons.Material.Filled.Comment />
-                            <span>@post.CommentsCount</span>
+                            <MudText Typo=@Typo.caption>@post.CommentsCount комментариев</MudText>
                         </div>
                     </HeaderContent>
                     <ChildContent>

@@ -50,7 +50,7 @@ public class PostsController : Controller
 
         if (result.IsSuccess())
         {
-            var models = mapper.Map<IReadOnlyCollection<PostModel>>(result.Posts);
+            var models = mapper.Map<IReadOnlyCollection<BriefModel>>(result.Posts);
             return Ok(new ListAllResponse
             {
                 Posts = models,

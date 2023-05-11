@@ -15,6 +15,8 @@ public sealed class CommentsCollection : IReadOnlyList<ICommentBase>
 {
     public static readonly CommentsCollection Unknown;
     
+    public static readonly CommentsCollection Loading;
+    
     public static readonly CommentsCollection Empty;
 
     private readonly IReadOnlyList<ICommentBase>? comments;
@@ -48,6 +50,7 @@ public sealed class CommentsCollection : IReadOnlyList<ICommentBase>
     static CommentsCollection()
     {
         Unknown = new CommentsCollection(CommentsCollectionState.Unknown, null);
+        Loading = new CommentsCollection(CommentsCollectionState.Loading, null);
         Empty = new CommentsCollection(CommentsCollectionState.Success, Array.Empty<ICommentBase>());
     }
 

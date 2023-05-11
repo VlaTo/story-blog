@@ -1,11 +1,24 @@
 ﻿@using StoryBlog.Web.Client.Blog.Shared
+@using StoryBlog.Web.Client.Blog.Extensions
 
 <Fluxor.Blazor.Web.StoreInitializer />
 
 <Router AppAssembly="@typeof(App).Assembly">
     <Found Context="routeData">
-        <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
-        <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+        <AuthorizeRouteView RouteData=@routeData DefaultLayout=@typeof(MainLayout)>
+            <NotAuthorized>
+                @if (false == context.User.IsAuthenticated())
+                {
+                    <RedirectToSignIn />
+                }
+                else
+                {
+                    <MudAlert>You are not authorized</MudAlert>
+                }
+            </NotAuthorized>
+        </AuthorizeRouteView>
+        @*<RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)"/>*@
+        <FocusOnNavigate RouteData="@routeData" Selector="h1"/>
     </Found>
     <NotFound>
         <PageTitle>Not found</PageTitle>

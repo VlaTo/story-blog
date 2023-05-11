@@ -25,12 +25,12 @@ public sealed class FetchCommentsEventArgs : EventArgs
 /// </summary>
 public sealed class PublishReplyEventArgs : EventArgs
 {
-    public Guid ParentKey
+    public Guid? ParentKey
     {
         get;
     }
 
-    public string CorrelationId
+    public string CorrelationKey
     {
         get;
     }
@@ -40,11 +40,11 @@ public sealed class PublishReplyEventArgs : EventArgs
         get;
     }
 
-    public PublishReplyEventArgs(Guid parentKey, string reply, string correlationId)
+    public PublishReplyEventArgs(Guid? parentKey, string reply, string correlationKey)
     {
         ParentKey = parentKey;
         Reply = reply;
-        CorrelationId = correlationId;
+        CorrelationKey = correlationKey;
     }
 }
 
@@ -57,7 +57,7 @@ public partial class Comments : ICommentsCoordinator
     
     private readonly List<Disposable<ICommentsObserver>> disposables;
     
-    protected string Classname => new CssBuilder("storyblog-blog-comment")
+    protected string Classname => new CssBuilder("storyblog-blog-comments")
         .AddClass(Class)
         .Build();
 
@@ -83,14 +83,14 @@ public partial class Comments : ICommentsCoordinator
     }
 
     [Parameter]
-    public EventCallback<FetchCommentsEventArgs> OnFetchComments
+    public EventCallback<FetchCommentsEventArgs> FetchComments
     {
         get;
         set;
     }
 
     [Parameter]
-    public EventCallback<PublishReplyEventArgs> OnPublishReply
+    public EventCallback<PublishReplyEventArgs> PublishReply
     {
         get;
         set;
@@ -103,7 +103,7 @@ public partial class Comments : ICommentsCoordinator
 
     #region ICommentCoordinator implementation
 
-    IDisposable ICommentsCoordinator.Subscribe(ICommentsObserver observer)
+    public IDisposable Subscribe(ICommentsObserver observer)
     {
         var index = disposables.FindIndex(x => ReferenceEquals(x.State, observer));
 
@@ -116,7 +116,7 @@ public partial class Comments : ICommentsCoordinator
         return disposables[index];
     }
 
-    void ICommentsCoordinator.NotifyReplyComposerOpened(ICommentsObserver observer)
+    public void NotifyReplyComposerOpened(ICommentsObserver observer)
     {
         for (var index = 0; index < disposables.Count; index++)
         {
@@ -131,20 +131,19 @@ public partial class Comments : ICommentsCoordinator
         }
     }
 
-    Task ICommentsCoordinator.FetchCommentsAsync(Guid parentKey)
+    public Task FetchCommentsAsync(Guid parentKey)
     {
-        var handler = OnFetchComments;
+        var handler = FetchComments;
         return handler.InvokeAsync(new FetchCommentsEventArgs(parentKey));
     }
 
-    async Task ICommentsCoordinator.PublishReplyAsync(Guid parentKey, string reply)
+    public async Task PublishReplyAsync(Guid parentKey, string reply, string correlationKey)
     {
-        var handler = OnPublishReply;
+        var handler = PublishReply;
 
         if (handler.HasDelegate)
         {
-            var correlationId = Guid.NewGuid().ToString("N");
-            await handler.InvokeAsync(new PublishReplyEventArgs(parentKey, reply, correlationId));
+            await handler.InvokeAsync(new PublishReplyEventArgs(parentKey, reply, correlationKey));
         }
     }
 

@@ -1,5 +1,7 @@
 :root {
     --storyblog-palette-white: white;
+    --storyblog-palette-accent: yellow;
+    --storyblog-palette-dark: #F0F3F4;
 }
 
 html, body {
@@ -8,9 +10,37 @@ html, body {
 
 
 
+
+/* comment */
 .storyblog-box {
     background: var(--storyblog-palette-white);
 }
+
+.storyblog-blog-comment {
+}
+
+    .storyblog-blog-comment .comment-content {
+    }
+
+        .storyblog-blog-comment .comment-content .avatar {
+        }
+
+        .storyblog-blog-comment .comment-content .comment-header {
+        }
+
+            .storyblog-blog-comment .comment-content .comment-header > .tool {
+                visibility: hidden;
+            }
+
+        .storyblog-blog-comment .comment-content:hover .comment-header > .tool {
+            visibility: visible;
+        }
+
+        .storyblog-blog-comment .comment-content .comment-text {
+            background: var(--storyblog-palette-dark);
+        }
+
+
 
 
 

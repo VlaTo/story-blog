@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Localization;
+using MudBlazor;
 using MudBlazor.Utilities;
+using StoryBlog.Web.Client.Blog.Core;
 
 namespace StoryBlog.Web.Client.Blog.Components;
 
@@ -14,6 +16,7 @@ public enum DateTimeMode
 public partial class DateTimeView
 {
     protected string Classname => new CssBuilder("storyblog-datetime")
+        .AddClass("mud-typography-" + Typo.ToDescriptionString())
         .AddClass(Class)
         .Build();
 
@@ -26,6 +29,14 @@ public partial class DateTimeView
 
     [Parameter]
     public DateTime? DateTime
+    {
+        get;
+        set;
+    }
+
+    [Parameter]
+    [Category("Appearance")]
+    public Typo Typo
     {
         get;
         set;
@@ -54,6 +65,7 @@ public partial class DateTimeView
 
     public DateTimeView()
     {
+        Typo = Typo.body1;
         Mode = DateTimeMode.DateOnly;
     }
 
@@ -61,34 +73,30 @@ public partial class DateTimeView
     {
         if (null != DateTime)
         {
+            var dateTime = DateTime.Value;
+
             switch (Mode)
             {
                 case DateTimeMode.DateOnly:
                 {
-                    return DateTime.Value.ToShortDateString(); // d
+                    return dateTime.ToShortDateString(); // d
                 }
 
                 case DateTimeMode.TimeOnly:
                 {
-                    return DateTime.Value.ToShortTimeString(); // t
+                    return dateTime.ToShortTimeString(); // t
                 }
 
                 case DateTimeMode.RelativeFromCurrent:
                 {
                     var now = System.DateTime.UtcNow;
-                    return FormatDateTime(
-                        now.Date == DateTime.Value.Date ? "TodayDateTimeFormat" : "GeneralDateTimeFormat"
-                    );
+                    var timeSpanQuantity = new RussianTimeSpanQuantity(Localizer, "CommentAge");
+
+                    return timeSpanQuantity.GetQuantityString(dateTime, now.Date - dateTime.Date);
                 }
             }
         }
 
         return String.Empty;
-    }
-
-    private string FormatDateTime(string formatKey)
-    {
-        var format = Localizer[formatKey];
-        return String.Format(format, DateTime!.Value);
     }
 }

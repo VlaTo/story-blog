@@ -8,7 +8,7 @@ public sealed class ListAllResponse
 {
     [DataMember]
     [JsonPropertyName(nameof(Posts))]
-    public IReadOnlyCollection<PostModel> Posts
+    public IReadOnlyCollection<BriefModel> Posts
     {
         get; 
         set;
@@ -32,6 +32,6 @@ public sealed class ListAllResponse
 
     public ListAllResponse()
     {
-        Posts = Array.Empty<PostModel>();
+        Posts = Array.Empty<BriefModel>();
     }
 }

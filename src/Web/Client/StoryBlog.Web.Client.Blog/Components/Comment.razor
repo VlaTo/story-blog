@@ -2,16 +2,25 @@
 @using StoryBlog.Web.Client.Blog.Core
 @using StoryBlog.Web.Client.Blog.Models
 <div class=@Classname @attributes=@UserAttributes>
-    <div class="storyblog-comment-header d-flex flex-row align-center">
-        <div class="d-inline-flex align-center">
-            <MudIcon Icon=@Icons.Material.Filled.CalendarMonth />
-            <DateTimeView DateTime=@CreatedDateTime Mode=@DateTimeMode.RelativeFromCurrent/>
+    <div class="d-flex flex-row align-start comment-content">
+        <MudImage Elevation=25 Src="https://www.gravatar.com/avatar/00000000000000000000000000000000?size=36" Class="rounded-circle mt-2 avatar" Alt="gravatar" />
+        <div class="d-flex flex-column flex-auto">
+            <div class="d-flex flex-row align-center px-2 comment-header">
+                <div class="mr-1">
+                    <strong>Unknown</strong>
+                </div>
+                <DateTimeView DateTime=@CreatedDateTime Typo=@Typo.caption Mode=@DateTimeMode.RelativeFromCurrent />
+                <MudSpacer />
+                <MudIconButton Icon=@Icons.Material.Filled.Reply Size=@Size.Small Class="tool" OnClick=@DoOpenReplyComposer />
+                <MudIconButton Icon=@Icons.Material.Filled.Link Size=@Size.Small Class="tool" />
+            </div>
+            <MudPaper Class="ml-2 pa-4 comment-text" Elevation=0>
+                @ChildContent
+            </MudPaper>
         </div>
     </div>
-    <div class="storyblog-comment-content pa-2">
-        @ChildContent
-    </div>
-    <div class="storyblog-comment-actions d-flex align-end">
+
+    <div class="d-flex flex-row comment-actions">
         <MudButton
             ButtonType=@ButtonType.Button
             Disabled=@(CommentsCollectionState.Loading == Comments.State)
@@ -28,48 +37,39 @@
                 <MudText>@Localizer["ButtonExpandComments"]</MudText>
             }
         </MudButton>
-        <MudButton
-            ButtonType=@ButtonType.Button
-            StartIcon=@Icons.Material.Filled.Reply
-            IconSize=@Size.Small
-            Size=@Size.Small
-            OnClick=@DoOpenReplyComposer>
-            @Localizer["ButtonOpenReply"]
-        </MudButton>
     </div>
-    
-    @if (IsReplyComposerOpened)
-    {
-        <div class="storyblog-comment-reply">
-            <MarkdownEditor Class="mt-4" AutoFocus=true @bind-Text=@ReplyText>
-                <Toolbar>
-                    <ToolbarGroup>
-                        <ToolbarActionButton EditorAction=@EditorAction.Undo/>
-                        <ToolbarActionButton EditorAction=@EditorAction.Redo/>
-                    </ToolbarGroup>
-                    <ToolbarGroup>
-                        <ToolbarActionButton EditorAction=@EditorAction.Bold/>
-                        <ToolbarActionButton EditorAction=@EditorAction.Italic/>
-                        <ToolbarActionButton EditorAction=@EditorAction.Underline/>
-                    </ToolbarGroup>
-                </Toolbar>
-            </MarkdownEditor>
 
-            <div class="storyblog-comment-reply-actions">
-                <MudButton ButtonType=@ButtonType.Button Icon=@Icons.Material.Filled.Cancel Size=@Size.Small OnClick=@DoCancelReplyComposer>@Localizer["ButtonCancelReply"]</MudButton>
-                <MudButton ButtonType=@ButtonType.Button Icon=@Icons.Material.Filled.Send Size=@Size.Small OnClick=@DoSendReply>@Localizer["ButtonSendReply"]</MudButton>
-            </div>
+    @{ UpdateReplyStatus(); }
+
+    <ExpansionPanel NoTitle=true Class="storyblog-comment-reply" IsExpanded=@IsReplyComposerOpened>
+        <MarkdownEditor Class="mt-4" AutoFocus=true @bind-Text=@ReplyText>
+            <Toolbar>
+                <ToolbarGroup>
+                    <ToolbarActionButton EditorAction=@EditorAction.Undo/>
+                    <ToolbarActionButton EditorAction=@EditorAction.Redo/>
+                </ToolbarGroup>
+                <ToolbarGroup>
+                    <ToolbarActionButton EditorAction=@EditorAction.Bold/>
+                    <ToolbarActionButton EditorAction=@EditorAction.Italic/>
+                    <ToolbarActionButton EditorAction=@EditorAction.Underline/>
+                </ToolbarGroup>
+            </Toolbar>
+        </MarkdownEditor>
+
+        <div class="storyblog-comment-reply-actions">
+            <MudButton ButtonType=@ButtonType.Button Icon=@Icons.Material.Filled.Cancel Size=@Size.Small OnClick=@DoCancelReplyComposer>@Localizer["ButtonCancelReply"]</MudButton>
+            <MudButton ButtonType=@ButtonType.Button Icon=@Icons.Material.Filled.Send Size=@Size.Small OnClick=@DoSendReply>@Localizer["ButtonSendReply"]</MudButton>
         </div>
-    }
-    
-    <ExpansionPanel NoTitle=true Class="storyblog-comment-comments pl-2 my-2" @bind-IsExpanded=@IsCommentsExpanded>
+    </ExpansionPanel>
+
+    <ExpansionPanel NoTitle=true Class="storyblog-comment-comments pl-2 my-2" IsExpanded=@IsCommentsExpanded>
         @switch (Comments.State)
         {
-            case CommentsCollectionState.Loading:
+            @*case CommentsCollectionState.Loading:
             {
                 <MudText>Loading...</MudText>
                 break;
-            }
+            }*@
 
             case CommentsCollectionState.Success:
             {
@@ -85,9 +85,13 @@
                                 </ChildContent>
                             </Comment>
                         }
-                        else if (Comments[index] is CommentReplyModel reply)
+                        else if (Comments[index] is NewCommentModel newComment)
                         {
-                            <MudText>@reply.CorrelationId</MudText>
+                            <Comment Key=@newComment.Key ParentKey=@Key IsNew=true CreatedDateTime=@newComment.CreateAt Comments=@newComment.Comments Class="pa-1">
+                                <ChildContent>
+                                    @newComment.Text
+                                </ChildContent>
+                            </Comment>
                         }
                     }
                 }
@@ -106,7 +110,7 @@
             }
         }
     </ExpansionPanel>
-    
+
     <div class="storyblog-comment-footer">
 
     </div>

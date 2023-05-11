@@ -27,17 +27,17 @@ namespace StoryBlog.Web.Client.Blog.Store.HomeUseCase;
 [FeatureState]
 public sealed class HomeState : AbstractStore
 {
-    public IReadOnlyCollection<PostModel> Posts
+    public IReadOnlyCollection<BriefModel> Posts
     {
         get;
     }
 
     public HomeState()
-        : this(Array.Empty<PostModel>(), storeState: StoreState.Empty)
+        : this(Array.Empty<BriefModel>(), storeState: StoreState.Empty)
     {
     }
 
-    public HomeState(IReadOnlyCollection<PostModel> posts, StoreState storeState = StoreState.Empty)
+    public HomeState(IReadOnlyCollection<BriefModel> posts, StoreState storeState = StoreState.Empty)
         : base(storeState)
     {
         Posts = posts;

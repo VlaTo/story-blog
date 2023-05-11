@@ -48,7 +48,7 @@ public sealed class CommentsController : Controller
         var query = new GetCommentsQuery(postKey, parentKey, pageNumber, pageSize, includeAll: true);
         var result = await mediator.Send(query);
 
-        await Task.Delay(TimeSpan.FromSeconds(5.0d));
+        //await Task.Delay(TimeSpan.FromSeconds(5.0d));
 
         if (result.IsSuccess())
         {

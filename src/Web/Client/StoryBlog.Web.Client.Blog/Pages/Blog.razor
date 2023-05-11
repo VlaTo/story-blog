@@ -25,42 +25,79 @@
 
         <PageTitle>@post.Title</PageTitle>
 
-        <article>
+        <div class="d-flex flex-column">
             <div>
-                <MudText Typo=@Typo.h4>@post.Title</MudText>
+                <MudText Typo=@Typo.h5>@post.Title</MudText>
             </div>
-            <div>
-                <span>@post.CreatedAt</span>
+            <div class="d-flex flex-row">
+                 <DateTimeView DateTime=@post.CreatedAt Mode=@DateTimeMode.RelativeFromCurrent Typo=@Typo.caption />
             </div>
-            <div>
+            <div class="mt-4 d-flex flex-row">
                 <MudMarkdown Value=@post.Text />
             </div>
 
             @{
                 var store = CommentsStore.Value;
 
-                switch (store.Comments.State)
-                {
-                    case CommentsCollectionState.Loading:
-                    {
-                        <div>Loading...</div>
+                <div class="d-flex flex-row mt-4">
+                    <MudButton ButtonType=@ButtonType.Button
+                               StartIcon=@Icons.Material.Filled.Reply
+                               IconSize=@Size.Medium
+                               Size=@Size.Medium
+                               OnClick=@DoOpenReplyComposer>
+                        @Localizer["ButtonLeaveComment"]
+                    </MudButton>
+                </div>
 
-                        break;
-                    }
+                UpdateReplyStatus(store);
+                
+                <ExpansionPanel NoTitle=true Class="mt-2 mb-4 storyblog-comment-reply" IsExpanded=@IsReplyComposerOpened>
+                    <MudPaper Square=true Elevation=0 Class="storyblog-blog pa-2">
+                        <MarkdownEditor Class="mt-4" AutoFocus=true @bind-Text=@ReplyText>
+                            <Toolbar>
+                                <ToolbarGroup>
+                                    <ToolbarActionButton EditorAction=@EditorAction.Undo/>
+                                    <ToolbarActionButton EditorAction=@EditorAction.Redo/>
+                                </ToolbarGroup>
+                                <ToolbarGroup>
+                                    <ToolbarActionButton EditorAction=@EditorAction.Bold/>
+                                    <ToolbarActionButton EditorAction=@EditorAction.Italic/>
+                                    <ToolbarActionButton EditorAction=@EditorAction.Underline/>
+                                </ToolbarGroup>
+                            </Toolbar>
+                        </MarkdownEditor>
 
-                    case CommentsCollectionState.Success:
+                        <div class="storyblog-comment-reply-actions">
+                            <MudButton ButtonType=@ButtonType.Button Icon=@Icons.Material.Filled.Send Size=@Size.Small OnClick=@DoSendReply>
+                                @Localizer["ButtonSendReply"]
+                            </MudButton>
+                        </div>
+                    </MudPaper>
+                </ExpansionPanel>
+
+                <MudPaper Square=true Elevation=0 Class="storyblog-blog pa-2">
+                    <div>
+                        <MudText Typo=@Typo.h6>@Localizer["CommentsHeaderLabel"]</MudText>
+                    </div>
+
+                    @switch (store.Comments.State)
                     {
-                        <MudPaper Square=true Elevation=0 Class="storyblog-blog pa-2">
+                        case CommentsCollectionState.Loading:
+                        {
+                            <div>Loading...</div>
+
+                            break;
+                        }
+
+                        case CommentsCollectionState.Success:
+                        {
                             @if (0 == store.Comments.Count)
                             {
-
+                                <MudText Typo=@Typo.caption>No comments</MudText>
                             }
                             else
                             {
-                                <div>
-                                    <MudText Typo=@Typo.h6>@Localizer["CommentsHeaderLabel"]</MudText>
-                                </div>
-                                <Comments OnFetchComments=@DoFetchComments OnPublishReply=@DoPublishReply>
+                                <Comments @ref=comments FetchComments=@DoFetchComments PublishReply=@DoPublishReply>
                                     @for (var index = 0; index < store.Comments.Count; index++)
                                     {
                                         if (store.Comments[index] is CommentModel comment)
@@ -71,27 +108,31 @@
                                                 </ChildContent>
                                             </Comment>
                                         }
-                                        else if (store.Comments[index] is CommentReplyModel reply)
+                                        else if (store.Comments[index] is NewCommentModel newComment)
                                         {
-                                            ;
+                                            <Comment Key=@newComment.Key IsNew=true Comments=@newComment.Comments CreatedDateTime=@newComment.CreateAt Class="pa-2">
+                                                <ChildContent>
+                                                    @newComment.Text
+                                                </ChildContent>
+                                            </Comment>
                                         }
                                     }
                                 </Comments>
                             }
-                        </MudPaper>
 
-                        break;
-                    }
+                            break;
+                        }
 
-                    case CommentsCollectionState.Failed:
-                    {
-                        <div>No comments yet</div>
-        
-                        break;
+                        case CommentsCollectionState.Failed:
+                        {
+                            <div>No comments yet</div>
+
+                            break;
+                        }
                     }
-                }
+                </MudPaper>
             }
-        </article>
+        </div>
 
         break;
     }

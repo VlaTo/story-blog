@@ -8,5 +8,5 @@ public interface ICommentsCoordinator
 
     Task FetchCommentsAsync(Guid parentKey);
 
-    Task PublishReplyAsync(Guid parentKey, string reply);
+    Task PublishReplyAsync(Guid parentKey, string reply, string correlationKey);
 }

@@ -28,6 +28,12 @@ public class Post : Entity, IHasId<long>
         set;
     }
 
+    public Content Content
+    {
+        get;
+        set;
+    }
+
     public CommentsCounter CommentsCounter
     {
         get;

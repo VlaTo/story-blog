@@ -7,6 +7,16 @@ internal static class AutoMapperConfigurationExpressionExtensions
 {
     public static IMapperConfigurationExpression AddWebApiMappingProfiles(this IMapperConfigurationExpression expression)
     {
+        expression.CreateMap<Application.Models.Brief, BriefModel>()
+            .ForMember(destination => destination.Key, source => source.MapFrom(x => x.Key))
+            .ForMember(destination => destination.Title, source => source.MapFrom(x => x.Title))
+            .ForMember(destination => destination.Slug, source => source.MapFrom(x => x.Slug))
+            .ForMember(destination => destination.Text, source => source.MapFrom(x => x.Text))
+            .ForMember(destination => destination.Status, source => source.MapFrom(x => x.Status))
+            .ForMember(destination => destination.CommentsCount, source => source.MapFrom(x => x.CommentsCount))
+            .ForMember(destination => destination.CreatedAt, source => source.MapFrom(x => x.CreatedAt))
+            ;
+
         expression.CreateMap<Application.Models.Post, PostModel>()
             .ForMember(destination => destination.Key, source => source.MapFrom(x => x.Key))
             .ForMember(destination => destination.Title, source => source.MapFrom(x => x.Title))

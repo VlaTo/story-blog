@@ -117,10 +117,25 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="GeneralDateTimeFormat" xml:space="preserve">
-    <value>{0:g}</value>
+  <data name="CommentAge_beforeyesterday" xml:space="preserve">
+    <value>позавчера, в {1:t}</value>
   </data>
-  <data name="TodayDateTimeFormat" xml:space="preserve">
-    <value>Сегодня, в {0:t}</value>
+  <data name="CommentAge_few" xml:space="preserve">
+    <value>{0:G} дня назад, в {1:t}</value>
+  </data>
+  <data name="CommentAge_many" xml:space="preserve">
+    <value>{0:G} дней назад, в {1:t}</value>
+  </data>
+  <data name="CommentAge_months" xml:space="preserve">
+    <value>{0:G}</value>
+  </data>
+  <data name="CommentAge_today" xml:space="preserve">
+    <value>сегодня, в {1:t}</value>
+  </data>
+  <data name="CommentAge_years" xml:space="preserve">
+    <value>{0:G}</value>
+  </data>
+  <data name="CommentAge_yesterday" xml:space="preserve">
+    <value>вчера, в {1:t}</value>
   </data>
 </root>

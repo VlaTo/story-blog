@@ -1,11 +1,11 @@
-﻿using Microsoft.AspNetCore.WebUtilities;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
 using StoryBlog.Web.Client.Blog.Clients.Interfaces;
 using StoryBlog.Web.Client.Blog.Configuration;
 using StoryBlog.Web.Microservices.Comments.Shared.Models;
 using System.Diagnostics;
 using System.Net.Http.Json;
 using System.Text.Json;
+using StoryBlog.Web.Client.Blog.Extensions;
 
 namespace StoryBlog.Web.Client.Blog.Clients;
 
@@ -116,7 +116,7 @@ internal sealed class CommentsHttpClient : HttpClientBase, ICommentsClient
             return null;
         }
 
-        var queryString = new Dictionary<string, string>();
+        var queryString = new Dictionary<string, string?>();
 
         if (null != parentKey)
         {

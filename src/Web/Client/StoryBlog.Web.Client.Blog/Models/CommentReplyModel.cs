@@ -18,7 +18,7 @@ public sealed class CommentReplyModel : ICommentBase
         get;
     }
 
-    public string CorrelationId
+    public string CorrelationKey
     {
         get;
     }
@@ -28,10 +28,10 @@ public sealed class CommentReplyModel : ICommentBase
         get;
     }
 
-    public CommentReplyModel(Guid? parentKey, string correlationId, CommentReplyResult result, DateTime createAt)
+    public CommentReplyModel(Guid? parentKey, string correlationKey, CommentReplyResult result, DateTime createAt)
     {
         ParentKey = parentKey;
-        CorrelationId = correlationId;
+        CorrelationKey = correlationKey;
         Result = result;
         CreateAt = createAt;
     }

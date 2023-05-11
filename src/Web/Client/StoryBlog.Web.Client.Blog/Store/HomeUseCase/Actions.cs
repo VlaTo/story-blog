@@ -61,13 +61,13 @@ public sealed class FetchPostsPageAction : PostsPageAction
 /// </summary>
 public sealed class FetchPostsPageReadyAction : PostsPageAction
 {
-    public IReadOnlyCollection<PostModel> Posts
+    public IReadOnlyCollection<BriefModel> Posts
     {
         get; 
         set;
     }
 
-    public FetchPostsPageReadyAction(IReadOnlyCollection<PostModel> posts, int pageNumber, int pageSize)
+    public FetchPostsPageReadyAction(IReadOnlyCollection<BriefModel> posts, int pageNumber, int pageSize)
         : base(pageNumber, pageSize)
     {
         Posts = posts;

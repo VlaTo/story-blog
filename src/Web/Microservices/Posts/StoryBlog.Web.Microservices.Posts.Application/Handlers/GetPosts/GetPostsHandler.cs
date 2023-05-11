@@ -29,7 +29,7 @@ public sealed class GetPostsHandler : HandlerBase, IRequestHandler<GetPostsQuery
         }
 
         return new GetPostsResult(
-            mapper.Map<IReadOnlyList<Post>>(posts, options =>
+            mapper.Map<IReadOnlyList<Brief>>(posts, options =>
             {
                 ;
             })

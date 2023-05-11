@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.Localization;
 using MudBlazor.Utilities;
 using StoryBlog.Web.Client.Blog.Core;
+using StoryBlog.Web.Client.Blog.Models;
 
 namespace StoryBlog.Web.Client.Blog.Components;
 
@@ -12,8 +13,11 @@ namespace StoryBlog.Web.Client.Blog.Components;
 public partial class Comment : ICommentsObserver, IDisposable
 {
     private IDisposable? editorSubscription;
+    private bool isReplyComposerOpened;
+    private string? correlationKey;
 
     protected string Classname => new CssBuilder("storyblog-blog-comment")
+        .AddClass("new-comment", IsNew)
         .AddClass(Class)
         .Build();
 
@@ -61,6 +65,23 @@ public partial class Comment : ICommentsObserver, IDisposable
 
     [Parameter]
     public bool IsReplyComposerOpened
+    {
+        get => isReplyComposerOpened;
+        set
+        {
+            if (isReplyComposerOpened == value)
+            {
+                return;
+            }
+
+            isReplyComposerOpened = value;
+
+            StateHasChanged();
+        }
+    }
+
+    [Parameter]
+    public bool IsNew
     {
         get;
         set;
@@ -126,6 +147,50 @@ public partial class Comment : ICommentsObserver, IDisposable
         editorSubscription = Coordinator.Subscribe(this);
     }
 
+    private void UpdateReplyStatus()
+    {
+        if (false == IsReplyComposerOpened)
+        {
+            return ;
+        }
+
+        if (String.IsNullOrEmpty(correlationKey))
+        {
+            return ;
+        }
+
+        for (var index = 0; index < Comments.Count; index++)
+        {
+            if (Comments[index] is CommentReplyModel reply)
+            {
+                if (reply.CorrelationKey == correlationKey)
+                {
+                    switch (reply.Result)
+                    {
+                        case CommentReplyResult.Publishing:
+                        {
+                            break;
+                        }
+
+                        case CommentReplyResult.Failed:
+                        {
+                            break;
+                        }
+                    }
+                }
+            }
+            else if (Comments[index] is NewCommentModel newComment)
+            {
+                if (newComment.CorrelationKey == correlationKey)
+                {
+                    correlationKey = null;
+                    isReplyComposerOpened = false;
+                    ReplyText = null;
+                }
+            }
+        }
+    }
+
     #region Reply compose callbacks
 
     private void DoOpenReplyComposer(MouseEventArgs _)
@@ -135,7 +200,7 @@ public partial class Comment : ICommentsObserver, IDisposable
             return ;
         }
 
-        IsReplyComposerOpened=true;
+        IsReplyComposerOpened = true;
 
         StateHasChanged();
 
@@ -158,8 +223,14 @@ public partial class Comment : ICommentsObserver, IDisposable
     {
         if (IsReplyComposerOpened)
         {
-            var reply = ReplyText!;
-            await Coordinator.PublishReplyAsync(Key, reply);
+            if (String.IsNullOrEmpty(ReplyText))
+            {
+                return ;
+            }
+
+            correlationKey = Guid.NewGuid().ToString("N");
+
+            await Coordinator.PublishReplyAsync(Key, ReplyText, correlationKey);
         }
     }
 

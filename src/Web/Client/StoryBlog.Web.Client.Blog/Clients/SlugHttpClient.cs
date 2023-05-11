@@ -1,10 +1,10 @@
-﻿using Microsoft.AspNetCore.WebUtilities;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
 using StoryBlog.Web.Client.Blog.Clients.Interfaces;
 using StoryBlog.Web.Client.Blog.Configuration;
 using StoryBlog.Web.Microservices.Posts.Shared.Models;
 using System.Diagnostics;
 using System.Text.Json;
+using StoryBlog.Web.Client.Blog.Extensions;
 
 namespace StoryBlog.Web.Client.Blog.Clients;
 
@@ -22,7 +22,7 @@ internal sealed class SlugHttpClient : HttpClientBase, ISlugClient
     {
         var uri = QueryHelpers.AddQueryString(
             options.Endpoints.Slugs.BasePath,
-            new Dictionary<string, string>
+            new Dictionary<string, string?>
             {
                 { "title", title }
             }

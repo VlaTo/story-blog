@@ -37,7 +37,7 @@ public sealed class FetchPostFailedReducer : Reducer<BlogState, FetchPostFailedA
 public sealed class FetchRootCommentsReducer : Reducer<CommentsState, FetchRootCommentsAction>
 {
     public override CommentsState Reduce(CommentsState state, FetchRootCommentsAction action) =>
-        new(action.PostKey, CommentsCollection.Unknown, action.PageNumber, action.PageSize);
+        new(action.PostKey, CommentsCollection.Loading, action.PageNumber, action.PageSize);
 }
 
 // ReSharper disable once UnusedMember.Global
@@ -190,7 +190,7 @@ public sealed class PublishReplyReducer : Reducer<CommentsState, PublishReplyAct
 {
     public override CommentsState Reduce(CommentsState state, PublishReplyAction action)
     {
-        var comments = MapReplace(state.Comments, action);
+        var comments = Reduce(state.Comments, action);
         return new(state.PostKey, comments, state.PageNumber, state.PageSize);
     }
 
@@ -207,7 +207,7 @@ public sealed class PublishReplyReducer : Reducer<CommentsState, PublishReplyAct
                 if (source.Key == action.ParentKey)
                 {
                     var commentReply = new CommentReplyModel(action.ParentKey, action.CorrelationId, CommentReplyResult.Publishing, DateTime.MinValue);
-                    comments = source.Comments.Append(commentReply, CommentsCollectionState.Loading);
+                    comments = source.Comments.Append(commentReply, source.Comments.State);
                 }
                 else if (0 < source.Comments.Count)
                 {
@@ -223,6 +223,23 @@ public sealed class PublishReplyReducer : Reducer<CommentsState, PublishReplyAct
         }
 
         return new CommentsCollection(sourceComments.State, result);
+    }
+
+    private static CommentsCollection Reduce(CommentsCollection comments, PublishReplyAction action)
+    {
+        if (null == action.ParentKey)
+        {
+            var commentReply = new CommentReplyModel(
+                action.ParentKey,
+                action.CorrelationId,
+                CommentReplyResult.Publishing,
+                DateTime.MinValue
+            );
+
+            return comments.Append(commentReply, comments.State);
+        }
+
+        return MapReplace(comments, action);
     }
 }
 
@@ -244,16 +261,17 @@ public sealed class PublishReplySuccessReducer : Reducer<CommentsState, PublishR
         {
             if (sourceComments[sourceIndex] is CommentReplyModel reply)
             {
-                if (reply.CorrelationId == action.CorrelationId)
+                if (reply.CorrelationKey == action.CorrelationId)
                 {
                     state = CommentsCollectionState.Success;
-                    result[sourceIndex] = new CommentModel(
+                    result[sourceIndex] = new NewCommentModel(
                         action.Comment.Key,
                         action.Comment.PostKey,
                         action.Comment.ParentKey,
                         action.Comment.Text,
                         CommentsCollection.Unknown,
-                        action.Comment.CreatedAt
+                        action.Comment.CreatedAt,
+                        action.CorrelationId
                     );
                 }
                 else
@@ -290,14 +308,19 @@ public sealed class PublishReplyFailedReducer : Reducer<CommentsState, PublishRe
 
         for (var sourceIndex = 0; sourceIndex < sourceComments.Count; sourceIndex++)
         {
-            if (sourceComments[sourceIndex] is CommentReplyModel reply && reply.CorrelationId == action.CorrelationId)
+            if (sourceComments[sourceIndex] is CommentReplyModel reply && reply.CorrelationKey == action.CorrelationId && CommentReplyResult.Publishing == reply.Result)
             {
                 result[sourceIndex] = new CommentReplyModel(
-                    action.ParentKey,
-                    reply.CorrelationId,
+                    reply.ParentKey,
+                    reply.CorrelationKey,
                     CommentReplyResult.Failed,
                     reply.CreateAt
                 );
+            }
+
+            if (sourceComments[sourceIndex] is CommentModel comment)
+            {
+                result[sourceIndex] = comment.MapReplace(MapReplace(comment.Comments, action));
             }
             else
             {
@@ -305,7 +328,7 @@ public sealed class PublishReplyFailedReducer : Reducer<CommentsState, PublishRe
             }
         }
 
-        return new CommentsCollection(sourceComments.State, result);
+        return new CommentsCollection(sourceComments.State, result.AsReadOnly());
     }
 }
 
