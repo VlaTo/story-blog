@@ -14,7 +14,8 @@ public partial class RedirectToSignIn
     }
 
     [Inject]
-    private IOptionsSnapshot<RemoteAuthenticationOptions<ApiAuthorizationProviderOptions>> OptionsSnapshot
+    //private IOptionsSnapshot<RemoteAuthenticationOptions<ApiAuthorizationProviderOptions>> OptionsSnapshot
+    private IOptionsSnapshot<RemoteAuthenticationOptions<OidcProviderOptions>> OptionsSnapshot
     {
         get;
         set;

@@ -52,7 +52,7 @@ public static class Permissions
 
             if (null != propertyValue)
             {
-                permissions.Add(propertyValue.ToString());
+                permissions.Add(propertyValue.ToString()!);
             }
         }
 

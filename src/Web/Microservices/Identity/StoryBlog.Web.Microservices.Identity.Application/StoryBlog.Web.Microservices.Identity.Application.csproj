@@ -1,0 +1,50 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <Optimize>True</Optimize>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <Optimize>False</Optimize>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Scripts\ChechSession.template.html" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Scripts\ChechSession.template.html" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Common\StoryBlog.Web.Common.Application\StoryBlog.Web.Common.Application.csproj" />
+    <ProjectReference Include="..\..\..\Identity\StoryBlog.Web.Identity\StoryBlog.Web.Identity.csproj" />
+    <ProjectReference Include="..\StoryBlog.Web.Microservices.Identity.Domain\StoryBlog.Web.Microservices.Identity.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="IdentityModel" Version="6.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.5" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="7.0.1" />
+    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.30.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Authorization\Responses\" />
+    <Folder Include="Core\Events\" />
+    <Folder Include="Endpoints\Results\" />
+    <Folder Include="Hosting\FederatedSignOut\" />
+    <Folder Include="ResponseHandling\Models\" />
+    <Folder Include="Services\KeyManagement\" />
+    <Folder Include="Validation\Results\" />
+    <Folder Include="Validation\Defaults\" />
+  </ItemGroup>
+
+</Project>

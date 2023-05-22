@@ -32,7 +32,12 @@ builder.Services
         builder.Configuration.Bind(HttpClientOptions.SectionName, options);
     });
 
-//builder.Services.AddScoped<ICommentsCoordinator, DefaultCommentsCoordinator>();
+builder.Services.AddOidcAuthentication(options =>
+{
+    // Configure your authentication provider options here.
+    // For more information, see https://aka.ms/blazor-standalone-auth
+    builder.Configuration.Bind("Oidc", options);
+});
 
 builder.Services.AddScoped<IPostsClient, PostsHttpClient>();
 builder.Services.AddScoped<ICommentsClient, CommentsHttpClient>();

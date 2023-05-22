@@ -1,0 +1,9 @@
+﻿<AuthorizeView>
+    <Authorized>
+        Hello, @context.User.Identity?.Name!
+        <MudButton ButtonType="ButtonType.Button" Size=@Size.Small OnClick=@BeginLogOut>Log out</MudButton>
+    </Authorized>
+    <NotAuthorized>
+        <MudButton ButtonType=@ButtonType.Button Size=@Size.Small Variant=@Variant.Outlined Href="authentication/login">Log in</MudButton>
+    </NotAuthorized>
+</AuthorizeView>
