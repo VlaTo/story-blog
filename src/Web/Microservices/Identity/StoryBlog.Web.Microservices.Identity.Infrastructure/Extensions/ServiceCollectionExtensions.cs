@@ -3,7 +3,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using StoryBlog.Web.Common.Domain;
+using StoryBlog.Web.Common.Infrastructure;
 using StoryBlog.Web.Microservices.Identity.Application.Contexts;
+using StoryBlog.Web.Microservices.Identity.Application.Models.Messages;
 using StoryBlog.Web.Microservices.Identity.Application.Stores;
 using StoryBlog.Web.Microservices.Identity.Domain.Entities;
 using StoryBlog.Web.Microservices.Identity.Infrastructure.Persistence;
@@ -15,9 +18,12 @@ public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration, string connectionStringKey)
     {
+        services.AddScoped<IUnitOfWork, UnitOfWork<StoryBlogIdentityDbContext>>();
+
         services.TryAddTransient<IUserConsentStore, UserConsentStore>();
         services.TryAddTransient<IRefreshTokenStore, DefaultRefreshTokenStore>();
         services.TryAddTransient<IMessageStore<LogoutNotificationContext>, ProtectedDataMessageStore<LogoutNotificationContext>>();
+        services.TryAddTransient<IMessageStore<ErrorMessage>, ProtectedDataMessageStore<ErrorMessage>>();
         services.TryAddTransient<IAuthorizationCodeStore, DefaultAuthorizationCodeStore>();
         services.TryAddTransient<IBackChannelAuthenticationRequestStore, DefaultBackChannelAuthenticationRequestStore>();
         services.TryAddTransient<IConsentMessageStore, ConsentMessageStore>();

@@ -9,20 +9,23 @@ using StoryBlog.Web.Microservices.Comments.Domain.Specifications;
 
 namespace StoryBlog.Web.Microservices.Comments.Application.Handlers.GetComments;
 
-public sealed class GetCommentsHandler : HandlerBase, IRequestHandler<GetCommentsQuery, GetCommentsResult>
+public sealed class GetCommentsHandler : HandlerBase, IRequestHandler<GetCommentsQuery, Result<IReadOnlyList<Comment>>>
 {
-    private readonly IUnitOfWork context;
+    private readonly IAsyncUnitOfWork context;
     private readonly IMapper mapper;
     private readonly ILogger<GetCommentsHandler> logger;
 
-    public GetCommentsHandler(IUnitOfWork context, IMapper mapper, ILogger<GetCommentsHandler> logger)
+    public GetCommentsHandler(
+        IAsyncUnitOfWork context,
+        IMapper mapper,
+        ILogger<GetCommentsHandler> logger)
     {
         this.context = context;
         this.mapper = mapper;
         this.logger = logger;
     }
 
-    public async Task<GetCommentsResult> Handle(GetCommentsQuery request, CancellationToken cancellationToken)
+    public async Task<Result<IReadOnlyList<Comment>>> Handle(GetCommentsQuery request, CancellationToken cancellationToken)
     {
         IReadOnlyList<Domain.Entities.Comment>? comments;
         ISpecification<Domain.Entities.Comment> specification = null == request.ParentKey
@@ -34,7 +37,7 @@ public sealed class GetCommentsHandler : HandlerBase, IRequestHandler<GetComment
             comments = await repository.QueryAsync(specification, cancellationToken);
         }
 
-        return new GetCommentsResult(
+        return new Result<IReadOnlyList<Comment>>(
             mapper.Map<IReadOnlyList<Comment>>(comments, options =>
             {
                 ;

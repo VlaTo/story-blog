@@ -1,14 +1,14 @@
-﻿using System.Collections;
-using Microsoft.EntityFrameworkCore;
-using StoryBlog.Web.Common.Domain;
+﻿using StoryBlog.Web.Common.Domain;
 using StoryBlog.Web.Common.Domain.Entities;
 using StoryBlog.Web.Common.Domain.Repositories;
 using StoryBlog.Web.Common.Infrastructure.Repositories;
+using System.Collections;
+using StoryBlog.Web.Common.Application;
 
 namespace StoryBlog.Web.Common.Infrastructure;
 
 public sealed class UnitOfWork<T> : IUnitOfWork
-    where T : GenericDbContext
+    where T : class, IGenericDbContext
 {
     private readonly Hashtable repositories;
     private T? context;
@@ -20,7 +20,10 @@ public sealed class UnitOfWork<T> : IUnitOfWork
         repositories = new Hashtable();
     }
 
-    public ValueTask DisposeAsync() => DisposeAsync(true);
+    public void Dispose()
+    {
+        ;
+    }
 
     public IGenericRepository<TEntity> GetRepository<TEntity>() where TEntity : IEntity
     {
@@ -46,26 +49,26 @@ public sealed class UnitOfWork<T> : IUnitOfWork
 
         throw new Exception();
     }
-
-    public Task CommitAsync(CancellationToken cancellationToken = default)
+    
+    public void Commit()
     {
-        return context!.SaveChangesAsync(cancellationToken);
+        context!.SaveChanges();
     }
 
-    private async ValueTask DisposeAsync(bool dispose)
+    private void Dispose(bool dispose)
     {
         if (disposed)
         {
-            return ;
+            return;
         }
 
         try
         {
             if (dispose)
             {
-                if (context!.ChangeTracker.HasChanges())
+                if (context!.HasChanges())
                 {
-                    await context!.RollbackAsync();
+                    context!.Rollback();
                 }
 
                 context = null;

@@ -1,10 +1,12 @@
 ﻿using System.Collections.Specialized;
 using System.Security.Claims;
+using System.Text;
 using IdentityModel;
 using Microsoft.Extensions.Logging;
 using StoryBlog.Web.Microservices.Identity.Application.Configuration;
 using StoryBlog.Web.Microservices.Identity.Application.Core;
 using StoryBlog.Web.Microservices.Identity.Application.Extensions;
+using StoryBlog.Web.Microservices.Identity.Application.Models.Logging;
 using StoryBlog.Web.Microservices.Identity.Application.Models.Requests;
 using StoryBlog.Web.Microservices.Identity.Application.Services;
 using StoryBlog.Web.Microservices.Identity.Application.Stores;
@@ -906,7 +908,16 @@ internal sealed class AuthorizeRequestValidator : IAuthorizeRequestValidator
 
     private void LogError(string message, string detail, ValidatedAuthorizeRequest request)
     {
-        //var requestDetails = new AuthorizeRequestValidationLog(request, options.Logging.AuthorizeRequestSensitiveValuesFilter);
-        //logger.LogError(message + ": {detail}\n{@requestDetails}", detail, requestDetails);
+        var text = new StringBuilder()
+            .Append(message)
+            .Append(':')
+            .Append(' ')
+            .AppendLine()
+            .Append(new AuthorizeRequestValidationLog(
+                request,
+                options.Logging.AuthorizeRequestSensitiveValuesFilter
+            ))
+            .ToString();
+        logger.LogError(text);
     }
 }

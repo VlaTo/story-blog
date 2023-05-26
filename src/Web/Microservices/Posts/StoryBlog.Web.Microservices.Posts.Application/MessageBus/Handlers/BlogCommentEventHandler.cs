@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using SlimMessageBus;
 using StoryBlog.Web.Common.Domain;
 using StoryBlog.Web.Common.Events;
@@ -9,11 +8,11 @@ namespace StoryBlog.Web.Microservices.Posts.Application.MessageBus.Handlers;
 
 public sealed class BlogCommentEventHandler : IConsumer<BlogCommentEvent>
 {
-    private readonly IUnitOfWork context;
+    private readonly IAsyncUnitOfWork context;
     private readonly ILogger<BlogCommentEventHandler> logger;
 
     public BlogCommentEventHandler(
-        IUnitOfWork context,
+        IAsyncUnitOfWork context,
         ILogger<BlogCommentEventHandler> logger)
     {
         this.context = context;

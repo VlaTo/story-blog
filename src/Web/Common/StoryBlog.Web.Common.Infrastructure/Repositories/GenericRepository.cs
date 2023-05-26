@@ -16,6 +16,8 @@ public class GenericRepository<TEntity, TDbContext> : IGenericRepository<TEntity
         this.context = context;
     }
 
+    #region IGenericRepository
+
     public async Task AddAsync(TEntity entity, CancellationToken cancellationToken)
     {
         var entities = context.Set<TEntity>();
@@ -43,14 +45,28 @@ public class GenericRepository<TEntity, TDbContext> : IGenericRepository<TEntity
         return 0 < await query.CountAsync(cancellationToken);
     }
 
+    public Task DeleteAsync(TEntity entity, CancellationToken cancellationToken = default)
+    {
+        var entities = context.Set<TEntity>();
+        
+        entities.Remove(entity);
+
+        return Task.CompletedTask;
+    }
+
     public Task SaveChangesAsync(CancellationToken cancellationToken = default)
     {
         return context.SaveChangesAsync(cancellationToken);
     }
 
-    public ValueTask DisposeAsync()
+    #endregion
+
+    #region IDisposable
+
+    public void Dispose()
     {
         //return context.DisposeAsync();
-        return ValueTask.CompletedTask;
     }
+
+    #endregion
 }

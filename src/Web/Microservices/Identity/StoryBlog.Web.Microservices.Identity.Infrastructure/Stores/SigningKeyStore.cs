@@ -1,11 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using StoryBlog.Web.Microservices.Identity.Application.Contexts;
+﻿using Microsoft.Extensions.Logging;
+using StoryBlog.Web.Common.Domain;
 using StoryBlog.Web.Microservices.Identity.Application.Core;
 using StoryBlog.Web.Microservices.Identity.Application.Services;
 using StoryBlog.Web.Microservices.Identity.Application.Storage;
 using StoryBlog.Web.Microservices.Identity.Application.Stores;
 using StoryBlog.Web.Microservices.Identity.Domain.Entities;
+using StoryBlog.Web.Microservices.Identity.Infrastructure.Specifications;
 
 namespace StoryBlog.Web.Microservices.Identity.Infrastructure.Stores;
 
@@ -20,7 +20,7 @@ public class SigningKeyStore : ISigningKeyStore
     /// <summary>
     /// The DbContext.
     /// </summary>
-    protected IPersistedGrantDbContext Context
+    protected IUnitOfWork Context
     {
         init;
         get;
@@ -52,7 +52,7 @@ public class SigningKeyStore : ISigningKeyStore
     /// <param name="cancellationTokenProvider"></param>
     /// <exception cref="ArgumentNullException">context</exception>
     public SigningKeyStore(
-        IPersistedGrantDbContext context,
+        IUnitOfWork context,
         ICancellationTokenProvider cancellationTokenProvider,
         ILogger<SigningKeyStore> logger)
     {
@@ -65,29 +65,35 @@ public class SigningKeyStore : ISigningKeyStore
     /// Loads all keys from store.
     /// </summary>
     /// <returns></returns>
-    public Task<IReadOnlyCollection<SerializedKey>> LoadKeysAsync()
+    public async Task<IReadOnlyCollection<SerializedKey>> LoadKeysAsync()
     {
-        using var activity = Tracing.ActivitySource.StartActivity("SigningKeyStore.LoadKeys");
+        using (Tracing.ActivitySource.StartActivity("SigningKeyStore.LoadKeys"))
+        {
+            Key[] entities;
 
-        /*var entities = await Context.Keys
-            .Where(x => x.Use == Use)
-            .AsNoTracking()
-            .ToArrayAsync(CancellationTokenProvider.CancellationToken);
-
-        return entities
-            .Select(key => new SerializedKey
+            using (var repository = Context.GetRepository<Key>())
             {
-                Id = key.Id,
-                Created = key.Created,
-                Version = key.Version,
-                Algorithm = key.Algorithm,
-                Data = key.Data,
-                DataProtected = key.DataProtected,
-                IsX509Certificate = key.IsX509Certificate
-            })
-            .ToArray();*/
+                var specification = new QueryKeysByUse(Use);
+                
+                entities = await repository.QueryAsync(
+                    specification,
+                    CancellationTokenProvider.CancellationToken
+                );
+            }
 
-        return Task.FromResult<IReadOnlyCollection<SerializedKey>>(Array.Empty<SerializedKey>());
+            return entities
+                .Select(key => new SerializedKey
+                {
+                    Id = key.Id,
+                    Created = key.Created,
+                    Version = key.Version,
+                    Algorithm = key.Algorithm,
+                    Data = key.Data,
+                    DataProtected = key.DataProtected,
+                    IsX509Certificate = key.IsX509Certificate
+                })
+                .ToArray();
+        }
     }
 
     /// <summary>
@@ -95,25 +101,28 @@ public class SigningKeyStore : ISigningKeyStore
     /// </summary>
     /// <param name="key"></param>
     /// <returns></returns>
-    public Task StoreKeyAsync(SerializedKey key)
+    public async Task StoreKeyAsync(SerializedKey key)
     {
-        using var activity = Tracing.ActivitySource.StartActivity("SigningKeyStore.StoreKey");
-
-        var entity = new Key
+        using (Tracing.ActivitySource.StartActivity("SigningKeyStore.StoreKey"))
         {
-            Id = key.Id,
-            Use = Use,
-            Created = key.Created,
-            Version = key.Version,
-            Algorithm = key.Algorithm,
-            Data = key.Data,
-            DataProtected = key.DataProtected,
-            IsX509Certificate = key.IsX509Certificate
-        };
+            var entity = new Key
+            {
+                Id = key.Id,
+                Use = Use,
+                Created = key.Created,
+                Version = key.Version,
+                Algorithm = key.Algorithm,
+                Data = key.Data,
+                DataProtected = key.DataProtected,
+                IsX509Certificate = key.IsX509Certificate
+            };
 
-        //Context.Keys.Add(entity);
-
-        return Context.SaveChangesAsync(CancellationTokenProvider.CancellationToken);
+            using (var repository = Context.GetRepository<Key>())
+            {
+                await repository.AddAsync(entity, CancellationTokenProvider.CancellationToken);
+                await repository.SaveChangesAsync(CancellationTokenProvider.CancellationToken);
+            }
+        }
     }
 
     /// <summary>
@@ -123,30 +132,20 @@ public class SigningKeyStore : ISigningKeyStore
     /// <returns></returns>
     public async Task DeleteKeyAsync(string id)
     {
-        using var activity = Tracing.ActivitySource.StartActivity("SigningKeyStore.DeleteKey");
-
-        /*var item = await Context.Keys
-            .Where(x => x.Use == Use && x.Id == id)
-            .FirstOrDefaultAsync(CancellationTokenProvider.CancellationToken);
-
-        if (null != item)
+        using (Tracing.ActivitySource.StartActivity("SigningKeyStore.DeleteKey"))
         {
-            try
+            using (var repository = Context.GetRepository<Key>())
             {
-                Context.Keys.Remove(item);
+                var query = new FindKeyByIdAndUse(id, Use);
+                var key = await repository.FindAsync(query, CancellationTokenProvider.CancellationToken);
 
-                await Context.SaveChangesAsync(CancellationTokenProvider.CancellationToken);
-            }
-            catch (DbUpdateConcurrencyException ex)
-            {
-                foreach (var entity in ex.Entries)
+                if (null != key)
                 {
-                    entity.State = EntityState.Detached;
+                    await repository.DeleteAsync(key, CancellationTokenProvider.CancellationToken);
                 }
 
-                // already deleted, so we can eat this exception
-                Logger.LogDebug("Concurrency exception caught deleting key id {kid}", id);
+                await repository.SaveChangesAsync(CancellationTokenProvider.CancellationToken);
             }
-        }*/
+        }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using StoryBlog.Web.Common.Application;
 using StoryBlog.Web.Common.Infrastructure.Converters;
 using StoryBlog.Web.Microservices.Identity.Application.Contexts;
 using StoryBlog.Web.Microservices.Identity.Application.DependencyInjection.Options;
@@ -9,10 +10,8 @@ using StoryBlog.Web.Microservices.Identity.Infrastructure.Configuration;
 
 namespace StoryBlog.Web.Microservices.Identity.Infrastructure.Persistence;
 
-public sealed class StoryBlogIdentityDbContext : IdentityDbContext<StoryBlogUser, StoryBlogUserRole, string>, IStoryBlogIdentityDbContext, IConfigurationDbContext, IPersistedGrantDbContext
+public sealed class StoryBlogIdentityDbContext : IdentityDbContext<StoryBlogUser, StoryBlogUserRole, string>, IGenericDbContext, IStoryBlogIdentityDbContext, IConfigurationDbContext, IPersistedGrantDbContext
 {
-
-    /*
     #region IConfigurationDbContext
 
     public DbSet<Client> Clients
@@ -74,7 +73,6 @@ public sealed class StoryBlogIdentityDbContext : IdentityDbContext<StoryBlogUser
     }
     
     #endregion
-    */
 
     public ConfigurationStoreOptions? StoreOptions
     {
@@ -91,6 +89,19 @@ public sealed class StoryBlogIdentityDbContext : IdentityDbContext<StoryBlogUser
     {
     }
 
+    public bool HasChanges() => ChangeTracker.HasChanges();
+
+    public Task RollbackAsync(CancellationToken cancellationToken = default)
+    {
+        // do nothing
+        return Task.CompletedTask;
+    }
+
+    public void Rollback()
+    {
+        ;
+    }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         var storeOptions = StoreOptions ?? this.GetService<ConfigurationStoreOptions>();
@@ -100,8 +111,8 @@ public sealed class StoryBlogIdentityDbContext : IdentityDbContext<StoryBlogUser
             throw new ArgumentNullException();
         }
 
-        //modelBuilder.ApplyConfiguration(new ClientEntityConfiguration(storeOptions));
-        //modelBuilder.ApplyConfiguration(new KeyEntityConfiguration(storeOptions));
+        modelBuilder.ApplyConfiguration(new ClientEntityConfiguration(storeOptions));
+        modelBuilder.ApplyConfiguration(new KeyEntityConfiguration(storeOptions));
 
         base.OnModelCreating(modelBuilder);
         

@@ -1,9 +1,10 @@
-﻿using System.Security.Claims;
-using MediatR;
+﻿using MediatR;
+using StoryBlog.Web.Common.Application;
+using System.Security.Claims;
 
 namespace StoryBlog.Web.Microservices.Comments.Application.Handlers.GetComment;
 
-public sealed class GetCommentQuery : IRequest<GetCommentResult>
+public sealed class GetCommentQuery : IRequest<Result<Models.Comment>>
 {
     public Guid Key
     {

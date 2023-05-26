@@ -6,7 +6,7 @@
 public class PersistentGrantOptions
 {
     /// <summary>
-    /// Data protect the persisted grants "data" column.
+    /// Value protect the persisted grants "data" column.
     /// </summary>
     public bool DataProtectData
     {

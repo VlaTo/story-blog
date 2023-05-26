@@ -119,7 +119,7 @@ public static class IdentityServiceBuilderExtensions
         services.AddSingleton(options);
         storeOptionsAction?.Invoke(options);
 
-        if (null != options.ResolveDbContextOptions)
+        /*if (null != options.ResolveDbContextOptions)
         {
             if (options.EnablePooling)
             {
@@ -164,7 +164,7 @@ public static class IdentityServiceBuilderExtensions
             }
         }
 
-        services.AddScoped<IConfigurationDbContext, TContext>();
+        services.AddScoped<IConfigurationDbContext, TContext>();*/
 
         return services;
     }

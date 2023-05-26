@@ -106,7 +106,7 @@ public class DeviceFlowStore : IDeviceFlowStore
             return null;
         }
 
-        var model = ToModel(deviceFlowCode.Data);
+        var model = ToModel(deviceFlowCode.Value);
 
         Logger.LogDebug("{userCode} found in database: {userCodeFound}", userCode, null != model);
 
@@ -135,7 +135,7 @@ public class DeviceFlowStore : IDeviceFlowStore
             return null;
         }
 
-        var model = ToModel(deviceFlowCodes.Data);
+        var model = ToModel(deviceFlowCodes.Value);
 
         Logger.LogDebug("{deviceCode} found in database: {deviceCodeFound}", deviceCode, null != model);
 
@@ -169,7 +169,7 @@ public class DeviceFlowStore : IDeviceFlowStore
         Logger.LogDebug("{userCode} found in database", userCode);
 
         deviceFlowCode.SubjectId = data.Subject.FindFirst(JwtClaimTypes.Subject).Value;
-        deviceFlowCode.Data = entity.Data;
+        deviceFlowCode.Value = entity.Value;
         deviceFlowCode.SessionId = data.SessionId;
         deviceFlowCode.Description = data.Description;
 

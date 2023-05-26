@@ -1,10 +1,11 @@
 ﻿using System.Security.Claims;
 using MediatR;
+using StoryBlog.Web.Common.Application;
 using StoryBlog.Web.Microservices.Posts.Application.Models;
 
 namespace StoryBlog.Web.Microservices.Posts.Application.Handlers.CreatePost;
 
-public sealed class CreatePostCommand : IRequest<Guid?>
+public sealed class CreatePostCommand : IRequest<Result<Guid>>
 {
     public CreatePostDetails Details
     {

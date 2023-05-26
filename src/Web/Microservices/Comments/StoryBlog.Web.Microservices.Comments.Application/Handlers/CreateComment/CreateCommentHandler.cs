@@ -8,14 +8,14 @@ using StoryBlog.Web.Microservices.Comments.Domain.Specifications;
 
 namespace StoryBlog.Web.Microservices.Comments.Application.Handlers.CreateComment;
 
-public sealed class CreateCommentHandler : HandlerBase, MediatR.IRequestHandler<CreateCommentCommand, Guid?>
+public sealed class CreateCommentHandler : HandlerBase, MediatR.IRequestHandler<CreateCommentCommand, Result<Guid>>
 {
-    private readonly IUnitOfWork context;
+    private readonly IAsyncUnitOfWork context;
     private readonly IMessageBus messageBus;
     private readonly ILogger<CreateCommentHandler> logger;
 
     public CreateCommentHandler(
-        IUnitOfWork context,
+        IAsyncUnitOfWork context,
         IMessageBus messageBus,
         ILogger<CreateCommentHandler> logger)
     {
@@ -24,7 +24,7 @@ public sealed class CreateCommentHandler : HandlerBase, MediatR.IRequestHandler<
         this.logger = logger;
     }
 
-    public async Task<Guid?> Handle(CreateCommentCommand request, CancellationToken cancellationToken)
+    public async Task<Result<Guid>> Handle(CreateCommentCommand request, CancellationToken cancellationToken)
     {
         var comment = new Comment
         {
@@ -45,7 +45,7 @@ public sealed class CreateCommentHandler : HandlerBase, MediatR.IRequestHandler<
 
                 if (null == parentComment)
                 {
-                    throw new Exception();
+                    return new Result<Guid>(new Exception("No parent"));
                 }
 
                 parentComment.Comments.Add(comment);
@@ -64,6 +64,6 @@ public sealed class CreateCommentHandler : HandlerBase, MediatR.IRequestHandler<
 
         await messageBus.Publish(commentEvent, cancellationToken: cancellationToken);
 
-        return comment.Key;
+        return new Result<Guid>(comment.Key);
     }
 }

@@ -9,7 +9,7 @@ public interface ISigningKeyStoreCache
     /// Returns cached keys.
     /// </summary>
     /// <returns></returns>
-    Task<IEnumerable<KeyContainer>?> GetKeysAsync();
+    Task<ICollection<KeyContainer>?> GetKeysAsync();
 
     /// <summary>
     /// Caches keys for duration.
@@ -17,5 +17,5 @@ public interface ISigningKeyStoreCache
     /// <param name="keys"></param>
     /// <param name="duration"></param>
     /// <returns></returns>
-    Task StoreKeysAsync(IEnumerable<KeyContainer> keys, TimeSpan duration);
+    Task StoreKeysAsync(ICollection<KeyContainer> keys, TimeSpan duration);
 }

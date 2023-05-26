@@ -1,6 +1,8 @@
-﻿namespace StoryBlog.Web.Microservices.Identity.Domain.Entities;
+﻿using StoryBlog.Web.Common.Domain.Entities;
 
-public class IdentityResource
+namespace StoryBlog.Web.Microservices.Identity.Domain.Entities;
+
+public class IdentityResource : IEntity, IHasId<int>
 {
     public int Id
     {

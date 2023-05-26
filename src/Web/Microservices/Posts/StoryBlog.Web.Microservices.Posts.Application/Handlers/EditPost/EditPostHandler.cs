@@ -7,20 +7,20 @@ using StoryBlog.Web.Microservices.Posts.Domain.Specifications;
 
 namespace StoryBlog.Web.Microservices.Posts.Application.Handlers.EditPost;
 
-public sealed class EditPostHandler : HandlerBase, IRequestHandler<EditPostCommand, bool>
+public sealed class EditPostHandler : HandlerBase, IRequestHandler<EditPostCommand, Result>
 {
-    private readonly IUnitOfWork context;
+    private readonly IAsyncUnitOfWork context;
     private readonly ILogger<EditPostHandler> logger;
 
     public EditPostHandler(
-        IUnitOfWork context,
+        IAsyncUnitOfWork context,
         ILogger<EditPostHandler> logger)
     {
         this.context = context;
         this.logger = logger;
     }
 
-    public async Task<bool> Handle(EditPostCommand request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(EditPostCommand request, CancellationToken cancellationToken)
     {
         await using (var repository = context.GetRepository<Post>())
         {
@@ -36,10 +36,10 @@ public sealed class EditPostHandler : HandlerBase, IRequestHandler<EditPostComma
 
                 await context.CommitAsync(cancellationToken);
 
-                return true;
+                return Result.Success;
             }
         }
 
-        return false;
+        return new Exception();
     }
 }

@@ -1,6 +1,8 @@
-﻿namespace StoryBlog.Web.Microservices.Identity.Domain.Entities;
+﻿using StoryBlog.Web.Common.Domain.Entities;
 
-public class ClientRedirectUri
+namespace StoryBlog.Web.Microservices.Identity.Domain.Entities;
+
+public sealed class ClientRedirectUri : IEntity, IHasId<int>
 {
     public int Id
     {

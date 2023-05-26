@@ -4,6 +4,8 @@ using StoryBlog.Web.Common.Infrastructure.Converters;
 using StoryBlog.Web.Microservices.Identity.Application.DependencyInjection.Options;
 using StoryBlog.Web.Microservices.Identity.Domain;
 using StoryBlog.Web.Microservices.Identity.Domain.Entities;
+using static StoryBlog.Web.Microservices.Identity.Application.Core.Tracing;
+using static System.Formats.Asn1.AsnWriter;
 
 namespace StoryBlog.Web.Microservices.Identity.Infrastructure.Configuration;
 
@@ -210,7 +212,6 @@ internal sealed class ClientEntityConfiguration : IEntityTypeConfiguration<Clien
         builder
             .Property(x => x.LastAccessed)
             .IsRequired(required: false);
-
         builder
             .OwnsMany(
                 x => x.AllowedScopes,
@@ -219,16 +220,235 @@ internal sealed class ClientEntityConfiguration : IEntityTypeConfiguration<Clien
                     scopes
                         .Property(x => x.Scope)
                         .HasMaxLength(256)
+                        .IsUnicode(unicode: true)
                         .IsRequired(required: true);
+
                     scopes
                         .WithOwner(x => x.Client)
                         .HasForeignKey(x => x.ClientId);
 
                     scopes
                         .HasKey(x => x.Id);
+                    scopes
+                        .HasIndex(x => x.Scope);
 
                     scopes
                         .ToTable(TableNames.ClientScope, SchemaNames.Identity);
+                }
+            );
+        builder
+            .OwnsMany(
+                x => x.ClientSecrets,
+                secrets =>
+                {
+                    secrets
+                        .Property(x => x.Value)
+                        .HasMaxLength(Int16.MaxValue)
+                        .IsUnicode(unicode: true)
+                        .IsRequired(required: true);
+                    secrets
+                        .Property(x => x.Description)
+                        .HasMaxLength(Int16.MaxValue)
+                        .IsUnicode(unicode: true)
+                        .IsRequired(required: true);
+                    secrets
+                        .Property(x => x.Type)
+                        .HasMaxLength(256)
+                        .IsRequired(required: true);
+                    secrets
+                        .Property(x => x.Created)
+                        .IsRequired(required: true)
+                        .HasValueGenerator<UtcNowDateTimeValueGenerator>()
+                        .ValueGeneratedOnAdd();
+
+                    secrets
+                        .WithOwner(x => x.Client)
+                        .HasForeignKey(x => x.ClientId);
+
+                    secrets
+                        .HasKey(x => x.Id);
+                    secrets
+                        .HasIndex(x => x.Type);
+
+                    secrets
+                        .ToTable(TableNames.ClientSecret, SchemaNames.Identity);
+                }
+            );
+        builder
+            .OwnsMany(
+                x => x.Properties,
+                properties =>
+                {
+                    properties
+                        .Property(x => x.Key)
+                        .HasMaxLength(256)
+                        .IsRequired(required: true);
+                    properties
+                        .Property(x => x.Value)
+                        .HasMaxLength(Int16.MaxValue)
+                        .IsUnicode(unicode: true)
+                        .IsRequired(required: true);
+
+                    properties
+                        .WithOwner(x => x.Client)
+                        .HasForeignKey(x => x.ClientId);
+
+                    properties
+                        .HasKey(x => x.Id);
+                    properties
+                        .HasIndex(x => x.Key)
+                        .IsUnique(unique: false);
+
+                    properties
+                        .ToTable(TableNames.ClientProperty, SchemaNames.Identity);
+                }
+            );
+        builder
+            .OwnsMany(
+                x => x.Claims,
+                claims =>
+                {
+                    claims
+                        .Property(x => x.Type)
+                        .HasMaxLength(256)
+                        .IsRequired(required: true);
+                    claims
+                        .Property(x => x.Value)
+                        .HasMaxLength(Int16.MaxValue)
+                        .IsUnicode(unicode: true)
+                        .IsRequired(required: true);
+
+                    claims
+                        .WithOwner(x => x.Client)
+                        .HasForeignKey(x => x.ClientId);
+                    claims
+                        .HasKey(x => x.Id);
+                    claims
+                        .HasIndex(x => x.Type)
+                        .IsUnique(unique: false);
+
+                    claims
+                        .ToTable(TableNames.ClientClaim, SchemaNames.Identity);
+                }
+            );
+        builder
+            .OwnsMany(
+                x => x.AllowedCorsOrigins,
+                cors =>
+                {
+                    cors
+                        .Property(x => x.Origin)
+                        .HasMaxLength(2083)
+                        .IsRequired(required: true);
+
+                    cors
+                        .WithOwner(x => x.Client)
+                        .HasForeignKey(x => x.ClientId);
+
+                    cors
+                        .HasKey(x => x.Id);
+                    cors
+                        .HasIndex(x => x.Origin)
+                        .IsUnique(unique: false);
+
+                    cors
+                        .ToTable(TableNames.ClientCorsOrigin, SchemaNames.Identity);
+                }
+            );
+        builder
+            .OwnsMany(
+                x => x.AllowedGrantTypes,
+                grants =>
+                {
+                    grants
+                        .Property(x => x.GrantType)
+                        .HasMaxLength(256)
+                        .IsRequired(required: true);
+
+                    grants
+                        .WithOwner(x => x.Client)
+                        .HasForeignKey(x => x.ClientId);
+
+                    grants
+                        .HasKey(x => x.Id);
+                    grants
+                        .HasIndex(x => x.GrantType)
+                        .IsUnique(unique: false);
+
+                    grants
+                        .ToTable(TableNames.ClientGrantType, SchemaNames.Identity);
+                }
+            );
+        builder
+            .OwnsMany(
+                x => x.RedirectUris,
+                uris =>
+                {
+                    uris
+                        .Property(x => x.RedirectUri)
+                        .HasMaxLength(2083)
+                        .IsRequired(required: true);
+
+                    uris
+                        .WithOwner(x => x.Client)
+                        .HasForeignKey(x => x.ClientId);
+
+                    uris
+                        .HasKey(x => x.Id);
+                    uris
+                        .HasIndex(x => x.RedirectUri)
+                        .IsUnique(unique: true);
+
+                    uris
+                        .ToTable(TableNames.ClientRedirectUri, SchemaNames.Identity);
+                }
+            );
+        builder
+            .OwnsMany(
+                x => x.IdentityProviderRestrictions,
+                restrictions =>
+                {
+                    restrictions
+                        .Property(x => x.Provider)
+                        .HasMaxLength(256)
+                        .IsRequired(required: true);
+
+                    restrictions
+                        .WithOwner(x => x.Client)
+                        .HasForeignKey(x => x.ClientId);
+
+                    restrictions
+                        .HasKey(x => x.Id);
+                    restrictions
+                        .HasIndex(x => x.Provider)
+                        .IsUnique(unique: true);
+
+                    restrictions
+                        .ToTable(TableNames.ClientIdPRestriction, SchemaNames.Identity);
+                }
+            );
+        builder
+            .OwnsMany(
+                x => x.PostLogoutRedirectUris,
+                uris =>
+                {
+                    uris
+                        .Property(x => x.PostLogoutRedirectUri)
+                        .HasMaxLength(2083)
+                        .IsRequired(required: true);
+
+                    uris
+                        .WithOwner(x => x.Client)
+                        .HasForeignKey(x => x.ClientId);
+
+                    uris
+                        .HasKey(x => x.Id);
+                    uris
+                        .HasIndex(x => x.PostLogoutRedirectUri)
+                        .IsUnique(unique: true);
+
+                    uris
+                        .ToTable(TableNames.ClientPostLogoutRedirectUri, SchemaNames.Identity);
                 }
             );
 

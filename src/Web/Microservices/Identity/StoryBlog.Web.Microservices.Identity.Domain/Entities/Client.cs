@@ -1,10 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
+﻿using StoryBlog.Web.Common.Domain.Entities;
 
 namespace StoryBlog.Web.Microservices.Identity.Domain.Entities;
 
-public class Client
+public class Client : IEntity, IHasId<int>
 {
     public int Id
     {

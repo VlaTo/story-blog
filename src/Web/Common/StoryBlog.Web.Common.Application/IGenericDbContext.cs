@@ -2,7 +2,13 @@
 
 public interface IGenericDbContext
 {
-    Task<int> CommitAsync(CancellationToken cancellationToken = default);
+    bool HasChanges();
+
+    Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
+    
+    int SaveChanges();
 
     Task RollbackAsync(CancellationToken cancellationToken = default);
+
+    void Rollback();
 }

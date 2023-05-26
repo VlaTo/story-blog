@@ -24,6 +24,11 @@ public sealed class CommentsDbContext : GenericDbContext, ICommentsDbContext
         return Task.CompletedTask;
     }
 
+    public override void Rollback()
+    {
+        ;
+    }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfiguration(new CommentEntityConfiguration());

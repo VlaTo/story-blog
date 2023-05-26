@@ -204,7 +204,7 @@ public class TokenIssuedSuccessEvent : Event
     #region Token
 
     /// <summary>
-    /// Data structure serializing issued tokens
+    /// Value structure serializing issued tokens
     /// </summary>
     public class Token
     {

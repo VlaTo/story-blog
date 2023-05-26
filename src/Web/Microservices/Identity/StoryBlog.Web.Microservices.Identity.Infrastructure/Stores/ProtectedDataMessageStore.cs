@@ -1,5 +1,4 @@
-﻿using Azure.Core.Serialization;
-using IdentityModel;
+﻿using IdentityModel;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Extensions.Logging;
 using StoryBlog.Web.Microservices.Identity.Application.Core;

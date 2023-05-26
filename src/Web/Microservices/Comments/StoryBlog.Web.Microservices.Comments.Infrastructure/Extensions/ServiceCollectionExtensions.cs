@@ -11,7 +11,8 @@ public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddInfrastructureServices(this IServiceCollection services)
     {
-        services.AddScoped<IUnitOfWork, UnitOfWork<CommentsDbContext>>();
+        //services.AddScoped<IUnitOfWork, UnitOfWork<CommentsDbContext>>();
+        services.AddScoped<IAsyncUnitOfWork, AsyncUnitOfWork<CommentsDbContext>>();
 
         return services;
     }

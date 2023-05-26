@@ -8,11 +8,11 @@ namespace StoryBlog.Web.Microservices.Comments.Application.MessageBus.Handlers;
 
 public sealed class BlogPostEventHandler : IConsumer<BlogPostEvent>
 {
-    private readonly IUnitOfWork context;
+    private readonly IAsyncUnitOfWork context;
     private readonly ILogger<BlogPostEventHandler> logger;
 
     public BlogPostEventHandler(
-        IUnitOfWork context,
+        IAsyncUnitOfWork context,
         ILogger<BlogPostEventHandler> logger)
     {
         this.context = context;

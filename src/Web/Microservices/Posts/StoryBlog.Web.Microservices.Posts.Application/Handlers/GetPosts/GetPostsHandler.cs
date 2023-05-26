@@ -7,18 +7,18 @@ using StoryBlog.Web.Microservices.Posts.Domain.Specifications;
 
 namespace StoryBlog.Web.Microservices.Posts.Application.Handlers.GetPosts;
 
-public sealed class GetPostsHandler : HandlerBase, IRequestHandler<GetPostsQuery, GetPostsResult>
+public sealed class GetPostsHandler : HandlerBase, IRequestHandler<GetPostsQuery, Result<IReadOnlyList<Brief>>>
 {
-    private readonly IUnitOfWork context;
+    private readonly IAsyncUnitOfWork context;
     private readonly IMapper mapper;
 
-    public GetPostsHandler(IUnitOfWork context, IMapper mapper)
+    public GetPostsHandler(IAsyncUnitOfWork context, IMapper mapper)
     {
         this.context = context;
         this.mapper = mapper;
     }
 
-    public async Task<GetPostsResult> Handle(GetPostsQuery request, CancellationToken cancellationToken)
+    public async Task<Result<IReadOnlyList<Brief>>> Handle(GetPostsQuery request, CancellationToken cancellationToken)
     {
         IEnumerable<Domain.Entities.Post> posts;
 
@@ -28,7 +28,7 @@ public sealed class GetPostsHandler : HandlerBase, IRequestHandler<GetPostsQuery
             posts = await repository.QueryAsync(specification, cancellationToken);
         }
 
-        return new GetPostsResult(
+        return new Result<IReadOnlyList<Brief>>(
             mapper.Map<IReadOnlyList<Brief>>(posts, options =>
             {
                 ;

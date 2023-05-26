@@ -14,7 +14,7 @@ public abstract class GenericDbContext : DbContext, IGenericDbContext
     {
     }
 
-    public virtual async Task<int> CommitAsync(CancellationToken cancellationToken = default)
+    /*public virtual async Task<int> CommitAsync(CancellationToken cancellationToken = default)
     {
         if (ChangeTracker.HasChanges())
         {
@@ -22,7 +22,14 @@ public abstract class GenericDbContext : DbContext, IGenericDbContext
         }
 
         return 0;
-    }
+    }*/
+
+    public virtual bool HasChanges() => ChangeTracker.HasChanges();
 
     public abstract Task RollbackAsync(CancellationToken cancellationToken = default);
+
+    public virtual void Rollback()
+    {
+        ;
+    }
 }

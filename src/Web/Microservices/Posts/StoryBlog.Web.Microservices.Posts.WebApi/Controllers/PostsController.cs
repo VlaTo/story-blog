@@ -48,9 +48,9 @@ public class PostsController : Controller
         var query = new GetPostsQuery(pageNumber, pageSize, includeAll: true);
         var result = await mediator.Send(query);
 
-        if (result.IsSuccess())
+        if (result.IsSuccess)
         {
-            var models = mapper.Map<IReadOnlyCollection<BriefModel>>(result.Posts);
+            var models = mapper.Map<IReadOnlyCollection<BriefModel>>(result.Value);
             return Ok(new ListAllResponse
             {
                 Posts = models,
@@ -85,28 +85,28 @@ public class PostsController : Controller
         };
 
         var command = new CreatePostCommand(createPostDetails, User);
-        var createdPostKey = await mediator.Send(command).ConfigureAwait(false);
+        var createdPostResult = await mediator.Send(command).ConfigureAwait(false);
 
-        if (createdPostKey.HasValue)
+        if (createdPostResult.IsSuccess)
         {
-            var query = new GetPostQuery(createdPostKey.Value, User);
-            var postResult = await mediator.Send(query).ConfigureAwait(false);
+            var query = new GetPostQuery(createdPostResult.Value, User);
+            var queryPostResult = await mediator.Send(query).ConfigureAwait(false);
 
-            if (postResult.IsSuccess())
+            if (queryPostResult.IsSuccess)
             {
-                var location = locationProvider.GetPostUri(ControllerContext, RouteNames.GetPostRouteKey, createdPostKey.Value);
+                var location = locationProvider.GetPostUri(ControllerContext, RouteNames.GetPostRouteKey, createdPostResult.Value);
 
                 if (null != location)
                 {
-                    var model = mapper.Map<CreatedPostModel>(postResult.Post);
+                    var model = mapper.Map<CreatedPostModel>(queryPostResult.Value);
                     return Created(location, model);
                 }
 
-                logger.LogWarning($"Failed to build location for new post with key: {createdPostKey:D}");
+                logger.LogWarning($"Failed to build location for new post with key: {createdPostResult:D}");
             }
             else
             {
-                logger.LogWarning($"Failed to retrieve post with key: {createdPostKey:D}");
+                logger.LogWarning($"Failed to retrieve post with key: {createdPostResult:D}");
             }
         }
 

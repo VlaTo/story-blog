@@ -1,10 +1,12 @@
 ﻿using Microsoft.Extensions.Logging;
-using StoryBlog.Web.Microservices.Identity.Application.Contexts;
+using StoryBlog.Web.Common.Domain;
 using StoryBlog.Web.Microservices.Identity.Application.Core;
 using StoryBlog.Web.Microservices.Identity.Application.Extensions;
 using StoryBlog.Web.Microservices.Identity.Application.Services;
 using StoryBlog.Web.Microservices.Identity.Application.Storage;
 using StoryBlog.Web.Microservices.Identity.Application.Stores;
+using StoryBlog.Web.Microservices.Identity.Infrastructure.Extensions;
+using StoryBlog.Web.Microservices.Identity.Infrastructure.Specifications;
 
 namespace StoryBlog.Web.Microservices.Identity.Infrastructure.Stores;
 
@@ -17,7 +19,7 @@ public class ResourceStore : IResourceStore
     /// <summary>
     /// The DbContext.
     /// </summary>
-    protected readonly IConfigurationDbContext Context;
+    protected readonly IUnitOfWork Context;
 
     /// <summary>
     /// The CancellationToken provider.
@@ -37,7 +39,7 @@ public class ResourceStore : IResourceStore
     /// <param name="cancellationTokenProvider"></param>
     /// <exception cref="ArgumentNullException">context</exception>
     public ResourceStore(
-        IConfigurationDbContext context,
+        IUnitOfWork context,
         ILogger<ResourceStore> logger,
         ICancellationTokenProvider cancellationTokenProvider)
     {
@@ -51,39 +53,32 @@ public class ResourceStore : IResourceStore
     /// </summary>
     /// <param name="apiResourceNames">The names.</param>
     /// <returns></returns>
-    public virtual Task<IEnumerable<ApiResource>> FindApiResourcesByNameAsync(IEnumerable<string> apiResourceNames)
+    public virtual async Task<IEnumerable<ApiResource>> FindApiResourcesByNameAsync(IEnumerable<string> apiResourceNames)
     {
-        using var activity = Tracing.StoreActivitySource.StartActivity("ResourceStore.FindApiResourcesByName");
-
-        activity?.SetTag(Tracing.Properties.ApiResourceNames, apiResourceNames.ToSpaceSeparatedString());
-
-        var names = apiResourceNames.ToArray();
-
-        /*var result = await Context.ApiResources
-            .Where(resource => names.Contains(resource.Name))
-            .Include(resource => resource.Secrets)
-            .Include(resource => resource.Scopes)
-            .Include(resource => resource.UserClaims)
-            .Include(resource => resource.Properties)
-            .AsNoTracking()
-            .ToArrayAsync(CancellationTokenProvider.CancellationToken);
-
-        var resources = result
-            .Select(resource => resource.ToModel())
-            .ToArray();
-
-        if (0 < resources.Length)
+        using (var activity = Tracing.StoreActivitySource.StartActivity("ResourceStore.FindApiResourcesByName"))
         {
-            Logger.LogDebug("Found {apis} API resource in database", result.Select(x => x.Name));
-        }
-        else
-        {
-            Logger.LogDebug("Did not find {apis} API resource in database", apiResourceNames);
-        }
+            activity?.SetTag(Tracing.Properties.ApiResourceNames, apiResourceNames.ToSpaceSeparatedString());
 
-        return resources;*/
+            using (var repository = Context.GetRepository<Domain.Entities.ApiResource>())
+            {
+                var specification = new FindApiResourcesByName(apiResourceNames.ToArray());
+                var result = await repository.QueryAsync(specification, CancellationTokenProvider.CancellationToken);
+                var resources = result
+                    .Select(resource => resource.ToModel())
+                    .ToArray();
 
-        return Task.FromResult(Enumerable.Empty<ApiResource>());
+                if (0 < resources.Length)
+                {
+                    Logger.LogDebug("Found {apis} API resource in database", result.Select(x => x.Name));
+                }
+                else
+                {
+                    Logger.LogDebug("Did not find {apis} API resource in database", apiResourceNames);
+                }
+
+                return resources;
+            }
+        }
     }
 
     public Task<Resources> GetAllResourcesAsync()
@@ -134,52 +129,44 @@ public class ResourceStore : IResourceStore
     /// </summary>
     /// <param name="scopeNames"></param>
     /// <returns></returns>
-    public Task<IEnumerable<IdentityResource>> FindIdentityResourcesByScopeNameAsync(IEnumerable<string> scopeNames)
+    public async Task<IEnumerable<IdentityResource>> FindIdentityResourcesByScopeNameAsync(IEnumerable<string> scopeNames)
     {
-        using var activity = Tracing.StoreActivitySource.StartActivity("ResourceStore.FindIdentityResourcesByScopeName");
+        using (var activity = Tracing.StoreActivitySource.StartActivity("ResourceStore.FindIdentityResourcesByScopeName"))
+        {
+            activity?.SetTag(Tracing.Properties.ScopeNames, scopeNames.ToSpaceSeparatedString());
 
-        activity?.SetTag(Tracing.Properties.ScopeNames, scopeNames.ToSpaceSeparatedString());
+            using (var repository = Context.GetRepository<Domain.Entities.IdentityResource>())
+            {
+                var specification = new FindIdentityResourcesByScopes(scopeNames.ToArray());
+                var resources = await repository.QueryAsync(specification, CancellationTokenProvider.CancellationToken);
 
-        var scopes = scopeNames.ToArray();
+                Logger.LogDebug("Found {scopes} identity scopes in database", resources.Select(x => x.Name));
 
-        /*var resources = await Context.IdentityResources
-            .Where(resource => scopes.Contains(resource.Name))
-            .Include(resource => resource.UserClaims)
-            .Include(resource => resource.Properties)
-            .AsNoTracking()
-            .ToArrayAsync(CancellationTokenProvider.CancellationToken);
-
-        Logger.LogDebug("Found {scopes} identity scopes in database", resources.Select(x => x.Name));
-
-        return resources
-            .Select(x => x.ToModel())
-            .ToArray();*/
-
-        return Task.FromResult(Enumerable.Empty<IdentityResource>());
+                return resources
+                    .Select(x => x.ToModel())
+                    .ToArray();
+            }
+        }
     }
 
-    public Task<IEnumerable<ApiScope>> FindApiScopesByNameAsync(IEnumerable<string> scopeNames)
+    public async Task<IEnumerable<ApiScope>> FindApiScopesByNameAsync(IEnumerable<string> scopeNames)
     {
-        using var activity = Tracing.StoreActivitySource.StartActivity("ResourceStore.FindApiScopesByName");
+        using (var activity = Tracing.StoreActivitySource.StartActivity("ResourceStore.FindApiScopesByName"))
+        {
+            activity?.SetTag(Tracing.Properties.ScopeNames, scopeNames.ToSpaceSeparatedString());
 
-        activity?.SetTag(Tracing.Properties.ScopeNames, scopeNames.ToSpaceSeparatedString());
+            using (var repository = Context.GetRepository<Domain.Entities.ApiScope>())
+            {
+                var specification = new FindApiScopesByScopes(scopeNames.ToArray());
+                var resources = await repository.QueryAsync(specification, CancellationTokenProvider.CancellationToken);
 
-        var scopes = scopeNames.ToArray();
+                Logger.LogDebug("Found {scopes} identity scopes in database", resources.Select(x => x.Name));
 
-        /*var resources = await Context.ApiScopes
-            .Where(resource => scopes.Contains(resource.Name))
-            .Include(x => x.UserClaims)
-            .Include(x => x.Properties)
-            .AsNoTracking()
-            .ToArrayAsync(CancellationTokenProvider.CancellationToken);
-
-        Logger.LogDebug("Found {scopes} scopes in database", resources.Select(x => x.Name));
-
-        return resources
-            .Select(x => x.ToModel())
-            .ToArray();*/
-
-        return Task.FromResult(Enumerable.Empty<ApiScope>());
+                return resources
+                    .Select(x => x.ToModel())
+                    .ToArray();
+            }
+        }
     }
 
     /// <summary>
@@ -187,32 +174,24 @@ public class ResourceStore : IResourceStore
     /// </summary>
     /// <param name="scopeNames"></param>
     /// <returns></returns>
-    public virtual Task<IEnumerable<ApiResource>> FindApiResourcesByScopeNameAsync(IEnumerable<string> scopeNames)
+    public virtual async Task<IEnumerable<ApiResource>> FindApiResourcesByScopeNameAsync(IEnumerable<string> scopeNames)
     {
-        using var activity = Tracing.StoreActivitySource.StartActivity("ResourceStore.FindApiResourcesByScopeName");
+        using (var activity = Tracing.StoreActivitySource.StartActivity("ResourceStore.FindApiResourcesByScopeName"))
+        {
+            activity?.SetTag(Tracing.Properties.ScopeNames, scopeNames.ToSpaceSeparatedString());
 
-        activity?.SetTag(Tracing.Properties.ScopeNames, scopeNames.ToSpaceSeparatedString());
+            using (var repository = Context.GetRepository<Domain.Entities.ApiResource>())
+            {
+                var specification = new FindApiResourcesByScopeNames(scopeNames.ToArray());
+                var resources = await repository.QueryAsync(specification, CancellationTokenProvider.CancellationToken);
+                var models = resources
+                    .Select(x => x.ToModel())
+                    .ToArray();
 
-        var names = scopeNames.ToArray();
+                Logger.LogDebug("Found {apis} API resources in database", models.Select(x => x.Name));
 
-        /*var apiResources = await Context.ApiResources
-            .Where(resource => resource.Scopes.Any(scope => names.Contains(scope.Scope)))
-            .Include(resource => resource.Secrets)
-            .Include(resource => resource.Scopes)
-            .Include(resource => resource.UserClaims)
-            .Include(resource => resource.Properties)
-            .AsNoTracking()
-            .AsSplitQuery()
-            .ToArrayAsync(CancellationTokenProvider.CancellationToken);
-
-        var models = apiResources
-            .Select(x => x.ToModel())
-            .ToArray();
-
-        Logger.LogDebug("Found {apis} API resources in database", models.Select(x => x.Name));
-
-        return models;*/
-
-        return Task.FromResult(Enumerable.Empty<ApiResource>());
+                return models;
+            }
+        }
     }
 }

@@ -1,10 +1,11 @@
 ﻿using MediatR;
 using System.Security.Claims;
+using StoryBlog.Web.Common.Application;
 using StoryBlog.Web.Microservices.Posts.Application.Models;
 
 namespace StoryBlog.Web.Microservices.Posts.Application.Handlers.EditPost;
 
-public class EditPostCommand : IRequest<bool>
+public class EditPostCommand : IRequest<Result>
 {
     public Guid Key
     {

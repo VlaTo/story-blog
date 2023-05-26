@@ -21,6 +21,12 @@ public class SpecificationBase<TEntity> : ISpecification<TEntity> where TEntity 
         get;
     }
 
+    public SpecificationQueryOptions Options
+    {
+        get;
+        protected set;
+    }
+
     public int? Skip
     {
         get;
@@ -37,5 +43,6 @@ public class SpecificationBase<TEntity> : ISpecification<TEntity> where TEntity 
     {
         Includes = new List<Expression<Func<TEntity, object?>>>();
         OrderBy = new List<Expression<Func<TEntity, object?>>>();
+        Options = 0;
     }
 }

@@ -8,14 +8,14 @@ using StoryBlog.Web.Microservices.Posts.Domain.Specifications;
 
 namespace StoryBlog.Web.Microservices.Posts.Application.Handlers.GetPostReference;
 
-public sealed class GetPostReferenceHandler : HandlerBase, IRequestHandler<GetPostReferenceQuery, PostReference?>
+public sealed class GetPostReferenceHandler : HandlerBase, IRequestHandler<GetPostReferenceQuery, Result<PostReference>>
 {
-    private readonly IUnitOfWork context;
+    private readonly IAsyncUnitOfWork context;
     private readonly IMapper mapper;
     private readonly ILogger<GetPostReferenceHandler> logger;
 
     public GetPostReferenceHandler(
-        IUnitOfWork context,
+        IAsyncUnitOfWork context,
         IMapper mapper,
         ILogger<GetPostReferenceHandler> logger)
     {
@@ -24,7 +24,7 @@ public sealed class GetPostReferenceHandler : HandlerBase, IRequestHandler<GetPo
         this.logger = logger;
     }
 
-    public async Task<PostReference?> Handle(GetPostReferenceQuery request, CancellationToken cancellationToken)
+    public async Task<Result<PostReference>> Handle(GetPostReferenceQuery request, CancellationToken cancellationToken)
     {
         await using (var repository = context.GetRepository<Domain.Entities.Post>())
         {
@@ -40,6 +40,6 @@ public sealed class GetPostReferenceHandler : HandlerBase, IRequestHandler<GetPo
             }
         }
 
-        return null;
+        return new Exception("");
     }
 }

@@ -9,14 +9,14 @@ using StoryBlog.Web.Microservices.Posts.Domain.Specifications;
 
 namespace StoryBlog.Web.Microservices.Posts.Application.Handlers.GenerateSlug;
 
-public sealed class GenerateSlugHandler : HandlerBase, IRequestHandler<GenerateSlugQuery, string?>
+public sealed class GenerateSlugHandler : HandlerBase, IRequestHandler<GenerateSlugQuery, Result<string>>
 {
-    private readonly IUnitOfWork context;
+    private readonly IAsyncUnitOfWork context;
     private readonly IWordTransliterator transliterator;
     private readonly ILogger<GenerateSlugHandler> logger;
 
     public GenerateSlugHandler(
-        IUnitOfWork context,
+        IAsyncUnitOfWork context,
         IWordTransliterator transliterator,
         ILogger<GenerateSlugHandler> logger)
     {
@@ -25,7 +25,7 @@ public sealed class GenerateSlugHandler : HandlerBase, IRequestHandler<GenerateS
         this.logger = logger;
     }
 
-    public async Task<string?> Handle(GenerateSlugQuery request, CancellationToken cancellationToken)
+    public async Task<Result<string>> Handle(GenerateSlugQuery request, CancellationToken cancellationToken)
     {
         await using (var repository = context.GetRepository<Domain.Entities.Post>())
         {
@@ -45,7 +45,7 @@ public sealed class GenerateSlugHandler : HandlerBase, IRequestHandler<GenerateS
             }
         }
 
-        return null;
+        return new Exception("Failed to generate slug");
     }
 
     private async ValueTask<string> GenerateSlugAsync(string text)

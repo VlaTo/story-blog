@@ -8,20 +8,23 @@ using StoryBlog.Web.Microservices.Posts.Domain.Entities;
 
 namespace StoryBlog.Web.Microservices.Posts.Application.Handlers.CreatePost;
 
-public sealed class CreatePostHandler : HandlerBase, MediatR.IRequestHandler<CreatePostCommand, Guid?>
+public sealed class CreatePostHandler : HandlerBase, MediatR.IRequestHandler<CreatePostCommand, Result<Guid>>
 {
-    private readonly IUnitOfWork context;
+    private readonly IAsyncUnitOfWork context;
     private readonly IMessageBus messageBus;
     private readonly ILogger<CreatePostHandler> logger;
 
-    public CreatePostHandler(IUnitOfWork context, IMessageBus messageBus, ILogger<CreatePostHandler> logger)
+    public CreatePostHandler(
+        IAsyncUnitOfWork context,
+        IMessageBus messageBus,
+        ILogger<CreatePostHandler> logger)
     {
         this.context = context;
         this.messageBus = messageBus;
         this.logger = logger;
     }
 
-    public async Task<Guid?> Handle(CreatePostCommand request, CancellationToken cancellationToken)
+    public async Task<Result<Guid>> Handle(CreatePostCommand request, CancellationToken cancellationToken)
     {
         var post = new Post
         {
@@ -43,7 +46,9 @@ public sealed class CreatePostHandler : HandlerBase, MediatR.IRequestHandler<Cre
             await repository.SaveChangesAsync(cancellationToken);
         }
 
-        await messageBus.Publish(new BlogPostEvent(post.Key, BlogPostAction.Submitted), cancellationToken: cancellationToken);
+        var message = new BlogPostEvent(post.Key, BlogPostAction.Submitted);
+
+        await messageBus.Publish(message, cancellationToken: cancellationToken);
 
         return post.Key;
     }

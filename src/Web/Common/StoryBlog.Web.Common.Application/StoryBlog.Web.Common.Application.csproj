@@ -10,4 +10,8 @@
     <ProjectReference Include="..\StoryBlog.Web.Common.Domain\StoryBlog.Web.Common.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Extensions\" />
+  </ItemGroup>
+
 </Project>

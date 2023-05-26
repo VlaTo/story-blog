@@ -1,10 +1,11 @@
-﻿using System.Security.Claims;
-using MediatR;
+﻿using MediatR;
+using StoryBlog.Web.Common.Application;
 using StoryBlog.Web.Microservices.Comments.Application.Models;
+using System.Security.Claims;
 
 namespace StoryBlog.Web.Microservices.Comments.Application.Handlers.CreateComment;
 
-public sealed class CreateCommentCommand : IRequest<Guid?>
+public sealed class CreateCommentCommand : IRequest<Result<Guid>>
 {
     public CreateCommentDetails Details
     {
@@ -16,7 +17,7 @@ public sealed class CreateCommentCommand : IRequest<Guid?>
         get;
     }
 
-    public CreateCommentCommand(Models.CreateCommentDetails details, ClaimsPrincipal currentUser)
+    public CreateCommentCommand(CreateCommentDetails details, ClaimsPrincipal currentUser)
     {
         Details = details;
         CurrentUser = currentUser;

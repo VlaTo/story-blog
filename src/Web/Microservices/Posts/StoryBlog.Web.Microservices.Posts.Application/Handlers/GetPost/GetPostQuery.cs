@@ -1,9 +1,10 @@
 ﻿using System.Security.Claims;
 using MediatR;
+using StoryBlog.Web.Common.Application;
 
 namespace StoryBlog.Web.Microservices.Posts.Application.Handlers.GetPost;
 
-public class GetPostQuery : IRequest<GetPostResult>
+public class GetPostQuery : IRequest<Result<Models.Post>>
 {
     public Guid Key
     {

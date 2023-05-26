@@ -19,5 +19,5 @@ public interface ISigningKeyProtector
     /// </summary>
     /// <param name="key"></param>
     /// <returns></returns>
-    KeyContainer Unprotect(SerializedKey key);
+    KeyContainer? Unprotect(SerializedKey key);
 }

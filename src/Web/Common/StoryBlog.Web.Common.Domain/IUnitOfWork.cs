@@ -3,9 +3,9 @@ using StoryBlog.Web.Common.Domain.Repositories;
 
 namespace StoryBlog.Web.Common.Domain;
 
-public interface IUnitOfWork : IAsyncDisposable
+public interface IUnitOfWork : IDisposable
 {
     IGenericRepository<TEntity> GetRepository<TEntity>() where TEntity : IEntity;
 
-    Task CommitAsync(CancellationToken cancellationToken = default);
+    void Commit();
 }

@@ -31,7 +31,7 @@ builder.Services
     .AddIdentityServer()
     .AddApiAuthorization<StoryBlogUser, StoryBlogIdentityDbContext>(options =>
     {
-        options.Clients.AddSPA("blog.spa.client", client =>
+        options.Clients.AddSPA("288849a891664840975fa7992f247947", client =>
             client
                 .WithScopes(
                     DefinedScopes.Blog.Api.Blogs,

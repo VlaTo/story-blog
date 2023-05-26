@@ -14,7 +14,7 @@ public interface IPersistedGrantDbContext
     /// <value>
     /// The persisted grants.
     /// </value>
-    /*DbSet<Domain.Entities.PersistedGrant> PersistedGrants
+    DbSet<Domain.Entities.PersistedGrant> PersistedGrants
     {
         get;
         set;
@@ -42,7 +42,7 @@ public interface IPersistedGrantDbContext
     {
         get;
         set;
-    }*/
+    }
 
     /// <summary>
     /// Gets or sets the user sessions.
@@ -63,7 +63,7 @@ public interface IPersistedGrantDbContext
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
 
     // this is here only because of this: https://github.com/DuendeSoftware/IdentityServer/issues/472
-    // and because Microsoft implements the old API explicitly: https://github.com/dotnet/aspnetcore/blob/v6.0.0-rc.2.21480.10/src/Identity/ApiAuthorization.IdentityServer/src/Data/ApiAuthorizationDbContext.cs
+    // and because Microsoft implements the old API explicitly: https://github.com/dotnet/aspnetcore/blob/v6.0.0-rc.2.21480.10/src/Identity/ApiAuthorization.IdentityServer/src/Value/ApiAuthorizationDbContext.cs
 
     /// <summary>
     /// Saves the changes.

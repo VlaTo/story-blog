@@ -11,7 +11,7 @@ public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddInfrastructureServices(this IServiceCollection services)
     {
-        services.AddScoped<IUnitOfWork, UnitOfWork<PostsDbContext>>();
+        services.AddScoped<IAsyncUnitOfWork, AsyncUnitOfWork<PostsDbContext>>();
 
         return services;
     }

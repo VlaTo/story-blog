@@ -43,11 +43,11 @@ public class PostController : Controller
     public async Task<IActionResult> GetPost([FromRoute] Guid key)
     {
         var query = new GetPostQuery(key, User);
-        var postResult = await mediator.Send(query).ConfigureAwait(false);
+        var getPostResult = await mediator.Send(query).ConfigureAwait(false);
 
-        if (postResult.IsSuccess())
+        if (getPostResult.IsSuccess)
         {
-            var model = mapper.Map<PostModel>(postResult.Post);
+            var model = mapper.Map<PostModel>(getPostResult.Value);
             return Ok(model);
         }
 
@@ -73,16 +73,16 @@ public class PostController : Controller
         };
 
         var command = new EditPostCommand(key, details, User);
-        var success = await mediator.Send(command).ConfigureAwait(false);
+        var editPostResult = await mediator.Send(command).ConfigureAwait(false);
 
-        if (success)
+        if (editPostResult.IsSuccess)
         {
             var query = new GetPostQuery(key, User);
-            var postResult = await mediator.Send(query).ConfigureAwait(false);
+            var queryPostResult = await mediator.Send(query).ConfigureAwait(false);
 
-            if (postResult.IsSuccess())
+            if (queryPostResult.IsSuccess)
             {
-                var model = mapper.Map<PostModel>(postResult.Post);
+                var model = mapper.Map<PostModel>(queryPostResult.Value);
                 return Ok(model);
             }
         }

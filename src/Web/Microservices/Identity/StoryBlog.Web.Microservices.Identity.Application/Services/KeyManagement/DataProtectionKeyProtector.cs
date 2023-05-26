@@ -55,7 +55,7 @@ public class DataProtectionKeyProtector : ISigningKeyProtector
     }
 
     /// <inheritdoc/>
-    public KeyContainer Unprotect(SerializedKey key)
+    public KeyContainer? Unprotect(SerializedKey key)
     {
         var data = key.DataProtected ?
             dataProtectionProvider.Unprotect(key.Data) :

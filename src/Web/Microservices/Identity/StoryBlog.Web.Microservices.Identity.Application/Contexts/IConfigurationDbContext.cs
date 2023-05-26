@@ -14,7 +14,7 @@ public interface IConfigurationDbContext
     /// <value>
     /// The clients.
     /// </value>
-    /*DbSet<Domain.Entities.Client> Clients
+    DbSet<Domain.Entities.Client> Clients
     {
         get;
         set;
@@ -78,5 +78,5 @@ public interface IConfigurationDbContext
     {
         get;
         set;
-    }*/
+    }
 }

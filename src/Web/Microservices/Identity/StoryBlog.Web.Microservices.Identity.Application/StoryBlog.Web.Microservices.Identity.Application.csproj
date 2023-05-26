@@ -41,6 +41,7 @@
     <Folder Include="Core\Events\" />
     <Folder Include="Endpoints\Results\" />
     <Folder Include="Hosting\FederatedSignOut\" />
+    <Folder Include="Models\Logging\" />
     <Folder Include="ResponseHandling\Models\" />
     <Folder Include="Services\KeyManagement\" />
     <Folder Include="Validation\Results\" />

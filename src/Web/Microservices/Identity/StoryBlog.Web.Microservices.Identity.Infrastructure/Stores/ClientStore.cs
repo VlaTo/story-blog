@@ -1,10 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using StoryBlog.Web.Microservices.Identity.Application.Contexts;
+﻿using Microsoft.Extensions.Logging;
+using StoryBlog.Web.Common.Domain;
 using StoryBlog.Web.Microservices.Identity.Application.Core;
 using StoryBlog.Web.Microservices.Identity.Application.Services;
 using StoryBlog.Web.Microservices.Identity.Application.Stores;
 using StoryBlog.Web.Microservices.Identity.Infrastructure.Extensions;
+using StoryBlog.Web.Microservices.Identity.Infrastructure.Specifications;
 
 namespace StoryBlog.Web.Microservices.Identity.Infrastructure.Stores;
 
@@ -17,7 +17,7 @@ public class ClientStore : IClientStore
     /// <summary>
     /// The DbContext.
     /// </summary>
-    protected readonly IConfigurationDbContext Context;
+    protected readonly IUnitOfWork Context;
 
     /// <summary>
     /// The CancellationToken provider.
@@ -37,11 +37,11 @@ public class ClientStore : IClientStore
     /// <param name="cancellationTokenProvider"></param>
     /// <exception cref="ArgumentNullException">context</exception>
     public ClientStore(
-        IConfigurationDbContext context,
+        IUnitOfWork context,
         ICancellationTokenProvider cancellationTokenProvider,
         ILogger<ClientStore> logger)
     {
-        Context = context ?? throw new ArgumentNullException(nameof(context));
+        Context = context;
         CancellationTokenProvider = cancellationTokenProvider;
         Logger = logger;
     }
@@ -53,39 +53,37 @@ public class ClientStore : IClientStore
     /// <returns>
     /// The client
     /// </returns>
-    public virtual Task<Application.Storage.Client?> FindClientByIdAsync(string clientId)
+    public virtual async Task<Application.Storage.Client?> FindClientByIdAsync(string clientId)
     {
-        using var activity = Tracing.StoreActivitySource.StartActivity("ClientStore.FindClientById");
-
-        activity?.SetTag(Tracing.Properties.ClientId, clientId);
-
-        /*var query = Context.Clients
-            .Where(x => x.ClientId == clientId)
-            .Include(x => x.AllowedCorsOrigins)
-            .Include(x => x.AllowedGrantTypes)
-            .Include(x => x.AllowedScopes)
-            .Include(x => x.Claims)
-            .Include(x => x.ClientSecrets)
-            .Include(x => x.IdentityProviderRestrictions)
-            .Include(x => x.PostLogoutRedirectUris)
-            .Include(x => x.Properties)
-            .Include(x => x.RedirectUris)
-            .AsNoTracking()
-            .AsSplitQuery();
-
-        var client = await query.SingleOrDefaultAsync(CancellationTokenProvider.CancellationToken);
-
-        if (null == client)
+        using (var activity = Tracing.StoreActivitySource.StartActivity("ClientStore.FindClientById"))
         {
-            return null;
+            activity?.SetTag(Tracing.Properties.ClientId, clientId);
+
+            try
+            {
+                using (var repository = Context.GetRepository<Domain.Entities.Client>())
+                {
+                    var specification = new FindClientById(clientId);
+                    var client = await repository.FindAsync(specification, CancellationTokenProvider.CancellationToken);
+
+                    if (null != client)
+                    {
+                        var model = client.ToModel();
+
+                        Logger.LogDebug("Client {0} found in database", clientId);
+
+                        return model;
+                    }
+
+                    Logger.LogDebug("Client {0} not found in database", clientId);
+                }
+            }
+            catch (Exception exception)
+            {
+                Logger.LogError(exception, "Error while getting client {0}", clientId);
+            }
         }
 
-        var model = client.ToModel();
-
-        Logger.LogDebug("Client {clientId} found in database", clientId);
-
-        return model;*/
-
-        return Task.FromResult<Application.Storage.Client?>(null);
+        return null;
     }
 }

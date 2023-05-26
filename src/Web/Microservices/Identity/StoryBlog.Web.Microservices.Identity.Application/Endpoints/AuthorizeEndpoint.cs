@@ -40,36 +40,38 @@ internal class AuthorizeEndpoint : AuthorizeEndpointBase
 
     public override async Task<IEndpointResult?> ProcessAsync(HttpContext context)
     {
-        using var activity = Tracing.ActivitySource.StartActivity(Constants.EndpointNames.Authorize + "Endpoint");
-        // todo: add complete url?
-
-        Logger.LogDebug("Start authorize request");
-
-        NameValueCollection values;
-
-        if (HttpMethods.IsGet(context.Request.Method))
+        using (Tracing.ActivitySource.StartActivity(Constants.EndpointNames.Authorize + "Endpoint"))
         {
-            values = context.Request.Query.AsNameValueCollection();
-        }
-        else if (HttpMethods.IsPost(context.Request.Method))
-        {
-            if (!context.Request.HasApplicationFormContentType())
+            // todo: add complete url?
+
+            Logger.LogDebug("Start authorize request");
+
+            NameValueCollection values;
+
+            if (HttpMethods.IsGet(context.Request.Method))
             {
-                return new StatusCodeResult(HttpStatusCode.UnsupportedMediaType);
+                values = context.Request.Query.AsNameValueCollection();
+            }
+            else if (HttpMethods.IsPost(context.Request.Method))
+            {
+                if (!context.Request.HasApplicationFormContentType())
+                {
+                    return new StatusCodeResult(HttpStatusCode.UnsupportedMediaType);
+                }
+
+                values = context.Request.Form.AsNameValueCollection();
+            }
+            else
+            {
+                return new StatusCodeResult(HttpStatusCode.MethodNotAllowed);
             }
 
-            values = context.Request.Form.AsNameValueCollection();
+            var user = await UserSession.GetUserAsync();
+            var result = await ProcessAuthorizeRequestAsync(values, user);
+
+            Logger.LogTrace("End authorize request. result type: {0}", result?.GetType().ToString() ?? "-none-");
+
+            return result;
         }
-        else
-        {
-            return new StatusCodeResult(HttpStatusCode.MethodNotAllowed);
-        }
-
-        var user = await UserSession.GetUserAsync();
-        var result = await ProcessAuthorizeRequestAsync(values, user);
-
-        Logger.LogTrace("End authorize request. result type: {0}", result?.GetType().ToString() ?? "-none-");
-
-        return result;
     }
 }

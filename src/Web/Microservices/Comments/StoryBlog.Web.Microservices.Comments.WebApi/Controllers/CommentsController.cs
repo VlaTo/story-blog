@@ -48,11 +48,9 @@ public sealed class CommentsController : Controller
         var query = new GetCommentsQuery(postKey, parentKey, pageNumber, pageSize, includeAll: true);
         var result = await mediator.Send(query);
 
-        //await Task.Delay(TimeSpan.FromSeconds(5.0d));
-
-        if (result.IsSuccess())
+        if (result.IsSuccess)
         {
-            var comments = mapper.Map<IReadOnlyList<CommentModel>>(result.Comments);
+            var comments = mapper.Map<IReadOnlyList<CommentModel>>(result.Value);
             return Ok(new ListAllResponse
             {
                 Comments = comments,
@@ -86,24 +84,24 @@ public sealed class CommentsController : Controller
         };
 
         var command = new CreateCommentCommand(createCommentDetails, User);
-        var createdCommentKey = await mediator.Send(command).ConfigureAwait(false);
+        var createCommentResult = await mediator.Send(command).ConfigureAwait(false);
 
-        if (createdCommentKey.HasValue)
+        if (createCommentResult.IsSuccess)
         {
-            var query = new GetCommentQuery(createdCommentKey.Value, User);
-            var commentResult = await mediator.Send(query).ConfigureAwait(false);
+            var query = new GetCommentQuery(createCommentResult.Value, User);
+            var queryCommentResult = await mediator.Send(query).ConfigureAwait(false);
 
-            if (commentResult.IsSuccess())
+            if (queryCommentResult.IsSuccess)
             {
-                var location = locationProvider.GetCommentUri(ControllerContext, RouteNames.GetCommentRouteKey, createdCommentKey.Value);
+                var location = locationProvider.GetCommentUri(ControllerContext, RouteNames.GetCommentRouteKey, createCommentResult.Value);
 
                 if (null != location)
                 {
-                    var model = mapper.Map<CreatedCommentModel>(commentResult.Comment);
+                    var model = mapper.Map<CreatedCommentModel>(queryCommentResult.Value);
                     return Created(location, model);
                 }
 
-                logger.LogWarning($"Failed to build location for new comment with key: {createdCommentKey:D}");
+                logger.LogWarning($"Failed to build location for new comment with key: {createCommentResult.Value:D}");
             }
         }
 

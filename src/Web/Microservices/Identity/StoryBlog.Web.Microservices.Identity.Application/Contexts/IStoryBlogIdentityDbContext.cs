@@ -6,7 +6,7 @@ namespace StoryBlog.Web.Microservices.Identity.Application.Contexts;
 
 public interface IStoryBlogIdentityDbContext
 {
-    /*DbSet<StoryBlogUser> Users
+    DbSet<StoryBlogUser> Users
     {
         get;
     }
@@ -39,5 +39,5 @@ public interface IStoryBlogIdentityDbContext
     DbSet<IdentityUserToken<string>> UserTokens
     {
         get;
-    }*/
+    }
 }

@@ -1,6 +1,8 @@
-﻿namespace StoryBlog.Web.Microservices.Identity.Domain.Entities;
+﻿using StoryBlog.Web.Common.Domain.Entities;
 
-public sealed class ClientScope
+namespace StoryBlog.Web.Microservices.Identity.Domain.Entities;
+
+public sealed class ClientScope : IEntity, IHasId<int>
 {
     public int Id
     {

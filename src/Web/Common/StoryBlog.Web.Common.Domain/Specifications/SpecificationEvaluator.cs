@@ -9,6 +9,16 @@ public class SpecificationEvaluator<TEntity> where TEntity : class, IEntity
     {
         var query = entities.AsQueryable();
 
+        if (0 != (specification.Options & SpecificationQueryOptions.NoTracking))
+        {
+            query = query.AsNoTracking();
+        }
+
+        if (0 != (specification.Options & SpecificationQueryOptions.SplitQuery))
+        {
+            query = query.AsSplitQuery();
+        }
+
         if (null != specification.Criteria)
         {
             query = query.Where(specification.Criteria);

@@ -1,8 +1,10 @@
 ﻿using MediatR;
+using StoryBlog.Web.Common.Application;
+using StoryBlog.Web.Microservices.Comments.Application.Models;
 
 namespace StoryBlog.Web.Microservices.Comments.Application.Handlers.GetComments;
 
-public sealed class GetCommentsQuery : IRequest<GetCommentsResult>
+public sealed class GetCommentsQuery : IRequest<Result<IReadOnlyList<Comment>>>
 {
     public Guid PostKey
     {

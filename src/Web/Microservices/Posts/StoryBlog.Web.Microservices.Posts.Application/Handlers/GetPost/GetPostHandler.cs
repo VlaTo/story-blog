@@ -7,14 +7,14 @@ using StoryBlog.Web.Microservices.Posts.Domain.Specifications;
 
 namespace StoryBlog.Web.Microservices.Posts.Application.Handlers.GetPost;
 
-public class GetPostHandler : HandlerBase, IRequestHandler<GetPostQuery, GetPostResult>
+public class GetPostHandler : HandlerBase, IRequestHandler<GetPostQuery, Result<Models.Post>>
 {
-    private readonly IUnitOfWork context;
+    private readonly IAsyncUnitOfWork context;
     private readonly IMapper mapper;
     private readonly ILogger<GetPostHandler> logger;
 
     public GetPostHandler(
-        IUnitOfWork context,
+        IAsyncUnitOfWork context,
         IMapper mapper,
         ILogger<GetPostHandler> logger)
     {
@@ -23,7 +23,7 @@ public class GetPostHandler : HandlerBase, IRequestHandler<GetPostQuery, GetPost
         this.logger = logger;
     }
 
-    public async Task<GetPostResult> Handle(GetPostQuery request, CancellationToken cancellationToken)
+    public async Task<Result<Models.Post>> Handle(GetPostQuery request, CancellationToken cancellationToken)
     {
         await using (var repository = context.GetRepository<Domain.Entities.Post>())
         {
@@ -35,10 +35,10 @@ public class GetPostHandler : HandlerBase, IRequestHandler<GetPostQuery, GetPost
             if (null != entity)
             {
                 var post = mapper.Map<Models.Post>(entity);
-                return new GetPostResult(post);
+                return post;
             }
         }
 
-        return new GetPostResult(null);
+        return new Exception("No post found");
     }
 }
