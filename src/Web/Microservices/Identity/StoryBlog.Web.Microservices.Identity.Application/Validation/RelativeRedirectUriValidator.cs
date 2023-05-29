@@ -42,9 +42,15 @@ internal sealed class RelativeRedirectUriValidator : StrictRedirectUriValidator
         return base.IsPostLogoutRedirectUriValidAsync(requestedUri, client);
     }
 
-    private static bool IsLocalSPA(Client client) =>
-        client.Properties.TryGetValue(ApplicationProfilesPropertyNames.Profile, out var clientType) &&
-        ApplicationProfiles.IdentityServerSPA == clientType;
+    private static bool IsLocalSPA(Client client)
+    {
+        if (client.Properties.TryGetValue(ApplicationProfilesPropertyNames.Profile, out var clientType))
+        {
+            return ApplicationProfiles.IdentityServerSPA == clientType;
+        }
+
+        return false;
+    }
 
     private Task<bool> ValidateRelativeUris(string requestedUri, IEnumerable<string> clientUris)
     {

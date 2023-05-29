@@ -60,7 +60,7 @@ public sealed class StoryBlogIdentityDbContext : IdentityDbContext<StoryBlogUser
         set;
     }
 
-    public DbSet<DeviceFlowCodes> DeviceFlowCodes
+    public DbSet<DeviceFlowCode> DeviceFlowCodes
     {
         get;
         set;
@@ -111,8 +111,15 @@ public sealed class StoryBlogIdentityDbContext : IdentityDbContext<StoryBlogUser
             throw new ArgumentNullException();
         }
 
+        modelBuilder.ApplyConfiguration(new ApiResourceEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new ApiScopeEntityConfiguration(storeOptions));
         modelBuilder.ApplyConfiguration(new ClientEntityConfiguration(storeOptions));
+        modelBuilder.ApplyConfiguration(new DeviceFlowCodeEntityConfiguration(storeOptions));
+        modelBuilder.ApplyConfiguration(new IdentityResourceEntityConfiguration(storeOptions));
+        modelBuilder.ApplyConfiguration(new IdentityProviderEntityConfiguration(storeOptions));
         modelBuilder.ApplyConfiguration(new KeyEntityConfiguration(storeOptions));
+        modelBuilder.ApplyConfiguration(new PersistedGrantEntityConfiguration(storeOptions));
+        modelBuilder.ApplyConfiguration(new ServerSideSessionEntityConfiguration(storeOptions));
 
         base.OnModelCreating(modelBuilder);
         

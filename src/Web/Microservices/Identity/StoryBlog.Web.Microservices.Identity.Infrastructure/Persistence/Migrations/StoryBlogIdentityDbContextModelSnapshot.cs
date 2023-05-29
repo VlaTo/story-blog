@@ -146,150 +146,63 @@ namespace StoryBlog.Web.Microservices.Identity.Infrastructure.Persistence.Migrat
 
                     b.Property<string>("AllowedAccessTokenSigningAlgorithms")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(1024)
+                        .HasColumnType("nvarchar(1024)");
 
                     b.Property<DateTime>("Created")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(1024)
+                        .IsUnicode(true)
+                        .HasColumnType("nvarchar(1024)");
 
                     b.Property<string>("DisplayName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(256)
+                        .IsUnicode(true)
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<bool>("Enabled")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
 
                     b.Property<DateTime?>("LastAccessed")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(256)
+                        .IsUnicode(true)
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<bool>("NonEditable")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.Property<bool>("RequireResourceIndicator")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.Property<bool>("ShowInDiscoveryDocument")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
 
                     b.Property<DateTime?>("Updated")
+                        .ValueGeneratedOnUpdate()
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
-                    b.ToTable("ApiResources");
-                });
+                    b.HasIndex("Name");
 
-            modelBuilder.Entity("StoryBlog.Web.Microservices.Identity.Domain.Entities.ApiResourceClaim", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("ApiResourceId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ApiResourceId");
-
-                    b.ToTable("ApiResourceClaim");
-                });
-
-            modelBuilder.Entity("StoryBlog.Web.Microservices.Identity.Domain.Entities.ApiResourceProperty", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("ApiResourceId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Key")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Value")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ApiResourceId");
-
-                    b.ToTable("ApiResourceProperty");
-                });
-
-            modelBuilder.Entity("StoryBlog.Web.Microservices.Identity.Domain.Entities.ApiResourceScope", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("ApiResourceId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Scope")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ApiResourceId");
-
-                    b.ToTable("ApiResourceScope");
-                });
-
-            modelBuilder.Entity("StoryBlog.Web.Microservices.Identity.Domain.Entities.ApiResourceSecret", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("ApiResourceId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("Expiration")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Value")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ApiResourceId");
-
-                    b.ToTable("ApiResourceSecret");
+                    b.ToTable("ApiResources", "Identity");
                 });
 
             modelBuilder.Entity("StoryBlog.Web.Microservices.Identity.Domain.Entities.ApiScope", b =>
@@ -301,92 +214,62 @@ namespace StoryBlog.Web.Microservices.Identity.Infrastructure.Persistence.Migrat
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("Created")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
-                        .IsRequired()
+                        .HasMaxLength(32767)
+                        .IsUnicode(true)
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("DisplayName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(156)
+                        .IsUnicode(true)
+                        .HasColumnType("nvarchar(156)");
 
                     b.Property<bool>("Emphasize")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.Property<bool>("Enabled")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
 
                     b.Property<DateTime?>("LastAccessed")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(256)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(256)");
 
                     b.Property<bool>("NonEditable")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.Property<bool>("Required")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.Property<bool>("ShowInDiscoveryDocument")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
 
                     b.Property<DateTime?>("Updated")
+                        .ValueGeneratedOnUpdate()
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
-                    b.ToTable("ApiScopes");
-                });
+                    b.HasIndex("Id");
 
-            modelBuilder.Entity("StoryBlog.Web.Microservices.Identity.Domain.Entities.ApiScopeClaim", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("ScopeId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ScopeId");
-
-                    b.ToTable("ApiScopeClaim");
-                });
-
-            modelBuilder.Entity("StoryBlog.Web.Microservices.Identity.Domain.Entities.ApiScopeProperty", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Key")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("ScopeId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Value")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ScopeId");
-
-                    b.ToTable("ApiScopeProperty");
+                    b.ToTable("ApiScopes", "Identity");
                 });
 
             modelBuilder.Entity("StoryBlog.Web.Microservices.Identity.Domain.Entities.Client", b =>
@@ -612,49 +495,53 @@ namespace StoryBlog.Web.Microservices.Identity.Infrastructure.Persistence.Migrat
                     b.ToTable("Clients", "Identity");
                 });
 
-            modelBuilder.Entity("StoryBlog.Web.Microservices.Identity.Domain.Entities.DeviceFlowCodes", b =>
+            modelBuilder.Entity("StoryBlog.Web.Microservices.Identity.Domain.Entities.DeviceFlowCode", b =>
                 {
-                    b.Property<string>("UserCode")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
                     b.Property<string>("ClientId")
                         .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<DateTime>("CreationTime")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Data")
                         .IsRequired()
-                        .HasMaxLength(50000)
+                        .HasMaxLength(32767)
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Description")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
+                        .HasMaxLength(32767)
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("DeviceCode")
                         .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<DateTime>("Expiration")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("SessionId")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("SubjectId")
                         .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
-                    b.HasKey("UserCode");
+                    b.Property<string>("UserCode")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(256)");
 
-                    b.ToTable("DeviceFlowCodes");
+                    b.HasIndex("ClientId", "DeviceCode");
+
+                    b.ToTable("DeviceFlowCodes", "Identity");
                 });
 
             modelBuilder.Entity("StoryBlog.Web.Microservices.Identity.Domain.Entities.IdentityProvider", b =>
@@ -666,39 +553,54 @@ namespace StoryBlog.Web.Microservices.Identity.Infrastructure.Persistence.Migrat
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("Created")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DisplayName")
-                        .IsRequired()
+                        .HasMaxLength(32767)
+                        .IsUnicode(true)
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("Enabled")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
 
                     b.Property<DateTime?>("LastAccessed")
+                        .IsRequired()
                         .HasColumnType("datetime2");
 
                     b.Property<bool>("NonEditable")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.Property<string>("Properties")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(32767)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(max)");
 
                     b.Property<string>("Scheme")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<string>("Type")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(256)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(256)");
 
                     b.Property<DateTime?>("Updated")
+                        .ValueGeneratedOnUpdate()
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
-                    b.ToTable("IdentityProviders");
+                    b.HasIndex("Type");
+
+                    b.ToTable("IdentityProviders", "Identity");
                 });
 
             modelBuilder.Entity("StoryBlog.Web.Microservices.Identity.Domain.Entities.IdentityResource", b =>
@@ -710,89 +612,58 @@ namespace StoryBlog.Web.Microservices.Identity.Infrastructure.Persistence.Migrat
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("Created")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(2048)
+                        .IsUnicode(true)
+                        .HasColumnType("nvarchar(2048)");
 
                     b.Property<string>("DisplayName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(1024)
+                        .IsUnicode(true)
+                        .HasColumnType("nvarchar(1024)");
 
                     b.Property<bool>("Emphasize")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.Property<bool>("Enabled")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(1024)
+                        .IsUnicode(true)
+                        .HasColumnType("nvarchar(1024)");
 
                     b.Property<bool>("NonEditable")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.Property<bool>("Required")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.Property<bool>("ShowInDiscoveryDocument")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
 
                     b.Property<DateTime?>("Updated")
+                        .ValueGeneratedOnUpdate()
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
-                    b.ToTable("IdentityResources");
-                });
-
-            modelBuilder.Entity("StoryBlog.Web.Microservices.Identity.Domain.Entities.IdentityResourceClaim", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("IdentityResourceId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("IdentityResourceId");
-
-                    b.ToTable("IdentityResourceClaim");
-                });
-
-            modelBuilder.Entity("StoryBlog.Web.Microservices.Identity.Domain.Entities.IdentityResourceProperty", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("IdentityResourceId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Key")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Value")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("IdentityResourceId");
-
-                    b.ToTable("IdentityResourceProperty");
+                    b.ToTable("IdentityResources", "Identity");
                 });
 
             modelBuilder.Entity("StoryBlog.Web.Microservices.Identity.Domain.Entities.Key", b =>
@@ -859,9 +730,12 @@ namespace StoryBlog.Web.Microservices.Identity.Infrastructure.Persistence.Migrat
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Data")
+                        .HasMaxLength(32767)
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Description")
+                        .HasMaxLength(32767)
+                        .IsUnicode(true)
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("Expiration")
@@ -869,7 +743,8 @@ namespace StoryBlog.Web.Microservices.Identity.Infrastructure.Persistence.Migrat
 
                     b.Property<string>("Key")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<string>("SessionId")
                         .IsRequired()
@@ -881,11 +756,66 @@ namespace StoryBlog.Web.Microservices.Identity.Infrastructure.Persistence.Migrat
 
                     b.Property<string>("Type")
                         .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Key");
+
+                    b.ToTable("PersistedGrants", "Identity");
+                });
+
+            modelBuilder.Entity("StoryBlog.Web.Microservices.Identity.Domain.Entities.ServerSideSession", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Data")
+                        .HasMaxLength(32767)
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DisplayName")
+                        .IsRequired()
+                        .HasMaxLength(32767)
+                        .IsUnicode(true)
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("Expires")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Key")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<DateTime?>("Renewed")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Scheme")
+                        .IsRequired()
+                        .HasMaxLength(1024)
+                        .HasColumnType("nvarchar(1024)");
+
+                    b.Property<string>("SessionId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SubjectId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("PersistedGrants");
+                    b.HasIndex("Key");
+
+                    b.ToTable("ServerSideSessions", "Identity");
                 });
 
             modelBuilder.Entity("StoryBlog.Web.Microservices.Identity.Domain.Entities.StoryBlogUser", b =>
@@ -1084,70 +1014,230 @@ namespace StoryBlog.Web.Microservices.Identity.Infrastructure.Persistence.Migrat
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("StoryBlog.Web.Microservices.Identity.Domain.Entities.ApiResourceClaim", b =>
+            modelBuilder.Entity("StoryBlog.Web.Microservices.Identity.Domain.Entities.ApiResource", b =>
                 {
-                    b.HasOne("StoryBlog.Web.Microservices.Identity.Domain.Entities.ApiResource", "ApiResource")
-                        .WithMany("UserClaims")
-                        .HasForeignKey("ApiResourceId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.OwnsMany("StoryBlog.Web.Microservices.Identity.Domain.Entities.ApiResourceClaim", "UserClaims", b1 =>
+                        {
+                            b1.Property<int>("Id")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("int");
 
-                    b.Navigation("ApiResource");
+                            SqlServerPropertyBuilderExtensions.UseIdentityColumn(b1.Property<int>("Id"));
+
+                            b1.Property<int>("ApiResourceId")
+                                .HasColumnType("int");
+
+                            b1.Property<string>("Type")
+                                .IsRequired()
+                                .HasMaxLength(256)
+                                .HasColumnType("nvarchar(256)");
+
+                            b1.HasKey("Id");
+
+                            b1.HasIndex("ApiResourceId");
+
+                            b1.HasIndex("Type");
+
+                            b1.ToTable("ApiResourceClaims", "Identity");
+
+                            b1.WithOwner("ApiResource")
+                                .HasForeignKey("ApiResourceId");
+
+                            b1.Navigation("ApiResource");
+                        });
+
+                    b.OwnsMany("StoryBlog.Web.Microservices.Identity.Domain.Entities.ApiResourceProperty", "Properties", b1 =>
+                        {
+                            b1.Property<int>("Id")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("int");
+
+                            SqlServerPropertyBuilderExtensions.UseIdentityColumn(b1.Property<int>("Id"));
+
+                            b1.Property<int>("ApiResourceId")
+                                .HasColumnType("int");
+
+                            b1.Property<string>("Key")
+                                .IsRequired()
+                                .HasMaxLength(256)
+                                .HasColumnType("nvarchar(256)");
+
+                            b1.Property<string>("Value")
+                                .IsRequired()
+                                .HasMaxLength(32767)
+                                .IsUnicode(true)
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.HasKey("Id");
+
+                            b1.HasIndex("ApiResourceId");
+
+                            b1.ToTable("ApiResourceProperties", "Identity");
+
+                            b1.WithOwner("ApiResource")
+                                .HasForeignKey("ApiResourceId");
+
+                            b1.Navigation("ApiResource");
+                        });
+
+                    b.OwnsMany("StoryBlog.Web.Microservices.Identity.Domain.Entities.ApiResourceScope", "Scopes", b1 =>
+                        {
+                            b1.Property<int>("Id")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("int");
+
+                            SqlServerPropertyBuilderExtensions.UseIdentityColumn(b1.Property<int>("Id"));
+
+                            b1.Property<int>("ApiResourceId")
+                                .HasColumnType("int");
+
+                            b1.Property<string>("Scope")
+                                .IsRequired()
+                                .HasMaxLength(256)
+                                .IsUnicode(true)
+                                .HasColumnType("nvarchar(256)");
+
+                            b1.HasKey("Id");
+
+                            b1.HasIndex("ApiResourceId");
+
+                            b1.HasIndex("Scope");
+
+                            b1.ToTable("ApiResourceScopes", "Identity");
+
+                            b1.WithOwner("ApiResource")
+                                .HasForeignKey("ApiResourceId");
+
+                            b1.Navigation("ApiResource");
+                        });
+
+                    b.OwnsMany("StoryBlog.Web.Microservices.Identity.Domain.Entities.ApiResourceSecret", "Secrets", b1 =>
+                        {
+                            b1.Property<int>("Id")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("int");
+
+                            SqlServerPropertyBuilderExtensions.UseIdentityColumn(b1.Property<int>("Id"));
+
+                            b1.Property<int>("ApiResourceId")
+                                .HasColumnType("int");
+
+                            b1.Property<DateTime>("Created")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("datetime2");
+
+                            b1.Property<string>("Description")
+                                .IsRequired()
+                                .HasMaxLength(32767)
+                                .IsUnicode(true)
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<DateTime?>("Expiration")
+                                .HasColumnType("datetime2");
+
+                            b1.Property<string>("Type")
+                                .IsRequired()
+                                .HasMaxLength(256)
+                                .HasColumnType("nvarchar(256)");
+
+                            b1.Property<string>("Value")
+                                .IsRequired()
+                                .HasMaxLength(32767)
+                                .IsUnicode(true)
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.HasKey("Id");
+
+                            b1.HasIndex("ApiResourceId");
+
+                            b1.HasIndex("Type");
+
+                            b1.ToTable("ApiResourceSecrets", "Identity");
+
+                            b1.WithOwner("ApiResource")
+                                .HasForeignKey("ApiResourceId");
+
+                            b1.Navigation("ApiResource");
+                        });
+
+                    b.Navigation("Properties");
+
+                    b.Navigation("Scopes");
+
+                    b.Navigation("Secrets");
+
+                    b.Navigation("UserClaims");
                 });
 
-            modelBuilder.Entity("StoryBlog.Web.Microservices.Identity.Domain.Entities.ApiResourceProperty", b =>
+            modelBuilder.Entity("StoryBlog.Web.Microservices.Identity.Domain.Entities.ApiScope", b =>
                 {
-                    b.HasOne("StoryBlog.Web.Microservices.Identity.Domain.Entities.ApiResource", "ApiResource")
-                        .WithMany("Properties")
-                        .HasForeignKey("ApiResourceId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.OwnsMany("StoryBlog.Web.Microservices.Identity.Domain.Entities.ApiScopeClaim", "UserClaims", b1 =>
+                        {
+                            b1.Property<int>("Id")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("int");
 
-                    b.Navigation("ApiResource");
-                });
+                            SqlServerPropertyBuilderExtensions.UseIdentityColumn(b1.Property<int>("Id"));
 
-            modelBuilder.Entity("StoryBlog.Web.Microservices.Identity.Domain.Entities.ApiResourceScope", b =>
-                {
-                    b.HasOne("StoryBlog.Web.Microservices.Identity.Domain.Entities.ApiResource", "ApiResource")
-                        .WithMany("Scopes")
-                        .HasForeignKey("ApiResourceId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                            b1.Property<int>("ScopeId")
+                                .HasColumnType("int");
 
-                    b.Navigation("ApiResource");
-                });
+                            b1.Property<string>("Type")
+                                .IsRequired()
+                                .HasMaxLength(256)
+                                .HasColumnType("nvarchar(256)");
 
-            modelBuilder.Entity("StoryBlog.Web.Microservices.Identity.Domain.Entities.ApiResourceSecret", b =>
-                {
-                    b.HasOne("StoryBlog.Web.Microservices.Identity.Domain.Entities.ApiResource", "ApiResource")
-                        .WithMany("Secrets")
-                        .HasForeignKey("ApiResourceId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                            b1.HasKey("Id");
 
-                    b.Navigation("ApiResource");
-                });
+                            b1.HasIndex("ScopeId");
 
-            modelBuilder.Entity("StoryBlog.Web.Microservices.Identity.Domain.Entities.ApiScopeClaim", b =>
-                {
-                    b.HasOne("StoryBlog.Web.Microservices.Identity.Domain.Entities.ApiScope", "Scope")
-                        .WithMany("UserClaims")
-                        .HasForeignKey("ScopeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                            b1.HasIndex("Type");
 
-                    b.Navigation("Scope");
-                });
+                            b1.ToTable("ApiScopeClaims", "Identity");
 
-            modelBuilder.Entity("StoryBlog.Web.Microservices.Identity.Domain.Entities.ApiScopeProperty", b =>
-                {
-                    b.HasOne("StoryBlog.Web.Microservices.Identity.Domain.Entities.ApiScope", "Scope")
-                        .WithMany("Properties")
-                        .HasForeignKey("ScopeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                            b1.WithOwner("Scope")
+                                .HasForeignKey("ScopeId");
 
-                    b.Navigation("Scope");
+                            b1.Navigation("Scope");
+                        });
+
+                    b.OwnsMany("StoryBlog.Web.Microservices.Identity.Domain.Entities.ApiScopeProperty", "Properties", b1 =>
+                        {
+                            b1.Property<int>("Id")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("int");
+
+                            SqlServerPropertyBuilderExtensions.UseIdentityColumn(b1.Property<int>("Id"));
+
+                            b1.Property<string>("Key")
+                                .IsRequired()
+                                .HasMaxLength(256)
+                                .HasColumnType("nvarchar(256)");
+
+                            b1.Property<int>("ScopeId")
+                                .HasColumnType("int");
+
+                            b1.Property<string>("Value")
+                                .IsRequired()
+                                .HasMaxLength(32767)
+                                .IsUnicode(true)
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.HasKey("Id");
+
+                            b1.HasIndex("ScopeId");
+
+                            b1.ToTable("ApiScopeProperties", "Identity");
+
+                            b1.WithOwner("Scope")
+                                .HasForeignKey("ScopeId");
+
+                            b1.Navigation("Scope");
+                        });
+
+                    b.Navigation("Properties");
+
+                    b.Navigation("UserClaims");
                 });
 
             modelBuilder.Entity("StoryBlog.Web.Microservices.Identity.Domain.Entities.Client", b =>
@@ -1476,48 +1566,69 @@ namespace StoryBlog.Web.Microservices.Identity.Infrastructure.Persistence.Migrat
                     b.Navigation("RedirectUris");
                 });
 
-            modelBuilder.Entity("StoryBlog.Web.Microservices.Identity.Domain.Entities.IdentityResourceClaim", b =>
-                {
-                    b.HasOne("StoryBlog.Web.Microservices.Identity.Domain.Entities.IdentityResource", "IdentityResource")
-                        .WithMany("UserClaims")
-                        .HasForeignKey("IdentityResourceId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("IdentityResource");
-                });
-
-            modelBuilder.Entity("StoryBlog.Web.Microservices.Identity.Domain.Entities.IdentityResourceProperty", b =>
-                {
-                    b.HasOne("StoryBlog.Web.Microservices.Identity.Domain.Entities.IdentityResource", "IdentityResource")
-                        .WithMany("Properties")
-                        .HasForeignKey("IdentityResourceId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("IdentityResource");
-                });
-
-            modelBuilder.Entity("StoryBlog.Web.Microservices.Identity.Domain.Entities.ApiResource", b =>
-                {
-                    b.Navigation("Properties");
-
-                    b.Navigation("Scopes");
-
-                    b.Navigation("Secrets");
-
-                    b.Navigation("UserClaims");
-                });
-
-            modelBuilder.Entity("StoryBlog.Web.Microservices.Identity.Domain.Entities.ApiScope", b =>
-                {
-                    b.Navigation("Properties");
-
-                    b.Navigation("UserClaims");
-                });
-
             modelBuilder.Entity("StoryBlog.Web.Microservices.Identity.Domain.Entities.IdentityResource", b =>
                 {
+                    b.OwnsMany("StoryBlog.Web.Microservices.Identity.Domain.Entities.IdentityResourceClaim", "UserClaims", b1 =>
+                        {
+                            b1.Property<int>("Id")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("int");
+
+                            SqlServerPropertyBuilderExtensions.UseIdentityColumn(b1.Property<int>("Id"));
+
+                            b1.Property<int>("IdentityResourceId")
+                                .HasColumnType("int");
+
+                            b1.Property<string>("Type")
+                                .IsRequired()
+                                .HasMaxLength(256)
+                                .HasColumnType("nvarchar(256)");
+
+                            b1.HasKey("Id");
+
+                            b1.HasIndex("IdentityResourceId");
+
+                            b1.ToTable("IdentityResourceClaims", "Identity");
+
+                            b1.WithOwner("IdentityResource")
+                                .HasForeignKey("IdentityResourceId");
+
+                            b1.Navigation("IdentityResource");
+                        });
+
+                    b.OwnsMany("StoryBlog.Web.Microservices.Identity.Domain.Entities.IdentityResourceProperty", "Properties", b1 =>
+                        {
+                            b1.Property<int>("Id")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("int");
+
+                            SqlServerPropertyBuilderExtensions.UseIdentityColumn(b1.Property<int>("Id"));
+
+                            b1.Property<int>("IdentityResourceId")
+                                .HasColumnType("int");
+
+                            b1.Property<string>("Key")
+                                .IsRequired()
+                                .HasMaxLength(256)
+                                .HasColumnType("nvarchar(256)");
+
+                            b1.Property<string>("Value")
+                                .IsRequired()
+                                .HasMaxLength(32767)
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.HasKey("Id");
+
+                            b1.HasIndex("IdentityResourceId");
+
+                            b1.ToTable("IdentityResourceProperties", "Identity");
+
+                            b1.WithOwner("IdentityResource")
+                                .HasForeignKey("IdentityResourceId");
+
+                            b1.Navigation("IdentityResource");
+                        });
+
                     b.Navigation("Properties");
 
                     b.Navigation("UserClaims");

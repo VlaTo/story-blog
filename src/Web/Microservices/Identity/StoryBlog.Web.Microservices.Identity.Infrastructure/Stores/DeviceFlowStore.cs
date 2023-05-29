@@ -78,7 +78,7 @@ public class DeviceFlowStore : IDeviceFlowStore
     {
         using var activity = Tracing.StoreActivitySource.StartActivity("DeviceFlowStore.StoreDeviceAuthorization");
 
-        //Context.DeviceFlowCodes.Add(ToEntity(data, deviceCode, userCode));
+        //Context.DeviceFlowCode.Add(ToEntity(data, deviceCode, userCode));
 
         await Context.SaveChangesAsync(CancellationTokenProvider.CancellationToken);
     }
@@ -92,7 +92,7 @@ public class DeviceFlowStore : IDeviceFlowStore
     {
         using var activity = Tracing.StoreActivitySource.StartActivity("DeviceFlowStore.FindByUserCode");
 
-        /*var deviceFlowCode = await Context.DeviceFlowCodes
+        /*var deviceFlowCode = await Context.DeviceFlowCode
             .Where(x => x.UserCode == userCode)
             //.ToArrayAsync(CancellationTokenProvider.CancellationToken)
             .AsNoTracking()
@@ -124,7 +124,7 @@ public class DeviceFlowStore : IDeviceFlowStore
     {
         using var activity = Tracing.StoreActivitySource.StartActivity("DeviceFlowStore.FindByDeviceCode");
 
-        /*var deviceFlowCodes = await Context.DeviceFlowCodes
+        /*var deviceFlowCodes = await Context.DeviceFlowCode
             .AsNoTracking()
             .Where(x => x.DeviceCode == deviceCode)
             //.ToArrayAsync(CancellationTokenProvider.CancellationToken)
@@ -154,7 +154,7 @@ public class DeviceFlowStore : IDeviceFlowStore
     {
         using var activity = Tracing.StoreActivitySource.StartActivity("DeviceFlowStore.UpdateByUserCode");
 
-        /*var deviceFlowCode = await Context.DeviceFlowCodes
+        /*var deviceFlowCode = await Context.DeviceFlowCode
             .Where(x => x.UserCode == userCode)
             //.ToArrayAsync(CancellationTokenProvider.CancellationToken)
             .SingleOrDefaultAsync(x => x.UserCode == userCode, CancellationTokenProvider.CancellationToken);
@@ -192,7 +192,7 @@ public class DeviceFlowStore : IDeviceFlowStore
     {
         using var activity = Tracing.StoreActivitySource.StartActivity("DeviceFlowStore.RemoveByDeviceCode");
 
-        /*var deviceFlowCodes = await Context.DeviceFlowCodes
+        /*var deviceFlowCodes = await Context.DeviceFlowCode
             .Where(x => x.DeviceCode == deviceCode)
             //.ToArrayAsync(CancellationTokenProvider.CancellationToken)
             .SingleOrDefaultAsync(x => x.DeviceCode == deviceCode, CancellationTokenProvider.CancellationToken);
@@ -201,7 +201,7 @@ public class DeviceFlowStore : IDeviceFlowStore
         {
             Logger.LogDebug("removing {deviceCode} device code from database", deviceCode);
 
-            Context.DeviceFlowCodes.Remove(deviceFlowCodes);
+            Context.DeviceFlowCode.Remove(deviceFlowCodes);
 
             try
             {
@@ -225,9 +225,9 @@ public class DeviceFlowStore : IDeviceFlowStore
     /// <param name="deviceCode"></param>
     /// <param name="userCode"></param>
     /// <returns></returns>
-    protected DeviceFlowCodes ToEntity(DeviceCode model, string deviceCode, string userCode)
+    protected DeviceFlowCode ToEntity(DeviceCode model, string deviceCode, string userCode)
     {
-        return new DeviceFlowCodes
+        return new DeviceFlowCode
         {
             DeviceCode = deviceCode,
             UserCode = userCode,

@@ -26,7 +26,7 @@ public interface IPersistedGrantDbContext
     /// <value>
     /// The device flow codes.
     /// </value>
-    DbSet<Domain.Entities.DeviceFlowCodes> DeviceFlowCodes
+    DbSet<Domain.Entities.DeviceFlowCode> DeviceFlowCodes
     {
         get;
         set;

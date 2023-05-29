@@ -4,8 +4,6 @@ using StoryBlog.Web.Common.Infrastructure.Converters;
 using StoryBlog.Web.Microservices.Identity.Application.DependencyInjection.Options;
 using StoryBlog.Web.Microservices.Identity.Domain;
 using StoryBlog.Web.Microservices.Identity.Domain.Entities;
-using static StoryBlog.Web.Microservices.Identity.Application.Core.Tracing;
-using static System.Formats.Asn1.AsnWriter;
 
 namespace StoryBlog.Web.Microservices.Identity.Infrastructure.Configuration;
 

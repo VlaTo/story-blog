@@ -89,7 +89,7 @@ public class DefaultClientConfigurationValidator : IClientConfigurationValidator
     /// <returns></returns>
     protected virtual Task ValidateGrantTypesAsync(ClientConfigurationValidationContext context)
     {
-        if (false == context.Client.AllowedGrantTypes.Any())
+        if (0 == context.Client.AllowedGrantTypes.Count)
         {
             context.SetError("no allowed grant type specified");
         }
@@ -180,7 +180,7 @@ public class DefaultClientConfigurationValidator : IClientConfigurationValidator
                 {
                     var uri = new Uri(origin);
 
-                    if (uri.AbsolutePath == "/" && !origin.EndsWith("/"))
+                    if (uri.AbsolutePath == "/" && false == origin.EndsWith("/"))
                     {
                         fail = false;
                     }
@@ -257,7 +257,7 @@ public class DefaultClientConfigurationValidator : IClientConfigurationValidator
                     continue;
                 }
 
-                if (context.Client.RequireClientSecret && 0 == context.Client.ClientSecrets.Count)
+                if (context.Client is { RequireClientSecret: true, ClientSecrets.Count: 0 })
                 {
                     context.SetError($"Client secret is required for {grantType}, but no client secret is configured.");
                     return Task.CompletedTask;

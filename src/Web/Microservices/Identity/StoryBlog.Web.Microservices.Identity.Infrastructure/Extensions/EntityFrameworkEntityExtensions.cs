@@ -69,8 +69,7 @@ internal static class EntityFrameworkEntityExtensions
             Description = source.Description,
             Enabled = source.Enabled,
             ProtocolType = source.ProtocolType,
-            RequireClientSecret = source.RequireClientSecret,
-            //AllowedIdentityTokenSigningAlgorithms = source.AllowedIdentityTokenSigningAlgorithms
+            RequireClientSecret = source.RequireClientSecret
         };
 
         client
@@ -78,7 +77,8 @@ internal static class EntityFrameworkEntityExtensions
             .UseAllowedGrantTypes(source.AllowedGrantTypes)
             .UseRedirectUris(source.RedirectUris)
             .UseAllowedScopes(source.AllowedScopes)
-            .UseAllowedIdentityTokenSigningAlgorithms(source.AllowedIdentityTokenSigningAlgorithms);
+            .UseAllowedIdentityTokenSigningAlgorithms(source.AllowedIdentityTokenSigningAlgorithms)
+            .UseAllowedCorsOrigins(source.AllowedCorsOrigins);
         client.UseProperties(source.Properties);
         client.UseClaims(source.Claims);
 

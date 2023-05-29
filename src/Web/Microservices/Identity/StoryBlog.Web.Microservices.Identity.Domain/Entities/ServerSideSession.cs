@@ -2,9 +2,9 @@
 
 namespace StoryBlog.Web.Microservices.Identity.Domain.Entities;
 
-public class PersistedGrant : IEntity, IHasId<long>
+public class ServerSideSession : IEntity, IHasId<int>
 {
-    public long Id
+    public int Id
     {
         get;
         set;
@@ -16,7 +16,7 @@ public class PersistedGrant : IEntity, IHasId<long>
         set;
     }
 
-    public string Type
+    public string Scheme
     {
         get;
         set;
@@ -34,37 +34,31 @@ public class PersistedGrant : IEntity, IHasId<long>
         set;
     }
 
-    public string ClientId
+    public string DisplayName
     {
         get;
         set;
     }
 
-    public string? Description
+    public DateTime Created
     {
         get;
         set;
     }
 
-    public DateTime CreationTime
+    public DateTime? Renewed
     {
         get;
         set;
     }
 
-    public DateTime? Expiration
+    public DateTime? Expires
     {
         get;
         set;
     }
 
-    public DateTime? ConsumedTime
-    {
-        get;
-        set;
-    }
-
-    public string? Data
+    public string Data
     {
         get;
         set;

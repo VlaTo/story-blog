@@ -161,7 +161,7 @@ public class TokenCleanupService
 
         while (found >= options.TokenCleanupBatchSize)
         {
-            /*var expiredCodes = await _persistedGrantDbContext.DeviceFlowCodes
+            /*var expiredCodes = await _persistedGrantDbContext.DeviceFlowCode
                 .Where(x => x.Expiration < DateTime.UtcNow)
                 .OrderBy(x => x.DeviceCode)
                 .Take(_options.TokenCleanupBatchSize)
@@ -173,9 +173,9 @@ public class TokenCleanupService
             {
                 _logger.LogInformation("Removing {deviceCodeCount} device flow codes", found);
 
-                _persistedGrantDbContext.DeviceFlowCodes.RemoveRange(expiredCodes);
+                _persistedGrantDbContext.DeviceFlowCode.RemoveRange(expiredCodes);
 
-                var list = await _persistedGrantDbContext.SaveChangesWithConcurrencyCheckAsync<Entities.DeviceFlowCodes>(_logger, cancellationToken);
+                var list = await _persistedGrantDbContext.SaveChangesWithConcurrencyCheckAsync<Entities.DeviceFlowCode>(_logger, cancellationToken);
                 expiredCodes = expiredCodes.Except(list).ToArray();
 
                 if (_operationalStoreNotification != null)

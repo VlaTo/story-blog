@@ -6,12 +6,26 @@ internal static class ClientExtensions
 {
     public static void UseProperties(this Application.Storage.Client client, IList<ClientProperty> properties)
     {
-        ;
+        var dictionary = new Dictionary<string, string>(properties.Count);
+
+        foreach (var clientProperty in properties)
+        {
+            dictionary.Add(clientProperty.Key, clientProperty.Value);
+        }
+
+        client.Properties = dictionary;
     }
 
     public static void UseProperties(this Application.Storage.Client client, IDictionary<string, string> properties)
     {
-        ;
+        var dictionary = new Dictionary<string, string>(properties.Count);
+
+        foreach (var (key, value) in properties)
+        {
+            dictionary.Add(key, value);
+        }
+
+        client.Properties = dictionary;
     }
 
     public static void UseClaims(this Application.Storage.Client client, IList<ClientClaim> claims)
@@ -54,6 +68,19 @@ internal static class ClientExtensions
         {
             var source = redirectUris[index];
             client.RedirectUris.Add(source.RedirectUri);
+        }
+
+        return client;
+    }
+    
+    public static Application.Storage.Client UseAllowedCorsOrigins(this Application.Storage.Client client, IList<ClientCorsOrigin> corsOrigins)
+    {
+        client.AllowedCorsOrigins = new HashSet<string>(corsOrigins.Count);
+
+        for (var index = 0; index < corsOrigins.Count; index++)
+        {
+            var source = corsOrigins[index];
+            client.AllowedCorsOrigins.Add(source.Origin);
         }
 
         return client;

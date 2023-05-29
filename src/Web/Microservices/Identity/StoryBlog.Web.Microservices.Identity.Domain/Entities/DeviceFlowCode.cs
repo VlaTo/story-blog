@@ -1,11 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using StoryBlog.Web.Common.Domain.Entities;
 
 namespace StoryBlog.Web.Microservices.Identity.Domain.Entities;
 
 /// <summary>
 /// Entity for device flow codes
 /// </summary>
-public class DeviceFlowCodes
+public class DeviceFlowCode : IEntity
 {
     /// <summary>
     /// Gets or sets the device code.
@@ -13,9 +13,6 @@ public class DeviceFlowCodes
     /// <value>
     /// The device code.
     /// </value>
-    [Required]
-    [MaxLength(200)]
-    [DataType("nvarchar(200)")]
     public string DeviceCode
     {
         get;
@@ -28,8 +25,6 @@ public class DeviceFlowCodes
     /// <value>
     /// The user code.
     /// </value>
-    [Key]
-    [MaxLength(200)]
     public string UserCode
     {
         get;
@@ -42,8 +37,6 @@ public class DeviceFlowCodes
     /// <value>
     /// The subject identifier.
     /// </value>
-    [MaxLength(200)]
-    [DataType("nvarchar")]
     public string SubjectId
     {
         get;
@@ -56,8 +49,6 @@ public class DeviceFlowCodes
     /// <value>
     /// The session identifier.
     /// </value>
-    [MaxLength(100)]
-    [DataType("nvarchar")]
     public string? SessionId
     {
         get;
@@ -70,8 +61,6 @@ public class DeviceFlowCodes
     /// <value>
     /// The client identifier.
     /// </value>
-    [Required]
-    [MaxLength(200)]
     public string ClientId
     {
         get;
@@ -84,7 +73,6 @@ public class DeviceFlowCodes
     /// <value>
     /// The description.
     /// </value>
-    [MaxLength(200)]
     public string? Description
     {
         get;
@@ -109,7 +97,6 @@ public class DeviceFlowCodes
     /// <value>
     /// The expiration.
     /// </value>
-    [Required]
     public DateTime Expiration
     {
         get;
@@ -122,8 +109,6 @@ public class DeviceFlowCodes
     /// <value>
     /// The data.
     /// </value>
-    [Required]
-    [MaxLength(50000)]
     public string Data
     {
         get;

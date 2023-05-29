@@ -37,6 +37,8 @@ public static class TableNames
     public const string ClientCorsOrigin = "ClientCorsOrigins";
 
     public const string ClientProperty = "ClientProperties";
+    
+    public const string DeviceFlowCode = "DeviceFlowCodes";
 
     public const string ApiScope = "ApiScopes";
 
@@ -47,4 +49,8 @@ public static class TableNames
     public const string IdentityProvider = "IdentityProviders";
     
     public const string Keys = "Keys";
+    
+    public const string PersistedGrant = "PersistedGrants";
+    
+    public const string ServerSideSession = "ServerSideSessions";
 }
