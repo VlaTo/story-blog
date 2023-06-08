@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "StoryBlog.Infrastructure.AnyOf.Tools": {
+      "commandName": "DebugRoslynComponent",
+      "targetProject": "..\\..\\Web\\Microservices\\Identity\\StoryBlog.Web.Microservices.Identity.Application\\StoryBlog.Web.Microservices.Identity.Application.csproj"
+    }
+  }
+}

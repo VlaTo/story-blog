@@ -9,7 +9,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0" />
     <PackageReference Include="SlimMessageBus" Version="2.0.1" />
-    <PackageReference Include="SlimMessageBus.Host" Version="2.1.5" />
+    <PackageReference Include="SlimMessageBus.Host" Version="2.1.8" />
   </ItemGroup>
 
   <ItemGroup>

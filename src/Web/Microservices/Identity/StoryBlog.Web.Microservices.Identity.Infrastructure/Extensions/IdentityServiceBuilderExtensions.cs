@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
@@ -24,11 +25,12 @@ public static class IdentityServiceBuilderExtensions
     /// <param name="configure">The <see cref="Action{ApplicationsOptions}"/>
     /// to configure the <see cref="ApiAuthorizationOptions"/>.</param>
     /// <returns>The <see cref="IIdentityServerBuilder"/>.</returns>
-    public static IIdentityServerBuilder AddApiAuthorization<TUser, TContext>(
+    public static IIdentityServerBuilder AddApiAuthorization<TUser, TRole>(
         this IIdentityServerBuilder builder,
         Action<ApiAuthorizationOptions> configure)
-        where TUser : class
-        where TContext : DbContext//, IPersistedGrantDbContext
+        where TUser : IdentityUser
+        //where TContext : DbContext, IPersistedGrantDbContext
+        where TRole : IdentityRole
     {
         if (null == configure)
         {
@@ -36,7 +38,7 @@ public static class IdentityServiceBuilderExtensions
         }
 
         builder
-            .AddAspNetIdentity<TUser>()
+            .AddAspNetIdentity<TUser, TRole>()
             //.AddOperationalStore<TContext>()
             //.ConfigureReplacedServices()
             //.AddIdentityResources()

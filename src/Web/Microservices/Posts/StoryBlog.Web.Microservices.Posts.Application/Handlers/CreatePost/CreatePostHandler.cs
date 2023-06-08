@@ -37,6 +37,17 @@ public sealed class CreatePostHandler : HandlerBase, MediatR.IRequestHandler<Cre
             Post = post,
             Text = request.Details.Slug
         };
+        post.CommentsCounter = new CommentsCounter
+        {
+            Post = post,
+            Counter = 0
+        };
+        post.Content = new Content
+        {
+            Post = post,
+            Text = request.Details.Text,
+            Brief = request.Details.Brief
+        };
 
         logger.LogEntityCreated();
 

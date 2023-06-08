@@ -4,7 +4,7 @@
 /// Event for failed client authentication
 /// </summary>
 /// <seealso cref="Event" />
-public class ClientAuthenticationFailureEvent : Event
+public sealed class ClientAuthenticationFailureEvent : Event
 {
     /// <summary>
     /// Gets or sets the client identifier.

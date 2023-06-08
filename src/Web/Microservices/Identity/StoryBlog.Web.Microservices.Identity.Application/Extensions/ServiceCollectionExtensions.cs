@@ -1,7 +1,5 @@
-﻿using System.Security.Claims;
-using Microsoft.AspNetCore.Authentication.Cookies;
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
@@ -9,7 +7,7 @@ using Microsoft.IdentityModel.Tokens;
 using StoryBlog.Web.Identity.Core;
 using StoryBlog.Web.Microservices.Identity.Application.Configuration;
 using StoryBlog.Web.Microservices.Identity.Application.Core;
-using StoryBlog.Web.Microservices.Identity.Application.DependencyInjection;
+using System.Security.Claims;
 
 namespace StoryBlog.Web.Microservices.Identity.Application.Extensions;
 

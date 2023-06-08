@@ -1201,11 +1201,11 @@ internal class TokenRequestValidator : ITokenRequestValidator
 
     private Task RaiseSuccessfulResourceOwnerAuthenticationEventAsync(string userName, string subjectId, string clientId)
     {
-        return events.RaiseAsync(new UserLoginSuccessEvent(userName, subjectId, null, interactive: false, clientId));
+        return events.RaiseAsync(new UserSignInSuccessEvent(userName, subjectId, null, interactive: false, clientId));
     }
 
     private Task RaiseFailedResourceOwnerAuthenticationEventAsync(string userName, string error, string clientId)
     {
-        return events.RaiseAsync(new UserLoginFailureEvent(userName, error, interactive: false, clientId: clientId));
+        return events.RaiseAsync(new UserSignInFailureEvent(userName, error, interactive: false, clientId: clientId));
     }
 }

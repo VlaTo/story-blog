@@ -4,7 +4,7 @@
 /// Event for successful user authentication
 /// </summary>
 /// <seealso cref="Event" />
-public class UserLoginSuccessEvent : Event
+public class UserSignInSuccessEvent : Event
 {
     /// <summary>
     /// Gets or sets the username.
@@ -91,7 +91,7 @@ public class UserLoginSuccessEvent : Event
     }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="UserLoginSuccessEvent"/> class.
+    /// Initializes a new instance of the <see cref="UserSignInSuccessEvent"/> class.
     /// </summary>
     /// <param name="provider">The provider.</param>
     /// <param name="providerUserId">The provider user identifier.</param>
@@ -99,7 +99,13 @@ public class UserLoginSuccessEvent : Event
     /// <param name="name">The name.</param>
     /// <param name="interactive">if set to <c>true</c> [interactive].</param>
     /// <param name="clientId">The client id.</param>
-    public UserLoginSuccessEvent(string provider, string providerUserId, string subjectId, string? name, bool interactive = true, string? clientId = null)
+    public UserSignInSuccessEvent(
+        string provider,
+        string providerUserId,
+        string subjectId,
+        string? name,
+        bool interactive = true,
+        string? clientId = null)
         : this()
     {
         Provider = provider;
@@ -120,14 +126,19 @@ public class UserLoginSuccessEvent : Event
     }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="UserLoginSuccessEvent"/> class.
+    /// Initializes a new instance of the <see cref="UserSignInSuccessEvent"/> class.
     /// </summary>
     /// <param name="username">The username.</param>
     /// <param name="subjectId">The subject identifier.</param>
     /// <param name="name">The name.</param>
     /// <param name="interactive">if set to <c>true</c> [interactive].</param>
     /// <param name="clientId">The client id.</param>
-    public UserLoginSuccessEvent(string username, string subjectId, string? name, bool interactive = true, string? clientId = null)
+    public UserSignInSuccessEvent(
+        string username,
+        string subjectId,
+        string? name,
+        bool interactive = true,
+        string? clientId = null)
         : this()
     {
         Username = username;
@@ -146,9 +157,9 @@ public class UserLoginSuccessEvent : Event
     }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="UserLoginSuccessEvent"/> class.
+    /// Initializes a new instance of the <see cref="UserSignInSuccessEvent"/> class.
     /// </summary>
-    protected UserLoginSuccessEvent()
+    protected UserSignInSuccessEvent()
         : base(EventCategories.Authentication,
             "User Login Success",
             EventTypes.Success,

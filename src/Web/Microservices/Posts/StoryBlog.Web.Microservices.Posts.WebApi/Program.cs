@@ -1,8 +1,11 @@
+using System.Net.Mime;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Versioning;
+using RabbitMQ.Client;
 using SlimMessageBus.Host;
 using SlimMessageBus.Host.NamedPipe;
+using SlimMessageBus.Host.RabbitMQ;
 using SlimMessageBus.Host.Serialization.SystemTextJson;
 using StoryBlog.Web.Common.Events;
 using StoryBlog.Web.Identity.Extensions;
@@ -45,18 +48,40 @@ builder.Services.AddSlimMessageBus(buses => buses
             )
             .AutoStartConsumersEnabled(true)
             .WithProviderNamedPipes();
-
         bus
-            .Produce<BlogPostEvent>(x => x.DefaultTopic("blog-post"))
+            .Produce<BlogPostEvent>(x => x
+                .DefaultTopic("blog-post")
+            )
             .WithProviderNamedPipes(settings =>
             {
                 settings.Instances = 1;
             });
-
     })
     .AddJsonSerializer()
     .AddAspNet()
 );
+/*builder.Services.AddSlimMessageBus(buses => buses
+    .WithProviderRabbitMQ(rabbit =>
+    {
+        rabbit.ConnectionFactory.HostName = "localhost";
+        rabbit.ConnectionFactory.Port = 5672;
+        rabbit.ConnectionFactory.UserName = "guest";
+        rabbit.ConnectionFactory.Password = "guest";
+        rabbit.ConnectionFactory.Ssl.Enabled = false;
+
+        rabbit.UseExchangeDefaults(durable: true);
+        rabbit.UseQueueDefaults(durable: true);
+        rabbit.UseMessagePropertiesModifier((o, properties) =>
+        {
+            properties.ContentType = MediaTypeNames.Application.Json;
+        });
+    })
+    .Produce<BlogPostEvent>(x => x
+        .Exchange("blog.created")
+    )
+    .AddJsonSerializer()
+    .AddAspNet()
+);*/
 builder.Services.AddNamedPipeMessageBus();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddCors(options =>

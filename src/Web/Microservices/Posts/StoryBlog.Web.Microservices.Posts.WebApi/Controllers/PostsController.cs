@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Net.Mime;
+using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -69,6 +70,7 @@ public class PostsController : Controller
     /// <returns>
     /// 
     /// </returns>
+    [Consumes(MediaTypeNames.Application.Json)]
     [ProducesResponseType(typeof(CreatedPostModel), StatusCodes.Status201Created)]
     [HttpPost]
     public async Task<IActionResult> CreatePost([FromBody] CreatePostRequest request)
@@ -81,7 +83,9 @@ public class PostsController : Controller
         var createPostDetails = new Application.Models.CreatePostDetails
         {
             Title = request.Title,
-            Slug = request.Slug
+            Slug = request.Slug,
+            Text = "",
+            Brief = ""
         };
 
         var command = new CreatePostCommand(createPostDetails, User);

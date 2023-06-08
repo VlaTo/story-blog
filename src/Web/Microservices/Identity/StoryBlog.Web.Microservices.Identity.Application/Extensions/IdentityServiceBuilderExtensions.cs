@@ -280,6 +280,9 @@ public static class IdentityServiceBuilderExtensions
         builder.Services.TryAddTransient<ITokenCreationService, DefaultTokenCreationService>();
         builder.Services.TryAddTransient<IClaimsService, DefaultClaimsService>();
         builder.Services.TryAddTransient<IRefreshTokenService, DefaultRefreshTokenService>();
+        builder.Services.TryAddTransient<IPersistedGrantService, DefaultPersistedGrantService>();
+        
+        builder.Services.TryAddTransient<IIdentityServerInteractionService, DefaultIdentityServerInteractionService>();
 
         builder.Services.AddTransient<IClientSecretValidator, ClientSecretValidator>();
 
@@ -308,8 +311,9 @@ public static class IdentityServiceBuilderExtensions
     /// <typeparam name="TUser">The type of the user.</typeparam>
     /// <param name="builder">The builder.</param>
     /// <returns></returns>
-    public static IIdentityServerBuilder AddAspNetIdentity<TUser>(this IIdentityServerBuilder builder)
-        where TUser : class
+    public static IIdentityServerBuilder AddAspNetIdentity<TUser, TRole>(this IIdentityServerBuilder builder)
+        where TUser : IdentityUser
+        where TRole : IdentityRole
     {
         builder.Services.AddTransientDecorator<IUserClaimsPrincipalFactory<TUser>, UserClaimsFactory<TUser>>();
 
@@ -358,6 +362,8 @@ public static class IdentityServiceBuilderExtensions
                 options.DefaultScheme = IdentityConstants.ApplicationScheme;
             }
         });
+
+        //builder.Services.AddIdentity<TUser, TRole>();
 
         builder.AddResourceOwnerValidator<ResourceOwnerPasswordValidator<TUser>>();
         builder.AddProfileService<ProfileService<TUser>>();

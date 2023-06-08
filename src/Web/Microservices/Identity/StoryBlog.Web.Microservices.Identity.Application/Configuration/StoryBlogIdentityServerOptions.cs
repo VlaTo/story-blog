@@ -1,17 +1,52 @@
-﻿using System.Runtime.Serialization;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.Runtime.Serialization;
 
 namespace StoryBlog.Web.Microservices.Identity.Application.Configuration;
 
-internal class StoryBlogIdentityServerOptions
+public class StoryBlogIdentityServerOptions
 {
     public const string SectionName = "IdentityServerOptions";
 }
 
 [DataContract, Serializable]
-internal class StoryBlogIdentityServerOptions<TIdentityOptions> : StoryBlogIdentityServerOptions
+public class StoryBlogIdentityServerOptions<TIdentityOptions> : StoryBlogIdentityServerOptions
     where TIdentityOptions : IIdentityOptions
 {
-    public TIdentityOptions IdentityOptions
+    public TIdentityOptions Identity
+    {
+        get;
+        set;
+    }
+
+    [Required]
+    public string Secret
+    {
+        get;
+        set;
+    }
+
+    [DefaultValue(true)]
+    public bool AllowRememberMe
+    {
+        get;
+        set;
+    }
+
+    [DefaultValue(true)]
+    public bool AllowUserLockOut
+    {
+        get;
+        set;
+    }
+
+    public TimeSpan RefreshTokenDuration
+    {
+        get;
+        set;
+    }
+
+    public TimeSpan SecurityTokenDuration
     {
         get;
         set;

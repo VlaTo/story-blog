@@ -1,6 +1,9 @@
-﻿namespace StoryBlog.Web.Microservices.Identity.Application.Configuration;
+﻿using System.ComponentModel;
+using System.Runtime.Serialization;
 
-internal sealed class StoryBlogIdentityOptions : IIdentityOptions
+namespace StoryBlog.Web.Microservices.Identity.Application.Configuration;
+
+[DataContract, Serializable]
+public sealed class StoryBlogIdentityOptions : IIdentityOptions
 {
-
 }

@@ -4,7 +4,7 @@
 /// Event for failed user authentication
 /// </summary>
 /// <seealso cref="Event" />
-public class UserLoginFailureEvent : Event
+public class UserSignInFailureEvent : Event
 {
     /// <summary>
     /// Gets or sets the username.
@@ -43,13 +43,13 @@ public class UserLoginFailureEvent : Event
     }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="T:Duende.IdentityServer.Events.UserLoginFailureEvent" /> class.
+    /// Initializes a new instance of the <see cref="T:Duende.IdentityServer.Events.UserSignInFailureEvent" /> class.
     /// </summary>
     /// <param name="username">The username.</param>
     /// <param name="error">The error.</param>
     /// <param name="interactive">Specifies if login was interactive</param>
     /// <param name="clientId">The client id</param>
-    public UserLoginFailureEvent(string username, string error, bool interactive = true, string? clientId = null)
+    public UserSignInFailureEvent(string username, string error, bool interactive = true, string? clientId = null)
         : base(EventCategories.Authentication,
             "User Login Failure",
             EventTypes.Failure,

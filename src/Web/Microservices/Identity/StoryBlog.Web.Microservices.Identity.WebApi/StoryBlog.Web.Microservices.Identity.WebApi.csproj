@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
@@ -27,14 +27,17 @@
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="7.0.5" />
     <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="7.0.5" />
+    <PackageReference Include="SlimMessageBus.Host.AspNetCore" Version="2.1.8" />
+    <PackageReference Include="SlimMessageBus.Host.Serialization.SystemTextJson" Version="2.0.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Configuration\" />
-    <Folder Include="Controllers\" />
     <Folder Include="Extensions\" />
     <Folder Include="Core\" />
+    <Folder Include="ViewModels\Account\" />
+    <Folder Include="wwwroot\css\" />
   </ItemGroup>
 
   <ItemGroup>

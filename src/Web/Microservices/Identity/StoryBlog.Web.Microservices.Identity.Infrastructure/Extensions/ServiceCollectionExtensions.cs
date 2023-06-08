@@ -24,6 +24,7 @@ public static class ServiceCollectionExtensions
         services.TryAddTransient<IRefreshTokenStore, DefaultRefreshTokenStore>();
         services.TryAddTransient<IMessageStore<LogoutNotificationContext>, ProtectedDataMessageStore<LogoutNotificationContext>>();
         services.TryAddTransient<IMessageStore<ErrorMessage>, ProtectedDataMessageStore<ErrorMessage>>();
+        services.TryAddTransient<IMessageStore<LogoutMessage>, ProtectedDataMessageStore<LogoutMessage>>();
         services.TryAddTransient<IAuthorizationCodeStore, DefaultAuthorizationCodeStore>();
         services.TryAddTransient<IBackChannelAuthenticationRequestStore, DefaultBackChannelAuthenticationRequestStore>();
         services.TryAddTransient<IConsentMessageStore, ConsentMessageStore>();
