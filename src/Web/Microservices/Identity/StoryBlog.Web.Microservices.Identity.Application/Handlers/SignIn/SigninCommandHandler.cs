@@ -1,4 +1,8 @@
-﻿using MediatR;
+﻿using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Security.Cryptography;
+using System.Text;
+using MediatR;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
@@ -7,15 +11,12 @@ using Microsoft.IdentityModel.Tokens;
 using StoryBlog.Infrastructure.AnyOf;
 using StoryBlog.Web.Microservices.Identity.Application.Configuration;
 using StoryBlog.Web.Microservices.Identity.Application.Core.Events;
+using StoryBlog.Web.Microservices.Identity.Application.Extensions;
+using StoryBlog.Web.Microservices.Identity.Application.Handlers.SigningIn;
 using StoryBlog.Web.Microservices.Identity.Application.Services;
 using StoryBlog.Web.Microservices.Identity.Domain.Entities;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Security.Cryptography;
-using System.Text;
-using StoryBlog.Web.Microservices.Identity.Application.Extensions;
 
-namespace StoryBlog.Web.Microservices.Identity.Application.Handlers.SigningIn;
+namespace StoryBlog.Web.Microservices.Identity.Application.Handlers.SignIn;
 
 public sealed class SigninCommandHandler : IRequestHandler<SigninCommand, AnyOf<SignInError, (StoryBlogUser User, string? Token)>>
 {
@@ -52,11 +53,6 @@ public sealed class SigninCommandHandler : IRequestHandler<SigninCommand, AnyOf<
         if (null == user)
         {
             return SignInError.NotFound;
-        }
-
-        if (false == user.EmailConfirmed)
-        {
-            return SignInError.NotAllowed;
         }
 
         var canSignIn = await signInManager.CanSignInAsync(user);

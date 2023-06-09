@@ -1,0 +1,10 @@
+﻿<meta http-equiv="refresh" content="0;url=@Model.ReturnUrl" data-url=@Model.ReturnUrl>
+
+@model StoryBlog.Web.Microservices.Identity.WebApi.ViewModels.RedirectPage.RedirectPageViewModel
+
+<div>
+</div>
+
+<script type="application/javascript" defer>
+    window.location.href = document.querySelector("meta[http-equiv=refresh]").getAttribute("data-url");
+</script>

@@ -11,6 +11,6 @@ internal static class AuthorizationRequestExtensions
     {
         var redirectUri = new Uri(context.RedirectUri);
         return String.Equals(redirectUri.Scheme, Uri.UriSchemeHttp, StringComparison.Ordinal)
-               && String.Equals(redirectUri.Scheme, Uri.UriSchemeHttps, StringComparison.Ordinal);
+               || String.Equals(redirectUri.Scheme, Uri.UriSchemeHttps, StringComparison.Ordinal);
     }
 }

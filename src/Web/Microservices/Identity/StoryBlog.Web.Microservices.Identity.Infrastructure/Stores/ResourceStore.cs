@@ -131,10 +131,12 @@ public class ResourceStore : IResourceStore
     /// <returns></returns>
     public async Task<IEnumerable<IdentityResource>> FindIdentityResourcesByScopeNameAsync(IEnumerable<string> scopeNames)
     {
-        using (var activity = Tracing.StoreActivitySource.StartActivity("ResourceStore.FindIdentityResourcesByScopeName"))
-        {
-            activity?.SetTag(Tracing.Properties.ScopeNames, scopeNames.ToSpaceSeparatedString());
+        using var activity = Tracing.StoreActivitySource.StartActivity("ResourceStore.FindIdentityResourcesByScopeName");
 
+        activity?.SetTag(Tracing.Properties.ScopeNames, scopeNames.ToSpaceSeparatedString());
+
+        try
+        {
             using (var repository = Context.GetRepository<Domain.Entities.IdentityResource>())
             {
                 var specification = new FindIdentityResourcesByScopes(scopeNames.ToArray());
@@ -146,6 +148,11 @@ public class ResourceStore : IResourceStore
                     .Select(x => x.ToModel())
                     .ToArray();
             }
+        }
+        catch (Exception exception)
+        {
+            Console.WriteLine(exception);
+            throw;
         }
     }
 

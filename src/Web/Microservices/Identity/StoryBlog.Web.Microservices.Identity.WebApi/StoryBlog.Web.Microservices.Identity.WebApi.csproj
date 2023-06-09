@@ -37,6 +37,7 @@
     <Folder Include="Extensions\" />
     <Folder Include="Core\" />
     <Folder Include="ViewModels\Account\" />
+    <Folder Include="ViewModels\RedirectPage\" />
     <Folder Include="wwwroot\css\" />
   </ItemGroup>
 
@@ -44,6 +45,21 @@
     <ProjectReference Include="..\..\..\Identity\StoryBlog.Web.Identity\StoryBlog.Web.Identity.csproj" />
     <ProjectReference Include="..\StoryBlog.Web.Microservices.Identity.Application\StoryBlog.Web.Microservices.Identity.Application.csproj" />
     <ProjectReference Include="..\StoryBlog.Web.Microservices.Identity.Infrastructure\StoryBlog.Web.Microservices.Identity.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
 
 </Project>

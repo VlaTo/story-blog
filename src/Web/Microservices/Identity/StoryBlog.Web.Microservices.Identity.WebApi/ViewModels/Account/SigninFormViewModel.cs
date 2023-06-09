@@ -10,7 +10,7 @@ public sealed class SigninFormViewModel
     [MinLength(3)]
     [DataType(DataType.EmailAddress)]
     [Description("Email address")]
-    [Display(Name = "Email1", Description = "Email address")]
+    [Display(Name = "Email", Description = "Email address")]
     [Localizable(true)]
     public string Email
     {
@@ -22,7 +22,8 @@ public sealed class SigninFormViewModel
     [MinLength(3)]
     [DataType(DataType.Password)]
     [Description("Password")]
-    [Display(Name = "Password1", Description = "Enter password")]
+    [Display(Name = "Password", Description = "Enter password")]
+    [DefaultValue("User_guEst1")]
     public string Password
     {
         get;

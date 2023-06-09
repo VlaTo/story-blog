@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Runtime.InteropServices.JavaScript;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Identity;
+using System.Security;
 using Microsoft.EntityFrameworkCore.Migrations;
 using StoryBlog.Web.Microservices.Identity.Application;
+using StoryBlog.Web.Microservices.Identity.Application.Storage;
 using StoryBlog.Web.Microservices.Identity.Domain;
 
 #nullable disable
@@ -1052,8 +1056,85 @@ namespace StoryBlog.Web.Microservices.Identity.Infrastructure.Persistence.Migrat
                 name: "IX_ServerSideSessions_Key",
                 schema: "Identity",
                 table: "ServerSideSessions",
-                column: "Key");
+            column: "Key");
 
+            #region Users
+
+            migrationBuilder.InsertData(
+                table: "AspNetUsers",
+                columns: new[]
+                {
+                    "Id", "IsActive", "Created", "Modified", "UserName", "NormalizedUserName", "Email",
+                    "NormalizedEmail", "EmailConfirmed", "PasswordHash", "SecurityStamp", "ConcurrencyStamp",
+                    "PhoneNumber", "PhoneNumberConfirmed", "TwoFactorEnabled", "LockoutEnd", "LockoutEnabled",
+                    "AccessFailedCount"
+                },
+                values: new object[]
+                {
+                    "1b2696b7-7605-49be-b59c-ab577f6c1cc0", true, "2023-06-08 08:40:34.0273908",
+                    "2023-06-08 08:40:34.0348363", "guest@storyblog.net", "GUEST@STORYBLOG.NET", "guest@storyblog.net",
+                    "GUEST@STORYBLOG.NET", true,
+                    "AQAAAAIAAYagAAAAEP2omrptRd+Y6ldZrmgtyGyiS5lCKnBNVSZFOxOioe798g708HWi818ueedmCfjfKg==",
+                    "JUBOLHW6CITA22TQG4QV4FCUDQDYZCKA", "e96c8397-8d72-4ffb-9cf4-246d5fa2f36f", "8-800-444-55-66", true,
+                    false, null, true, 0
+                }
+            );
+
+            migrationBuilder.InsertData(
+                table: "AspNetRoles",
+                columns: new[]
+                {
+                    "Id", "Description", "Created", "Modified", "Name", "NormalizedName", "ConcurrencyStamp"
+                },
+                values: new object[]
+                {
+                    "9e63463a-67ab-4bb7-a019-c151ea74a05b", "Blog Viewer", "2023-06-08 12:34:00.7029025", null,
+                    "Permissions.Blogs.View", "PERMISSIONS.BLOGS.VIEW", "7389d70d-c988-42f3-9712-5d1c607d60a7"
+                }
+            );
+
+            migrationBuilder.InsertData(
+                table: "AspNetUserRoles",
+                columns: new[]
+                {
+                    "UserId", "RoleId"
+                },
+                values: new object[]
+                {
+                    "1b2696b7-7605-49be-b59c-ab577f6c1cc0", "9e63463a-67ab-4bb7-a019-c151ea74a05b"
+                }
+            );
+
+            migrationBuilder.InsertData(
+                table: "AspNetUserClaims",
+                columns: new[]
+                {
+                    "UserId", "ClaimType", "ClaimValue"
+                },
+                values: new object[]
+                {
+                    "1b2696b7-7605-49be-b59c-ab577f6c1cc0",
+                    "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname", "Guest"
+                }
+            );
+
+            migrationBuilder.InsertData(
+                table: "AspNetRoleClaims",
+                columns: new[]
+                {
+                    "RoleId", "ClaimType", "ClaimValue", "Discriminator", "Description", "Group", "Created",
+                    "Modified"
+                },
+                values: new object[]
+                {
+                    "9e63463a-67ab-4bb7-a019-c151ea74a05b",
+                    "http://schemas.xmlsoap.org/ws/2009/09/identity/claims/actor", "Viewer",
+                    "IdentityRoleClaim<string>", null, null, null, null
+                }
+            );
+
+            #endregion
+            
             #region Identity Clients
 
             migrationBuilder.InsertData(
@@ -1168,6 +1249,24 @@ namespace StoryBlog.Web.Microservices.Identity.Infrastructure.Persistence.Migrat
 
             #endregion
 
+            #region Client Scopes
+
+            migrationBuilder.InsertData(
+                table: TableNames.ClientScope,
+                schema: SchemaNames.Identity,
+                columns: new[]
+                {
+                    "Scope", "ClientId"
+                },
+                values: new object[][]
+                {
+                    new object[] { "openid", 1 },
+                    new object[] { "profile", 1 }
+                }
+            );
+
+            #endregion
+
             #region Identity Clients Redirect Uris
 
             migrationBuilder.InsertData(
@@ -1179,7 +1278,7 @@ namespace StoryBlog.Web.Microservices.Identity.Infrastructure.Persistence.Migrat
                 },
                 values: new object[]
                 {
-                    "/authorization/redirect", 1
+                    "http://localhost:5035/authentication/login-callback", 1
                 }
             );
 
@@ -1204,7 +1303,7 @@ namespace StoryBlog.Web.Microservices.Identity.Infrastructure.Persistence.Migrat
 
             #endregion
 
-            #region Identity Clients Properties
+            #region Clients Properties
 
             migrationBuilder.InsertData(
                 table: TableNames.ClientProperty,
@@ -1215,7 +1314,35 @@ namespace StoryBlog.Web.Microservices.Identity.Infrastructure.Persistence.Migrat
                 },
                 values: new object[]
                 {
-                    1, "Profile", "IdentityServerSPA"
+                    1, "Profile", "SPA"
+                }
+            );
+
+            #endregion
+
+            #region Identity Resources
+
+            migrationBuilder.InsertData(
+                table: TableNames.IdentityResource,
+                schema: SchemaNames.Identity,
+                columns: new[]
+                {
+                    "Enabled", "Name", "DisplayName", "Description", "Required", "Emphasize", "ShowInDiscoveryDocument",
+                    "Created", "Updated", "NonEditable"
+                },
+                values: new object[][]
+                {
+                    new object[]
+                    {
+                        1, "profile", "SimpleBlog OpenID Profile resource", "SimpleBlog OpenID Profile resource", false,
+                        false, true, "2022-07-11 09:05:50.7431775", null, false
+                    },
+                    new object[]
+                    {
+                        1, "openid", "SimpleBlog OpenID General resource", "SimpleBlog OpenID General resource", false,
+                        false, true, "2022-07-11 09:05:50.7431775", null, false
+                    }
+
                 }
             );
 

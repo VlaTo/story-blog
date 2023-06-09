@@ -3,9 +3,11 @@ using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Razor.Compilation;
 using StoryBlog.Web.Microservices.Identity.Application.Handlers.SigningIn;
 using StoryBlog.Web.Microservices.Identity.Application.Services;
 using StoryBlog.Web.Microservices.Identity.WebApi.ViewModels.Account;
+using StoryBlog.Web.Microservices.Identity.WebApi.ViewModels.RedirectPage;
 
 namespace StoryBlog.Web.Microservices.Identity.WebApi.Controllers;
 
@@ -48,7 +50,11 @@ public class AccountController : Controller
 
         ViewData[ReturnUrlKey] = returnUrl;
 
-        var model = new SigninFormViewModel();
+        var model = new SigninFormViewModel
+        {
+            Email = "guest@storyblog.net",
+            Password = "User_guEst1"
+        };
 
         return View(model);
     }
@@ -56,7 +62,7 @@ public class AccountController : Controller
     // POST: account/login
     [HttpPost("login")]
     [Consumes("application/x-www-form-urlencoded")]
-    [ValidateAntiForgeryToken]
+    //[ValidateAntiForgeryToken]
     public async Task<IActionResult> Login([FromForm] SigninFormViewModel model, [FromForm(Name = ReturnUrlKey)]string returnUrl)
     {
         var context = await identityServerInteraction.GetAuthorizationContextAsync(returnUrl);
@@ -68,10 +74,16 @@ public class AccountController : Controller
 
             if (result.IsOfT2)
             {
-                return RedirectToUrl(returnUrl);
+                return View("RedirectPage", new RedirectPageViewModel(returnUrl));
             }
 
             ModelState.AddModelError("General", "General error");
+        }
+
+        if (null != context)
+        {
+            ViewData[ClientDescriptionKey] = context.Client?.Description;
+            ViewData[ClientLogoKey] = context.Client?.LogoUri;
         }
 
         ViewData[ReturnUrlKey] = returnUrl;

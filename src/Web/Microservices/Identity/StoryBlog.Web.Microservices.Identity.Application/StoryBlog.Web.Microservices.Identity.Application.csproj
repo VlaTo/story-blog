@@ -45,6 +45,7 @@
     <Folder Include="Authorization\Responses\" />
     <Folder Include="Endpoints\Results\" />
     <Folder Include="Handlers\SignIn\" />
+    <Folder Include="Handlers\CreateUser\" />
     <Folder Include="Hosting\FederatedSignOut\" />
     <Folder Include="Models\Logging\" />
     <Folder Include="ResponseHandling\Models\" />

@@ -5,13 +5,12 @@ namespace StoryBlog.Web.Microservices.Identity.Application;
 public class IdentityServerConstants
 {
     public const string LocalIdentityProvider = "local";
-    public const string DefaultCookieAuthenticationScheme = "idsrv";
+    public const string DefaultCookieAuthenticationScheme = "sbid";
     public const string SignOutScheme = "idsrv";
-    public const string ExternalCookieAuthenticationScheme = "idsrv.external";
-    public const string DefaultCheckSessionCookieName = "idsrv.session";
+    public const string ExternalCookieAuthenticationScheme = "sbid.external";
+    public const string DefaultCheckSessionCookieName = "sbid.session";
     public const string AccessTokenAudience = "{0}resources";
-
-    public const string JwtRequestClientKey = "idsrv.jwtrequesturi.client";
+    public const string JwtRequestClientKey = "sbid.jwtrequesturi.client";
 
     /// <summary>
     /// Constants for local IdentityServer access token authentication.

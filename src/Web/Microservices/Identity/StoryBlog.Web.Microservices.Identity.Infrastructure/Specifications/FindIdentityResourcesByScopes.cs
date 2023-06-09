@@ -9,6 +9,6 @@ internal sealed class FindIdentityResourcesByScopes : SpecificationBase<Domain.E
         Criteria = resource => scopes.Contains(resource.Name);
         Includes.Add(resource => resource.UserClaims);
         Includes.Add(resource => resource.Properties);
-        Options = SpecificationQueryOptions.NoTracking;
+        Options = SpecificationQueryOptions.NoTracking | SpecificationQueryOptions.SplitQuery;
     }
 }

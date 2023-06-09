@@ -2,8 +2,7 @@
   "profiles": {
     "http": {
       "commandName": "Project",
-      "launchBrowser": true,
-      "launchUrl": "account/login?returnUrl=%2Fconnect%2Fauthorize%2Fcallback%3Fclient_id%3D288849a891664840975fa7992f247947%26redirect_uri%3Dhttp%253A%252F%252Flocalhost%253A5030%252Fauthorization%252Fredirect%26response_type%3Dcode%26scope%3Dopenid%2520profile%26state%3Dc4c4dfbb084942ed808e806ee62579b4%26code_challenge%3DIMbOMAejOfSdUbAO3CfA6e9RQLwQk9bT6YKoMwK0CK4%26code_challenge_method%3DS256%26response_mode%3Dquery",
+      "launchUrl": "account/login?returnUrl=%2Fconnect%2Fauthorize%2Fcallback%3Fclient_id%3D288849a891664840975fa7992f247947%26redirect_uri%3Dhttp%253A%252F%252Flocalhost%253A5035%252Fauthorization%252Fredirect%26response_type%3Dcode%26scope%3Dopenid%2520profile%26state%3Dc4c4dfbb084942ed808e806ee62579b4%26code_challenge%3DIMbOMAejOfSdUbAO3CfA6e9RQLwQk9bT6YKoMwK0CK4%26code_challenge_method%3DS256%26response_mode%3Dquery",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
