@@ -1,11 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using StoryBlog.Web.Common.Domain;
 using StoryBlog.Web.Microservices.Identity.Application.Contexts;
 using StoryBlog.Web.Microservices.Identity.Application.Core;
 using StoryBlog.Web.Microservices.Identity.Application.Services;
 using StoryBlog.Web.Microservices.Identity.Application.Storage;
 using StoryBlog.Web.Microservices.Identity.Application.Stores;
+using StoryBlog.Web.Microservices.Identity.Domain.Entities;
 using StoryBlog.Web.Microservices.Identity.Infrastructure.Extensions;
+using StoryBlog.Web.Microservices.Identity.Infrastructure.Specifications;
 
 namespace StoryBlog.Web.Microservices.Identity.Infrastructure.Stores;
 
@@ -18,7 +21,12 @@ public class PersistedGrantStore : IPersistedGrantStore
     /// <summary>
     /// The DbContext.
     /// </summary>
-    protected readonly IPersistedGrantDbContext Context;
+    //protected readonly IPersistedGrantDbContext Context;
+
+    /// <summary>
+    /// The DbContext.
+    /// </summary>
+    protected readonly IUnitOfWork Context;
 
     /// <summary>
     /// The CancellationToken service.
@@ -37,7 +45,8 @@ public class PersistedGrantStore : IPersistedGrantStore
     /// <param name="logger">The logger.</param>
     /// <param name="cancellationTokenProvider"></param>
     public PersistedGrantStore(
-        IPersistedGrantDbContext context,
+        //IPersistedGrantDbContext context,
+        IUnitOfWork context,
         ICancellationTokenProvider cancellationTokenProvider,
         ILogger<PersistedGrantStore> logger)
     {
@@ -47,10 +56,34 @@ public class PersistedGrantStore : IPersistedGrantStore
     }
 
     /// <inheritdoc/>
-    public virtual async Task StoreAsync(PersistedGrant grant)
+    public virtual async Task StoreAsync(Application.Storage.PersistedGrant grant)
     {
         using var activity = Tracing.StoreActivitySource.StartActivity("PersistedGrantStore.StoreAsync");
 
+        using (var repository = Context.GetRepository<Domain.Entities.PersistedGrant>())
+        {
+            var specification = new FindPersistedGrantByKey(grant.Key);
+            var existing = await repository.FindAsync(specification, CancellationTokenProvider.CancellationToken);
+
+            if (null == existing)
+            {
+                Logger.LogDebug("{persistedGrantKey} not found in database", grant.Key);
+
+                var persistedGrant = grant.ToEntity();
+
+                await repository.AddAsync(persistedGrant, CancellationTokenProvider.CancellationToken);
+            }
+            else
+            {
+                Logger.LogDebug("{persistedGrantKey} found in database", grant.Key);
+
+                //await repository.SaveAsync(existing, CancellationTokenProvider.CancellationToken);
+                grant.UpdateEntity(existing);
+            }
+
+            await repository.SaveChangesAsync(CancellationTokenProvider.CancellationToken);
+        }
+        
         /*var existing = await Context.PersistedGrants
             .Where(x => x.Key == grant.Key)
             //.ToArrayAsync(CancellationTokenProvider.CancellationToken)
@@ -82,34 +115,30 @@ public class PersistedGrantStore : IPersistedGrantStore
     }
 
     /// <inheritdoc/>
-    public virtual Task<PersistedGrant?> GetAsync(string key)
+    public virtual async Task<Application.Storage.PersistedGrant?> GetAsync(string key)
     {
         using var activity = Tracing.StoreActivitySource.StartActivity("PersistedGrantStore.GetAsync");
 
-        /*var persistedGrant = await Context.PersistedGrants
-            .Where(x => x.Key == key)
-            .AsNoTracking()
-            .SingleOrDefaultAsync(
-                x => x.Key == key,
-                CancellationTokenProvider.CancellationToken
-            );
-
-        if (null != persistedGrant)
+        using (var repository = Context.GetRepository<Domain.Entities.PersistedGrant>())
         {
-            var model = persistedGrant.ToModel();
+            var specification = new FindPersistedGrantByKey(key);
+            var persistedGrant = await repository.FindAsync(specification, CancellationTokenProvider.CancellationToken);
 
-            Logger.LogDebug("{persistedGrantKey} found in database: {persistedGrantKeyFound}", key, model != null);
+            if (null != persistedGrant)
+            {
+                var model = persistedGrant.ToModel();
 
-            return model;
+                Logger.LogDebug("{persistedGrantKey} found in database: {persistedGrantKeyFound}", key, model != null);
+
+                return model;
+            }
         }
 
-        return null;*/
-
-        return Task.FromResult<PersistedGrant?>(null);
+        return null;
     }
 
     /// <inheritdoc/>
-    public Task<IEnumerable<PersistedGrant>> GetAllAsync(PersistedGrantFilter filter)
+    public Task<IEnumerable<Application.Storage.PersistedGrant>> GetAllAsync(PersistedGrantFilter filter)
     {
         using var activity = Tracing.StoreActivitySource.StartActivity("PersistedGrantStore.GetAllAsync");
 
@@ -126,7 +155,7 @@ public class PersistedGrantStore : IPersistedGrantStore
 
         return grants;*/
 
-        return Task.FromResult(Enumerable.Empty<PersistedGrant>());
+        return Task.FromResult(Enumerable.Empty<Application.Storage.PersistedGrant>());
     }
 
     /// <inheritdoc/>

@@ -252,8 +252,9 @@ internal class TokenRequestValidator : ITokenRequestValidator
         /////////////////////////////////////////////
         // check if client is authorized for grant type
         /////////////////////////////////////////////
-        if (!validatedRequest.Client.AllowedGrantTypes.ToList().Contains(GrantType.AuthorizationCode) &&
-            !validatedRequest.Client.AllowedGrantTypes.ToList().Contains(GrantType.Hybrid))
+        var allowedGrantTypes = (validatedRequest.Client?.AllowedGrantTypes ?? Array.Empty<string>()).ToList();
+
+        if (false == allowedGrantTypes.Contains(GrantType.AuthorizationCode) && false == allowedGrantTypes.Contains(GrantType.Hybrid))
         {
             LogError("Client not authorized for code flow");
             return Invalid(OidcConstants.TokenErrors.UnauthorizedClient);
@@ -263,6 +264,7 @@ internal class TokenRequestValidator : ITokenRequestValidator
         // validate authorization code
         /////////////////////////////////////////////
         var code = parameters.Get(OidcConstants.TokenRequest.Code);
+
         if (String.IsNullOrEmpty(code))
         {
             LogError("Authorization code is missing");
@@ -352,8 +354,7 @@ internal class TokenRequestValidator : ITokenRequestValidator
         /////////////////////////////////////////////
         // validate scopes are present
         /////////////////////////////////////////////
-        if (validatedRequest.AuthorizationCode.RequestedScopes == null ||
-            !validatedRequest.AuthorizationCode.RequestedScopes.Any())
+        if (validatedRequest.AuthorizationCode.RequestedScopes.NoValue())
         {
             LogError("Authorization code has no associated scopes");
             return Invalid(OidcConstants.TokenErrors.InvalidRequest);
@@ -362,9 +363,9 @@ internal class TokenRequestValidator : ITokenRequestValidator
         //////////////////////////////////////////////////////////
         // resource indicator
         //////////////////////////////////////////////////////////
-        if (validatedRequest.RequestedResourceIndicator != null &&
-            validatedRequest.AuthorizationCode.RequestedResourceIndicators?.Any() == true &&
-            !validatedRequest.AuthorizationCode.RequestedResourceIndicators.Contains(validatedRequest.RequestedResourceIndicator))
+        if (null != validatedRequest.RequestedResourceIndicator &&
+            validatedRequest.AuthorizationCode.RequestedResourceIndicators.Any() &&
+            false == validatedRequest.AuthorizationCode.RequestedResourceIndicators.Contains(validatedRequest.RequestedResourceIndicator))
         {
             return Invalid(OidcConstants.AuthorizeErrors.InvalidTarget, "Resource indicator does not match any resource indicator in the original authorize request.");
         }

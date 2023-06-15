@@ -1,7 +1,10 @@
+using System.Diagnostics.Tracing;
 using System.Net.Mime;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Versioning;
+using Microsoft.IdentityModel.Logging;
+using Microsoft.IdentityModel.Protocols;
 using RabbitMQ.Client;
 using SlimMessageBus.Host;
 using SlimMessageBus.Host.NamedPipe;
@@ -19,9 +22,13 @@ using StoryBlog.Web.Microservices.Posts.WebApi.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
+IdentityModelEventSource.Logger.LogLevel = EventLevel.Verbose;
+IdentityModelEventSource.ShowPII = true;
+
 builder.Configuration.AddJsonFile("appsettings.authentication.json", optional: true, reloadOnChange: true);
 builder.Configuration.AddJsonFile("appsettings.dbconnection.json", optional: true, reloadOnChange: true);
 
+//builder.Services.AddScoped<IConfigurationRetriever<>>();
 builder.Services.AddInfrastructureServices();
 builder.Services.AddInfrastructureDbContext(builder.Configuration, "Database");
 builder.Services.AddScoped<ILocationProvider, AspNetCoreLocationProvider>();

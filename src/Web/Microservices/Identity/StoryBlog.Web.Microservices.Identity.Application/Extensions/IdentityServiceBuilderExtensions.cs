@@ -47,9 +47,34 @@ public static class IdentityServiceBuilderExtensions
             .AddKeyManagement()
             .AddDefaultEndpoints()
             .AddResponseGenerators()
-            //.AddDefaultSecretParsers()
-            //.AddDefaultSecretValidators()
+            .AddDefaultSecretParsers()
+            .AddDefaultSecretValidators()
             ;
+
+        return builder;
+    }
+
+    /// <summary>
+    /// Adds the default secret validators.
+    /// </summary>
+    /// <param name="builder">The builder.</param>
+    /// <returns></returns>
+    public static IIdentityServerBuilder AddDefaultSecretValidators(this IIdentityServerBuilder builder)
+    {
+        builder.Services.AddTransient<ISecretValidator, HashedSharedSecretValidator>();
+
+        return builder;
+    }
+
+    /// <summary>
+    /// Adds the default secret parsers.
+    /// </summary>
+    /// <param name="builder">The builder.</param>
+    /// <returns></returns>
+    public static IIdentityServerBuilder AddDefaultSecretParsers(this IIdentityServerBuilder builder)
+    {
+        builder.Services.AddTransient<ISecretParser, BasicAuthenticationSecretParser>();
+        builder.Services.AddTransient<ISecretParser, PostBodySecretParser>();
 
         return builder;
     }
@@ -138,7 +163,7 @@ public static class IdentityServiceBuilderExtensions
         //builder.AddEndpoint<BackchannelAuthenticationEndpoint>(EndpointNames.BackchannelAuthentication, ProtocolRoutePaths.BackchannelAuthentication.EnsureLeadingSlash());
         builder.AddEndpoint<CheckSessionEndpoint>(Constants.EndpointNames.CheckSession, Constants.ProtocolRoutePaths.CheckSession.EnsureLeadingSlash());
         //builder.AddEndpoint<DeviceAuthorizationEndpoint>(EndpointNames.DeviceAuthorization, ProtocolRoutePaths.DeviceAuthorization.EnsureLeadingSlash());
-        //builder.AddEndpoint<DiscoveryKeyEndpoint>(EndpointNames.Discovery, ProtocolRoutePaths.DiscoveryWebKeys.EnsureLeadingSlash());
+        builder.AddEndpoint<DiscoveryKeyEndpoint>(Constants.EndpointNames.Discovery, Constants.ProtocolRoutePaths.DiscoveryWebKeys.EnsureLeadingSlash());
         builder.AddEndpoint<DiscoveryEndpoint>(Constants.EndpointNames.Discovery, Constants.ProtocolRoutePaths.DiscoveryConfiguration.EnsureLeadingSlash());
         //builder.AddEndpoint<EndSessionCallbackEndpoint>(EndpointNames.EndSession, ProtocolRoutePaths.EndSessionCallback.EnsureLeadingSlash());
         //builder.AddEndpoint<EndSessionEndpoint>(EndpointNames.EndSession, ProtocolRoutePaths.EndSession.EnsureLeadingSlash());

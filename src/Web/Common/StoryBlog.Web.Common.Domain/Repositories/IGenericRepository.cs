@@ -14,6 +14,8 @@ public interface IGenericRepository<TEntity> : IDisposable where TEntity : IEnti
     Task<bool> ExistsAsync(ISpecification<TEntity> specification, CancellationToken cancellationToken = default);
 
     Task DeleteAsync(TEntity entity, CancellationToken cancellationToken = default);
+    
+    Task SaveAsync(TEntity entity, CancellationToken cancellationToken);
 
     Task SaveChangesAsync(CancellationToken cancellationToken = default);
 }

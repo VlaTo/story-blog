@@ -317,17 +317,23 @@ internal sealed class TokenValidator : ITokenValidator
             }
         }
 
-        var result = handler.ValidateToken(jwtString, parameters);
+        var result = await handler.ValidateTokenAsync(jwtString, parameters);
 
         if (false == result.IsValid)
         {
             if (result.Exception is SecurityTokenExpiredException expiredException)
             {
-                logger.LogInformation(expiredException, "JWT token validation error: {exception}", expiredException.Message);
+                logger.LogInformation(
+                    expiredException,
+                    "JWT token validation error: {exception}",
+                    expiredException.Message
+                );
+
                 return Invalid(OidcConstants.ProtectedResourceErrors.ExpiredToken);
             }
 
             logger.LogError(result.Exception, "JWT token validation error: {exception}", result.Exception.Message);
+            
             return Invalid(OidcConstants.ProtectedResourceErrors.InvalidToken);
         }
 

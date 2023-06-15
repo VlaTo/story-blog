@@ -54,6 +54,15 @@ public class GenericRepository<TEntity, TDbContext> : IGenericRepository<TEntity
         return Task.CompletedTask;
     }
 
+    public Task SaveAsync(TEntity entity, CancellationToken cancellationToken)
+    {
+        var entities = context.Set<TEntity>();
+
+        entities.Update(entity);
+
+        return Task.CompletedTask;
+    }
+
     public Task SaveChangesAsync(CancellationToken cancellationToken = default)
     {
         return context.SaveChangesAsync(cancellationToken);

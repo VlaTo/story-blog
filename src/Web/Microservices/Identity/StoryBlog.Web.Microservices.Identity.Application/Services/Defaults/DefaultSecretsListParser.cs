@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using StoryBlog.Web.Microservices.Identity.Application.Models;
+using StoryBlog.Web.Microservices.Identity.Domain.Entities;
 
 namespace StoryBlog.Web.Microservices.Identity.Application.Services.Defaults;
 

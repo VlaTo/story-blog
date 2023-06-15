@@ -2,6 +2,7 @@
 using StoryBlog.Web.Microservices.Identity.Application.Core;
 using System.Collections.Specialized;
 using System.Diagnostics;
+using System.Security.Cryptography;
 using System.Text;
 using System.Text.Encodings.Web;
 
@@ -245,6 +246,27 @@ public static class StringExtensions
         var hash = bytes.Sha256();
 
         return Convert.ToBase64String(hash);
+    }
+
+    /// <summary>
+    /// Creates a SHA512 hash of the specified input.
+    /// </summary>
+    /// <param name="input">The input.</param>
+    /// <returns>A hash</returns>
+    public static string Sha512(this string? input)
+    {
+        if (String.IsNullOrEmpty(input))
+        {
+            return String.Empty;
+        }
+
+        using (var algorithm = SHA512.Create())
+        {
+            var bytes = Encoding.UTF8.GetBytes(input);
+            var hash = algorithm.ComputeHash(bytes);
+
+            return Convert.ToBase64String(hash);
+        }
     }
 
     public static string Obfuscate(this string value)

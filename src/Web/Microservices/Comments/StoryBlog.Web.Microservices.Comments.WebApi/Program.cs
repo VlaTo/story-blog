@@ -17,6 +17,7 @@ using StoryBlog.Web.Microservices.Comments.WebApi.Extensions;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration.AddJsonFile("appsettings.authentication.json", optional: true);
+builder.Configuration.AddJsonFile("appsettings.dbconnection.json", optional: true, reloadOnChange: true);
 
 builder.Services.AddInfrastructureServices();
 builder.Services.AddInfrastructureDbContext(builder.Configuration, "Database");

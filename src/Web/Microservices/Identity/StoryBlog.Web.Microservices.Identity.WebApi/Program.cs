@@ -10,6 +10,7 @@ using StoryBlog.Web.Microservices.Identity.WebApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Configuration.AddJsonFile("appsettings.dbconnection.json", optional: true, reloadOnChange: true);
 builder.Services.AddMediatR(mediatr =>
 {
     mediatr.RegisterServicesFromAssembly(typeof(IdentityServerConstants).Assembly);

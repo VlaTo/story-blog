@@ -9,6 +9,10 @@ public static class StringEnumerableExtensions
         return null == strings ? String.Empty : String.Join(' ', strings);
     }
 
+    public static bool HasValue(this IEnumerable<string>? strings) => null != strings && strings.Any();
+
+    public static bool NoValue(this IEnumerable<string>? strings) => null == strings || false == strings.Any();
+
     internal static bool AreValidResourceIndicatorFormat(this IEnumerable<string>? list, ILogger logger)
     {
         if (null != list)

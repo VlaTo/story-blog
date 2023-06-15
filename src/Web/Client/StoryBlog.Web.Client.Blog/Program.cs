@@ -8,7 +8,6 @@ using StoryBlog.Web.Blazor.Markdown.Editor.Extensions;
 using StoryBlog.Web.Client.Blog;
 using StoryBlog.Web.Client.Blog.Clients;
 using StoryBlog.Web.Client.Blog.Clients.Interfaces;
-using StoryBlog.Web.Client.Blog.Components;
 using StoryBlog.Web.Client.Blog.Configuration;
 using StoryBlog.Web.Client.Blog.Middlewares;
 

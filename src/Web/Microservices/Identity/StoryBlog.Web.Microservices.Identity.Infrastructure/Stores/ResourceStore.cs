@@ -81,29 +81,13 @@ public class ResourceStore : IResourceStore
         }
     }
 
-    public Task<Resources> GetAllResourcesAsync()
+    public async Task<Resources> GetAllResourcesAsync()
     {
         using var activity = Tracing.StoreActivitySource.StartActivity("ResourceStore.GetAllResources");
 
-        /*var identity = await Context.IdentityResources
-            .Include(x => x.UserClaims)
-            .Include(x => x.Properties)
-            .AsNoTracking()
-            .ToArrayAsync(CancellationTokenProvider.CancellationToken);
-
-        var apis = await Context.ApiResources
-            .Include(x => x.Secrets)
-            .Include(x => x.Scopes)
-            .Include(x => x.UserClaims)
-            .Include(x => x.Properties)
-            .AsNoTracking()
-            .ToArrayAsync(CancellationTokenProvider.CancellationToken);
-
-        var scopes = await Context.ApiScopes
-            .Include(x => x.UserClaims)
-            .Include(x => x.Properties)
-            .AsNoTracking()
-            .ToArrayAsync(CancellationTokenProvider.CancellationToken);
+        var identity = await GetAllIdentityResourcesAsync();
+        var apis = await GetAllApiResourcesAsync();
+        var scopes = await GetAllApiScopedAsync();
 
         var result = Resources.Create(
             identity.Select(resource => resource.ToModel()),
@@ -119,9 +103,7 @@ public class ResourceStore : IResourceStore
             result.ApiResources.Select(x => x.Name)
         );
 
-        return result;*/
-
-        return Task.FromResult(new Resources());
+        return result;
     }
 
     /// <summary>
@@ -199,6 +181,33 @@ public class ResourceStore : IResourceStore
 
                 return models;
             }
+        }
+    }
+
+    private async Task<Domain.Entities.IdentityResource[]> GetAllIdentityResourcesAsync()
+    {
+        using (var repository = Context.GetRepository<Domain.Entities.IdentityResource>())
+        {
+            var specification = new QueryAllIdentityResources();
+            return await repository.QueryAsync(specification, CancellationTokenProvider.CancellationToken);
+        }
+    }
+
+    private async Task<Domain.Entities.ApiResource[]> GetAllApiResourcesAsync()
+    {
+        using (var repository = Context.GetRepository<Domain.Entities.ApiResource>())
+        {
+            var specification = new QueryAllApiResources();
+            return await repository.QueryAsync(specification, CancellationTokenProvider.CancellationToken);
+        }
+    }
+
+    private async Task<Domain.Entities.ApiScope[]> GetAllApiScopedAsync()
+    {
+        using (var repository = Context.GetRepository<Domain.Entities.ApiScope>())
+        {
+            var specification = new QueryAllApiScopes();
+            return await repository.QueryAsync(specification, CancellationTokenProvider.CancellationToken);
         }
     }
 }

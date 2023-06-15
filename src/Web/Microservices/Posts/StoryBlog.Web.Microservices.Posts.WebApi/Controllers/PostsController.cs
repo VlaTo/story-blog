@@ -1,4 +1,5 @@
-﻿using System.Net.Mime;
+﻿using System.Diagnostics;
+using System.Net.Mime;
 using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -46,6 +47,11 @@ public class PostsController : Controller
     [HttpGet]
     public async Task<IActionResult> ListAll([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 30)
     {
+        if (User.Identity?.IsAuthenticated ?? false)
+        {
+            Debugger.Break();
+        }
+
         var query = new GetPostsQuery(pageNumber, pageSize, includeAll: true);
         var result = await mediator.Send(query);
 
