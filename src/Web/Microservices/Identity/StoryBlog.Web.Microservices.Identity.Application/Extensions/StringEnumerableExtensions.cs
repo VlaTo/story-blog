@@ -1,9 +1,11 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using System.Diagnostics.CodeAnalysis;
+using Microsoft.Extensions.Logging;
 
 namespace StoryBlog.Web.Microservices.Identity.Application.Extensions;
 
 public static class StringEnumerableExtensions
 {
+    [return: NotNull]
     public static string ToSpaceSeparatedString(this IEnumerable<string>? strings)
     {
         return null == strings ? String.Empty : String.Join(' ', strings);

@@ -2,13 +2,13 @@
 
 internal class HttpClientBase
 {
-    protected HttpClient Client
+    protected HttpClient ClientFactory
     {
         get;
     }
 
-    protected HttpClientBase(HttpClient client)
+    protected HttpClientBase(HttpClient clientFactory)
     {
-        Client = client;
+        ClientFactory = clientFactory;
     }
 }

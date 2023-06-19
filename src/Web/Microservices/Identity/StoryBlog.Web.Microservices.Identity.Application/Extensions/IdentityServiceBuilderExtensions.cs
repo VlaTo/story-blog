@@ -15,7 +15,6 @@ using StoryBlog.Web.Microservices.Identity.Application.DependencyInjection;
 using StoryBlog.Web.Microservices.Identity.Application.DependencyInjection.Options;
 using StoryBlog.Web.Microservices.Identity.Application.Endpoints;
 using StoryBlog.Web.Microservices.Identity.Application.Hosting;
-using StoryBlog.Web.Microservices.Identity.Application.Models.Messages;
 using StoryBlog.Web.Microservices.Identity.Application.ResponseHandling.Defaults;
 using StoryBlog.Web.Microservices.Identity.Application.ResponseHandling.Generators;
 using StoryBlog.Web.Microservices.Identity.Application.Services;
@@ -160,7 +159,7 @@ public static class IdentityServiceBuilderExtensions
 
         builder.AddEndpoint<AuthorizeCallbackEndpoint>(Constants.EndpointNames.Authorize, Constants.ProtocolRoutePaths.AuthorizeCallback.EnsureLeadingSlash());
         builder.AddEndpoint<AuthorizeEndpoint>(Constants.EndpointNames.Authorize, Constants.ProtocolRoutePaths.Authorize.EnsureLeadingSlash());
-        //builder.AddEndpoint<BackchannelAuthenticationEndpoint>(EndpointNames.BackchannelAuthentication, ProtocolRoutePaths.BackchannelAuthentication.EnsureLeadingSlash());
+        builder.AddEndpoint<BackchannelAuthenticationEndpoint>(Constants.EndpointNames.BackchannelAuthentication, Constants.ProtocolRoutePaths.BackchannelAuthentication.EnsureLeadingSlash());
         builder.AddEndpoint<CheckSessionEndpoint>(Constants.EndpointNames.CheckSession, Constants.ProtocolRoutePaths.CheckSession.EnsureLeadingSlash());
         //builder.AddEndpoint<DeviceAuthorizationEndpoint>(EndpointNames.DeviceAuthorization, ProtocolRoutePaths.DeviceAuthorization.EnsureLeadingSlash());
         builder.AddEndpoint<DiscoveryKeyEndpoint>(Constants.EndpointNames.Discovery, Constants.ProtocolRoutePaths.DiscoveryWebKeys.EnsureLeadingSlash());
@@ -190,7 +189,7 @@ public static class IdentityServiceBuilderExtensions
         builder.Services.TryAddTransient<IDiscoveryResponseGenerator, DefaultDiscoveryResponseGenerator>();
         //builder.Services.TryAddTransient<ITokenRevocationResponseGenerator, TokenRevocationResponseGenerator>();
         //builder.Services.TryAddTransient<IDeviceAuthorizationResponseGenerator, DeviceAuthorizationResponseGenerator>();
-        //builder.Services.TryAddTransient<IBackchannelAuthenticationResponseGenerator, BackchannelAuthenticationResponseGenerator>();
+        builder.Services.TryAddTransient<IBackchannelAuthenticationResponseGenerator, BackchannelAuthenticationResponseGenerator>();
 
         return builder;
     }
@@ -314,13 +313,11 @@ public static class IdentityServiceBuilderExtensions
         builder.AddJwtRequestUriHttpClient();
         builder.AddValidators();
 
-        //---builder.Services.TryAddTransient<IBackchannelAuthenticationUserValidator, NopBackchannelAuthenticationUserValidator>();
-
         builder.Services.TryAddTransient(typeof(IConcurrencyLock<>), typeof(DefaultConcurrencyLock<>));
 
         builder.Services.TryAddTransient<IDeviceFlowThrottlingService, DistributedDeviceFlowThrottlingService>();
         builder.Services.TryAddTransient<IBackChannelAuthenticationThrottlingService, DistributedBackChannelAuthenticationThrottlingService>();
-        builder.Services.TryAddTransient<IBackChannelAuthenticationRequestIdValidator, BackChannelAuthenticationRequestIdValidator>();
+        builder.Services.TryAddTransient<IBackchannelAuthenticationUserNotificationService, NopBackchannelAuthenticationUserNotificationService>();
 
         builder.Services.AddDistributedMemoryCache();
 
@@ -448,6 +445,20 @@ public static class IdentityServiceBuilderExtensions
     }
 
     /// <summary>
+    /// Adds the backchannel login user validator.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="builder">The builder.</param>
+    /// <returns></returns>
+    public static IIdentityServerBuilder AddBackchannelAuthenticationUserValidator<T>(this IIdentityServerBuilder builder)
+        where T : class, IBackchannelAuthenticationUserValidator
+    {
+        builder.Services.AddTransient<IBackchannelAuthenticationUserValidator, T>();
+
+        return builder;
+    }
+
+    /// <summary>
     /// Adds the profile service.
     /// </summary>
     /// <typeparam name="T"></typeparam>
@@ -468,6 +479,9 @@ public static class IdentityServiceBuilderExtensions
         builder.Services.TryAddTransient<ITokenRequestValidator, TokenRequestValidator>();
         builder.Services.TryAddTransient<IDeviceCodeValidator, DeviceCodeValidator>();
         builder.Services.TryAddTransient<IUserInfoRequestValidator, UserInfoRequestValidator>();
+        builder.Services.TryAddTransient<IBackchannelAuthenticationRequestValidator, BackchannelAuthenticationRequestValidator>();
+        builder.Services.TryAddTransient<IBackchannelAuthenticationUserValidator, NopBackchannelAuthenticationUserValidator>();
+        builder.Services.TryAddTransient<IBackChannelAuthenticationRequestIdValidator, BackChannelAuthenticationRequestIdValidator>();
 
         return builder;
     }

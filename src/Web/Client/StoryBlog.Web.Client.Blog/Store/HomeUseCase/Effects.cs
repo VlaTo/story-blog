@@ -40,6 +40,8 @@ public sealed class FetchAvailablePostsEffect : Effect<FetchPostsPageAction>
     {
         var response = await client.GetPostsAsync(action.PageNumber, action.PageSize);
 
+        Console.WriteLine($"Posts count: {response?.Posts.Count ?? 0}");
+
         if (null == response)
         {
             var failedAction = new FetchPostsPageFailedAction(action.PageNumber, action.PageSize);

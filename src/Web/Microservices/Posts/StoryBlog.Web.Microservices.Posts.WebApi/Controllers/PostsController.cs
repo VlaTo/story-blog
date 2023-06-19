@@ -47,12 +47,7 @@ public class PostsController : Controller
     [HttpGet]
     public async Task<IActionResult> ListAll([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 30)
     {
-        if (User.Identity?.IsAuthenticated ?? false)
-        {
-            Debugger.Break();
-        }
-
-        var query = new GetPostsQuery(pageNumber, pageSize, includeAll: true);
+        var query = new GetPostsQuery(User, pageNumber, pageSize, includeAll: true);
         var result = await mediator.Send(query);
 
         if (result.IsSuccess)

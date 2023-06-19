@@ -13,8 +13,8 @@ internal sealed class CommentsHttpClient : HttpClientBase, ICommentsClient
 {
     private readonly HttpClientOptions options;
 
-    public CommentsHttpClient(HttpClient httpClient, IOptions<HttpClientOptions> options)
-        : base(httpClient)
+    public CommentsHttpClient(HttpClient httpClientFactory, IOptions<HttpClientOptions> options)
+        : base(httpClientFactory)
     {
         this.options = options.Value;
     }
@@ -36,7 +36,7 @@ internal sealed class CommentsHttpClient : HttpClientBase, ICommentsClient
 
         try
         {
-            using (var response = await Client.SendAsync(request))
+            using (var response = await ClientFactory.SendAsync(request))
             {
                 var message = response.EnsureSuccessStatusCode();
 
@@ -74,7 +74,7 @@ internal sealed class CommentsHttpClient : HttpClientBase, ICommentsClient
 
         try
         {
-            using (var response = await Client.SendAsync(request))
+            using (var response = await ClientFactory.SendAsync(request))
             {
                 var message = response.EnsureSuccessStatusCode();
 
@@ -138,7 +138,7 @@ internal sealed class CommentsHttpClient : HttpClientBase, ICommentsClient
 
         try
         {
-            using (var response = await Client.SendAsync(request))
+            using (var response = await ClientFactory.SendAsync(request))
             {
                 var message = response.EnsureSuccessStatusCode();
 

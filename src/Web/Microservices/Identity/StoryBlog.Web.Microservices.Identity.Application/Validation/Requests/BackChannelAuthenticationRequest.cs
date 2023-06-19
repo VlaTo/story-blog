@@ -37,7 +37,7 @@ public class BackChannelAuthenticationRequest
     /// <summary>
     /// Gets or sets the ID of the client.
     /// </summary>
-    public string ClientId
+    public string? ClientId
     {
         get;
         set;
@@ -46,7 +46,7 @@ public class BackChannelAuthenticationRequest
     /// <summary>
     /// Gets or sets the subject.
     /// </summary>
-    public ClaimsPrincipal Subject
+    public ClaimsPrincipal? Subject
     {
         get;
         set;
@@ -64,7 +64,7 @@ public class BackChannelAuthenticationRequest
     /// <summary>
     /// Gets or sets the requested resource indicators.
     /// </summary>
-    public IEnumerable<string> RequestedResourceIndicators
+    public IEnumerable<string>? RequestedResourceIndicators
     {
         get;
         set;
@@ -73,7 +73,7 @@ public class BackChannelAuthenticationRequest
     /// <summary>
     /// Gets or sets the authentication context reference classes.
     /// </summary>
-    public ICollection<string> AuthenticationContextReferenceClasses
+    public ICollection<string>? AuthenticationContextReferenceClasses
     {
         get;
         set;
@@ -82,7 +82,7 @@ public class BackChannelAuthenticationRequest
     /// <summary>
     /// Gets or sets the tenant.
     /// </summary>
-    public string Tenant
+    public string? Tenant
     {
         get;
         set;
@@ -91,7 +91,7 @@ public class BackChannelAuthenticationRequest
     /// <summary>
     /// Gets or sets the idp.
     /// </summary>
-    public string IdP
+    public string? IdP
     {
         get;
         set;
@@ -100,7 +100,7 @@ public class BackChannelAuthenticationRequest
     /// <summary>
     /// Gets or sets the binding message.
     /// </summary>
-    public string BindingMessage
+    public string? BindingMessage
     {
         get;
         set;

@@ -12,8 +12,8 @@ internal sealed class SlugHttpClient : HttpClientBase, ISlugClient
 {
     private readonly HttpClientOptions options;
 
-    public SlugHttpClient(HttpClient httpClient, IOptions<HttpClientOptions> options)
-        : base(httpClient)
+    public SlugHttpClient(HttpClient httpClientFactory, IOptions<HttpClientOptions> options)
+        : base(httpClientFactory)
     {
         this.options = options.Value;
     }
@@ -32,7 +32,7 @@ internal sealed class SlugHttpClient : HttpClientBase, ISlugClient
 
         try
         {
-            using (var response = await Client.SendAsync(request))
+            using (var response = await ClientFactory.SendAsync(request))
             {
                 var message = response.EnsureSuccessStatusCode();
 
@@ -63,7 +63,7 @@ internal sealed class SlugHttpClient : HttpClientBase, ISlugClient
 
         try
         {
-            using (var response = await Client.SendAsync(request))
+            using (var response = await ClientFactory.SendAsync(request))
             {
                 var message = response.EnsureSuccessStatusCode();
 

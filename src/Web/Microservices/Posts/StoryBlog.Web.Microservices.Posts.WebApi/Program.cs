@@ -28,7 +28,6 @@ IdentityModelEventSource.ShowPII = true;
 builder.Configuration.AddJsonFile("appsettings.authentication.json", optional: true, reloadOnChange: true);
 builder.Configuration.AddJsonFile("appsettings.dbconnection.json", optional: true, reloadOnChange: true);
 
-//builder.Services.AddScoped<IConfigurationRetriever<>>();
 builder.Services.AddInfrastructureServices();
 builder.Services.AddInfrastructureDbContext(builder.Configuration, "Database");
 builder.Services.AddScoped<ILocationProvider, AspNetCoreLocationProvider>();
@@ -143,7 +142,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app
-    .UseHttpsRedirection()
     .UseApiVersioning()
     .UseCors()
     .UseAuthentication()

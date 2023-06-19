@@ -29,26 +29,28 @@ using System.Text.Json;
 
 namespace StoryBlog.Web.Client.Blog.Clients;
 
-internal sealed class PostsHttpClient : HttpClientBase, IPostsClient
+internal sealed class PostsHttpClient : IPostsClient
 {
+    private readonly IHttpClientFactory httpClientFactory;
     private readonly HttpClientOptions options;
 
     public PostsHttpClient(
-        HttpClient httpClient,
+        IHttpClientFactory httpClientFactory,
         IOptions<HttpClientOptions> options)
-        : base(httpClient)
     {
+        this.httpClientFactory = httpClientFactory;
         this.options = options.Value;
     }
 
     /// <inheritdoc cref="IPostsClient.GetPostsAsync" />
     public async Task<ListAllResponse?> GetPostsAsync(int pageNumber, int pageSize)
     {
-        var request = new HttpRequestMessage(HttpMethod.Get, options.Endpoints.Posts.BasePath);
-
         try
         {
-            using (var response = await Client.SendAsync(request))
+            var httpClient = httpClientFactory.CreateClient("PostsApi");
+            var request = new HttpRequestMessage(HttpMethod.Get, options.Endpoints.Posts.BasePath);
+
+            using (var response = await httpClient.SendAsync(request))
             {
                 var message = response.EnsureSuccessStatusCode();
 
@@ -76,11 +78,12 @@ internal sealed class PostsHttpClient : HttpClientBase, IPostsClient
             return null;
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Get, endpoint);
-
         try
         {
-            using (var response = await Client.SendAsync(request))
+            var httpClient = httpClientFactory.CreateClient("PostsApi");
+            var request = new HttpRequestMessage(HttpMethod.Get, endpoint);
+
+            using (var response = await httpClient.SendAsync(request))
             {
                 var message = response.EnsureSuccessStatusCode();
 
@@ -111,7 +114,9 @@ internal sealed class PostsHttpClient : HttpClientBase, IPostsClient
 
         try
         {
-            using (var response = await Client.SendAsync(request))
+            var httpClient = httpClientFactory.CreateClient("PostsApi");
+
+            using (var response = await httpClient.SendAsync(request))
             {
                 var message = response.EnsureSuccessStatusCode();
 

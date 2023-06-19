@@ -470,7 +470,7 @@ public sealed class Client
     /// <summary>
     /// Gets or sets the backchannel authentication request lifetime in seconds.
     /// </summary>
-    public int? CibaLifetime
+    public TimeSpan? CibaLifetime
     {
         get;
         set;

@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using System.Security.Claims;
+using MediatR;
 using StoryBlog.Web.Common.Application;
 using StoryBlog.Web.Microservices.Posts.Application.Models;
 
@@ -16,13 +17,19 @@ public class GetPostsQuery : IRequest<Result<IReadOnlyList<Brief>>>
         get;
     }
 
+    public ClaimsPrincipal CurrentUser
+    {
+        get;
+    }
+
     public bool IncludeAll
     {
         get;
     }
 
-    public GetPostsQuery(int pageNumber, int pageSize, bool includeAll = false)
+    public GetPostsQuery(ClaimsPrincipal currentUser, int pageNumber, int pageSize, bool includeAll = false)
     {
+        CurrentUser = currentUser;
         PageNumber = pageNumber;
         PageSize = pageSize;
         IncludeAll = includeAll;

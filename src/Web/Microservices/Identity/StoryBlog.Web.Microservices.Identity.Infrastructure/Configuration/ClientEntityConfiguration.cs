@@ -121,8 +121,9 @@ internal sealed class ClientEntityConfiguration : IEntityTypeConfiguration<Clien
             .HasColumnType("bigint");
         builder
             .Property(x => x.CibaLifetime)
-            .IsRequired(required: false)
-            .HasColumnType("bigint");
+            .HasColumnType("bigint")
+            .IsRequired(required: true)
+            .HasDefaultValue(TimeSpan.FromHours(1.0d));
         builder
             .Property(x => x.AllowedIdentityTokenSigningAlgorithms)
             .IsRequired(required: true);

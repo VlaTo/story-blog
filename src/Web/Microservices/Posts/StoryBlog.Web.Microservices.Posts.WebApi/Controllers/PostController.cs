@@ -13,10 +13,11 @@ namespace StoryBlog.Web.Microservices.Posts.WebApi.Controllers;
 /// <summary>
 /// 
 /// </summary>
-[ApiVersion("1.0-alpha")]
+//[ApiVersion("1.0-alpha")]
 [AllowAnonymous]
 [ApiController]
-[Route("api/v{version:apiVersion}/[controller]")]
+//[Route("api/v{version:apiVersion}/[controller]")]
+[Route("api/v1.0-alpha/[controller]")]
 public class PostController : Controller
 {
     private readonly IMediator mediator;

@@ -45,7 +45,24 @@ public partial class AddIdentityEntities
 
         #endregion
 
-        #region Api Resources scopes
+        #region Api Resource Claims
+
+        migrationBuilder.InsertData(
+            table: TableNames.ApiResourceClaim,
+            schema: SchemaNames.Identity,
+            columns: new[]
+            {
+                "ApiResourceId", "Type"
+            },
+            values: new object?[]
+            {
+                1, "test"
+            }
+        );
+
+        #endregion
+
+        #region Api scopes
 
         migrationBuilder.InsertData(
             table: TableNames.ApiScope,
@@ -207,22 +224,70 @@ public partial class AddIdentityEntities
             schema: SchemaNames.Identity,
             columns: new[]
             {
-                "Enabled", "Name", "DisplayName", "Description", "Required", "Emphasize", "ShowInDiscoveryDocument",
+                "Id", "Enabled", "Name", "DisplayName", "Description", "Required", "Emphasize", "ShowInDiscoveryDocument",
                 "Created", "Updated", "NonEditable"
             },
             values: new object[][]
             {
                 new object[]
                 {
-                    1, "profile", "SimpleBlog OpenID Profile resource", "SimpleBlog OpenID Profile resource", false,
+                    1, 1, "profile", "SimpleBlog OpenID Profile resource", "SimpleBlog OpenID Profile resource", false,
                     false, true, "2022-07-11 09:05:50.7431775", null, false
                 },
                 new object[]
                 {
-                    1, "openid", "SimpleBlog OpenID General resource", "SimpleBlog OpenID General resource", false,
-                    false, true, "2022-07-11 09:05:50.7431775", null, false
+                    2, 1, "openid", "SimpleBlog OpenID General resource", "SimpleBlog OpenID General resource", false,
+                    false, true, "2022-07-11 09:05:50.7731775", null, false
+                },
+                new object[]
+                {
+                    3, 1, "email", "SimpleBlog OpenID Email resource", "SimpleBlog OpenID Email resource", false,
+                    false, true, "2022-07-11 09:05:50.7931775", null, false
                 }
+            }
+        );
 
+        #endregion
+
+        #region Identity Resources Claims
+
+        migrationBuilder.InsertData(
+            table: TableNames.IdentityResourceClaim,
+            schema: SchemaNames.Identity,
+            columns: new[]
+            {
+                "IdentityResourceId", "Type"
+            },
+            values: new object[][]
+            {
+                new object[]
+                {
+                    1, "name"
+                },
+                new object[]
+                {
+                    1, "given_name"
+                },
+                new object[]
+                {
+                    1, "nickname"
+                },
+                new object[]
+                {
+                    1, "gender"
+                },
+                new object[]
+                {
+                    1, "phone_number"
+                },
+                new object[]
+                {
+                    3, "email"
+                },
+                new object[]
+                {
+                    3, "email_confirmed"
+                }
             }
         );
 

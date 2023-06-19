@@ -2,6 +2,7 @@ using Fluxor;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.Configuration.Memory;
+using Microsoft.Extensions.DependencyInjection;
 using MudBlazor;
 using MudBlazor.Services;
 using StoryBlog.Web.Blazor.Markdown.Editor.Extensions;
@@ -9,6 +10,7 @@ using StoryBlog.Web.Client.Blog;
 using StoryBlog.Web.Client.Blog.Clients;
 using StoryBlog.Web.Client.Blog.Clients.Interfaces;
 using StoryBlog.Web.Client.Blog.Configuration;
+using StoryBlog.Web.Client.Blog.Core;
 using StoryBlog.Web.Client.Blog.Middlewares;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
@@ -41,7 +43,13 @@ builder.Services.AddOidcAuthentication(options =>
 builder.Services.AddScoped<IPostsClient, PostsHttpClient>();
 builder.Services.AddScoped<ICommentsClient, CommentsHttpClient>();
 builder.Services.AddScoped<ISlugClient, SlugHttpClient>();
-
+builder.Services.AddScoped<BlogApiAuthorizationMessageHandler>();
+builder.Services
+    .AddHttpClient(
+        "PostsApi",
+        client => client.BaseAddress = new Uri("http://localhost:5033")
+    )
+    .AddHttpMessageHandler<BlogApiAuthorizationMessageHandler>();
 builder.Services.AddMudServices();
 builder.Services.AddMudMarkdownServices();
 builder.Services.AddMarkdownEditor(options =>

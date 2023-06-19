@@ -71,7 +71,7 @@ public class TokenResponse
     /// <value>
     /// The custom entries.
     /// </value>
-    public Dictionary<string, object>? Custom
+    public Dictionary<string, object> Custom
     {
         get;
         set;

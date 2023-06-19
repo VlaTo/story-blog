@@ -1,12 +1,15 @@
+using Microsoft.Identity.Client.Extensions.Msal;
 using StoryBlog.Web.Microservices.Identity.Application.Configuration;
 using StoryBlog.Web.Microservices.Identity.Application;
 using StoryBlog.Web.Microservices.Identity.Application.Extensions;
 using StoryBlog.Web.Microservices.Identity.Application.Services;
+using StoryBlog.Web.Microservices.Identity.Application.Storage;
 using StoryBlog.Web.Microservices.Identity.Domain.Entities;
 using StoryBlog.Web.Microservices.Identity.Infrastructure.Extensions;
 using StoryBlog.Web.Microservices.Identity.Infrastructure.Persistence;
 using StoryBlog.Web.Microservices.Identity.WebApi.Core;
 using StoryBlog.Web.Microservices.Identity.WebApi.Services;
+using ApiResource = StoryBlog.Web.Microservices.Identity.Application.Storage.ApiResource;
 
 var builder = WebApplication.CreateBuilder(args);
 

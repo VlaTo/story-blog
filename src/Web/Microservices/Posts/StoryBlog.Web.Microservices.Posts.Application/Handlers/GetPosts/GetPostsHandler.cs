@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using StoryBlog.Web.Common.Application;
+using StoryBlog.Web.Common.Application.Extensions;
 using StoryBlog.Web.Common.Domain;
 using StoryBlog.Web.Microservices.Posts.Application.Models;
 using StoryBlog.Web.Microservices.Posts.Domain.Specifications;
@@ -24,6 +25,7 @@ public sealed class GetPostsHandler : HandlerBase, IRequestHandler<GetPostsQuery
 
         await using (var repository = context.GetRepository<Domain.Entities.Post>())
         {
+            var authenticated = request.CurrentUser.IsAuthenticated();
             var specification = new AllAvailablePostsSpecification(request.PageNumber, request.PageSize);
             posts = await repository.QueryAsync(specification, cancellationToken);
         }
