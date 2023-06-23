@@ -166,7 +166,7 @@ public static class IdentityServiceBuilderExtensions
         builder.AddEndpoint<DiscoveryEndpoint>(Constants.EndpointNames.Discovery, Constants.ProtocolRoutePaths.DiscoveryConfiguration.EnsureLeadingSlash());
         //builder.AddEndpoint<EndSessionCallbackEndpoint>(EndpointNames.EndSession, ProtocolRoutePaths.EndSessionCallback.EnsureLeadingSlash());
         //builder.AddEndpoint<EndSessionEndpoint>(EndpointNames.EndSession, ProtocolRoutePaths.EndSession.EnsureLeadingSlash());
-        //builder.AddEndpoint<IntrospectionEndpoint>(EndpointNames.Introspection, ProtocolRoutePaths.Introspection.EnsureLeadingSlash());
+        builder.AddEndpoint<IntrospectionEndpoint>(Constants.EndpointNames.Introspection, Constants.ProtocolRoutePaths.Introspection.EnsureLeadingSlash());
         //builder.AddEndpoint<TokenRevocationEndpoint>(EndpointNames.Revocation, ProtocolRoutePaths.Revocation.EnsureLeadingSlash());
         builder.AddEndpoint<TokenEndpoint>(Constants.EndpointNames.Token, Constants.ProtocolRoutePaths.Token.EnsureLeadingSlash());
         builder.AddEndpoint<UserInfoEndpoint>(Constants.EndpointNames.UserInfo, Constants.ProtocolRoutePaths.UserInfo.EnsureLeadingSlash());

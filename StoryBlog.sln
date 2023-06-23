@@ -83,7 +83,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StoryBlog.Infrastructure.An
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StoryBlog.Infrastructure.AnyOf.Tools", "src\Infrastructure\StoryBlog.Infrastructure.AnyOf.Tools\StoryBlog.Infrastructure.AnyOf.Tools.csproj", "{F0BDC558-53C1-437E-A5F7-CD01CF4B9A79}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StoryBlog.Infrastructure.AnyOf.Common", "src\Infrastructure\StoryBlog.Infrastructure.AnyOf.Common\StoryBlog.Infrastructure.AnyOf.Common.csproj", "{71C31742-8757-4D35-9C19-23DD6D5C0D29}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StoryBlog.Infrastructure.AnyOf.Common", "src\Infrastructure\StoryBlog.Infrastructure.AnyOf.Common\StoryBlog.Infrastructure.AnyOf.Common.csproj", "{71C31742-8757-4D35-9C19-23DD6D5C0D29}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StoryBlog.Web.Common.Result", "src\Web\Common\StoryBlog.Web.Common.Result\StoryBlog.Web.Common.Result.csproj", "{4665DAC1-E6BD-4B9E-8E19-E4C99C82EFC8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StoryBlog.Web.Common.Identity.Permission", "src\Web\Identity\StoryBlog.Web.Common.Identity.Permission\StoryBlog.Web.Common.Identity.Permission.csproj", "{5CF9088E-9844-4149-AEE6-A0691B299211}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -195,6 +199,14 @@ Global
 		{71C31742-8757-4D35-9C19-23DD6D5C0D29}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{71C31742-8757-4D35-9C19-23DD6D5C0D29}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{71C31742-8757-4D35-9C19-23DD6D5C0D29}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4665DAC1-E6BD-4B9E-8E19-E4C99C82EFC8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4665DAC1-E6BD-4B9E-8E19-E4C99C82EFC8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4665DAC1-E6BD-4B9E-8E19-E4C99C82EFC8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4665DAC1-E6BD-4B9E-8E19-E4C99C82EFC8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5CF9088E-9844-4149-AEE6-A0691B299211}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5CF9088E-9844-4149-AEE6-A0691B299211}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5CF9088E-9844-4149-AEE6-A0691B299211}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5CF9088E-9844-4149-AEE6-A0691B299211}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -234,6 +246,8 @@ Global
 		{4E609F9E-209A-499C-8337-F3E3ACB23AD6} = {7699E9E6-BB87-42DE-A80C-86692C996C44}
 		{F0BDC558-53C1-437E-A5F7-CD01CF4B9A79} = {7699E9E6-BB87-42DE-A80C-86692C996C44}
 		{71C31742-8757-4D35-9C19-23DD6D5C0D29} = {7699E9E6-BB87-42DE-A80C-86692C996C44}
+		{4665DAC1-E6BD-4B9E-8E19-E4C99C82EFC8} = {9D593EF7-B4BD-40A7-9D40-B03DDA4D92E8}
+		{5CF9088E-9844-4149-AEE6-A0691B299211} = {9D593EF7-B4BD-40A7-9D40-B03DDA4D92E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D7123581-6A53-434A-BD68-656AB44693B4}

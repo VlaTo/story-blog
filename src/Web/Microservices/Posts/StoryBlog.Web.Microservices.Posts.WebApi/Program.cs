@@ -1,14 +1,9 @@
-using System.Diagnostics.Tracing;
-using System.Net.Mime;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.IdentityModel.Logging;
-using Microsoft.IdentityModel.Protocols;
-using RabbitMQ.Client;
 using SlimMessageBus.Host;
 using SlimMessageBus.Host.NamedPipe;
-using SlimMessageBus.Host.RabbitMQ;
 using SlimMessageBus.Host.Serialization.SystemTextJson;
 using StoryBlog.Web.Common.Events;
 using StoryBlog.Web.Identity.Extensions;
@@ -19,6 +14,7 @@ using StoryBlog.Web.Microservices.Posts.Infrastructure.Extensions;
 using StoryBlog.Web.Microservices.Posts.WebApi.Configuration;
 using StoryBlog.Web.Microservices.Posts.WebApi.Core;
 using StoryBlog.Web.Microservices.Posts.WebApi.Extensions;
+using System.Diagnostics.Tracing;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -123,7 +119,6 @@ builder.Services.ConfigureOptions<ConfigureSwaggerOptions>();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     var apiVersionDescriptionProvider = app.Services.GetRequiredService<IApiVersionDescriptionProvider>();

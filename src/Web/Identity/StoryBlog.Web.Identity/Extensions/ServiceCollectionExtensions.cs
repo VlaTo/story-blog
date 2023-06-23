@@ -1,12 +1,13 @@
-﻿using System.Security.Claims;
-using System.Text;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using StoryBlog.Web.Common.Result;
 using StoryBlog.Web.Identity.Configuration;
-using StoryBlog.Web.Identity.Core;
+using System.Security.Claims;
+using System.Text;
+using StoryBlog.Web.Common.Identity.Permission;
 
 namespace StoryBlog.Web.Identity.Extensions;
 
@@ -70,13 +71,13 @@ public static class ServiceCollectionExtensions
                         {
                             return context.Response.WriteJsonAsync(
                                 StatusCodes.Status401Unauthorized,
-                                Result.Fail("Token has expired")
+                                Result.Fail(new Exception("Token has expired"))
                             );
                         }
 
                         return context.Response.WriteJsonAsync(
                             StatusCodes.Status500InternalServerError,
-                            Result.Fail("An unhandler error has occured")
+                            Result.Fail(new Exception("An unhandler error has occured"))
                         );
                     },
                     OnChallenge = context =>
@@ -87,7 +88,7 @@ public static class ServiceCollectionExtensions
                         {
                             return context.Response.WriteJsonAsync(
                                 StatusCodes.Status401Unauthorized,
-                                Result.Fail("You are not authorized")
+                                Result.Fail(new Exception("You are not authorized"))
                             );
                         }
 
@@ -97,7 +98,7 @@ public static class ServiceCollectionExtensions
                     {
                         return context.Response.WriteJsonAsync(
                             StatusCodes.Status403Forbidden,
-                            Result.Fail("You are not authorized to access this resource.")
+                            Result.Fail(new Exception("You are not authorized to access this resource."))
                         );
                     }
                 };

@@ -3,8 +3,11 @@ using MediatR;
 using StoryBlog.Web.Common.Application;
 using StoryBlog.Web.Common.Application.Extensions;
 using StoryBlog.Web.Common.Domain;
+using StoryBlog.Web.Common.Result;
 using StoryBlog.Web.Microservices.Posts.Application.Models;
 using StoryBlog.Web.Microservices.Posts.Domain.Specifications;
+using System.Diagnostics;
+using StoryBlog.Web.Common.Identity.Permission;
 
 namespace StoryBlog.Web.Microservices.Posts.Application.Handlers.GetPosts;
 
@@ -26,7 +29,13 @@ public sealed class GetPostsHandler : HandlerBase, IRequestHandler<GetPostsQuery
         await using (var repository = context.GetRepository<Domain.Entities.Post>())
         {
             var authenticated = request.CurrentUser.IsAuthenticated();
-            var specification = new AllAvailablePostsSpecification(request.PageNumber, request.PageSize);
+
+            if (authenticated && request.CurrentUser.IsInRole(Permissions.Blogs.View))
+            {
+                Debugger.Break();
+            }
+
+            var specification = new AllAvailablePostsSpecification(authenticated, request.PageNumber, request.PageSize);
             posts = await repository.QueryAsync(specification, cancellationToken);
         }
 

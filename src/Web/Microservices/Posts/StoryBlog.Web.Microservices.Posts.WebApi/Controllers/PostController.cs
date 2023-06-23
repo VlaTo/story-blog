@@ -13,11 +13,10 @@ namespace StoryBlog.Web.Microservices.Posts.WebApi.Controllers;
 /// <summary>
 /// 
 /// </summary>
-//[ApiVersion("1.0-alpha")]
+[ApiVersion("1.0-alpha")]
 [AllowAnonymous]
 [ApiController]
-//[Route("api/v{version:apiVersion}/[controller]")]
-[Route("api/v1.0-alpha/[controller]")]
+[Route("api/v{version:apiVersion}/[controller]")]
 public class PostController : Controller
 {
     private readonly IMediator mediator;
@@ -46,7 +45,7 @@ public class PostController : Controller
         var query = new GetPostQuery(key, User);
         var getPostResult = await mediator.Send(query).ConfigureAwait(false);
 
-        if (getPostResult.IsSuccess)
+        if (getPostResult.Succeeded)
         {
             var model = mapper.Map<PostModel>(getPostResult.Value);
             return Ok(model);
@@ -76,12 +75,12 @@ public class PostController : Controller
         var command = new EditPostCommand(key, details, User);
         var editPostResult = await mediator.Send(command).ConfigureAwait(false);
 
-        if (editPostResult.IsSuccess)
+        if (editPostResult.Succeeded)
         {
             var query = new GetPostQuery(key, User);
             var queryPostResult = await mediator.Send(query).ConfigureAwait(false);
 
-            if (queryPostResult.IsSuccess)
+            if (queryPostResult.Succeeded)
             {
                 var model = mapper.Map<PostModel>(queryPostResult.Value);
                 return Ok(model);

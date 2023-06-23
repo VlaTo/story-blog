@@ -19,13 +19,15 @@
 // DEALINGS IN THE SOFTWARE.
 #endregion
 
+using StoryBlog.Web.Client.Blog.Models;
+using StoryBlog.Web.Common.Result;
 using StoryBlog.Web.Microservices.Posts.Shared.Models;
 
 namespace StoryBlog.Web.Client.Blog.Clients.Interfaces;
 
 public interface IPostsClient
 {
-    Task<ListAllResponse?> GetPostsAsync(int pageNumber, int pageSize);
+    Task<Result<EmptyPostsResponse, ListAllResponse>> GetPostsAsync(int pageNumber, int pageSize);
 
     Task<PostModel?> GetPostAsync(Guid postKey);
 

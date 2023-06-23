@@ -1,17 +1,6 @@
 ﻿using MediatR;
-using StoryBlog.Web.Common.Application;
+using StoryBlog.Web.Common.Result;
 
 namespace StoryBlog.Web.Microservices.Posts.Application.Handlers.GenerateSlug;
 
-public sealed class GenerateSlugQuery : IRequest<Result<string>>
-{
-    public string Title
-    {
-        get;
-    }
-
-    public GenerateSlugQuery(string title)
-    {
-        Title = title;
-    }
-}
+public sealed record GenerateSlugQuery(string Title) : IRequest<Result<string>>;

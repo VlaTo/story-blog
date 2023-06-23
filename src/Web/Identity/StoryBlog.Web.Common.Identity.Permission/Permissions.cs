@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 
-namespace StoryBlog.Web.Identity.Core;
+namespace StoryBlog.Web.Common.Identity.Permission;
 
 public static class Permissions
 {

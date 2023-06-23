@@ -4,9 +4,9 @@ namespace StoryBlog.Web.Microservices.Posts.Domain.Specifications;
 
 public sealed class AllAvailablePostsSpecification : SpecificationBase<Entities.Post>
 {
-    public AllAvailablePostsSpecification(int pageNumber, int pageSize)
+    public AllAvailablePostsSpecification(bool authenticated, int pageNumber, int pageSize)
     {
-        Criteria = entity => null == entity.DeletedAt;
+        Criteria = entity => null == entity.DeletedAt && (entity.IsPublic || authenticated);
         Includes.Add(x => x.Slug);
         OrderBy.Add(entity => entity.CreateAt);
         OrderBy.Add(entity => entity.Title);

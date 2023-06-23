@@ -166,6 +166,14 @@ public class DefaultTokenResponseGenerator : ITokenResponseGenerator
     /// <exception cref="System.InvalidOperationException">Client does not exist anymore.</exception>
     protected virtual async Task<TokenResponse> ProcessAuthorizationCodeRequestAsync(TokenRequestValidationResult request)
     {
+        var response = new TokenResponse
+        {
+            //AccessToken = accessToken,
+            AccessTokenLifetime = request.ValidatedRequest.AccessTokenLifetime,
+            Custom = request.CustomResponse,
+            Scope = request.ValidatedRequest.ValidatedResources.RawScopeValues.ToSpaceSeparatedString()
+        };
+
         Logger.LogTrace("Creating response for authorization code request");
 
         //////////////////////////
@@ -173,13 +181,8 @@ public class DefaultTokenResponseGenerator : ITokenResponseGenerator
         /////////////////////////
         var (accessToken, refreshToken) = await CreateAccessTokenAsync(request.ValidatedRequest);
 
-        var response = new TokenResponse
-        {
-            AccessToken = accessToken,
-            AccessTokenLifetime = request.ValidatedRequest.AccessTokenLifetime,
-            Custom = request.CustomResponse,
-            Scope = request.ValidatedRequest.ValidatedResources.RawScopeValues.ToSpaceSeparatedString()
-        };
+        response.AccessToken = accessToken;
+        response.RefreshToken = refreshToken;
 
         //////////////////////////
         // refresh token

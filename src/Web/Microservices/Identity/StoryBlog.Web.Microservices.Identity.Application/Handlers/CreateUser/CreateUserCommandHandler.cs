@@ -1,16 +1,16 @@
-﻿using System.Security.Claims;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
-using StoryBlog.Web.Identity.Core;
+using StoryBlog.Web.Common.Result;
 using StoryBlog.Web.Microservices.Identity.Application.Configuration;
-using StoryBlog.Web.Microservices.Identity.Application.Services;
 using StoryBlog.Web.Microservices.Identity.Domain.Entities;
+using System.Security.Claims;
+using StoryBlog.Web.Common.Identity.Permission;
 
 namespace StoryBlog.Web.Microservices.Identity.Application.Handlers.CreateUser;
 
-public sealed class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Common.Application.Result<StoryBlogUser>>
+public sealed class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Result<StoryBlogUser>>
 {
     private readonly UserManager<StoryBlogUser> userManager;
     private readonly SignInManager<StoryBlogUser> signInManager;
@@ -32,7 +32,7 @@ public sealed class CreateUserCommandHandler : IRequestHandler<CreateUserCommand
         this.options = options;
     }
 
-    public async Task<Common.Application.Result<StoryBlogUser>> Handle(CreateUserCommand request, CancellationToken cancellationToken)
+    public async Task<Result<StoryBlogUser>> Handle(CreateUserCommand request, CancellationToken cancellationToken)
     {
         var user = new StoryBlogUser
         {
@@ -58,15 +58,15 @@ public sealed class CreateUserCommandHandler : IRequestHandler<CreateUserCommand
 
             if (false == result.Succeeded)
             {
-                return new Common.Application.Result<StoryBlogUser>(new Exception());
+                return new Exception();
             }
 
             result = await roleManager.AddClaimAsync(viewerRole, new Claim(ClaimTypes.Actor, "Viewer", ClaimValueTypes.String));
             result = await userManager.AddToRoleAsync(user, viewerRole.Name);
 
-            return new Common.Application.Result<StoryBlogUser>(user);
+            return user;
         }
 
-        return new Common.Application.Result<StoryBlogUser>(new Exception());
+        return new Exception();
     }
 }

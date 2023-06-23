@@ -1,6 +1,6 @@
 ﻿using System.Security.Claims;
 using MediatR;
-using StoryBlog.Web.Common.Application;
+using StoryBlog.Web.Common.Result;
 using StoryBlog.Web.Microservices.Posts.Application.Models;
 
 namespace StoryBlog.Web.Microservices.Posts.Application.Handlers.GetPosts;

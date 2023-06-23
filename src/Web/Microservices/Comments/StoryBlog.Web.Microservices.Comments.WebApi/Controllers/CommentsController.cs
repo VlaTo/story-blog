@@ -48,7 +48,7 @@ public sealed class CommentsController : Controller
         var query = new GetCommentsQuery(postKey, parentKey, pageNumber, pageSize, includeAll: true);
         var result = await mediator.Send(query);
 
-        if (result.IsSuccess)
+        if (result.Succeeded)
         {
             var comments = mapper.Map<IReadOnlyList<CommentModel>>(result.Value);
             return Ok(new ListAllResponse
@@ -86,12 +86,12 @@ public sealed class CommentsController : Controller
         var command = new CreateCommentCommand(createCommentDetails, User);
         var createCommentResult = await mediator.Send(command).ConfigureAwait(false);
 
-        if (createCommentResult.IsSuccess)
+        if (createCommentResult.Succeeded)
         {
             var query = new GetCommentQuery(createCommentResult.Value, User);
             var queryCommentResult = await mediator.Send(query).ConfigureAwait(false);
 
-            if (queryCommentResult.IsSuccess)
+            if (queryCommentResult.Succeeded)
             {
                 var location = locationProvider.GetCommentUri(ControllerContext, RouteNames.GetCommentRouteKey, createCommentResult.Value);
 

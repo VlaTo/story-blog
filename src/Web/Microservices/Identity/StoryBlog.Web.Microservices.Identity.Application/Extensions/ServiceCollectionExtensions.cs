@@ -4,10 +4,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using StoryBlog.Web.Identity.Core;
 using StoryBlog.Web.Microservices.Identity.Application.Configuration;
 using StoryBlog.Web.Microservices.Identity.Application.Core;
 using System.Security.Claims;
+using StoryBlog.Web.Common.Identity.Permission;
+using StoryBlog.Web.Common.Result;
 
 namespace StoryBlog.Web.Microservices.Identity.Application.Extensions;
 
@@ -53,7 +54,7 @@ public static class ServiceCollectionExtensions
             services.Add(new ServiceDescriptor(type!, type!, registration.Lifetime));
         }
     }
-
+    
     internal static void AddTransientDecorator<TService, TImplementation>(this IServiceCollection services)
         where TService : class
         where TImplementation : class, TService
@@ -106,13 +107,13 @@ public static class ServiceCollectionExtensions
                         {
                             return context.Response.WriteJsonAsync(
                                 StatusCodes.Status401Unauthorized,
-                                Result.Fail("The Token is expired.")
+                                Result.Fail(new Exception("The Token is expired."))
                             );
                         }
 
                         return context.Response.WriteJsonAsync(
                             StatusCodes.Status500InternalServerError,
-                            Result.Fail("An unhandled error has occurred.")
+                            Result.Fail(new Exception("An unhandled error has occurred."))
                         );
                     },
                     OnChallenge = context =>
@@ -123,7 +124,7 @@ public static class ServiceCollectionExtensions
                         {
                             return context.Response.WriteJsonAsync(
                                 StatusCodes.Status401Unauthorized,
-                                Result.Fail("You are not Authorized.")
+                                Result.Fail(new Exception("You are not Authorized."))
                             );
                         }
 
@@ -131,7 +132,7 @@ public static class ServiceCollectionExtensions
                     },
                     OnForbidden = context => context.Response.WriteJsonAsync(
                         StatusCodes.Status403Forbidden,
-                        Result.Fail("You are not authorized to access this resource.")
+                        Result.Fail(new Exception("You are not authorized to access this resource."))
                     )
                 };
             });

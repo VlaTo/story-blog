@@ -1,5 +1,5 @@
 ﻿using MediatR;
-using StoryBlog.Web.Common.Application;
+using StoryBlog.Web.Common.Result;
 using StoryBlog.Web.Microservices.Comments.Application.Models;
 using System.Security.Claims;
 

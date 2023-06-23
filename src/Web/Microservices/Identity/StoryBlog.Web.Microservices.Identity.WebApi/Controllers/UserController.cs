@@ -22,7 +22,7 @@ public class UserController : Controller
         var command = new CreateUserCommand("guest@storyblog.net", "User_guEst1");
         var result = await mediator.Send(command, HttpContext.RequestAborted);
 
-        if (result.IsSuccess)
+        if (result.Succeeded)
         {
             return Ok();
         }

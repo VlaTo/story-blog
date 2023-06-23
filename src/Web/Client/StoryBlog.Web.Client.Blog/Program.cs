@@ -43,13 +43,13 @@ builder.Services.AddOidcAuthentication(options =>
 builder.Services.AddScoped<IPostsClient, PostsHttpClient>();
 builder.Services.AddScoped<ICommentsClient, CommentsHttpClient>();
 builder.Services.AddScoped<ISlugClient, SlugHttpClient>();
-builder.Services.AddScoped<BlogApiAuthorizationMessageHandler>();
+builder.Services.AddScoped<StoryBlogApiAuthorizationMessageHandler>();
 builder.Services
     .AddHttpClient(
         "PostsApi",
         client => client.BaseAddress = new Uri("http://localhost:5033")
     )
-    .AddHttpMessageHandler<BlogApiAuthorizationMessageHandler>();
+    .AddHttpMessageHandler<StoryBlogApiAuthorizationMessageHandler>();
 builder.Services.AddMudServices();
 builder.Services.AddMudMarkdownServices();
 builder.Services.AddMarkdownEditor(options =>

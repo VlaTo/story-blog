@@ -6,7 +6,7 @@ namespace StoryBlog.Web.Microservices.Identity.Infrastructure.Persistence.Migrat
 
 public partial class AddIdentityEntities
 {
-    private void SeedIdentityData(MigrationBuilder migrationBuilder)
+    private static void SeedIdentityData(MigrationBuilder migrationBuilder)
     {
         #region Api Resources
 
@@ -54,9 +54,14 @@ public partial class AddIdentityEntities
             {
                 "ApiResourceId", "Type"
             },
-            values: new object?[]
+            values: new[]
             {
-                1, "test"
+                new object?[]{ 1, "email" },
+                new object?[]{ 1, "email_verified" },
+                new object?[]{ 1, "role" },
+                new object?[]{ 1, "name" },
+                new object?[]{ 1, "preferred_username" },
+                new object?[]{ 1, "http://schemas.xmlsoap.org/ws/2009/09/identity/claims/actor" }
             }
         );
 

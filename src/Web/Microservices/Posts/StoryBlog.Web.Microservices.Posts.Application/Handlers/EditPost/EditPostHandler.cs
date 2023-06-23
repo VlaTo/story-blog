@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using StoryBlog.Web.Common.Application;
 using StoryBlog.Web.Common.Domain;
+using StoryBlog.Web.Common.Result;
 using StoryBlog.Web.Microservices.Posts.Domain.Entities;
 using StoryBlog.Web.Microservices.Posts.Domain.Specifications;
 

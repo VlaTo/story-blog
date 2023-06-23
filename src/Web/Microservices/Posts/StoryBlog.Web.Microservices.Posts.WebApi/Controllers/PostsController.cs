@@ -50,7 +50,7 @@ public class PostsController : Controller
         var query = new GetPostsQuery(User, pageNumber, pageSize, includeAll: true);
         var result = await mediator.Send(query);
 
-        if (result.IsSuccess)
+        if (result.Succeeded)
         {
             var models = mapper.Map<IReadOnlyCollection<BriefModel>>(result.Value);
             return Ok(new ListAllResponse
@@ -92,12 +92,12 @@ public class PostsController : Controller
         var command = new CreatePostCommand(createPostDetails, User);
         var createdPostResult = await mediator.Send(command).ConfigureAwait(false);
 
-        if (createdPostResult.IsSuccess)
+        if (createdPostResult.Succeeded)
         {
             var query = new GetPostQuery(createdPostResult.Value, User);
             var queryPostResult = await mediator.Send(query).ConfigureAwait(false);
 
-            if (queryPostResult.IsSuccess)
+            if (queryPostResult.Succeeded)
             {
                 var location = locationProvider.GetPostUri(ControllerContext, RouteNames.GetPostRouteKey, createdPostResult.Value);
 

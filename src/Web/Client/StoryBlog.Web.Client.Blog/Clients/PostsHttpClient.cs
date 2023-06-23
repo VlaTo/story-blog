@@ -22,10 +22,13 @@
 using Microsoft.Extensions.Options;
 using StoryBlog.Web.Client.Blog.Clients.Interfaces;
 using StoryBlog.Web.Client.Blog.Configuration;
+using StoryBlog.Web.Client.Blog.Models;
+using StoryBlog.Web.Common.Result;
 using StoryBlog.Web.Microservices.Posts.Shared.Models;
 using System.Diagnostics;
 using System.Net.Http.Json;
 using System.Text.Json;
+using CreatedPostModel = StoryBlog.Web.Microservices.Posts.Shared.Models.CreatedPostModel;
 
 namespace StoryBlog.Web.Client.Blog.Clients;
 
@@ -43,7 +46,7 @@ internal sealed class PostsHttpClient : IPostsClient
     }
 
     /// <inheritdoc cref="IPostsClient.GetPostsAsync" />
-    public async Task<ListAllResponse?> GetPostsAsync(int pageNumber, int pageSize)
+    public async Task<Result<EmptyPostsResponse, ListAllResponse>> GetPostsAsync(int pageNumber, int pageSize)
     {
         try
         {
@@ -56,14 +59,20 @@ internal sealed class PostsHttpClient : IPostsClient
 
                 using (var stream = await message.Content.ReadAsStreamAsync())
                 {
-                    return await JsonSerializer.DeserializeAsync<ListAllResponse>(stream);
+                    var model = await JsonSerializer.DeserializeAsync<ListAllResponse>(stream);
+
+                    if (null == model)
+                    {
+                        return new EmptyPostsResponse();
+                    }
+
+                    return model;
                 }
             }
         }
-        catch (Exception exception)
+        catch(Exception exception)
         {
-            Debug.WriteLine(exception);
-            return null;
+            return exception;
         }
     }
 

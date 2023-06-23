@@ -21,6 +21,8 @@
 
 using Fluxor;
 using StoryBlog.Web.Client.Blog.Clients.Interfaces;
+using StoryBlog.Web.Client.Blog.Extensions;
+using StoryBlog.Web.Microservices.Posts.Shared.Models;
 
 namespace StoryBlog.Web.Client.Blog.Store.HomeUseCase;
 
@@ -39,20 +41,12 @@ public sealed class FetchAvailablePostsEffect : Effect<FetchPostsPageAction>
     public override async Task HandleAsync(FetchPostsPageAction action, IDispatcher dispatcher)
     {
         var response = await client.GetPostsAsync(action.PageNumber, action.PageSize);
+        var next = response.Select<object>(
+            empty => new FetchPostsPageReadyAction(Array.Empty<BriefModel>(), action.PageNumber, action.PageSize),
+            result => new FetchPostsPageReadyAction(result.Posts, result.PageNumber, result.PageSize),
+            exception => new FetchPostsPageFailedAction(action.PageNumber, action.PageSize)
+        );
 
-        Console.WriteLine($"Posts count: {response?.Posts.Count ?? 0}");
-
-        if (null == response)
-        {
-            var failedAction = new FetchPostsPageFailedAction(action.PageNumber, action.PageSize);
-            
-            dispatcher.Dispatch(failedAction);
-
-            return;
-        }
-
-        var readyAction = new FetchPostsPageReadyAction(response.Posts, response.PageNumber, response.PageSize);
-
-        dispatcher.Dispatch(readyAction);
+        dispatcher.Dispatch(next);
     }
 }
