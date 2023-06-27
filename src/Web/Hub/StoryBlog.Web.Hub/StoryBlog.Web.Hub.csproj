@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Extensions\" />
+    <Folder Include="Services\Hosted\" />
+    <Folder Include="Middlewares\" />
+    <Folder Include="Messages\" />
+  </ItemGroup>
+
+  <ItemGroup>
+	<FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\StoryBlog.Web.Hub.Common\StoryBlog.Web.Hub.Common.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Microsoft.AspNetCore.Http.Connections">
+      <HintPath>C:\Program Files\dotnet\packs\Microsoft.AspNetCore.App.Ref\7.0.7\ref\net7.0\Microsoft.AspNetCore.Http.Connections.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNetCore.WebSockets">
+      <HintPath>C:\Program Files\dotnet\packs\Microsoft.AspNetCore.App.Ref\7.0.7\ref\net7.0\Microsoft.AspNetCore.WebSockets.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

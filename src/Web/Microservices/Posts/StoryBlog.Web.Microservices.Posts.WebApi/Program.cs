@@ -15,6 +15,7 @@ using StoryBlog.Web.Microservices.Posts.WebApi.Configuration;
 using StoryBlog.Web.Microservices.Posts.WebApi.Core;
 using StoryBlog.Web.Microservices.Posts.WebApi.Extensions;
 using System.Diagnostics.Tracing;
+using StoryBlog.Web.Hub.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -98,6 +99,10 @@ builder.Services.AddCors(options =>
     });
 });
 builder.Services.AddStoryBlogAuthentication();
+builder.Services.AddMessageHub(options =>
+{
+
+});
 builder.Services.AddControllers();
 builder.Services.AddApiVersioning(options =>
 {
@@ -140,7 +145,8 @@ app
     .UseApiVersioning()
     .UseCors()
     .UseAuthentication()
-    .UseAuthorization();
+    .UseAuthorization()
+    .UseMessageHub();
 app
     .MapControllers()
     .WithOpenApi();

@@ -183,7 +183,7 @@ public static class IdentityServiceBuilderExtensions
     {
         builder.Services.TryAddTransient<ITokenResponseGenerator, DefaultTokenResponseGenerator>();
         builder.Services.TryAddTransient<IUserInfoResponseGenerator, DefaultUserInfoResponseGenerator>();
-        //builder.Services.TryAddTransient<IIntrospectionResponseGenerator, IntrospectionResponseGenerator>();
+        builder.Services.TryAddTransient<IIntrospectionResponseGenerator, IntrospectionResponseGenerator>();
         builder.Services.TryAddTransient<IAuthorizeInteractionResponseGenerator, DefaultAuthorizeInteractionResponseGenerator>();
         builder.Services.TryAddTransient<IAuthorizeResponseGenerator, DefaultAuthorizeResponseGenerator>();
         builder.Services.TryAddTransient<IDiscoveryResponseGenerator, DefaultDiscoveryResponseGenerator>();
@@ -305,6 +305,7 @@ public static class IdentityServiceBuilderExtensions
         builder.Services.TryAddTransient<IClaimsService, DefaultClaimsService>();
         builder.Services.TryAddTransient<IRefreshTokenService, DefaultRefreshTokenService>();
         builder.Services.TryAddTransient<IPersistedGrantService, DefaultPersistedGrantService>();
+        builder.Services.TryAddTransient<IApiSecretValidator, ApiSecretValidator>();
         
         builder.Services.TryAddTransient<IIdentityServerInteractionService, DefaultIdentityServerInteractionService>();
 
@@ -482,6 +483,7 @@ public static class IdentityServiceBuilderExtensions
         builder.Services.TryAddTransient<IBackchannelAuthenticationRequestValidator, BackchannelAuthenticationRequestValidator>();
         builder.Services.TryAddTransient<IBackchannelAuthenticationUserValidator, NopBackchannelAuthenticationUserValidator>();
         builder.Services.TryAddTransient<IBackChannelAuthenticationRequestIdValidator, BackChannelAuthenticationRequestIdValidator>();
+        builder.Services.TryAddTransient<IIntrospectionRequestValidator, IntrospectionRequestValidator>();
 
         return builder;
     }

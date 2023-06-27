@@ -6,4 +6,12 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="Messages\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Hub\StoryBlog.Web.Hub\StoryBlog.Web.Hub.csproj" />
+  </ItemGroup>
+
 </Project>

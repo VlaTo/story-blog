@@ -12,8 +12,8 @@
     <PackageReference Include="MediatR" Version="12.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="5.1.0" />
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.7" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.7">
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.8" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.8">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
@@ -31,6 +31,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Hub\StoryBlog.Web.Hub\StoryBlog.Web.Hub.csproj" />
     <ProjectReference Include="..\..\..\Identity\StoryBlog.Web.Identity\StoryBlog.Web.Identity.csproj" />
     <ProjectReference Include="..\..\..\NamedPipeMessageBus\SlimMessageBus.Host.NamedPipe\SlimMessageBus.Host.NamedPipe.csproj" />
     <ProjectReference Include="..\StoryBlog.Web.Microservices.Posts.Application\StoryBlog.Web.Microservices.Posts.Application.csproj" />

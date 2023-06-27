@@ -3,7 +3,9 @@ using SlimMessageBus;
 using StoryBlog.Web.Common.Application;
 using StoryBlog.Web.Common.Domain;
 using StoryBlog.Web.Common.Events;
+using StoryBlog.Web.Common.Messages;
 using StoryBlog.Web.Common.Result;
+using StoryBlog.Web.Hub.Services;
 using StoryBlog.Web.Microservices.Posts.Application.Extensions;
 using StoryBlog.Web.Microservices.Posts.Domain.Entities;
 
@@ -12,15 +14,18 @@ namespace StoryBlog.Web.Microservices.Posts.Application.Handlers.CreatePost;
 public sealed class CreatePostHandler : HandlerBase, MediatR.IRequestHandler<CreatePostCommand, Result<Guid>>
 {
     private readonly IAsyncUnitOfWork context;
+    private readonly IMessageHub messageHub;
     private readonly IMessageBus messageBus;
     private readonly ILogger<CreatePostHandler> logger;
 
     public CreatePostHandler(
         IAsyncUnitOfWork context,
+        IMessageHub messageHub,
         IMessageBus messageBus,
         ILogger<CreatePostHandler> logger)
     {
         this.context = context;
+        this.messageHub = messageHub;
         this.messageBus = messageBus;
         this.logger = logger;
     }
@@ -61,6 +66,7 @@ public sealed class CreatePostHandler : HandlerBase, MediatR.IRequestHandler<Cre
         var message = new BlogPostEvent(post.Key, BlogPostAction.Submitted);
 
         await messageBus.Publish(message, cancellationToken: cancellationToken);
+        await messageHub.SendAsync(new BlogPostMessage(), cancellationToken);
 
         return post.Key;
     }
