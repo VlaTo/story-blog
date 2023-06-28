@@ -52,7 +52,7 @@ internal sealed class PostsHttpClient : IPostsClient
         {
             var httpClient = httpClientFactory.CreateClient("PostsApi");
             var request = new HttpRequestMessage(HttpMethod.Get, options.Endpoints.Posts.BasePath);
-
+            
             using (var response = await httpClient.SendAsync(request))
             {
                 var message = response.EnsureSuccessStatusCode();

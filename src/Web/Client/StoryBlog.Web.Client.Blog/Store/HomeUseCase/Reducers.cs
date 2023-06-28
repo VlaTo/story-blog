@@ -50,8 +50,6 @@ public sealed class FetchPostsPageFailedReducer : Reducer<HomeState, FetchPostsP
 /// </summary>
 public sealed class PostsPageReadyReducer : Reducer<HomeState, FetchPostsPageReadyAction>
 {
-    public override HomeState Reduce(HomeState state, FetchPostsPageReadyAction action)
-    {
-        return new HomeState(action.Posts, StoreState.Success);
-    }
+    public override HomeState Reduce(HomeState state, FetchPostsPageReadyAction action) =>
+        new HomeState(action.Posts, StoreState.Success);
 }

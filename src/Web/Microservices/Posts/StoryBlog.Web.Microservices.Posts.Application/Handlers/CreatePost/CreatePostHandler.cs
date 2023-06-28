@@ -5,7 +5,7 @@ using StoryBlog.Web.Common.Domain;
 using StoryBlog.Web.Common.Events;
 using StoryBlog.Web.Common.Messages;
 using StoryBlog.Web.Common.Result;
-using StoryBlog.Web.Hub.Services;
+using StoryBlog.Web.MessageHub;
 using StoryBlog.Web.Microservices.Posts.Application.Extensions;
 using StoryBlog.Web.Microservices.Posts.Domain.Entities;
 
@@ -66,7 +66,7 @@ public sealed class CreatePostHandler : HandlerBase, MediatR.IRequestHandler<Cre
         var message = new BlogPostEvent(post.Key, BlogPostAction.Submitted);
 
         await messageBus.Publish(message, cancellationToken: cancellationToken);
-        await messageHub.SendAsync(new BlogPostMessage(), cancellationToken);
+        await messageHub.SendAsync("Test", new BlogPostMessage(), cancellationToken);
 
         return post.Key;
     }

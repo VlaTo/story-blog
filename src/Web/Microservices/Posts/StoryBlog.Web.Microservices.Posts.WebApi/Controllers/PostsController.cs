@@ -4,9 +4,11 @@ using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using StoryBlog.Web.MessageHub;
 using StoryBlog.Web.Microservices.Posts.Application.Handlers.CreatePost;
 using StoryBlog.Web.Microservices.Posts.Application.Handlers.GetPost;
 using StoryBlog.Web.Microservices.Posts.Application.Handlers.GetPosts;
+using StoryBlog.Web.Microservices.Posts.Shared.Messages;
 using StoryBlog.Web.Microservices.Posts.Shared.Models;
 using StoryBlog.Web.Microservices.Posts.WebApi.Core;
 
@@ -116,5 +118,17 @@ public class PostsController : Controller
         }
 
         return StatusCode(StatusCodes.Status500InternalServerError);
+    }
+
+    [HttpPost("test")]
+    public async Task<IActionResult> Test([FromServices]IMessageHub messageHub)
+    {
+        await messageHub.SendAsync(
+            "Test",
+            new NewPostPublishedMessage(Guid.NewGuid(), "test-post-slug"),
+            HttpContext.RequestAborted
+        );
+
+        return Ok();
     }
 }

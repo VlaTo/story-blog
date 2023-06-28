@@ -15,7 +15,7 @@ using StoryBlog.Web.Microservices.Posts.WebApi.Configuration;
 using StoryBlog.Web.Microservices.Posts.WebApi.Core;
 using StoryBlog.Web.Microservices.Posts.WebApi.Extensions;
 using System.Diagnostics.Tracing;
-using StoryBlog.Web.Hub.Extensions;
+using StoryBlog.Web.MessageHub.Server.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -101,7 +101,7 @@ builder.Services.AddCors(options =>
 builder.Services.AddStoryBlogAuthentication();
 builder.Services.AddMessageHub(options =>
 {
-
+    options.Path = "/notification";
 });
 builder.Services.AddControllers();
 builder.Services.AddApiVersioning(options =>
@@ -142,11 +142,13 @@ if (app.Environment.IsDevelopment())
 }
 
 app
+    .UseWebSockets()
     .UseApiVersioning()
     .UseCors()
     .UseAuthentication()
     .UseAuthorization()
-    .UseMessageHub();
+    .UseMessageHub()
+    ;
 app
     .MapControllers()
     .WithOpenApi();

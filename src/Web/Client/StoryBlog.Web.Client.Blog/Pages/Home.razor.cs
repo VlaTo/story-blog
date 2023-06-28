@@ -1,7 +1,5 @@
 ﻿using Fluxor;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Authorization;
-using StoryBlog.Web.Client.Blog.Extensions;
 using StoryBlog.Web.Client.Blog.Store.HomeUseCase;
 
 namespace StoryBlog.Web.Client.Blog.Pages;
@@ -22,22 +20,10 @@ public partial class Home
         set;
     }
 
-    [CascadingParameter]
-    private Task<AuthenticationState> authenticationState
+    protected override void OnInitialized()
     {
-        get; 
-        set;
-    }
-
-    protected override async Task OnInitializedAsync()
-    {
-        var authentication = await authenticationState;
+        base.OnInitialized();
 
         Dispatcher.Dispatch(new FetchPostsPageAction(1, 10));
-
-        if (authentication.User.IsAuthenticated())
-        {
-            ;
-        }
     }
 }

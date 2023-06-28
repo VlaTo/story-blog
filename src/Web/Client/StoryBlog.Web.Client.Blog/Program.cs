@@ -12,7 +12,7 @@ using StoryBlog.Web.Client.Blog.Configuration;
 using StoryBlog.Web.Client.Blog.Core;
 using StoryBlog.Web.Client.Blog.Core.MessageHandlers;
 using StoryBlog.Web.Client.Blog.Middlewares;
-using StoryBlog.Web.Hub.Blazor.WebAssembly.Extensions;
+using StoryBlog.Web.MessageHub.Client.Extensions;
 using StoryBlog.Web.Microservices.Posts.Shared.Messages;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
@@ -41,12 +41,12 @@ builder.Services.AddOidcAuthentication(options =>
     // For more information, see https://aka.ms/blazor-standalone-auth
     builder.Configuration.Bind("Oidc", options);
 });
-builder.Services.AddMessageHub(hub =>
+/*builder.Services.AddMessageHub(hub =>
 {
     hub
         .AddMessage<NewPostPublishedMessage>()
         .WithHandler<NewPostPublishedMessageHandler>();
-});
+});*/
 
 builder.Services.AddScoped<IPostsClient, PostsHttpClient>();
 builder.Services.AddScoped<ICommentsClient, CommentsHttpClient>();

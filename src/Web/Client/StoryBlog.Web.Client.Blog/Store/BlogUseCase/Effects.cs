@@ -1,4 +1,5 @@
 ﻿using Fluxor;
+using Microsoft.AspNetCore.Components.Authorization;
 using StoryBlog.Web.Client.Blog.Clients.Interfaces;
 
 namespace StoryBlog.Web.Client.Blog.Store.BlogUseCase;
@@ -49,14 +50,18 @@ public sealed class FetchPostReferenceActionEffect : Effect<FetchPostReferenceAc
 public sealed class FetchPostEffect : Effect<FetchPostAction>
 {
     private readonly IPostsClient client;
+    private readonly AuthenticationStateProvider authenticationProvider;
 
-    public FetchPostEffect(IPostsClient client)
+    public FetchPostEffect(IPostsClient client, AuthenticationStateProvider authenticationProvider)
     {
         this.client = client;
+        this.authenticationProvider = authenticationProvider;
     }
 
     public override async Task HandleAsync(FetchPostAction action, IDispatcher dispatcher)
     {
+         await authenticationProvider.GetAuthenticationStateAsync();
+
         try
         {
             var post = await client.GetPostAsync(action.Key);

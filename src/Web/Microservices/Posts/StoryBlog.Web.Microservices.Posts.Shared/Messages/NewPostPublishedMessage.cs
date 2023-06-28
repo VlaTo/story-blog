@@ -2,4 +2,4 @@
 
 namespace StoryBlog.Web.Microservices.Posts.Shared.Messages;
 
-public sealed record NewPostPublishedMessage() : IHubMessage;
+public sealed record NewPostPublishedMessage(Guid PostKey, string Slug) : IHubMessage;

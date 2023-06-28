@@ -20,8 +20,8 @@
 #endregion
 
 using Fluxor;
+using Microsoft.AspNetCore.Components.Authorization;
 using StoryBlog.Web.Client.Blog.Clients.Interfaces;
-using StoryBlog.Web.Client.Blog.Extensions;
 using StoryBlog.Web.Microservices.Posts.Shared.Models;
 
 namespace StoryBlog.Web.Client.Blog.Store.HomeUseCase;
@@ -31,15 +31,21 @@ namespace StoryBlog.Web.Client.Blog.Store.HomeUseCase;
 /// </summary>
 public sealed class FetchAvailablePostsEffect : Effect<FetchPostsPageAction>
 {
+    private readonly AuthenticationStateProvider authenticationProvider;
     private readonly IPostsClient client;
 
-    public FetchAvailablePostsEffect(IPostsClient client)
+    public FetchAvailablePostsEffect(
+        AuthenticationStateProvider authenticationProvider,
+        IPostsClient client)
     {
+        this.authenticationProvider = authenticationProvider;
         this.client = client;
     }
 
     public override async Task HandleAsync(FetchPostsPageAction action, IDispatcher dispatcher)
     {
+        await authenticationProvider.GetAuthenticationStateAsync();
+
         var response = await client.GetPostsAsync(action.PageNumber, action.PageSize);
         var next = response.Select<object>(
             empty => new FetchPostsPageReadyAction(Array.Empty<BriefModel>(), action.PageNumber, action.PageSize),

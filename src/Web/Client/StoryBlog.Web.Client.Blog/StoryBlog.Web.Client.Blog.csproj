@@ -33,7 +33,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Common\StoryBlog.Web.Common.Result\StoryBlog.Web.Common.Result.csproj" />
-    <ProjectReference Include="..\..\Hub\StoryBlog.Web.Hub.Blazor.WebAssembly\StoryBlog.Web.Hub.Blazor.WebAssembly.csproj" />
+    <ProjectReference Include="..\..\MessageHub\StoryBlog.Web.MessageHub.Client\StoryBlog.Web.MessageHub.Client.csproj" />
     <ProjectReference Include="..\..\Microservices\Comments\StoryBlog.Web.Microservices.Comments.Shared\StoryBlog.Web.Microservices.Comments.Shared.csproj" />
     <ProjectReference Include="..\..\Microservices\Posts\StoryBlog.Web.Microservices.Posts.Shared\StoryBlog.Web.Microservices.Posts.Shared.csproj" />
     <ProjectReference Include="..\StoryBlog.Web.Blazor.Markdown.Editor\StoryBlog.Web.Blazor.Markdown.Editor.csproj" />
