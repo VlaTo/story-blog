@@ -10,10 +10,7 @@ using StoryBlog.Web.Client.Blog.Clients;
 using StoryBlog.Web.Client.Blog.Clients.Interfaces;
 using StoryBlog.Web.Client.Blog.Configuration;
 using StoryBlog.Web.Client.Blog.Core;
-using StoryBlog.Web.Client.Blog.Core.MessageHandlers;
 using StoryBlog.Web.Client.Blog.Middlewares;
-using StoryBlog.Web.MessageHub.Client.Extensions;
-using StoryBlog.Web.Microservices.Posts.Shared.Messages;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 

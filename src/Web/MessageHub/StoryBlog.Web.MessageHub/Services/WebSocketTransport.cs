@@ -2,7 +2,7 @@
 
 namespace StoryBlog.Web.MessageHub.Services;
 
-public class WebSocketTransport : IDisposable
+public abstract class WebSocketTransport : IDisposable
 {
     private bool disposed;
 
@@ -69,6 +69,8 @@ public class WebSocketTransport : IDisposable
         }
     }
 
+    protected abstract void DoDispose();
+
     protected void Dispose(bool dispose)
     {
         if (disposed)
@@ -81,6 +83,7 @@ public class WebSocketTransport : IDisposable
             if (dispose)
             {
                 WebSocket.Dispose();
+                DoDispose();
             }
         }
         finally

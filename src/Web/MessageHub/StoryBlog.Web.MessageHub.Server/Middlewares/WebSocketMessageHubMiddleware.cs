@@ -2,9 +2,9 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using StoryBlog.Web.MessageHub.Configuration;
 using StoryBlog.Web.MessageHub.Server.Helpers;
 using StoryBlog.Web.MessageHub.Server.Services;
+using MessageHubOptions = StoryBlog.Web.MessageHub.Server.Configuration.MessageHubOptions;
 
 namespace StoryBlog.Web.MessageHub.Server.Middlewares;
 

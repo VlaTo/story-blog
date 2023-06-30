@@ -1,16 +1,16 @@
-﻿using System.Net.WebSockets;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using StoryBlog.Web.Hub.Common.Messages;
-using StoryBlog.Web.MessageHub.Configuration;
 using StoryBlog.Web.MessageHub.Services;
+using System.Net.WebSockets;
+using MessageHubOptions = StoryBlog.Web.MessageHub.Server.Configuration.MessageHubOptions;
 
 namespace StoryBlog.Web.MessageHub.Server.Services;
 
 internal sealed class MessageHubService
 {
     private readonly MessageHubOptions options;
-    private readonly List<(WebSocket, MessageHubHandler)> handlers;
+    private readonly List<MessageHubHandler> handlers;
     private readonly IServiceProvider serviceProvider;
     private readonly ILogger<MessageHubService> logger;
 
@@ -19,7 +19,7 @@ internal sealed class MessageHubService
         IOptions<MessageHubOptions> options,
         ILogger<MessageHubService> logger)
     {
-        handlers = new List<(WebSocket, MessageHubHandler)>();
+        handlers = new List<MessageHubHandler>();
         this.options = options.Value;
         this.serviceProvider = serviceProvider;
         this.logger = logger;
@@ -27,9 +27,9 @@ internal sealed class MessageHubService
 
     public Task<MessageHubHandler> CreateWebSocketHandlerAsync(WebSocket webSocket)
     {
-        var handler = new MessageHubHandler(serviceProvider, webSocket, this, options.Serializer);
+        var handler = new MessageHubHandler(this, serviceProvider, webSocket, options);
 
-        handlers.Add((webSocket, handler));
+        handlers.Add(handler);
 
         return Task.FromResult(handler);
     }
@@ -40,14 +40,14 @@ internal sealed class MessageHubService
         var payload = options.Serializer.Serialize(message);
         var temp = new Message(channel, payload);
 
-        await handlers[0].Item2.SendAsync(temp.ToBytes(), cancellationToken);
+        await handlers[0].SendAsync(temp.ToBytes(), cancellationToken);
     }
 
     public void RemoveSocketHandler(MessageHubHandler handler)
     {
         for (int index = 0; index < handlers.Count; index++)
         {
-            if (ReferenceEquals(handlers[index].Item2, handler))
+            if (ReferenceEquals(handlers[index], handler))
             {
                 handlers.RemoveAt(index);
                 handler.WebSocket.Dispose();

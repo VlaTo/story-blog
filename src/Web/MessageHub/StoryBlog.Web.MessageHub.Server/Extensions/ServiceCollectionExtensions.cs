@@ -1,15 +1,14 @@
 ﻿using Microsoft.AspNetCore.WebSockets;
 using Microsoft.Extensions.DependencyInjection;
-using StoryBlog.Web.MessageHub.Configuration;
 using StoryBlog.Web.MessageHub.Server.Middlewares;
 using StoryBlog.Web.MessageHub.Server.Services;
-using StoryBlog.Web.MessageHub.Services;
+using MessageHubOptions = StoryBlog.Web.MessageHub.Server.Configuration.MessageHubOptions;
 
 namespace StoryBlog.Web.MessageHub.Server.Extensions;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddMessageHub(this IServiceCollection services, Action<MessageHubOptions> configuration)
+    public static IServiceCollection AddMessageHub(this IServiceCollection services, Action<MessageHubOptions> setupAction)
     {
         services.AddConnections();
         services.AddWebSockets(sockets =>
@@ -17,9 +16,12 @@ public static class ServiceCollectionExtensions
             sockets.KeepAliveInterval = TimeSpan.FromMinutes(15.0d);
         });
 
-        services
+        services.AddOptions();
+        services.Configure(setupAction);
+
+        /*services
             .AddOptions<MessageHubOptions>()
-            .Configure(configuration)
+            .Configure(setupAction)
             .PostConfigure(options =>
             {
                 if (null == options.Serializer)
@@ -32,7 +34,8 @@ public static class ServiceCollectionExtensions
 
                 return null != options.Serializer;
             })
-            .ValidateOnStart();
+            .ValidateOnStart();*/
+
 
         services
             .AddSingleton<MessageHubService>()

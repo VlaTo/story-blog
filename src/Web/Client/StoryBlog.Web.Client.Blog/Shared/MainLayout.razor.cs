@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using System.Numerics;
+using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
 using MudBlazor;
 using StoryBlog.Web.MessageHub.Client;
 using StoryBlog.Web.Microservices.Posts.Shared.Messages;
@@ -7,6 +9,8 @@ namespace StoryBlog.Web.Client.Blog.Shared;
 
 public partial class MainLayout
 {
+    private MessageHubConnection? hub;
+
     [Inject]
     private ISnackbar Snackbar
     {
@@ -33,17 +37,21 @@ public partial class MainLayout
     {
         await base.OnInitializedAsync();
 
-        var connection = new MessageHubConnectionBuilder()
+        hub = new MessageHubConnectionBuilder()
             .WithUrl("ws://localhost:5033/notification")
             .Build();
 
-        connection
-            .On<NewPostPublishedMessage>("Test", async message =>
-            {
-                Snackbar.Add("New Blog Post created!");
-                await Task.CompletedTask;
-            });
+        hub.On<NewPostPublishedMessage>("Test", async message =>
+        {
+            Snackbar.Add("New Blog Post created!");
+            await Task.CompletedTask;
+        });
 
-        await connection.ConnectAsync();
+        await hub.ConnectAsync();
+    }
+
+    private async Task DoSendMessage(MouseEventArgs arg)
+    {
+        await hub!.SendMessageAsync("Test", new NewPostPublishedMessage(Guid.NewGuid(), "client-post-test"));
     }
 }

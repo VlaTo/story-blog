@@ -1,4 +1,5 @@
 ﻿using System.Net.WebSockets;
+using System.Text;
 using StoryBlog.Web.Hub.Common.Messages;
 using StoryBlog.Web.MessageHub.Services;
 
@@ -36,8 +37,6 @@ public class MessageHubConnection : WebSocketTransport
     public MessageHubConnection On<TMessage>(string channel, Func<TMessage, Task> handler)
         where TMessage : IHubMessage
     {
-        //var key = typeof(TMessage).FullName!;
-
         if (handlers.ContainsKey(channel))
         {
             throw new Exception();
@@ -50,10 +49,17 @@ public class MessageHubConnection : WebSocketTransport
         return this;
     }
 
+    public async Task SendMessageAsync<TMessage>(string channel, TMessage message, CancellationToken cancellationToken = default)
+        where TMessage : IHubMessage
+    {
+        var json = System.Text.Json.JsonSerializer.Serialize(message);
+        var temp = new Message(channel, Encoding.UTF8.GetBytes(json));
+
+        await WebSocket.SendAsync(temp.ToBytes(), WebSocketMessageType.Binary, true, cancellationToken);
+    }
+
     private async Task HandleMessage(ArraySegment<byte> data)
     {
-        //ConsoleHelper.PrintBuffer(data);
-
         var message = Message.From(data);
 
         if (false == handlers.TryGetValue(message.Channel, out var handler))
@@ -64,5 +70,10 @@ public class MessageHubConnection : WebSocketTransport
         var hubMessage = serializer.Deserialize(handler.MessageType, message.Payload);
 
         await handler.HandleAsync(hubMessage);
+    }
+
+    protected override void DoDispose()
+    {
+        ;
     }
 }

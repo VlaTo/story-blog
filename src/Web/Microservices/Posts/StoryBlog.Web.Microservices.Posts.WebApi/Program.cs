@@ -16,6 +16,8 @@ using StoryBlog.Web.Microservices.Posts.WebApi.Core;
 using StoryBlog.Web.Microservices.Posts.WebApi.Extensions;
 using System.Diagnostics.Tracing;
 using StoryBlog.Web.MessageHub.Server.Extensions;
+using StoryBlog.Web.MessageHub.Services;
+using StoryBlog.Web.Microservices.Posts.Shared.Messages;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -102,6 +104,12 @@ builder.Services.AddStoryBlogAuthentication();
 builder.Services.AddMessageHub(options =>
 {
     options.Path = "/notification";
+    options.Serializer = new JsonHubMessageSerializer();
+
+    options.Channel("Test", channel =>
+    {
+        channel.AddHubMessageHandlers();
+    });
 });
 builder.Services.AddControllers();
 builder.Services.AddApiVersioning(options =>
