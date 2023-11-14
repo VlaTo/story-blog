@@ -201,12 +201,12 @@ internal sealed class ClientEntityConfiguration : IEntityTypeConfiguration<Clien
         builder
             .Property(x => x.Created)
             .IsRequired(required: true)
-            .HasValueGenerator<UtcNowDateTimeValueGenerator>()
+            .HasValueGenerator<UtcNowDateTimeOffsetValueGenerator>()
             .ValueGeneratedOnAdd();
         builder
             .Property(x => x.Updated)
             .IsRequired(required: false)
-            .HasValueGenerator<UtcNowDateTimeValueGenerator>()
+            .HasValueGenerator<UtcNowDateTimeOffsetValueGenerator>()
             .ValueGeneratedOnUpdate();
         builder
             .Property(x => x.LastAccessed)
@@ -257,7 +257,7 @@ internal sealed class ClientEntityConfiguration : IEntityTypeConfiguration<Clien
                     secrets
                         .Property(x => x.Created)
                         .IsRequired(required: true)
-                        .HasValueGenerator<UtcNowDateTimeValueGenerator>()
+                        .HasValueGenerator<UtcNowDateTimeOffsetValueGenerator>()
                         .ValueGeneratedOnAdd();
 
                     secrets

@@ -77,10 +77,10 @@ internal sealed class PostsHttpClient : IPostsClient
     }
 
     /// <inheritdoc cref="IPostsClient.GetPostAsync" />
-    public async Task<PostModel?> GetPostAsync(Guid postKey)
+    public async Task<PostModel?> GetPostAsync(string slugOrKey)
     {
         var basePath = new Uri(options.Endpoints.Post.BasePath, UriKind.Absolute);
-        var relativeUri = new Uri(postKey.ToString("D"), UriKind.Relative);
+        var relativeUri = new Uri(slugOrKey, UriKind.Relative);
 
         if (false == Uri.TryCreate(basePath, relativeUri, out var endpoint))
         {

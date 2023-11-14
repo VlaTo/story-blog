@@ -4,25 +4,19 @@ using StoryBlog.Web.Microservices.Posts.Shared.Models;
 namespace StoryBlog.Web.Client.Blog.Store.BlogUseCase;
 
 // Blog load actions graph
-// FetchPostReferenceAction (slug => post key) -> FetchPostAction -> FetchPostReadyAction -> FetchCommentsAction
-// -> FetchCommentsReadyAction
+// FetchPostAction -> FetchPostReadyAction -> FetchCommentsAction -> FetchCommentsReadyAction
 
 #region Blog actions
 
 /// <summary>
 /// 
 /// </summary>
-public sealed record FetchPostReferenceAction(string Slug);
+public sealed record FetchPostAction(string SlugOrKey);
 
 /// <summary>
 /// 
 /// </summary>
-public sealed record FetchPostAction(Guid Key);
-
-/// <summary>
-/// 
-/// </summary>
-public sealed record FetchPostReadyAction(Guid Key, PostModel Post);
+public sealed record FetchPostReadyAction(string SlugOrKey, PostModel Post);
 
 /// <summary>
 /// 

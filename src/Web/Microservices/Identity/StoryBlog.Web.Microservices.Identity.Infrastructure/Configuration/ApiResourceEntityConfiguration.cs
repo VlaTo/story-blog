@@ -44,11 +44,11 @@ internal sealed class ApiResourceEntityConfiguration : IEntityTypeConfiguration<
         builder
             .Property(x => x.Created)
             .IsRequired(required: true)
-            .HasValueGenerator<UtcNowDateTimeValueGenerator>()
+            .HasValueGenerator<UtcNowDateTimeOffsetValueGenerator>()
             .ValueGeneratedOnAdd();
         builder
             .Property(x => x.Updated)
-            .HasValueGenerator<UtcNowDateTimeValueGenerator>()
+            .HasValueGenerator<UtcNowDateTimeOffsetValueGenerator>()
             .ValueGeneratedOnUpdate();
         builder
             .Property(x => x.LastAccessed)
@@ -79,7 +79,7 @@ internal sealed class ApiResourceEntityConfiguration : IEntityTypeConfiguration<
                     secrets
                         .Property(x => x.Created)
                         .IsRequired(required: true)
-                        .HasValueGenerator<UtcNowDateTimeValueGenerator>()
+                        .HasValueGenerator<UtcNowDateTimeOffsetValueGenerator>()
                         .ValueGeneratedOnAdd();
                     secrets
                         .Property(x => x.Expiration)

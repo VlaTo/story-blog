@@ -184,11 +184,11 @@ public class DefaultGrantStore<T>
         string subjectId,
         string sessionId,
         string description,
-        DateTime created,
+        DateTimeOffset created,
         TimeSpan lifetime)
     {
         var handle = await CreateHandleAsync();
-        var expiration = created.Add(lifetime);
+        var expiration = created + lifetime;
 
         await StoreItemAsync(handle, item, clientId, subjectId, sessionId, description, created, expiration);
 
@@ -215,9 +215,9 @@ public class DefaultGrantStore<T>
         string subjectId,
         string sessionId,
         string description,
-        DateTime created,
-        DateTime? expiration,
-        DateTime? consumedTime = null)
+        DateTimeOffset created,
+        DateTimeOffset? expiration,
+        DateTimeOffset? consumedTime = null)
     {
         key = GetHashedKey(key);
         return StoreItemByHashedKeyAsync(key, item, clientId, subjectId, sessionId, description, created, expiration, consumedTime);
@@ -243,9 +243,9 @@ public class DefaultGrantStore<T>
         string subjectId,
         string? sessionId,
         string? description,
-        DateTime created,
-        DateTime? expiration,
-        DateTime? consumedTime = null)
+        DateTimeOffset created,
+        DateTimeOffset? expiration,
+        DateTimeOffset? consumedTime = null)
     {
         var json = Serializer.Serialize(item);
 
@@ -282,9 +282,9 @@ public class DefaultGrantStore<T>
     /// </summary>
     /// <param name="key">The key.</param>
     /// <returns></returns>
-    protected virtual async Task RemoveItemByHashedKeyAsync(string key)
+    protected virtual Task RemoveItemByHashedKeyAsync(string key)
     {
-        await Store.RemoveAsync(key);
+        return Store.RemoveAsync(key);
     }
 
     /// <summary>
@@ -293,8 +293,9 @@ public class DefaultGrantStore<T>
     /// <param name="subjectId">The subject identifier.</param>
     /// <param name="clientId">The client identifier.</param>
     /// <returns></returns>
-    protected virtual async Task RemoveAllAsync(string subjectId, string clientId)
+    protected virtual Task RemoveAllAsync(string subjectId, string clientId)
     {
-        await Store.RemoveAllAsync(new PersistedGrantFilter(subjectId: subjectId, clientId: clientId, type: GrantType));
+        var filter = new PersistedGrantFilter(subjectId: subjectId, clientId: clientId, type: GrantType);
+        return Store.RemoveAllAsync(filter);
     }
 }

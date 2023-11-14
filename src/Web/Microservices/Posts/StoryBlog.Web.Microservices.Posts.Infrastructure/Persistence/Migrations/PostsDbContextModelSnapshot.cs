@@ -2,8 +2,8 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using StoryBlog.Web.Microservices.Posts.Infrastructure.Persistence;
 
 #nullable disable
@@ -17,10 +17,10 @@ namespace StoryBlog.Web.Microservices.Posts.Infrastructure.Persistence.Migration
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.5")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128);
+                .HasAnnotation("ProductVersion", "7.0.13")
+                .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("StoryBlog.Web.Microservices.Posts.Domain.Entities.Post", b =>
                 {
@@ -28,33 +28,39 @@ namespace StoryBlog.Web.Microservices.Posts.Infrastructure.Persistence.Migration
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
-                    b.Property<DateTime>("CreateAt")
+                    b.Property<string>("AuthorId")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)");
+
+                    b.Property<DateTimeOffset>("CreateAt")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<bool>("IsPublic")
-                        .HasColumnType("bit");
+                        .HasColumnType("boolean");
 
                     b.Property<Guid>("Key")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
-                    b.Property<DateTime?>("ModifiedAt")
+                    b.Property<DateTimeOffset?>("ModifiedAt")
                         .ValueGeneratedOnUpdate()
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<int>("Status")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(1024)
-                        .HasColumnType("nvarchar(1024)");
+                        .IsUnicode(true)
+                        .HasColumnType("character varying(1024)");
 
                     b.HasKey("Id");
 
@@ -63,7 +69,7 @@ namespace StoryBlog.Web.Microservices.Posts.Infrastructure.Persistence.Migration
 
                     b.HasIndex("Title");
 
-                    b.ToTable("Posts", (string)null);
+                    b.ToTable("Posts", "Blog");
                 });
 
             modelBuilder.Entity("StoryBlog.Web.Microservices.Posts.Domain.Entities.Post", b =>
@@ -81,7 +87,7 @@ namespace StoryBlog.Web.Microservices.Posts.Infrastructure.Persistence.Migration
                             b1.HasIndex("PostId")
                                 .IsUnique();
 
-                            b1.ToTable("CommentsCounters", (string)null);
+                            b1.ToTable("CommentsCounters", "Blog");
 
                             b1.WithOwner("Post")
                                 .HasForeignKey("PostId");
@@ -97,15 +103,17 @@ namespace StoryBlog.Web.Microservices.Posts.Infrastructure.Persistence.Migration
                             b1.Property<string>("Brief")
                                 .IsRequired()
                                 .HasMaxLength(1024)
-                                .HasColumnType("nvarchar");
+                                .IsUnicode(true)
+                                .HasColumnType("character varying(1024)");
 
                             b1.Property<string>("Text")
                                 .IsRequired()
-                                .HasColumnType("ntext");
+                                .IsUnicode(true)
+                                .HasColumnType("text");
 
                             b1.HasKey("PostId");
 
-                            b1.ToTable("Contents", (string)null);
+                            b1.ToTable("Contents", "Blog");
 
                             b1.WithOwner("Post")
                                 .HasForeignKey("PostId");
@@ -120,15 +128,16 @@ namespace StoryBlog.Web.Microservices.Posts.Infrastructure.Persistence.Migration
 
                             b1.Property<string>("Text")
                                 .IsRequired()
-                                .HasMaxLength(200)
-                                .HasColumnType("nvarchar(200)");
+                                .HasMaxLength(250)
+                                .IsUnicode(true)
+                                .HasColumnType("character varying(250)");
 
                             b1.HasKey("PostId");
 
                             b1.HasIndex("Text")
                                 .IsUnique();
 
-                            b1.ToTable("Slugs", (string)null);
+                            b1.ToTable("Slugs", "Blog");
 
                             b1.WithOwner("Post")
                                 .HasForeignKey("PostId");

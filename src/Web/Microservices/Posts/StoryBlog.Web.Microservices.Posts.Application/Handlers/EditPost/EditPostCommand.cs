@@ -5,4 +5,4 @@ using System.Security.Claims;
 
 namespace StoryBlog.Web.Microservices.Posts.Application.Handlers.EditPost;
 
-public sealed record EditPostCommand(Guid Key, EditPostDetails Details, ClaimsPrincipal CurrentUser) : IRequest<Result>;
+public sealed record EditPostCommand(string SlugOrKey, EditPostDetails Details, ClaimsPrincipal CurrentUser) : IRequest<Result>;

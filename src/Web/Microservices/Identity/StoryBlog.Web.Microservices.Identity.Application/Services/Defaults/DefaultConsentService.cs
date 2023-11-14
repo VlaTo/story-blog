@@ -124,7 +124,7 @@ public class DefaultConsentService : IConsentService
             return true;
         }
 
-        if (consent.Expiration.HasExpired(Clock.UtcNow.UtcDateTime))
+        if (consent.Expiration.HasExpired(Clock.UtcNow))
         {
             Logger.LogDebug("Consent found in consent store is expired, consent is required");
 

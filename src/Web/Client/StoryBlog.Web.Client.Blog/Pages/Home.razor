@@ -1,6 +1,7 @@
 ﻿@page "/"
 
 @using StoryBlog.Web.Client.Blog.Store
+@using StoryBlog.Web.Microservices.Posts.Shared.Models
 @inherits Fluxor.Blazor.Web.Components.FluxorComponent
 
 <PageTitle>Home</PageTitle>
@@ -22,12 +23,31 @@
                 <BlogEntry Title=@post.Title data-test="test-value" Slug=@post.Slug>
                     <HeaderContent>
                         <div class="mr-2">
-                            <strong>Unknown</strong>
+                            <strong>@@Unknown</strong>
                         </div>
                         <DateTimeView Class="mr-2" Typo=@Typo.caption Mode=@DateTimeMode.RelativeFromCurrent DateTime=@post.CreatedAt />
                         <div>
                             <MudText Typo=@Typo.caption>@post.CommentsCount комментариев</MudText>
                         </div>
+                        <MudSpacer />
+                        @if (PostModelStatus.Pending == post.Status)
+                        {
+                            <MudChip Variant=@Variant.Outlined Disabled=true Size=@Size.Small>Pending</MudChip>
+                        }
+                        @if (CanEdit(post))
+                        {
+                            <MudIconButton
+                                Class="quick-action"
+                                Size=@Size.Small
+                                ButtonType=@ButtonType.Button
+                                Icon=@Icons.Material.Filled.Edit
+                                OnClick=@(() => DoPostEdit(post.Slug))
+                            />
+                        }
+                        @if (CanDelete(post))
+                        {
+                            <MudIconButton Class="quick-action" Size=@Size.Small ButtonType=@ButtonType.Button Icon=@Icons.Material.Filled.Delete OnClick=@DoPostDelete />
+                        }
                     </HeaderContent>
                     <ChildContent>
                         @post.Text

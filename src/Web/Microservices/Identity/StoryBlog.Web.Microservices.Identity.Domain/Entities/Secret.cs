@@ -22,7 +22,7 @@ public abstract class Secret : IEntity, IHasId<int>
         set;
     }
 
-    public DateTime? Expiration
+    public DateTimeOffset? Expiration
     {
         get;
         set;
@@ -34,7 +34,7 @@ public abstract class Secret : IEntity, IHasId<int>
         set;
     }
 
-    public DateTime Created
+    public DateTimeOffset Created
     {
         get;
         set;

@@ -20,6 +20,7 @@ internal sealed class PostEntityConfiguration : IEntityTypeConfiguration<Post>
 
         builder.Property(x => x.Title)
             .HasMaxLength(1024)
+            .IsUnicode(unicode: true)
             .IsRequired();
 
         builder.OwnsOne(
@@ -32,28 +33,32 @@ internal sealed class PostEntityConfiguration : IEntityTypeConfiguration<Post>
 
                 content
                     .Property(x => x.Text)
-                    .HasColumnType("ntext")
+                    .IsUnicode(unicode: true)
                     .IsRequired();
 
                 content
                     .Property(x => x.Brief)
-                    .HasColumnType("nvarchar")
                     .HasMaxLength(1024)
+                    .IsUnicode(unicode: true)
                     .IsRequired();
 
-                content.ToTable("Contents");
+                content.ToTable("Contents", "Blog");
             });
 
         builder.Property(x => x.IsPublic);
         
         builder.Property(x => x.Status);
 
+        builder.Property(x => x.AuthorId)
+            .IsRequired(required: true)
+            .HasMaxLength(150);
+
         builder.Property(x => x.CreateAt)
-            .HasValueGenerator<UtcNowDateTimeValueGenerator>()
+            .HasValueGenerator<UtcNowDateTimeOffsetValueGenerator>()
             .ValueGeneratedOnAdd();
 
         builder.Property(x => x.ModifiedAt)
-            .HasValueGenerator<UtcNowDateTimeValueGenerator>()
+            .HasValueGenerator<UtcNowDateTimeOffsetValueGenerator>()
             .ValueGeneratedOnUpdate();
 
         builder.Property(x => x.DeletedAt);
@@ -68,14 +73,15 @@ internal sealed class PostEntityConfiguration : IEntityTypeConfiguration<Post>
 
                 slug
                     .Property(x => x.Text)
-                    .HasMaxLength(200)
+                    .HasMaxLength(250)
+                    .IsUnicode(unicode: true)
                     .IsRequired();
 
                 slug
                     .HasIndex(x => x.Text)
                     .IsUnique(unique: true);
 
-                slug.ToTable("Slugs");
+                slug.ToTable("Slugs", "Blog");
             });
 
         builder.OwnsOne(
@@ -93,13 +99,13 @@ internal sealed class PostEntityConfiguration : IEntityTypeConfiguration<Post>
                     .HasIndex(x => x.PostId)
                     .IsUnique(unique: true);
 
-                counter.ToTable("CommentsCounters");
+                counter.ToTable("CommentsCounters", "Blog");
             });
 
         builder.HasKey(x => x.Id);
         builder.HasIndex(x => x.Key).IsUnique(unique: true);
         builder.HasIndex(x => x.Title);
 
-        builder.ToTable("Posts");
+        builder.ToTable("Posts", "Blog");
     }
 }

@@ -443,9 +443,9 @@ internal sealed class TokenValidator : ITokenValidator
         var claims = new List<Claim>
         {
             new(JwtClaimTypes.Issuer, token.Issuer),
-            new(JwtClaimTypes.NotBefore, new DateTimeOffset(token.CreationTime).ToUnixTimeSeconds().ToString(), ClaimValueTypes.Integer64),
-            new(JwtClaimTypes.IssuedAt, new DateTimeOffset(token.CreationTime).ToUnixTimeSeconds().ToString(), ClaimValueTypes.Integer64),
-            new(JwtClaimTypes.Expiration, (new DateTimeOffset(token.CreationTime) + token.Lifetime).ToUnixTimeSeconds().ToString(), ClaimValueTypes.Integer64)
+            new(JwtClaimTypes.NotBefore, token.CreationTime.ToUnixTimeSeconds().ToString(), ClaimValueTypes.Integer64),
+            new(JwtClaimTypes.IssuedAt, token.CreationTime.ToUnixTimeSeconds().ToString(), ClaimValueTypes.Integer64),
+            new(JwtClaimTypes.Expiration, (token.CreationTime + token.Lifetime).ToUnixTimeSeconds().ToString(), ClaimValueTypes.Integer64)
         };
 
         foreach (var aud in token.Audiences)

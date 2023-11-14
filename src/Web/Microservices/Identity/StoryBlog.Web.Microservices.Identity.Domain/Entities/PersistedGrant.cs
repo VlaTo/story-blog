@@ -46,19 +46,19 @@ public class PersistedGrant : IEntity, IHasId<long>
         set;
     }
 
-    public DateTime CreationTime
+    public DateTimeOffset CreationTime
     {
         get;
         set;
     }
 
-    public DateTime? Expiration
+    public DateTimeOffset? Expiration
     {
         get;
         set;
     }
 
-    public DateTime? ConsumedTime
+    public DateTimeOffset? ConsumedTime
     {
         get;
         set;

@@ -4,7 +4,7 @@ using StoryBlog.Web.Microservices.Identity.Domain;
 
 namespace StoryBlog.Web.Microservices.Identity.Infrastructure.Persistence.Migrations;
 
-public partial class AddIdentityEntities
+public partial class InitialStructure
 {
     private static void SeedIdentityData(MigrationBuilder migrationBuilder)
     {
@@ -346,7 +346,8 @@ public partial class AddIdentityEntities
         #region Users
 
         migrationBuilder.InsertData(
-            table: "AspNetUsers",
+            table: TableNames.AspNetUsers,
+            schema:SchemaNames.Identity,
             columns: new[]
             {
                     "Id", "IsActive", "Created", "Modified", "UserName", "NormalizedUserName", "Email",

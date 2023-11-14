@@ -44,7 +44,7 @@ internal sealed class KeyEntityConfiguration : IEntityTypeConfiguration<Key>
         builder
             .Property(x => x.Created)
             .IsRequired(required: true)
-            .HasValueGenerator<UtcNowDateTimeValueGenerator>()
+            .HasValueGenerator<UtcNowDateTimeOffsetValueGenerator>()
             .ValueGeneratedOnAdd();
         builder
             .Property(x => x.Version)

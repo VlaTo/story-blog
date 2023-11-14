@@ -8,4 +8,10 @@ public enum BlogCommentAction
 
 }
 
-public sealed record BlogCommentEvent(Guid Key, Guid PostKey, Guid? ParentKey, DateTime CreateAt, BlogCommentAction Action);
+public sealed record BlogCommentEvent(
+    Guid Key,
+    Guid PostKey,
+    Guid? ParentKey,
+    DateTimeOffset CreateAt,
+    BlogCommentAction Action
+);

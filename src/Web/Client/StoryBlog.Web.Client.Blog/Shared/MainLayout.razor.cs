@@ -1,5 +1,6 @@
-﻿using System.Numerics;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
 using MudBlazor;
 using StoryBlog.Web.MessageHub.Client;
@@ -7,6 +8,7 @@ using StoryBlog.Web.Microservices.Posts.Shared.Messages;
 
 namespace StoryBlog.Web.Client.Blog.Shared;
 
+[AllowAnonymous]
 public partial class MainLayout
 {
     private MessageHubConnection? hub;
@@ -50,8 +52,8 @@ public partial class MainLayout
         await hub.ConnectAsync();
     }
 
-    private async Task DoSendMessage(MouseEventArgs arg)
+    /*private async Task DoSendMessage(MouseEventArgs arg)
     {
         await hub!.SendMessageAsync("Test", new NewPostPublishedMessage(Guid.NewGuid(), "client-post-test"));
-    }
+    }*/
 }

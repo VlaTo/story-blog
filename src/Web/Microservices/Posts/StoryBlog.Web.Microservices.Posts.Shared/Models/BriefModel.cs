@@ -23,6 +23,14 @@ public class BriefModel : PostDetailsModel
     }
 
     [DataMember]
+    [JsonPropertyName(nameof(AllowedActions))]
+    public AllowedActions AllowedActions
+    {
+        get;
+        set;
+    }
+
+    [DataMember]
     [JsonPropertyName(nameof(CommentsCount))]
     public long CommentsCount
     {

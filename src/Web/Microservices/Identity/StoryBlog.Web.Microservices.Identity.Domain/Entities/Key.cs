@@ -19,7 +19,7 @@ public class Key : IEntity, IHasId<string>
         set;
     }
 
-    public DateTime Created
+    public DateTimeOffset Created
     {
         get;
         set;

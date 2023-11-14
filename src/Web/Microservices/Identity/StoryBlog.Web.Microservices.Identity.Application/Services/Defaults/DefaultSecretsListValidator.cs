@@ -22,7 +22,10 @@ internal sealed class DefaultSecretsListValidator : ISecretsListValidator
     /// <param name="clock">The clock.</param>
     /// <param name="validators">The validators.</param>
     /// <param name="logger">The logger.</param>
-    public DefaultSecretsListValidator(ISystemClock clock, IEnumerable<ISecretValidator> validators, ILogger<ISecretsListValidator> logger)
+    public DefaultSecretsListValidator(
+        ISystemClock clock,
+        IEnumerable<ISecretValidator> validators,
+        ILogger<ISecretsListValidator> logger)
     {
         this.clock = clock;
         this.validators = validators;
@@ -39,7 +42,7 @@ internal sealed class DefaultSecretsListValidator : ISecretsListValidator
     {
         var secretsArray = secrets as Secret[] ?? secrets.ToArray();
         var expiredSecrets = secretsArray
-            .Where(s => s.Expiration.HasExpired(clock.UtcNow.UtcDateTime))
+            .Where(s => s.Expiration.HasExpired(clock.UtcNow))
             .ToList();
 
         if (expiredSecrets.Any())
@@ -50,7 +53,7 @@ internal sealed class DefaultSecretsListValidator : ISecretsListValidator
         }
 
         var currentSecrets = secretsArray
-            .Where(s => false == s.Expiration.HasExpired(clock.UtcNow.UtcDateTime))
+            .Where(s => false == s.Expiration.HasExpired(clock.UtcNow))
             .ToArray();
 
         // see if a registered validator can validate the secret

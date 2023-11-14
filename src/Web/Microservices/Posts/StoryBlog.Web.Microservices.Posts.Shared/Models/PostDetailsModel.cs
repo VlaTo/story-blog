@@ -29,4 +29,12 @@ public class PostDetailsModel
         get;
         set;
     }
+
+    [DataMember]
+    [JsonPropertyName(nameof(Author))]
+    public string Author
+    {
+        get;
+        set;
+    }
 }

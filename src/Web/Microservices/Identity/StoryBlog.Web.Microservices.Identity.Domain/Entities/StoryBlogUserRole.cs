@@ -11,13 +11,13 @@ public sealed class StoryBlogUserRole : IdentityRole, IEntity, IHasId<string>
         set;
     }
 
-    public DateTime Created
+    public DateTimeOffset Created
     {
         get;
         set;
     }
 
-    public DateTime? Modified
+    public DateTimeOffset? Modified
     {
         get;
         set;

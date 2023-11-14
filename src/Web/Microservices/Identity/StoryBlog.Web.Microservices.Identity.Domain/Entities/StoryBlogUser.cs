@@ -11,13 +11,13 @@ public sealed class StoryBlogUser : IdentityUser, IEntity, IHasId<string>
         set;
     }
     
-    public DateTime Created
+    public DateTimeOffset Created
     {
         get;
         set;
     }
 
-    public DateTime? Modified
+    public DateTimeOffset? Modified
     {
         get;
         set;
@@ -29,7 +29,7 @@ public sealed class StoryBlogUser : IdentityUser, IEntity, IHasId<string>
         set;
     }
     
-    public DateTime? RefreshTokenExpiryTime
+    public DateTimeOffset? RefreshTokenExpiryTime
     {
         get;
         set;

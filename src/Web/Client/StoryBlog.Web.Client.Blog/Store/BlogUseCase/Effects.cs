@@ -10,43 +10,6 @@ namespace StoryBlog.Web.Client.Blog.Store.BlogUseCase;
 /// 
 /// </summary>
 // ReSharper disable once UnusedMember.Global
-public sealed class FetchPostReferenceActionEffect : Effect<FetchPostReferenceAction>
-{
-    private readonly ISlugClient client;
-
-    public FetchPostReferenceActionEffect(ISlugClient client)
-    {
-        this.client = client;
-    }
-
-    public override async Task HandleAsync(FetchPostReferenceAction action, IDispatcher dispatcher)
-    {
-        try
-        {
-            var postReference = await client.FetchPostReferenceAsync(action.Slug);
-
-            if (null != postReference)
-            {
-                var fetchPostAction = new FetchPostAction(postReference.Key);
-
-                dispatcher.Dispatch(fetchPostAction);
-
-                return;
-            }
-
-            dispatcher.Dispatch(new FetchPostFailedAction());
-        }
-        catch
-        {
-            dispatcher.Dispatch(new FetchPostFailedAction());
-        }
-    }
-}
-
-/// <summary>
-/// 
-/// </summary>
-// ReSharper disable once UnusedMember.Global
 public sealed class FetchPostEffect : Effect<FetchPostAction>
 {
     private readonly IPostsClient client;
@@ -64,11 +27,11 @@ public sealed class FetchPostEffect : Effect<FetchPostAction>
 
         try
         {
-            var post = await client.GetPostAsync(action.Key);
+            var post = await client.GetPostAsync(action.SlugOrKey);
 
             if (null != post)
             {
-                dispatcher.Dispatch(new FetchPostReadyAction(action.Key, post));
+                dispatcher.Dispatch(new FetchPostReadyAction(action.SlugOrKey, post));
                 
                 return;
             }
@@ -94,7 +57,10 @@ public sealed class FetchPostReadyEffect : Effect<FetchPostReadyAction>
 {
     public override Task HandleAsync(FetchPostReadyAction action, IDispatcher dispatcher)
     {
-        dispatcher.Dispatch(new FetchRootCommentsAction(action.Key, 1, 30));
+        var postKey = action.Post.Key;
+        
+        dispatcher.Dispatch(new FetchRootCommentsAction(postKey, 1, 30));
+        
         return Task.CompletedTask;
     }
 }

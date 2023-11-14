@@ -49,7 +49,7 @@ internal sealed class DeviceFlowCodeEntityConfiguration : IEntityTypeConfigurati
         builder
             .Property(x => x.CreationTime)
             .IsRequired(required: true)
-            .HasValueGenerator<UtcNowDateTimeValueGenerator>()
+            .HasValueGenerator<UtcNowDateTimeOffsetValueGenerator>()
             .ValueGeneratedOnAdd();
         builder
             .Property(x => x.Expiration)

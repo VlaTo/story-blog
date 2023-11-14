@@ -85,7 +85,7 @@ public class DeviceFlowCode : IEntity
     /// <value>
     /// The creation time.
     /// </value>
-    public DateTime CreationTime
+    public DateTimeOffset CreationTime
     {
         get;
         set;
@@ -97,7 +97,7 @@ public class DeviceFlowCode : IEntity
     /// <value>
     /// The expiration.
     /// </value>
-    public DateTime Expiration
+    public DateTimeOffset Expiration
     {
         get;
         set;

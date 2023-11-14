@@ -40,19 +40,19 @@ public class ServerSideSession : IEntity, IHasId<int>
         set;
     }
 
-    public DateTime Created
+    public DateTimeOffset Created
     {
         get;
         set;
     }
 
-    public DateTime? Renewed
+    public DateTimeOffset? Renewed
     {
         get;
         set;
     }
 
-    public DateTime? Expires
+    public DateTimeOffset? Expires
     {
         get;
         set;

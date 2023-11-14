@@ -185,11 +185,11 @@ public class GrantStore<T>
         string subjectId,
         string sessionId,
         string description,
-        DateTime created,
+        DateTimeOffset created,
         TimeSpan lifetime)
     {
         var handle = await CreateHandleAsync();
-        var expiration = created.Add(lifetime);
+        var expiration = created + lifetime;
 
         await StoreItemAsync(handle, item, clientId, subjectId, sessionId, description, created, expiration);
 
@@ -216,9 +216,9 @@ public class GrantStore<T>
         string subjectId,
         string sessionId,
         string description,
-        DateTime created,
-        DateTime? expiration,
-        DateTime? consumedTime = null)
+        DateTimeOffset created,
+        DateTimeOffset? expiration,
+        DateTimeOffset? consumedTime = null)
     {
         key = GetHashedKey(key);
         return StoreItemByHashedKeyAsync(key, item, clientId, subjectId, sessionId, description, created, expiration, consumedTime);
@@ -244,9 +244,9 @@ public class GrantStore<T>
         string subjectId,
         string? sessionId,
         string? description,
-        DateTime created,
-        DateTime? expiration,
-        DateTime? consumedTime = null)
+        DateTimeOffset created,
+        DateTimeOffset? expiration,
+        DateTimeOffset? consumedTime = null)
     {
         var json = Serializer.Serialize(item);
 

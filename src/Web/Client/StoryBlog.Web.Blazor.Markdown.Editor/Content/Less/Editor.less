@@ -7,7 +7,7 @@
     border-radius: var(--md-editor-default-borderradius);
     display: block;
     box-sizing: border-box;
-    background-image: url("background.png");
+    background-image: url("_content/StoryBlog.Web.Blazor.Markdown.Editor/background.png");
 
     .md-editor-toolbar {
         background-color: #FFFFFF;
@@ -69,6 +69,10 @@
 
         .md-editor-textarea {
             margin: 8px;
+
+            &:focus {
+                outline: none;
+            }
         }
     }
 }

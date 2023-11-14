@@ -104,7 +104,7 @@ public class RefreshToken
     /// <value>
     /// The creation time.
     /// </value>
-    public DateTime CreationTime
+    public DateTimeOffset CreationTime
     {
         get;
         set;
@@ -128,7 +128,7 @@ public class RefreshToken
     /// <value>
     /// The consumed time.
     /// </value>
-    public DateTime? ConsumedTime
+    public DateTimeOffset? ConsumedTime
     {
         get;
         set;

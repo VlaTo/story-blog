@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore.ValueGeneration;
 
 namespace StoryBlog.Web.Common.Infrastructure.Converters;
 
-public sealed class UtcNowDateTimeValueGenerator : ValueGenerator<DateTime>
+public sealed class UtcNowDateTimeOffsetValueGenerator : ValueGenerator<DateTimeOffset>
 {
     public override bool GeneratesTemporaryValues => false;
 
-    public override DateTime Next(EntityEntry entry) => DateTime.UtcNow;
+    public override DateTimeOffset Next(EntityEntry entry) => DateTimeOffset.UtcNow;
 }

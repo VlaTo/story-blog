@@ -26,7 +26,7 @@ public sealed class SerializedKey
     /// <summary>
     /// Date key was created.
     /// </summary>
-    public DateTime Created
+    public DateTimeOffset Created
     {
         get;
         set;

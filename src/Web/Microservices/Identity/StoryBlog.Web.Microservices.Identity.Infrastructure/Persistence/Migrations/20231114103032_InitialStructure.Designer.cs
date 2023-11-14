@@ -2,9 +2,9 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using StoryBlog.Web.Microservices.Identity.Infrastructure.Persistence;
 
 #nullable disable
@@ -12,40 +12,36 @@ using StoryBlog.Web.Microservices.Identity.Infrastructure.Persistence;
 namespace StoryBlog.Web.Microservices.Identity.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(StoryBlogIdentityDbContext))]
-    [Migration("20230529124343_AddIdentityEntities")]
-    partial class AddIdentityEntities
+    [Migration("20231114103032_InitialStructure")]
+    partial class InitialStructure
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.5")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128);
+                .HasAnnotation("ProductVersion", "7.0.13")
+                .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ClaimType")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<string>("ClaimValue")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<string>("RoleId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -53,28 +49,26 @@ namespace StoryBlog.Web.Microservices.Identity.Infrastructure.Persistence.Migrat
 
                     b.ToTable("AspNetRoleClaims", (string)null);
 
-                    b.HasDiscriminator<string>("Discriminator").HasValue("IdentityRoleClaim<string>");
-
-                    b.UseTphMappingStrategy();
+                    b.UseTptMappingStrategy();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ClaimType")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<string>("ClaimValue")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<string>("UserId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -86,17 +80,17 @@ namespace StoryBlog.Web.Microservices.Identity.Infrastructure.Persistence.Migrat
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("text");
 
                     b.Property<string>("ProviderKey")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("text");
 
                     b.Property<string>("ProviderDisplayName")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<string>("UserId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("text");
 
                     b.HasKey("LoginProvider", "ProviderKey");
 
@@ -108,10 +102,10 @@ namespace StoryBlog.Web.Microservices.Identity.Infrastructure.Persistence.Migrat
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
                 {
                     b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("text");
 
                     b.Property<string>("RoleId")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("text");
 
                     b.HasKey("UserId", "RoleId");
 
@@ -123,16 +117,16 @@ namespace StoryBlog.Web.Microservices.Identity.Infrastructure.Persistence.Migrat
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
                     b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("text");
 
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("text");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("text");
 
                     b.Property<string>("Value")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.HasKey("UserId", "LoginProvider", "Name");
 
@@ -143,63 +137,63 @@ namespace StoryBlog.Web.Microservices.Identity.Infrastructure.Persistence.Migrat
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("AllowedAccessTokenSigningAlgorithms")
                         .IsRequired()
                         .HasMaxLength(1024)
-                        .HasColumnType("nvarchar(1024)");
+                        .HasColumnType("character varying(1024)");
 
-                    b.Property<DateTime>("Created")
+                    b.Property<DateTimeOffset>("Created")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(1024)
                         .IsUnicode(true)
-                        .HasColumnType("nvarchar(1024)");
+                        .HasColumnType("character varying(1024)");
 
                     b.Property<string>("DisplayName")
                         .IsRequired()
                         .HasMaxLength(256)
                         .IsUnicode(true)
-                        .HasColumnType("nvarchar(256)");
+                        .HasColumnType("character varying(256)");
 
                     b.Property<bool>("Enabled")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
+                        .HasColumnType("boolean")
                         .HasDefaultValue(true);
 
-                    b.Property<DateTime?>("LastAccessed")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset?>("LastAccessed")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(256)
                         .IsUnicode(true)
-                        .HasColumnType("nvarchar(256)");
+                        .HasColumnType("character varying(256)");
 
                     b.Property<bool>("NonEditable")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
+                        .HasColumnType("boolean")
                         .HasDefaultValue(false);
 
                     b.Property<bool>("RequireResourceIndicator")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
+                        .HasColumnType("boolean")
                         .HasDefaultValue(false);
 
                     b.Property<bool>("ShowInDiscoveryDocument")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
+                        .HasColumnType("boolean")
                         .HasDefaultValue(true);
 
-                    b.Property<DateTime?>("Updated")
+                    b.Property<DateTimeOffset?>("Updated")
                         .ValueGeneratedOnUpdate()
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
 
@@ -212,61 +206,61 @@ namespace StoryBlog.Web.Microservices.Identity.Infrastructure.Persistence.Migrat
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("Created")
+                    b.Property<DateTimeOffset>("Created")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Description")
                         .HasMaxLength(32767)
                         .IsUnicode(true)
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("character varying(32767)");
 
                     b.Property<string>("DisplayName")
                         .HasMaxLength(156)
                         .IsUnicode(true)
-                        .HasColumnType("nvarchar(156)");
+                        .HasColumnType("character varying(156)");
 
                     b.Property<bool>("Emphasize")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
+                        .HasColumnType("boolean")
                         .HasDefaultValue(false);
 
                     b.Property<bool>("Enabled")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
+                        .HasColumnType("boolean")
                         .HasDefaultValue(true);
 
-                    b.Property<DateTime?>("LastAccessed")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset?>("LastAccessed")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(256)
                         .IsUnicode(false)
-                        .HasColumnType("varchar(256)");
+                        .HasColumnType("character varying(256)");
 
                     b.Property<bool>("NonEditable")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
+                        .HasColumnType("boolean")
                         .HasDefaultValue(false);
 
                     b.Property<bool>("Required")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
+                        .HasColumnType("boolean")
                         .HasDefaultValue(false);
 
                     b.Property<bool>("ShowInDiscoveryDocument")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
+                        .HasColumnType("boolean")
                         .HasDefaultValue(true);
 
-                    b.Property<DateTime?>("Updated")
+                    b.Property<DateTimeOffset?>("Updated")
                         .ValueGeneratedOnUpdate()
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
 
@@ -279,9 +273,9 @@ namespace StoryBlog.Web.Microservices.Identity.Infrastructure.Persistence.Migrat
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<long>("AbsoluteRefreshTokenLifetime")
                         .ValueGeneratedOnAdd()
@@ -295,41 +289,41 @@ namespace StoryBlog.Web.Microservices.Identity.Infrastructure.Persistence.Migrat
 
                     b.Property<int>("AccessTokenType")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
+                        .HasColumnType("integer")
                         .HasDefaultValue(0);
 
                     b.Property<bool>("AllowAccessTokensViaBrowser")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
+                        .HasColumnType("boolean")
                         .HasDefaultValue(false);
 
                     b.Property<bool>("AllowOfflineAccess")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
+                        .HasColumnType("boolean")
                         .HasDefaultValue(false);
 
                     b.Property<bool>("AllowPlainTextPkce")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
+                        .HasColumnType("boolean")
                         .HasDefaultValue(false);
 
                     b.Property<bool>("AllowRememberConsent")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
+                        .HasColumnType("boolean")
                         .HasDefaultValue(true);
 
                     b.Property<string>("AllowedIdentityTokenSigningAlgorithms")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<bool>("AlwaysIncludeUserClaimsInIdToken")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
+                        .HasColumnType("boolean")
                         .HasDefaultValue(false);
 
                     b.Property<bool>("AlwaysSendClientClaims")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
+                        .HasColumnType("boolean")
                         .HasDefaultValue(true);
 
                     b.Property<long>("AuthorizationCodeLifetime")
@@ -339,49 +333,51 @@ namespace StoryBlog.Web.Microservices.Identity.Infrastructure.Persistence.Migrat
 
                     b.Property<bool>("BackChannelLogoutSessionRequired")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
+                        .HasColumnType("boolean")
                         .HasDefaultValue(true);
 
                     b.Property<string>("BackChannelLogoutUri")
                         .HasMaxLength(2083)
-                        .HasColumnType("nvarchar(2083)");
+                        .HasColumnType("character varying(2083)");
 
-                    b.Property<long?>("CibaLifetime")
-                        .HasColumnType("bigint");
+                    b.Property<long>("CibaLifetime")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasDefaultValue(36000000000L);
 
                     b.Property<string>("ClientClaimsPrefix")
                         .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)")
+                        .HasColumnType("character varying(256)")
                         .HasDefaultValue("client_");
 
                     b.Property<string>("ClientId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<string>("ClientName")
                         .IsRequired()
                         .HasMaxLength(256)
                         .IsUnicode(true)
-                        .HasColumnType("nvarchar(256)");
+                        .HasColumnType("character varying(256)");
 
                     b.Property<string>("ClientUri")
                         .IsRequired()
                         .HasMaxLength(2083)
-                        .HasColumnType("nvarchar(2083)");
+                        .HasColumnType("character varying(2083)");
 
                     b.Property<long?>("ConsentLifetime")
                         .HasColumnType("bigint");
 
-                    b.Property<DateTime>("Created")
+                    b.Property<DateTimeOffset>("Created")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Description")
                         .HasMaxLength(1024)
                         .IsUnicode(true)
-                        .HasColumnType("nvarchar(1024)");
+                        .HasColumnType("character varying(1024)");
 
                     b.Property<long>("DeviceCodeLifetime")
                         .ValueGeneratedOnAdd()
@@ -390,22 +386,22 @@ namespace StoryBlog.Web.Microservices.Identity.Infrastructure.Persistence.Migrat
 
                     b.Property<bool>("EnableLocalLogin")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
+                        .HasColumnType("boolean")
                         .HasDefaultValue(true);
 
                     b.Property<bool>("Enabled")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
+                        .HasColumnType("boolean")
                         .HasDefaultValue(true);
 
                     b.Property<bool>("FrontChannelLogoutSessionRequired")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
+                        .HasColumnType("boolean")
                         .HasDefaultValue(true);
 
                     b.Property<string>("FrontChannelLogoutUri")
                         .HasMaxLength(2083)
-                        .HasColumnType("nvarchar(2083)");
+                        .HasColumnType("character varying(2083)");
 
                     b.Property<long>("IdentityTokenLifetime")
                         .ValueGeneratedOnAdd()
@@ -414,25 +410,25 @@ namespace StoryBlog.Web.Microservices.Identity.Infrastructure.Persistence.Migrat
 
                     b.Property<bool>("IncludeJwtId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
+                        .HasColumnType("boolean")
                         .HasDefaultValue(false);
 
-                    b.Property<DateTime?>("LastAccessed")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset?>("LastAccessed")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("LogoUri")
                         .HasMaxLength(2083)
-                        .HasColumnType("nvarchar(2083)");
+                        .HasColumnType("character varying(2083)");
 
                     b.Property<bool>("NonEditable")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
+                        .HasColumnType("boolean")
                         .HasDefaultValue(false);
 
                     b.Property<string>("PairWiseSubjectSalt")
                         .IsRequired()
                         .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasColumnType("character varying(256)");
 
                     b.Property<long?>("PollingInterval")
                         .HasColumnType("bigint");
@@ -440,37 +436,37 @@ namespace StoryBlog.Web.Microservices.Identity.Infrastructure.Persistence.Migrat
                     b.Property<string>("ProtocolType")
                         .IsRequired()
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("nvarchar(max)")
+                        .HasColumnType("text")
                         .HasDefaultValue("oidc");
 
                     b.Property<int>("RefreshTokenExpiration")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
+                        .HasColumnType("integer")
                         .HasDefaultValue(1);
 
                     b.Property<int>("RefreshTokenUsage")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
+                        .HasColumnType("integer")
                         .HasDefaultValue(1);
 
                     b.Property<bool>("RequireClientSecret")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
+                        .HasColumnType("boolean")
                         .HasDefaultValue(true);
 
                     b.Property<bool>("RequireConsent")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
+                        .HasColumnType("boolean")
                         .HasDefaultValue(false);
 
                     b.Property<bool>("RequirePkce")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
+                        .HasColumnType("boolean")
                         .HasDefaultValue(true);
 
                     b.Property<bool>("RequireRequestObject")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
+                        .HasColumnType("boolean")
                         .HasDefaultValue(false);
 
                     b.Property<long>("SlidingRefreshTokenLifetime")
@@ -479,16 +475,16 @@ namespace StoryBlog.Web.Microservices.Identity.Infrastructure.Persistence.Migrat
                         .HasDefaultValue(12960000000000L);
 
                     b.Property<bool>("UpdateAccessTokenClaimsOnRefresh")
-                        .HasColumnType("bit");
+                        .HasColumnType("boolean");
 
-                    b.Property<DateTime?>("Updated")
+                    b.Property<DateTimeOffset?>("Updated")
                         .ValueGeneratedOnUpdate()
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("UserCodeType")
                         .IsRequired()
                         .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasColumnType("character varying(256)");
 
                     b.Property<long?>("UserSsoLifetime")
                         .HasColumnType("bigint");
@@ -503,44 +499,44 @@ namespace StoryBlog.Web.Microservices.Identity.Infrastructure.Persistence.Migrat
                     b.Property<string>("ClientId")
                         .IsRequired()
                         .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasColumnType("character varying(256)");
 
-                    b.Property<DateTime>("CreationTime")
+                    b.Property<DateTimeOffset>("CreationTime")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Data")
                         .IsRequired()
                         .HasMaxLength(32767)
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("character varying(32767)");
 
                     b.Property<string>("Description")
                         .HasMaxLength(32767)
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("character varying(32767)");
 
                     b.Property<string>("DeviceCode")
                         .IsRequired()
                         .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasColumnType("character varying(256)");
 
-                    b.Property<DateTime>("Expiration")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset>("Expiration")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("SessionId")
                         .IsRequired()
                         .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("character varying(128)");
 
                     b.Property<string>("SubjectId")
                         .IsRequired()
                         .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasColumnType("character varying(256)");
 
                     b.Property<string>("UserCode")
                         .IsRequired()
                         .HasMaxLength(256)
                         .IsUnicode(false)
-                        .HasColumnType("varchar(256)");
+                        .HasColumnType("character varying(256)");
 
                     b.HasIndex("ClientId", "DeviceCode");
 
@@ -551,53 +547,53 @@ namespace StoryBlog.Web.Microservices.Identity.Infrastructure.Persistence.Migrat
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("Created")
+                    b.Property<DateTimeOffset>("Created")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("DisplayName")
                         .HasMaxLength(32767)
                         .IsUnicode(true)
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("character varying(32767)");
 
                     b.Property<bool>("Enabled")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
+                        .HasColumnType("boolean")
                         .HasDefaultValue(true);
 
-                    b.Property<DateTime?>("LastAccessed")
+                    b.Property<DateTimeOffset?>("LastAccessed")
                         .IsRequired()
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<bool>("NonEditable")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
+                        .HasColumnType("boolean")
                         .HasDefaultValue(false);
 
                     b.Property<string>("Properties")
                         .IsRequired()
                         .HasMaxLength(32767)
                         .IsUnicode(false)
-                        .HasColumnType("varchar(max)");
+                        .HasColumnType("character varying(32767)");
 
                     b.Property<string>("Scheme")
                         .IsRequired()
                         .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasColumnType("character varying(256)");
 
                     b.Property<string>("Type")
                         .IsRequired()
                         .HasMaxLength(256)
                         .IsUnicode(false)
-                        .HasColumnType("varchar(256)");
+                        .HasColumnType("character varying(256)");
 
-                    b.Property<DateTime?>("Updated")
+                    b.Property<DateTimeOffset?>("Updated")
                         .ValueGeneratedOnUpdate()
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
 
@@ -610,59 +606,59 @@ namespace StoryBlog.Web.Microservices.Identity.Infrastructure.Persistence.Migrat
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("Created")
+                    b.Property<DateTimeOffset>("Created")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Description")
                         .HasMaxLength(2048)
                         .IsUnicode(true)
-                        .HasColumnType("nvarchar(2048)");
+                        .HasColumnType("character varying(2048)");
 
                     b.Property<string>("DisplayName")
                         .IsRequired()
                         .HasMaxLength(1024)
                         .IsUnicode(true)
-                        .HasColumnType("nvarchar(1024)");
+                        .HasColumnType("character varying(1024)");
 
                     b.Property<bool>("Emphasize")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
+                        .HasColumnType("boolean")
                         .HasDefaultValue(false);
 
                     b.Property<bool>("Enabled")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
+                        .HasColumnType("boolean")
                         .HasDefaultValue(true);
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(1024)
                         .IsUnicode(true)
-                        .HasColumnType("nvarchar(1024)");
+                        .HasColumnType("character varying(1024)");
 
                     b.Property<bool>("NonEditable")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
+                        .HasColumnType("boolean")
                         .HasDefaultValue(false);
 
                     b.Property<bool>("Required")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
+                        .HasColumnType("boolean")
                         .HasDefaultValue(false);
 
                     b.Property<bool>("ShowInDiscoveryDocument")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
+                        .HasColumnType("boolean")
                         .HasDefaultValue(true);
 
-                    b.Property<DateTime?>("Updated")
+                    b.Property<DateTimeOffset?>("Updated")
                         .ValueGeneratedOnUpdate()
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
 
@@ -672,41 +668,41 @@ namespace StoryBlog.Web.Microservices.Identity.Infrastructure.Persistence.Migrat
             modelBuilder.Entity("StoryBlog.Web.Microservices.Identity.Domain.Entities.Key", b =>
                 {
                     b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("text");
 
                     b.Property<string>("Algorithm")
                         .IsRequired()
                         .HasMaxLength(1024)
-                        .HasColumnType("nvarchar(1024)");
+                        .HasColumnType("character varying(1024)");
 
-                    b.Property<DateTime>("Created")
+                    b.Property<DateTimeOffset>("Created")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Data")
                         .IsRequired()
                         .HasMaxLength(32767)
                         .IsUnicode(true)
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("character varying(32767)");
 
                     b.Property<bool>("DataProtected")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
+                        .HasColumnType("boolean")
                         .HasDefaultValue(false);
 
                     b.Property<bool>("IsX509Certificate")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
+                        .HasColumnType("boolean")
                         .HasDefaultValue(false);
 
                     b.Property<string>("Use")
                         .IsRequired()
                         .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasColumnType("character varying(256)");
 
                     b.Property<int>("Version")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
+                        .HasColumnType("integer")
                         .HasDefaultValue(0);
 
                     b.HasKey("Id");
@@ -720,47 +716,47 @@ namespace StoryBlog.Web.Microservices.Identity.Infrastructure.Persistence.Migrat
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
                     b.Property<string>("ClientId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
-                    b.Property<DateTime?>("ConsumedTime")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset?>("ConsumedTime")
+                        .HasColumnType("timestamp with time zone");
 
-                    b.Property<DateTime>("CreationTime")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset>("CreationTime")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Data")
                         .HasMaxLength(32767)
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("character varying(32767)");
 
                     b.Property<string>("Description")
                         .HasMaxLength(32767)
                         .IsUnicode(true)
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("character varying(32767)");
 
-                    b.Property<DateTime?>("Expiration")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset?>("Expiration")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Key")
                         .IsRequired()
                         .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasColumnType("character varying(256)");
 
                     b.Property<string>("SessionId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<string>("SubjectId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<string>("Type")
                         .IsRequired()
                         .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasColumnType("character varying(256)");
 
                     b.HasKey("Id");
 
@@ -773,46 +769,46 @@ namespace StoryBlog.Web.Microservices.Identity.Infrastructure.Persistence.Migrat
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset>("Created")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Data")
                         .HasMaxLength(32767)
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("character varying(32767)");
 
                     b.Property<string>("DisplayName")
                         .IsRequired()
                         .HasMaxLength(32767)
                         .IsUnicode(true)
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("character varying(32767)");
 
-                    b.Property<DateTime?>("Expires")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset?>("Expires")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Key")
                         .IsRequired()
                         .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasColumnType("character varying(256)");
 
-                    b.Property<DateTime?>("Renewed")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset?>("Renewed")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Scheme")
                         .IsRequired()
                         .HasMaxLength(1024)
-                        .HasColumnType("nvarchar(1024)");
+                        .HasColumnType("character varying(1024)");
 
                     b.Property<string>("SessionId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<string>("SubjectId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -824,71 +820,71 @@ namespace StoryBlog.Web.Microservices.Identity.Infrastructure.Persistence.Migrat
             modelBuilder.Entity("StoryBlog.Web.Microservices.Identity.Domain.Entities.StoryBlogUser", b =>
                 {
                     b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("text");
 
                     b.Property<int>("AccessFailedCount")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
-                    b.Property<DateTime>("Created")
+                    b.Property<DateTimeOffset>("Created")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasColumnType("character varying(256)");
 
                     b.Property<bool>("EmailConfirmed")
-                        .HasColumnType("bit");
+                        .HasColumnType("boolean");
 
                     b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
+                        .HasColumnType("boolean");
 
                     b.Property<bool>("LockoutEnabled")
-                        .HasColumnType("bit");
+                        .HasColumnType("boolean");
 
                     b.Property<DateTimeOffset?>("LockoutEnd")
-                        .HasColumnType("datetimeoffset");
+                        .HasColumnType("timestamp with time zone");
 
-                    b.Property<DateTime?>("Modified")
+                    b.Property<DateTimeOffset?>("Modified")
                         .ValueGeneratedOnUpdate()
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasColumnType("character varying(256)");
 
                     b.Property<string>("NormalizedUserName")
                         .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasColumnType("character varying(256)");
 
                     b.Property<string>("PasswordHash")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<string>("PhoneNumber")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<bool>("PhoneNumberConfirmed")
-                        .HasColumnType("bit");
+                        .HasColumnType("boolean");
 
                     b.Property<string>("RefreshToken")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
-                    b.Property<DateTime?>("RefreshTokenExpiryTime")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset?>("RefreshTokenExpiryTime")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("SecurityStamp")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<bool>("TwoFactorEnabled")
-                        .HasColumnType("bit");
+                        .HasColumnType("boolean");
 
                     b.Property<string>("UserName")
                         .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasColumnType("character varying(256)");
 
                     b.HasKey("Id");
 
@@ -897,73 +893,73 @@ namespace StoryBlog.Web.Microservices.Identity.Infrastructure.Persistence.Migrat
 
                     b.HasIndex("NormalizedUserName")
                         .IsUnique()
-                        .HasDatabaseName("UserNameIndex")
-                        .HasFilter("[NormalizedUserName] IS NOT NULL");
+                        .HasDatabaseName("UserNameIndex");
 
-                    b.ToTable("AspNetUsers", (string)null);
+                    b.ToTable("Users", "Identity");
                 });
 
             modelBuilder.Entity("StoryBlog.Web.Microservices.Identity.Domain.Entities.StoryBlogUserRole", b =>
                 {
                     b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("text");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
-                    b.Property<DateTime>("Created")
+                    b.Property<DateTimeOffset>("Created")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Description")
                         .HasMaxLength(256)
                         .IsUnicode(true)
-                        .HasColumnType("nvarchar(256)");
+                        .HasColumnType("character varying(256)");
 
-                    b.Property<DateTime?>("Modified")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset?>("Modified")
+                        .ValueGeneratedOnUpdate()
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Name")
                         .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasColumnType("character varying(256)");
 
                     b.Property<string>("NormalizedName")
                         .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasColumnType("character varying(256)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedName")
                         .IsUnique()
-                        .HasDatabaseName("RoleNameIndex")
-                        .HasFilter("[NormalizedName] IS NOT NULL");
+                        .HasDatabaseName("RoleNameIndex");
 
-                    b.ToTable("AspNetRoles", (string)null);
+                    b.ToTable("UserRoles", "Identity");
                 });
 
             modelBuilder.Entity("StoryBlog.Web.Microservices.Identity.Domain.Entities.StoryBlogUserRoleClaim", b =>
                 {
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>");
 
-                    b.Property<DateTime>("Created")
+                    b.Property<DateTimeOffset>("Created")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Description")
                         .HasMaxLength(256)
                         .IsUnicode(true)
-                        .HasColumnType("nvarchar(256)");
+                        .HasColumnType("character varying(256)");
 
                     b.Property<string>("Group")
                         .HasMaxLength(100)
                         .IsUnicode(true)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("character varying(100)");
 
-                    b.Property<DateTime?>("Modified")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset?>("Modified")
+                        .ValueGeneratedOnUpdate()
+                        .HasColumnType("timestamp with time zone");
 
-                    b.HasDiscriminator().HasValue("StoryBlogUserRoleClaim");
+                    b.ToTable("UserRoleClaims", "Identity");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -1023,17 +1019,17 @@ namespace StoryBlog.Web.Microservices.Identity.Infrastructure.Persistence.Migrat
                         {
                             b1.Property<int>("Id")
                                 .ValueGeneratedOnAdd()
-                                .HasColumnType("int");
+                                .HasColumnType("integer");
 
-                            SqlServerPropertyBuilderExtensions.UseIdentityColumn(b1.Property<int>("Id"));
+                            NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b1.Property<int>("Id"));
 
                             b1.Property<int>("ApiResourceId")
-                                .HasColumnType("int");
+                                .HasColumnType("integer");
 
                             b1.Property<string>("Type")
                                 .IsRequired()
                                 .HasMaxLength(256)
-                                .HasColumnType("nvarchar(256)");
+                                .HasColumnType("character varying(256)");
 
                             b1.HasKey("Id");
 
@@ -1053,23 +1049,23 @@ namespace StoryBlog.Web.Microservices.Identity.Infrastructure.Persistence.Migrat
                         {
                             b1.Property<int>("Id")
                                 .ValueGeneratedOnAdd()
-                                .HasColumnType("int");
+                                .HasColumnType("integer");
 
-                            SqlServerPropertyBuilderExtensions.UseIdentityColumn(b1.Property<int>("Id"));
+                            NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b1.Property<int>("Id"));
 
                             b1.Property<int>("ApiResourceId")
-                                .HasColumnType("int");
+                                .HasColumnType("integer");
 
                             b1.Property<string>("Key")
                                 .IsRequired()
                                 .HasMaxLength(256)
-                                .HasColumnType("nvarchar(256)");
+                                .HasColumnType("character varying(256)");
 
                             b1.Property<string>("Value")
                                 .IsRequired()
                                 .HasMaxLength(32767)
                                 .IsUnicode(true)
-                                .HasColumnType("nvarchar(max)");
+                                .HasColumnType("character varying(32767)");
 
                             b1.HasKey("Id");
 
@@ -1087,18 +1083,18 @@ namespace StoryBlog.Web.Microservices.Identity.Infrastructure.Persistence.Migrat
                         {
                             b1.Property<int>("Id")
                                 .ValueGeneratedOnAdd()
-                                .HasColumnType("int");
+                                .HasColumnType("integer");
 
-                            SqlServerPropertyBuilderExtensions.UseIdentityColumn(b1.Property<int>("Id"));
+                            NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b1.Property<int>("Id"));
 
                             b1.Property<int>("ApiResourceId")
-                                .HasColumnType("int");
+                                .HasColumnType("integer");
 
                             b1.Property<string>("Scope")
                                 .IsRequired()
                                 .HasMaxLength(256)
                                 .IsUnicode(true)
-                                .HasColumnType("nvarchar(256)");
+                                .HasColumnType("character varying(256)");
 
                             b1.HasKey("Id");
 
@@ -1118,36 +1114,36 @@ namespace StoryBlog.Web.Microservices.Identity.Infrastructure.Persistence.Migrat
                         {
                             b1.Property<int>("Id")
                                 .ValueGeneratedOnAdd()
-                                .HasColumnType("int");
+                                .HasColumnType("integer");
 
-                            SqlServerPropertyBuilderExtensions.UseIdentityColumn(b1.Property<int>("Id"));
+                            NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b1.Property<int>("Id"));
 
                             b1.Property<int>("ApiResourceId")
-                                .HasColumnType("int");
+                                .HasColumnType("integer");
 
-                            b1.Property<DateTime>("Created")
+                            b1.Property<DateTimeOffset>("Created")
                                 .ValueGeneratedOnAdd()
-                                .HasColumnType("datetime2");
+                                .HasColumnType("timestamp with time zone");
 
                             b1.Property<string>("Description")
                                 .IsRequired()
                                 .HasMaxLength(32767)
                                 .IsUnicode(true)
-                                .HasColumnType("nvarchar(max)");
+                                .HasColumnType("character varying(32767)");
 
-                            b1.Property<DateTime?>("Expiration")
-                                .HasColumnType("datetime2");
+                            b1.Property<DateTimeOffset?>("Expiration")
+                                .HasColumnType("timestamp with time zone");
 
                             b1.Property<string>("Type")
                                 .IsRequired()
                                 .HasMaxLength(256)
-                                .HasColumnType("nvarchar(256)");
+                                .HasColumnType("character varying(256)");
 
                             b1.Property<string>("Value")
                                 .IsRequired()
                                 .HasMaxLength(32767)
                                 .IsUnicode(true)
-                                .HasColumnType("nvarchar(max)");
+                                .HasColumnType("character varying(32767)");
 
                             b1.HasKey("Id");
 
@@ -1178,17 +1174,17 @@ namespace StoryBlog.Web.Microservices.Identity.Infrastructure.Persistence.Migrat
                         {
                             b1.Property<int>("Id")
                                 .ValueGeneratedOnAdd()
-                                .HasColumnType("int");
+                                .HasColumnType("integer");
 
-                            SqlServerPropertyBuilderExtensions.UseIdentityColumn(b1.Property<int>("Id"));
+                            NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b1.Property<int>("Id"));
 
                             b1.Property<int>("ScopeId")
-                                .HasColumnType("int");
+                                .HasColumnType("integer");
 
                             b1.Property<string>("Type")
                                 .IsRequired()
                                 .HasMaxLength(256)
-                                .HasColumnType("nvarchar(256)");
+                                .HasColumnType("character varying(256)");
 
                             b1.HasKey("Id");
 
@@ -1208,23 +1204,23 @@ namespace StoryBlog.Web.Microservices.Identity.Infrastructure.Persistence.Migrat
                         {
                             b1.Property<int>("Id")
                                 .ValueGeneratedOnAdd()
-                                .HasColumnType("int");
+                                .HasColumnType("integer");
 
-                            SqlServerPropertyBuilderExtensions.UseIdentityColumn(b1.Property<int>("Id"));
+                            NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b1.Property<int>("Id"));
 
                             b1.Property<string>("Key")
                                 .IsRequired()
                                 .HasMaxLength(256)
-                                .HasColumnType("nvarchar(256)");
+                                .HasColumnType("character varying(256)");
 
                             b1.Property<int>("ScopeId")
-                                .HasColumnType("int");
+                                .HasColumnType("integer");
 
                             b1.Property<string>("Value")
                                 .IsRequired()
                                 .HasMaxLength(32767)
                                 .IsUnicode(true)
-                                .HasColumnType("nvarchar(max)");
+                                .HasColumnType("character varying(32767)");
 
                             b1.HasKey("Id");
 
@@ -1249,23 +1245,23 @@ namespace StoryBlog.Web.Microservices.Identity.Infrastructure.Persistence.Migrat
                         {
                             b1.Property<int>("Id")
                                 .ValueGeneratedOnAdd()
-                                .HasColumnType("int");
+                                .HasColumnType("integer");
 
-                            SqlServerPropertyBuilderExtensions.UseIdentityColumn(b1.Property<int>("Id"));
+                            NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b1.Property<int>("Id"));
 
                             b1.Property<int>("ClientId")
-                                .HasColumnType("int");
+                                .HasColumnType("integer");
 
                             b1.Property<string>("Type")
                                 .IsRequired()
                                 .HasMaxLength(256)
-                                .HasColumnType("nvarchar(256)");
+                                .HasColumnType("character varying(256)");
 
                             b1.Property<string>("Value")
                                 .IsRequired()
                                 .HasMaxLength(32767)
                                 .IsUnicode(true)
-                                .HasColumnType("nvarchar(max)");
+                                .HasColumnType("character varying(32767)");
 
                             b1.HasKey("Id");
 
@@ -1285,17 +1281,17 @@ namespace StoryBlog.Web.Microservices.Identity.Infrastructure.Persistence.Migrat
                         {
                             b1.Property<int>("Id")
                                 .ValueGeneratedOnAdd()
-                                .HasColumnType("int");
+                                .HasColumnType("integer");
 
-                            SqlServerPropertyBuilderExtensions.UseIdentityColumn(b1.Property<int>("Id"));
+                            NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b1.Property<int>("Id"));
 
                             b1.Property<int>("ClientId")
-                                .HasColumnType("int");
+                                .HasColumnType("integer");
 
                             b1.Property<string>("Origin")
                                 .IsRequired()
                                 .HasMaxLength(2083)
-                                .HasColumnType("nvarchar(2083)");
+                                .HasColumnType("character varying(2083)");
 
                             b1.HasKey("Id");
 
@@ -1315,17 +1311,17 @@ namespace StoryBlog.Web.Microservices.Identity.Infrastructure.Persistence.Migrat
                         {
                             b1.Property<int>("Id")
                                 .ValueGeneratedOnAdd()
-                                .HasColumnType("int");
+                                .HasColumnType("integer");
 
-                            SqlServerPropertyBuilderExtensions.UseIdentityColumn(b1.Property<int>("Id"));
+                            NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b1.Property<int>("Id"));
 
                             b1.Property<int>("ClientId")
-                                .HasColumnType("int");
+                                .HasColumnType("integer");
 
                             b1.Property<string>("GrantType")
                                 .IsRequired()
                                 .HasMaxLength(256)
-                                .HasColumnType("nvarchar(256)");
+                                .HasColumnType("character varying(256)");
 
                             b1.HasKey("Id");
 
@@ -1345,17 +1341,17 @@ namespace StoryBlog.Web.Microservices.Identity.Infrastructure.Persistence.Migrat
                         {
                             b1.Property<int>("Id")
                                 .ValueGeneratedOnAdd()
-                                .HasColumnType("int");
+                                .HasColumnType("integer");
 
-                            SqlServerPropertyBuilderExtensions.UseIdentityColumn(b1.Property<int>("Id"));
+                            NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b1.Property<int>("Id"));
 
                             b1.Property<int>("ClientId")
-                                .HasColumnType("int");
+                                .HasColumnType("integer");
 
                             b1.Property<string>("Provider")
                                 .IsRequired()
                                 .HasMaxLength(256)
-                                .HasColumnType("nvarchar(256)");
+                                .HasColumnType("character varying(256)");
 
                             b1.HasKey("Id");
 
@@ -1376,17 +1372,17 @@ namespace StoryBlog.Web.Microservices.Identity.Infrastructure.Persistence.Migrat
                         {
                             b1.Property<int>("Id")
                                 .ValueGeneratedOnAdd()
-                                .HasColumnType("int");
+                                .HasColumnType("integer");
 
-                            SqlServerPropertyBuilderExtensions.UseIdentityColumn(b1.Property<int>("Id"));
+                            NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b1.Property<int>("Id"));
 
                             b1.Property<int>("ClientId")
-                                .HasColumnType("int");
+                                .HasColumnType("integer");
 
                             b1.Property<string>("PostLogoutRedirectUri")
                                 .IsRequired()
                                 .HasMaxLength(2083)
-                                .HasColumnType("nvarchar(2083)");
+                                .HasColumnType("character varying(2083)");
 
                             b1.HasKey("Id");
 
@@ -1407,23 +1403,23 @@ namespace StoryBlog.Web.Microservices.Identity.Infrastructure.Persistence.Migrat
                         {
                             b1.Property<int>("Id")
                                 .ValueGeneratedOnAdd()
-                                .HasColumnType("int");
+                                .HasColumnType("integer");
 
-                            SqlServerPropertyBuilderExtensions.UseIdentityColumn(b1.Property<int>("Id"));
+                            NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b1.Property<int>("Id"));
 
                             b1.Property<int>("ClientId")
-                                .HasColumnType("int");
+                                .HasColumnType("integer");
 
                             b1.Property<string>("Key")
                                 .IsRequired()
                                 .HasMaxLength(256)
-                                .HasColumnType("nvarchar(256)");
+                                .HasColumnType("character varying(256)");
 
                             b1.Property<string>("Value")
                                 .IsRequired()
                                 .HasMaxLength(32767)
                                 .IsUnicode(true)
-                                .HasColumnType("nvarchar(max)");
+                                .HasColumnType("character varying(32767)");
 
                             b1.HasKey("Id");
 
@@ -1443,17 +1439,17 @@ namespace StoryBlog.Web.Microservices.Identity.Infrastructure.Persistence.Migrat
                         {
                             b1.Property<int>("Id")
                                 .ValueGeneratedOnAdd()
-                                .HasColumnType("int");
+                                .HasColumnType("integer");
 
-                            SqlServerPropertyBuilderExtensions.UseIdentityColumn(b1.Property<int>("Id"));
+                            NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b1.Property<int>("Id"));
 
                             b1.Property<int>("ClientId")
-                                .HasColumnType("int");
+                                .HasColumnType("integer");
 
                             b1.Property<string>("RedirectUri")
                                 .IsRequired()
                                 .HasMaxLength(2083)
-                                .HasColumnType("nvarchar(2083)");
+                                .HasColumnType("character varying(2083)");
 
                             b1.HasKey("Id");
 
@@ -1474,18 +1470,18 @@ namespace StoryBlog.Web.Microservices.Identity.Infrastructure.Persistence.Migrat
                         {
                             b1.Property<int>("Id")
                                 .ValueGeneratedOnAdd()
-                                .HasColumnType("int");
+                                .HasColumnType("integer");
 
-                            SqlServerPropertyBuilderExtensions.UseIdentityColumn(b1.Property<int>("Id"));
+                            NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b1.Property<int>("Id"));
 
                             b1.Property<int>("ClientId")
-                                .HasColumnType("int");
+                                .HasColumnType("integer");
 
                             b1.Property<string>("Scope")
                                 .IsRequired()
                                 .HasMaxLength(256)
                                 .IsUnicode(true)
-                                .HasColumnType("nvarchar(256)");
+                                .HasColumnType("character varying(256)");
 
                             b1.HasKey("Id");
 
@@ -1505,36 +1501,36 @@ namespace StoryBlog.Web.Microservices.Identity.Infrastructure.Persistence.Migrat
                         {
                             b1.Property<int>("Id")
                                 .ValueGeneratedOnAdd()
-                                .HasColumnType("int");
+                                .HasColumnType("integer");
 
-                            SqlServerPropertyBuilderExtensions.UseIdentityColumn(b1.Property<int>("Id"));
+                            NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b1.Property<int>("Id"));
 
                             b1.Property<int>("ClientId")
-                                .HasColumnType("int");
+                                .HasColumnType("integer");
 
-                            b1.Property<DateTime>("Created")
+                            b1.Property<DateTimeOffset>("Created")
                                 .ValueGeneratedOnAdd()
-                                .HasColumnType("datetime2");
+                                .HasColumnType("timestamp with time zone");
 
                             b1.Property<string>("Description")
                                 .IsRequired()
                                 .HasMaxLength(32767)
                                 .IsUnicode(true)
-                                .HasColumnType("nvarchar(max)");
+                                .HasColumnType("character varying(32767)");
 
-                            b1.Property<DateTime?>("Expiration")
-                                .HasColumnType("datetime2");
+                            b1.Property<DateTimeOffset?>("Expiration")
+                                .HasColumnType("timestamp with time zone");
 
                             b1.Property<string>("Type")
                                 .IsRequired()
                                 .HasMaxLength(256)
-                                .HasColumnType("nvarchar(256)");
+                                .HasColumnType("character varying(256)");
 
                             b1.Property<string>("Value")
                                 .IsRequired()
                                 .HasMaxLength(32767)
                                 .IsUnicode(true)
-                                .HasColumnType("nvarchar(max)");
+                                .HasColumnType("character varying(32767)");
 
                             b1.HasKey("Id");
 
@@ -1575,17 +1571,17 @@ namespace StoryBlog.Web.Microservices.Identity.Infrastructure.Persistence.Migrat
                         {
                             b1.Property<int>("Id")
                                 .ValueGeneratedOnAdd()
-                                .HasColumnType("int");
+                                .HasColumnType("integer");
 
-                            SqlServerPropertyBuilderExtensions.UseIdentityColumn(b1.Property<int>("Id"));
+                            NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b1.Property<int>("Id"));
 
                             b1.Property<int>("IdentityResourceId")
-                                .HasColumnType("int");
+                                .HasColumnType("integer");
 
                             b1.Property<string>("Type")
                                 .IsRequired()
                                 .HasMaxLength(256)
-                                .HasColumnType("nvarchar(256)");
+                                .HasColumnType("character varying(256)");
 
                             b1.HasKey("Id");
 
@@ -1603,22 +1599,22 @@ namespace StoryBlog.Web.Microservices.Identity.Infrastructure.Persistence.Migrat
                         {
                             b1.Property<int>("Id")
                                 .ValueGeneratedOnAdd()
-                                .HasColumnType("int");
+                                .HasColumnType("integer");
 
-                            SqlServerPropertyBuilderExtensions.UseIdentityColumn(b1.Property<int>("Id"));
+                            NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b1.Property<int>("Id"));
 
                             b1.Property<int>("IdentityResourceId")
-                                .HasColumnType("int");
+                                .HasColumnType("integer");
 
                             b1.Property<string>("Key")
                                 .IsRequired()
                                 .HasMaxLength(256)
-                                .HasColumnType("nvarchar(256)");
+                                .HasColumnType("character varying(256)");
 
                             b1.Property<string>("Value")
                                 .IsRequired()
                                 .HasMaxLength(32767)
-                                .HasColumnType("nvarchar(max)");
+                                .HasColumnType("character varying(32767)");
 
                             b1.HasKey("Id");
 
@@ -1635,6 +1631,15 @@ namespace StoryBlog.Web.Microservices.Identity.Infrastructure.Persistence.Migrat
                     b.Navigation("Properties");
 
                     b.Navigation("UserClaims");
+                });
+
+            modelBuilder.Entity("StoryBlog.Web.Microservices.Identity.Domain.Entities.StoryBlogUserRoleClaim", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", null)
+                        .WithOne()
+                        .HasForeignKey("StoryBlog.Web.Microservices.Identity.Domain.Entities.StoryBlogUserRoleClaim", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

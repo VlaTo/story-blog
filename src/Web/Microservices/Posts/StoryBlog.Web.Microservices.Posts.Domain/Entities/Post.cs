@@ -52,19 +52,25 @@ public class Post : Entity, IHasId<long>
         set;
     }
 
-    public DateTime CreateAt
+    public string AuthorId
     {
         get;
         set;
     }
 
-    public DateTime? ModifiedAt
+    public DateTimeOffset CreateAt
     {
         get;
         set;
     }
 
-    public DateTime? DeletedAt
+    public DateTimeOffset? ModifiedAt
+    {
+        get;
+        set;
+    }
+
+    public DateTimeOffset? DeletedAt
     {
         get;
         set;

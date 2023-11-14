@@ -100,7 +100,7 @@ public class DefaultRefreshTokenService : IRefreshTokenService
         /////////////////////////////////////////////
         // check if refresh token has expired
         /////////////////////////////////////////////
-        if (refreshToken.CreationTime.HasExceeded(refreshToken.Lifetime, Clock.UtcNow.UtcDateTime))
+        if (refreshToken.CreationTime.HasExceeded(refreshToken.Lifetime, Clock.UtcNow))
         {
             Logger.LogWarning("Refresh token has expired.");
             return invalidGrant;
@@ -242,7 +242,7 @@ public class DefaultRefreshTokenService : IRefreshTokenService
             // flag as consumed
             if (null == request.RefreshToken.ConsumedTime)
             {
-                request.RefreshToken.ConsumedTime = Clock.UtcNow.UtcDateTime;
+                request.RefreshToken.ConsumedTime = Clock.UtcNow;
                 await RefreshTokenStore.UpdateRefreshTokenAsync(handle, request.RefreshToken);
             }
 
@@ -256,7 +256,7 @@ public class DefaultRefreshTokenService : IRefreshTokenService
 
             // if absolute exp > 0, make sure we don't exceed absolute exp
             // if absolute exp = 0, allow indefinite slide
-            var currentLifetime = request.RefreshToken.CreationTime.GetLifetimeInSeconds(Clock.UtcNow.UtcDateTime);
+            var currentLifetime = request.RefreshToken.CreationTime.GetLifetimeInSeconds(Clock.UtcNow);
             var newLifetime = currentLifetime + request.Client.SlidingRefreshTokenLifetime;
 
             Logger.LogDebug($@"Current lifetime: {currentLifetime:g}");

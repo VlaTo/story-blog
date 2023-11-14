@@ -59,7 +59,7 @@ public sealed class Grant
     /// <value>
     /// The creation time.
     /// </value>
-    public DateTime CreationTime
+    public DateTimeOffset CreationTime
     {
         get; 
         set;
@@ -71,7 +71,7 @@ public sealed class Grant
     /// <value>
     /// The expiration.
     /// </value>
-    public DateTime? Expiration
+    public DateTimeOffset? Expiration
     {
         get;
         set;

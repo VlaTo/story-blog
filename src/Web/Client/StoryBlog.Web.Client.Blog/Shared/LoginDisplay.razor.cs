@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Microsoft.Extensions.Options;
 
 namespace StoryBlog.Web.Client.Blog.Shared;
 
+[AllowAnonymous]
 public partial class LoginDisplay
 {
     [Inject]

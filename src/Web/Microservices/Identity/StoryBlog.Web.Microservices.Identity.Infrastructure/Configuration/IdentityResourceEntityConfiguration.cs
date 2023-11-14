@@ -55,12 +55,12 @@ internal sealed class IdentityResourceEntityConfiguration : IEntityTypeConfigura
         builder
             .Property(x => x.Created)
             .IsRequired(required: true)
-            .HasValueGenerator<UtcNowDateTimeValueGenerator>()
+            .HasValueGenerator<UtcNowDateTimeOffsetValueGenerator>()
             .ValueGeneratedOnAdd();
         builder
             .Property(x => x.Updated)
             .IsRequired(required: false)
-            .HasValueGenerator<UtcNowDateTimeValueGenerator>()
+            .HasValueGenerator<UtcNowDateTimeOffsetValueGenerator>()
             .ValueGeneratedOnUpdate();
         builder
             .Property(x => x.NonEditable)

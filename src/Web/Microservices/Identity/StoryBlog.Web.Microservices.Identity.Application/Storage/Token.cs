@@ -57,7 +57,7 @@ public class Token
     /// <value>
     /// The creation time.
     /// </value>
-    public DateTime CreationTime
+    public DateTimeOffset CreationTime
     {
         get;
         set;

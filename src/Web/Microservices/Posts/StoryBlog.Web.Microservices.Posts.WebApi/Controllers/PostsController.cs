@@ -96,7 +96,8 @@ public class PostsController : Controller
 
         if (createdPostResult.Succeeded)
         {
-            var query = new GetPostQuery(createdPostResult.Value, User);
+            var key = createdPostResult.Value.ToString("D");
+            var query = new GetPostQuery(key, User);
             var queryPostResult = await mediator.Send(query).ConfigureAwait(false);
 
             if (queryPostResult.Succeeded)

@@ -20,11 +20,12 @@
         <MudNavMenu>
             <MudNavLink Href="" Match=@NavLinkMatch.All>Home</MudNavLink>
             <MudNavLink Href="counter" Match=@NavLinkMatch.Prefix>Counter</MudNavLink>
-            <MudNavLink Href="create" Match=@NavLinkMatch.All>Write a post</MudNavLink>
+            <AuthorizeView>
+                <MudNavLink Href="create" Match=@NavLinkMatch.All>Write a post</MudNavLink>
+            </AuthorizeView>
         </MudNavMenu>
     </MudDrawer>
     <MudMainContent Class="d-flex align-start">
-        <MudButton OnClick=@DoSendMessage>Отправить</MudButton>
         <MudContainer Class="d-block flex-2" MaxWidth=@MaxWidth.ExtraLarge>
             @Body
         </MudContainer>

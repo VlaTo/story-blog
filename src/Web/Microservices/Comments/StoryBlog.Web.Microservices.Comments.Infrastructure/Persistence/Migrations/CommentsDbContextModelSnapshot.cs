@@ -2,8 +2,8 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using StoryBlog.Web.Microservices.Comments.Infrastructure.Persistence;
 
 #nullable disable
@@ -17,10 +17,10 @@ namespace StoryBlog.Web.Microservices.Comments.Infrastructure.Persistence.Migrat
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.5")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128);
+                .HasAnnotation("ProductVersion", "7.0.13")
+                .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("StoryBlog.Web.Microservices.Comments.Domain.Entities.Comment", b =>
                 {
@@ -28,39 +28,40 @@ namespace StoryBlog.Web.Microservices.Comments.Infrastructure.Persistence.Migrat
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
-                    b.Property<DateTime>("CreateAt")
+                    b.Property<DateTimeOffset>("CreateAt")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<bool>("IsPublic")
-                        .HasColumnType("bit");
+                        .HasColumnType("boolean");
 
                     b.Property<Guid>("Key")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
-                    b.Property<DateTime?>("ModifiedAt")
+                    b.Property<DateTimeOffset?>("ModifiedAt")
                         .ValueGeneratedOnUpdate()
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<long?>("ParentId")
                         .HasColumnType("bigint");
 
                     b.Property<Guid>("PostKey")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<int>("Status")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<string>("Text")
                         .IsRequired()
                         .HasMaxLength(1024)
-                        .HasColumnType("nvarchar(1024)");
+                        .IsUnicode(true)
+                        .HasColumnType("character varying(1024)");
 
                     b.HasKey("Id");
 
@@ -68,7 +69,7 @@ namespace StoryBlog.Web.Microservices.Comments.Infrastructure.Persistence.Migrat
 
                     b.HasIndex("PostKey");
 
-                    b.ToTable("Comments", (string)null);
+                    b.ToTable("Comments", "Comment");
                 });
 
             modelBuilder.Entity("StoryBlog.Web.Microservices.Comments.Domain.Entities.Comment", b =>
@@ -76,8 +77,7 @@ namespace StoryBlog.Web.Microservices.Comments.Infrastructure.Persistence.Migrat
                     b.HasOne("StoryBlog.Web.Microservices.Comments.Domain.Entities.Comment", "Parent")
                         .WithMany("Comments")
                         .HasForeignKey("ParentId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.Navigation("Parent");
                 });

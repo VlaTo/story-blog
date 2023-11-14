@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Components;
 
 namespace StoryBlog.Web.Client.Blog.Pages;
 
+[AllowAnonymous]
 public partial class Authentication
 {
     [Parameter]

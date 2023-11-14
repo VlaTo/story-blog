@@ -17,7 +17,7 @@ public partial class Blog : ICommentsObserver
 
     [Parameter]
     [SupplyParameterFromQuery]
-    public string Slug
+    public string SlugOrKey
     {
         get;
         set;
@@ -77,7 +77,7 @@ public partial class Blog : ICommentsObserver
     protected override void OnInitialized()
     {
         base.OnInitialized();
-        Dispatcher.Dispatch(new FetchPostReferenceAction(Slug));
+        Dispatcher.Dispatch(new FetchPostAction(SlugOrKey));
     }
 
     protected override void OnAfterRender(bool firstRender)

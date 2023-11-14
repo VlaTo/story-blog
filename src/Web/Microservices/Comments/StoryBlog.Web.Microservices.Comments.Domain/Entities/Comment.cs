@@ -1,5 +1,4 @@
-﻿using System.Net.Mime;
-using StoryBlog.Web.Common.Domain.Entities;
+﻿using StoryBlog.Web.Common.Domain.Entities;
 
 namespace StoryBlog.Web.Microservices.Comments.Domain.Entities;
 
@@ -59,19 +58,19 @@ public sealed class Comment : Entity, IHasId<long>
         set;
     }
 
-    public DateTime CreateAt
+    public DateTimeOffset CreateAt
     {
         get;
         set;
     }
 
-    public DateTime? ModifiedAt
+    public DateTimeOffset? ModifiedAt
     {
         get;
         set;
     }
 
-    public DateTime? DeletedAt
+    public DateTimeOffset? DeletedAt
     {
         get;
         set;

@@ -10,7 +10,9 @@ using StoryBlog.Web.Client.Blog.Clients;
 using StoryBlog.Web.Client.Blog.Clients.Interfaces;
 using StoryBlog.Web.Client.Blog.Configuration;
 using StoryBlog.Web.Client.Blog.Core;
+using StoryBlog.Web.Client.Blog.Extensions;
 using StoryBlog.Web.Client.Blog.Middlewares;
+using StoryBlog.Web.Common.Identity.Permission;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 
@@ -31,12 +33,19 @@ builder.Services
     {
         builder.Configuration.Bind(HttpClientOptions.SectionName, options);
     });
-
 builder.Services.AddOidcAuthentication(options =>
 {
     // Configure your authentication provider options here.
     // For more information, see https://aka.ms/blazor-standalone-auth
     builder.Configuration.Bind("Oidc", options);
+});
+builder.Services.AddAuthorizationCore(options =>
+{
+    options.AddPolicy("Editor", policy =>
+        policy
+            .RequireAuthenticatedUser()
+            .RequirePermissionClaim(Permissions.Blogs.Update)
+    );
 });
 /*builder.Services.AddMessageHub(hub =>
 {

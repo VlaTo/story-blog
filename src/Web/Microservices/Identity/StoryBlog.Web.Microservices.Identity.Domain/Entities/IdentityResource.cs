@@ -64,13 +64,13 @@ public class IdentityResource : IEntity, IHasId<int>
         set;
     }
 
-    public DateTime Created
+    public DateTimeOffset Created
     {
         get;
         set;
     }
 
-    public DateTime? Updated
+    public DateTimeOffset? Updated
     {
         get;
         set;

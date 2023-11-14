@@ -35,7 +35,7 @@ public static class ServiceCollectionExtensions
                 var connectionString = configuration.GetConnectionString(connectionStringKey);
 
                 options
-                    .UseSqlServer(connectionString, context =>
+                    .UseNpgsql(connectionString, context =>
                     {
                         var assemblyName = typeof(StoryBlogIdentityDbContext).Assembly.FullName;
                         context.MigrationsAssembly(assemblyName);

@@ -17,19 +17,26 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endregion
 
+using System.Text;
 using Fluxor;
 
 namespace StoryBlog.Web.Client.Blog.Middlewares;
 
 internal sealed class FluxorLoggingMiddleware : IMiddleware
 {
-    private IDispatcher? _dispatcher;
-    private IStore? _store;
+    private IDispatcher? dispatcher;
+    private IStore? store;
+    private ILogger<FluxorLoggingMiddleware> logger;
+
+    public FluxorLoggingMiddleware(ILogger<FluxorLoggingMiddleware> logger)
+    {
+        this.logger = logger;
+    }
 
     public Task InitializeAsync(IDispatcher dispatcher, IStore store)
     {
-        _dispatcher = dispatcher;
-        _store = store;
+        this.dispatcher = dispatcher;
+        this.store = store;
 
         return Task.CompletedTask;
     }
@@ -42,6 +49,11 @@ internal sealed class FluxorLoggingMiddleware : IMiddleware
 
     public void BeforeDispatch(object action)
     {
+        var text = new StringBuilder()
+            .Append("Fluxor: ")
+            .Append($"{action.GetType().Name}=")
+            .AppendLine(System.Text.Json.JsonSerializer.Serialize(action));
+        Console.WriteLine(text);
     }
 
     public void AfterDispatch(object action)

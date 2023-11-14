@@ -33,7 +33,7 @@ public sealed class Secret : IEquatable<Secret>
     /// <value>
     /// The expiration.
     /// </value>
-    public DateTime? Expiration
+    public DateTimeOffset? Expiration
     {
         get;
     }
@@ -54,7 +54,7 @@ public sealed class Secret : IEquatable<Secret>
     /// </summary>
     /// <param name="value">The value.</param>
     /// <param name="expiration">The expiration.</param>
-    public Secret(string value, DateTime? expiration = null)
+    public Secret(string value, DateTimeOffset? expiration = null)
         : this(value, String.Empty, expiration)
     {
     }
@@ -65,7 +65,7 @@ public sealed class Secret : IEquatable<Secret>
     /// <param name="value">The value.</param>
     /// <param name="description">The description.</param>
     /// <param name="expiration">The expiration.</param>
-    public Secret(string value, string description, DateTime? expiration = null)
+    public Secret(string value, string description, DateTimeOffset? expiration = null)
     {
         Value = value;
         Description = description;
@@ -111,7 +111,7 @@ public sealed class Secret : IEquatable<Secret>
         return String.Equals(Type, other.Type) && String.Equals(Value, other.Value);
     }
 
-    public void Deconstruct(out string value, out string type, out string description, out DateTime? expiration)
+    public void Deconstruct(out string value, out string type, out string description, out DateTimeOffset? expiration)
     {
         value = Value;
         type = Type;

@@ -41,6 +41,18 @@ html, body {
         }
 
 
+.storyblog-home-blog {
+    background: var(--mud-palette-white);
+}
+
+.storyblog-blog-entry .storyblog-blog-entry-header .storyblog-blog-entry-header-actions .quick-action {
+    visibility: hidden;
+}
+
+.storyblog-blog-entry:hover .storyblog-blog-entry-header .storyblog-blog-entry-header-actions .quick-action {
+    visibility: visible;
+}
+
 
 
 

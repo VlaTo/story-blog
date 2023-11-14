@@ -9,6 +9,7 @@ namespace StoryBlog.Web.Blazor.Markdown.Editor;
 public partial class MarkdownEditor
 {
     private static readonly ClassBuilder<MarkdownEditor> classBuilder;
+
     private ElementReference editorElement;
     private IJavaScriptMarkdownEditor? editor; 
 
@@ -28,6 +29,13 @@ public partial class MarkdownEditor
 
     [Parameter]
     public string? Text
+    {
+        get;
+        set;
+    }
+
+    [Parameter]
+    public string? Height
     {
         get;
         set;
@@ -60,9 +68,16 @@ public partial class MarkdownEditor
         private set;
     }
 
+    protected string Style
+    {
+        get;
+        private set;
+    }
+
     public MarkdownEditor()
     {
         Toolbar = DefaultToolbar;
+        Style = "height: 600px;";
         TextChanged = EventCallback<string?>.Empty;
     }
 
@@ -126,9 +141,11 @@ public partial class MarkdownEditor
         }
     }
 
-    public override Task SetParametersAsync(ParameterView parameters)
+    public override async Task SetParametersAsync(ParameterView parameters)
     {
-        return base.SetParametersAsync(parameters);
+        await base.SetParametersAsync(parameters);
+
+        ;
     }
 
     protected override async ValueTask OnBlurAsync(FocusEventArgs e)

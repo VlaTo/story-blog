@@ -29,7 +29,7 @@ public interface IPostsClient
 {
     Task<Result<EmptyPostsResponse, ListAllResponse>> GetPostsAsync(int pageNumber, int pageSize);
 
-    Task<PostModel?> GetPostAsync(Guid postKey);
+    Task<PostModel?> GetPostAsync(string slugOrKey);
 
     Task<Models.CreatedPostModel?> CreatePostAsync(string title, string slug);
 }

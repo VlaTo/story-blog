@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.ComponentModel;
+using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -34,15 +35,16 @@ public class PostController : Controller
     }
 
     /// <summary>
-    /// 
+    /// Gets existing post by slug or key(Guid).
     /// </summary>
-    /// <param name="key"></param>
+    /// <param name="slugOrKey">The slug -or- key for post to get.</param>
     /// <returns></returns>
+    [Description("Gets existing post by slug or key(Guid).")]
     [ProducesResponseType(typeof(PostModel), StatusCodes.Status200OK)]
-    [HttpGet("{key:guid:required}", Name = RouteNames.GetPostRouteKey)]
-    public async Task<IActionResult> GetPost([FromRoute] Guid key)
+    [HttpGet("{slugOrKey:required}", Name = RouteNames.GetPostRouteKey)]
+    public async Task<IActionResult> GetPost([FromRoute] string slugOrKey)
     {
-        var query = new GetPostQuery(key, User);
+        var query = new GetPostQuery(slugOrKey, User);
         var getPostResult = await mediator.Send(query).ConfigureAwait(false);
 
         if (getPostResult.Succeeded)
@@ -51,7 +53,7 @@ public class PostController : Controller
             return Ok(model);
         }
 
-        logger.LogDebug($"Post not found for slug: {key}");
+        logger.LogDebug($"Post not found for slug: {slugOrKey}");
 
         return BadRequest();
     }
@@ -59,12 +61,12 @@ public class PostController : Controller
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="key"></param>
+    /// <param name="slugOrKey"></param>
     /// <param name="request"></param>
     /// <returns></returns>
     [ProducesResponseType(typeof(PostModel), StatusCodes.Status200OK)]
-    [HttpPut("{key:guid:required}")]
-    public async Task<IActionResult> EditPost([FromRoute] Guid key, [FromBody] EditPostRequest request)
+    [HttpPut("{slugOrKey:required}")]
+    public async Task<IActionResult> EditPost([FromRoute] string slugOrKey, [FromBody] EditPostRequest request)
     {
         var details = new EditPostDetails
         {
@@ -72,12 +74,12 @@ public class PostController : Controller
             Slug = request.Slug
         };
 
-        var command = new EditPostCommand(key, details, User);
+        var command = new EditPostCommand(slugOrKey, details, User);
         var editPostResult = await mediator.Send(command).ConfigureAwait(false);
 
         if (editPostResult.Succeeded)
         {
-            var query = new GetPostQuery(key, User);
+            var query = new GetPostQuery(slugOrKey, User);
             var queryPostResult = await mediator.Send(query).ConfigureAwait(false);
 
             if (queryPostResult.Succeeded)
@@ -87,7 +89,7 @@ public class PostController : Controller
             }
         }
 
-        logger.LogDebug($"Post not found for key: {key}");
+        logger.LogDebug($"Post not found for key: {slugOrKey}");
 
         return BadRequest();
     }
@@ -95,11 +97,11 @@ public class PostController : Controller
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="key"></param>
+    /// <param name="slugOrKey"></param>
     /// <returns></returns>
     [ProducesResponseType(typeof(PostModel), StatusCodes.Status200OK)]
-    [HttpDelete("{key:guid:required}")]
-    public async Task<IActionResult> DeletePost([FromRoute] Guid key)
+    [HttpDelete("{slugOrKey:required}")]
+    public async Task<IActionResult> DeletePost([FromRoute] string slugOrKey)
     {
         /*var command = new EditPostCommand(request.Title, request.Key, User);
         var success = await mediator.Send(command).ConfigureAwait(false);

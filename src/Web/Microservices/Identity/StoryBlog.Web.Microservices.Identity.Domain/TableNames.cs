@@ -53,4 +53,10 @@ public static class TableNames
     public const string PersistedGrant = "PersistedGrants";
     
     public const string ServerSideSession = "ServerSideSessions";
+    
+    public const string AspNetUsers = "Users";
+    
+    public const string AspNetUserRoles = "UserRoles";
+    
+    public const string AspNetUserRoleClaims = "UserRoleClaims";
 }

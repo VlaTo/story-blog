@@ -26,6 +26,7 @@ internal sealed class CommentEntityConfiguration : IEntityTypeConfiguration<Comm
 
         builder.Property(x => x.Text)
             .HasMaxLength(1024)
+            .IsUnicode(unicode: true)
             .IsRequired();
 
         builder.Property(x => x.IsPublic);
@@ -33,11 +34,11 @@ internal sealed class CommentEntityConfiguration : IEntityTypeConfiguration<Comm
         builder.Property(x => x.Status);
         
         builder.Property(x => x.CreateAt)
-            .HasValueGenerator<UtcNowDateTimeValueGenerator>()
+            .HasValueGenerator<UtcNowDateTimeOffsetValueGenerator>()
             .ValueGeneratedOnAdd();
 
         builder.Property(x => x.ModifiedAt)
-            .HasValueGenerator<UtcNowDateTimeValueGenerator>()
+            .HasValueGenerator<UtcNowDateTimeOffsetValueGenerator>()
             .ValueGeneratedOnUpdate();
 
         builder.Property(x => x.DeletedAt);
@@ -53,6 +54,6 @@ internal sealed class CommentEntityConfiguration : IEntityTypeConfiguration<Comm
             .HasPrincipalKey(x => x.Id)
             .OnDelete(DeleteBehavior.NoAction);
 
-        builder.ToTable("Comments");
+        builder.ToTable("Comments", "Comment");
     }
 }
