@@ -3,11 +3,11 @@ using SlimMessageBus;
 using StoryBlog.Web.Common.Application;
 using StoryBlog.Web.Common.Domain;
 using StoryBlog.Web.Common.Events;
-using StoryBlog.Web.Common.Messages;
 using StoryBlog.Web.Common.Result;
 using StoryBlog.Web.MessageHub;
 using StoryBlog.Web.Microservices.Posts.Application.Extensions;
 using StoryBlog.Web.Microservices.Posts.Domain.Entities;
+using StoryBlog.Web.Microservices.Posts.Shared.Messages;
 
 namespace StoryBlog.Web.Microservices.Posts.Application.Handlers.CreatePost;
 
@@ -63,10 +63,13 @@ public sealed class CreatePostHandler : HandlerBase, MediatR.IRequestHandler<Cre
             await repository.SaveChangesAsync(cancellationToken);
         }
 
-        var message = new BlogPostEvent(post.Key, BlogPostAction.Submitted);
+        var createdEvent = new NewPostCreatedEvent(post.Key, post.CreateAt, post.AuthorId);
+        var publishedMessage = new NewPostPublishedMessage(post.Key, post.Slug.Text);
 
-        await messageBus.Publish(message, cancellationToken: cancellationToken);
-        await messageHub.SendAsync("Test", new BlogPostMessage(), cancellationToken);
+        await Task.WhenAll(
+            messageBus.Publish(createdEvent, cancellationToken: cancellationToken),
+            messageHub.SendAsync("Test", publishedMessage, cancellationToken)
+        );
 
         return post.Key;
     }

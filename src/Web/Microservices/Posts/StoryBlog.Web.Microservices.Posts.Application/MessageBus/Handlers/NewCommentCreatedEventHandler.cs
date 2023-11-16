@@ -6,45 +6,26 @@ using StoryBlog.Web.Microservices.Posts.Domain.Specifications;
 
 namespace StoryBlog.Web.Microservices.Posts.Application.MessageBus.Handlers;
 
-public sealed class BlogCommentEventHandler : IConsumer<BlogCommentEvent>
+public sealed class NewCommentCreatedEventHandler : IConsumer<NewCommentCreatedEvent>
 {
     private readonly IAsyncUnitOfWork context;
-    private readonly ILogger<BlogCommentEventHandler> logger;
+    private readonly ILogger<NewCommentCreatedEventHandler> logger;
 
-    public BlogCommentEventHandler(
+    public NewCommentCreatedEventHandler(
         IAsyncUnitOfWork context,
-        ILogger<BlogCommentEventHandler> logger)
+        ILogger<NewCommentCreatedEventHandler> logger)
     {
         this.context = context;
         this.logger = logger;
     }
 
-    public async Task OnHandle(BlogCommentEvent message)
+    public async Task OnHandle(NewCommentCreatedEvent message)
     {
-        logger.LogInformation($"Received event: action = {message.Action} for key: \"{message.Key}\"");
+        logger.LogInformation($"New Comment Created received event for key: \"{message.Key}\"");
 
-        switch (message.Action)
+        if (false == await UpdateCommentsCountAsync(message.PostKey, 1))
         {
-            case BlogCommentAction.Added:
-            {
-                if (false == await UpdateCommentsCountAsync(message.PostKey, 1))
-                {
-                    logger.LogWarning($"No post found for key: {message.PostKey}");
-                }
-                
-                break;
-            }
-
-            case BlogCommentAction.Deleted:
-            {
-                //return DeletePostCommentsAsync(message.Key);
-                break;
-            }
-
-            default:
-            {
-                break;
-            }
+            logger.LogWarning($"No post found for key: {message.PostKey}");
         }
     }
 

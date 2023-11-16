@@ -1,9 +1,5 @@
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ApiExplorer;
-using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.IdentityModel.Logging;
 using SlimMessageBus.Host;
-using SlimMessageBus.Host.NamedPipe;
 using SlimMessageBus.Host.Serialization.SystemTextJson;
 using StoryBlog.Web.Common.Events;
 using StoryBlog.Web.Identity.Extensions;
@@ -15,6 +11,9 @@ using StoryBlog.Web.Microservices.Posts.WebApi.Configuration;
 using StoryBlog.Web.Microservices.Posts.WebApi.Core;
 using StoryBlog.Web.Microservices.Posts.WebApi.Extensions;
 using System.Diagnostics.Tracing;
+using Asp.Versioning;
+using Asp.Versioning.ApiExplorer;
+using SlimMessageBus.Host.RabbitMQ;
 using StoryBlog.Web.MessageHub.Server.Extensions;
 using StoryBlog.Web.MessageHub.Services;
 
@@ -45,22 +44,20 @@ builder.Services.AddAutoMapper(configuration =>
 builder.Services.AddSlimMessageBus(buses => buses
     .AddChildBus("default", bus =>
     {
-        bus
-            .Consume<BlogCommentEvent>(x => x
-                .Topic("blog-comment")
-                .PerMessageScopeEnabled(true)
-                .WithConsumer<BlogCommentEventHandler>()
-            )
-            .AutoStartConsumersEnabled(true)
-            .WithProviderNamedPipes();
-        bus
-            .Produce<BlogPostEvent>(x => x
-                .DefaultTopic("blog-post")
-            )
-            .WithProviderNamedPipes(settings =>
-            {
-                settings.Instances = 1;
-            });
+        bus.Consume<NewCommentCreatedEvent>(x => x
+            .Queue("storyblog.comment.created", durable: true)
+            .PerMessageScopeEnabled(enabled: true)
+            .ExchangeBinding("amq.topic", routingKey: "storyblog.comment.created")
+            .WithConsumer<NewCommentCreatedEventHandler>()
+        );
+        bus.Produce<NewPostCreatedEvent>(x => x
+            .Exchange("amp.topic", durable: true)
+            .RoutingKeyProvider((a, b) => "storyblog.post.created")
+        );
+    })
+    .WithProviderRabbitMQ(rabbit =>
+    {
+        rabbit.ConnectionString = "amqp://admin:admin@localhost:5672";
     })
     .AddJsonSerializer()
     .AddAspNet()
@@ -87,7 +84,6 @@ builder.Services.AddSlimMessageBus(buses => buses
     .AddJsonSerializer()
     .AddAspNet()
 );*/
-builder.Services.AddNamedPipeMessageBus();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddCors(options =>
 {
@@ -111,19 +107,20 @@ builder.Services.AddMessageHub(options =>
     });
 });
 builder.Services.AddControllers();
-builder.Services.AddApiVersioning(options =>
-{
-    options.DefaultApiVersion = new ApiVersion(1, 0, "alpha");
-    options.AssumeDefaultVersionWhenUnspecified = true;
-    options.ReportApiVersions = true;
-    options.ApiVersionReader = new UrlSegmentApiVersionReader();
-});
-builder.Services.AddVersionedApiExplorer(options =>
-{
-    options.GroupNameFormat = "'v'VVVV";
-    options.SubstituteApiVersionInUrl = true;
-    options.SubstitutionFormat = "VVVV";
-});
+builder.Services
+    .AddApiVersioning(options =>
+    {
+        options.DefaultApiVersion = new ApiVersion(1, 0, "alpha");
+        options.AssumeDefaultVersionWhenUnspecified = true;
+        options.ReportApiVersions = true;
+        options.ApiVersionReader = new UrlSegmentApiVersionReader();
+    })
+    .AddApiExplorer(options =>
+    {
+        options.GroupNameFormat = "'v'VVVV";
+        options.SubstituteApiVersionInUrl = true;
+        options.SubstitutionFormat = "VVVV";
+    });
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -150,7 +147,7 @@ if (app.Environment.IsDevelopment())
 
 app
     .UseWebSockets()
-    .UseApiVersioning()
+    //.UseApiVersioning()
     .UseCors()
     .UseAuthentication()
     .UseAuthorization()

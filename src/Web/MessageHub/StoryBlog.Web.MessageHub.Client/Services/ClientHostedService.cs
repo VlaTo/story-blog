@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Hosting;
 
-namespace StoryBlog.Web.Hub.Blazor.WebAssembly.Services;
+namespace StoryBlog.Web.MessageHub.Client.Services;
 
 public class ClientHostedService : IHostedService
 {

@@ -1,14 +1,8 @@
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ApiExplorer;
-using Microsoft.AspNetCore.Mvc.Versioning;
-using SlimMessageBus.Host;
-using SlimMessageBus.Host.NamedPipe;
-using SlimMessageBus.Host.Serialization.SystemTextJson;
-using StoryBlog.Web.Common.Events;
+using Asp.Versioning;
+using Asp.Versioning.ApiExplorer;
 using StoryBlog.Web.Identity.Extensions;
 using StoryBlog.Web.Microservices.Comments.Application.Contexts;
 using StoryBlog.Web.Microservices.Comments.Application.Extensions;
-using StoryBlog.Web.Microservices.Comments.Application.MessageBus.Handlers;
 using StoryBlog.Web.Microservices.Comments.Infrastructure.Extensions;
 using StoryBlog.Web.Microservices.Comments.WebApi.Configuration;
 using StoryBlog.Web.Microservices.Comments.WebApi.Core;
@@ -34,7 +28,7 @@ builder.Services.AddAutoMapper(configuration =>
     configuration.AddApplicationMappingProfiles();
     configuration.AddWebApiMappingProfiles();
 });
-builder.Services.AddSlimMessageBus(buses => buses
+/*builder.Services.AddSlimMessageBus(buses => buses
     .AddChildBus("default", bus =>
     {
         bus
@@ -55,8 +49,7 @@ builder.Services.AddSlimMessageBus(buses => buses
     })
     .AddJsonSerializer()
     .AddAspNet()
-);
-builder.Services.AddNamedPipeMessageBus();
+);*/
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddCors(options =>
 {
@@ -70,19 +63,20 @@ builder.Services.AddCors(options =>
 });
 builder.Services.AddStoryBlogAuthentication();
 builder.Services.AddControllers();
-builder.Services.AddApiVersioning(options =>
-{
-    options.DefaultApiVersion = new ApiVersion(1, 0, "alpha");
-    options.AssumeDefaultVersionWhenUnspecified = true;
-    options.ReportApiVersions = true;
-    options.ApiVersionReader = new UrlSegmentApiVersionReader();
-});
-builder.Services.AddVersionedApiExplorer(options =>
-{
-    options.GroupNameFormat = "'v'VVVV";
-    options.SubstituteApiVersionInUrl = true;
-    options.SubstitutionFormat = "VVVV";
-});
+builder.Services
+    .AddApiVersioning(options =>
+    {
+        options.DefaultApiVersion = new ApiVersion(1, 0, "alpha");
+        options.AssumeDefaultVersionWhenUnspecified = true;
+        options.ReportApiVersions = true;
+        options.ApiVersionReader = new UrlSegmentApiVersionReader();
+    })
+    .AddApiExplorer(options =>
+    {
+        options.GroupNameFormat = "'v'VVVV";
+        options.SubstituteApiVersionInUrl = true;
+        options.SubstitutionFormat = "VVVV";
+    });
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -110,7 +104,7 @@ if (app.Environment.IsDevelopment())
 
 app
     .UseHttpsRedirection()
-    .UseApiVersioning()
+    //.UseApiVersioning()
     .UseCors()
     .UseAuthentication()
     .UseAuthorization();

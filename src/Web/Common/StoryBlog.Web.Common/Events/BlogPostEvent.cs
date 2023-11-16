@@ -12,4 +12,10 @@ public enum BlogPostAction : byte
 /// 
 /// </summary>
 /// <param name="Key"></param>
+public sealed record NewPostCreatedEvent(
+    Guid Key,
+    DateTimeOffset Created,
+    string? AuthorId
+);
+
 public sealed record BlogPostEvent(Guid Key, BlogPostAction Action);

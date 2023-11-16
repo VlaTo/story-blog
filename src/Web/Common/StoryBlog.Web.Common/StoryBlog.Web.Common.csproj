@@ -16,7 +16,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Identity\StoryBlog.Web.Common.Identity.Permission\StoryBlog.Web.Common.Identity.Permission.csproj" />
-    <ProjectReference Include="..\..\MessageHub\StoryBlog.Web.MessageHub\StoryBlog.Web.MessageHub.csproj" />
   </ItemGroup>
 
 </Project>

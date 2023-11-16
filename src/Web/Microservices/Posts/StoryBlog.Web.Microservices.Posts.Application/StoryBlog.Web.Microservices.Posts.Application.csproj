@@ -20,7 +20,6 @@
     <Folder Include="Handlers\GenerateSlug\" />
     <Folder Include="Core\" />
     <Folder Include="Handlers\GetPostReference\" />
-    <Folder Include="MessageBus\Handlers\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -38,7 +37,6 @@
     <ProjectReference Include="..\..\..\Common\StoryBlog.Web.Common\StoryBlog.Web.Common.csproj" />
     <ProjectReference Include="..\..\..\Identity\StoryBlog.Web.Common.Identity.Permission\StoryBlog.Web.Common.Identity.Permission.csproj" />
     <ProjectReference Include="..\..\..\MessageHub\StoryBlog.Web.MessageHub.Server\StoryBlog.Web.MessageHub.Server.csproj" />
-    <ProjectReference Include="..\..\..\MessageHub\StoryBlog.Web.MessageHub\StoryBlog.Web.MessageHub.csproj" />
     <ProjectReference Include="..\StoryBlog.Web.Microservices.Posts.Domain\StoryBlog.Web.Microservices.Posts.Domain.csproj" />
     <ProjectReference Include="..\StoryBlog.Web.Microservices.Posts.Shared\StoryBlog.Web.Microservices.Posts.Shared.csproj" />
   </ItemGroup>

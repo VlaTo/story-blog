@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+﻿using Asp.Versioning;
 using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -8,6 +8,7 @@ using StoryBlog.Web.Microservices.Posts.Application.Handlers.GetPost;
 using StoryBlog.Web.Microservices.Posts.Application.Models;
 using StoryBlog.Web.Microservices.Posts.Shared.Models;
 using StoryBlog.Web.Microservices.Posts.WebApi.Core;
+using System.ComponentModel;
 
 namespace StoryBlog.Web.Microservices.Posts.WebApi.Controllers;
 

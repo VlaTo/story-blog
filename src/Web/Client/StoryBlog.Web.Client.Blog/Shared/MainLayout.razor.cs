@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.Components.Web;
 using MudBlazor;
 using StoryBlog.Web.MessageHub.Client;
 using StoryBlog.Web.Microservices.Posts.Shared.Messages;
@@ -43,17 +41,12 @@ public partial class MainLayout
             .WithUrl("ws://localhost:5033/notification")
             .Build();
 
-        hub.On<NewPostPublishedMessage>("Test", async message =>
+        hub.On<NewPostPublishedMessage>("Test", message =>
         {
-            Snackbar.Add("New Blog Post created!");
-            await Task.CompletedTask;
+            Snackbar.Add($"New Post with slug: '{message.Slug}' created!");
+            return Task.CompletedTask;
         });
 
         await hub.ConnectAsync();
     }
-
-    /*private async Task DoSendMessage(MouseEventArgs arg)
-    {
-        await hub!.SendMessageAsync("Test", new NewPostPublishedMessage(Guid.NewGuid(), "client-post-test"));
-    }*/
 }

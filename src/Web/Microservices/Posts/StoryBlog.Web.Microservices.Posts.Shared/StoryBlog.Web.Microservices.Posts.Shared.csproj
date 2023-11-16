@@ -7,10 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Messages\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\..\..\MessageHub\StoryBlog.Web.MessageHub\StoryBlog.Web.MessageHub.csproj" />
   </ItemGroup>
 

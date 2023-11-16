@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.Net.Mime;
+﻿using Asp.Versioning;
 using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -11,6 +10,7 @@ using StoryBlog.Web.Microservices.Posts.Application.Handlers.GetPosts;
 using StoryBlog.Web.Microservices.Posts.Shared.Messages;
 using StoryBlog.Web.Microservices.Posts.Shared.Models;
 using StoryBlog.Web.Microservices.Posts.WebApi.Core;
+using System.Net.Mime;
 
 namespace StoryBlog.Web.Microservices.Posts.WebApi.Controllers;
 
