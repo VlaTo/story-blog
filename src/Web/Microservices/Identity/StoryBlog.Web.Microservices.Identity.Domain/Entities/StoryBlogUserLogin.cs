@@ -3,6 +3,6 @@ using StoryBlog.Web.Common.Domain.Entities;
 
 namespace StoryBlog.Web.Microservices.Identity.Domain.Entities;
 
-public sealed class StoryBlogUserRole : IdentityUserRole<string>, IEntity, IHasUserId<string>
+public sealed class StoryBlogUserLogin : IdentityUserLogin<string>, IEntity, IHasUserId<string>
 {
 }

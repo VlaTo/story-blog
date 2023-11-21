@@ -1,5 +1,4 @@
 ﻿using IdentityModel;
-using StoryBlog.Web.Microservices.Identity.Domain;
 
 namespace StoryBlog.Web.Microservices.Identity.Application;
 

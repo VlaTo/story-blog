@@ -29,6 +29,24 @@ public static class ClaimsPrincipalExtensions
         return claim?.Value;
     }
 
+    public static string? GetName(this ClaimsPrincipal? claimsPrincipal)
+    {
+        if (null != claimsPrincipal)
+        {
+            foreach (var identity in claimsPrincipal.Identities)
+            {
+                if (String.IsNullOrEmpty(identity.Name))
+                {
+                    continue;
+                }
+
+                return identity.Name;
+            }
+        }
+        
+        return null;
+    }
+
     private static bool CheckPermissions(ClaimsPrincipal claimsPrincipal, bool anyOrAll, string[] permissions)
     {
         bool Test(Claim claim) => permissions.Any(permission => String.Equals(permission, claim.Value));

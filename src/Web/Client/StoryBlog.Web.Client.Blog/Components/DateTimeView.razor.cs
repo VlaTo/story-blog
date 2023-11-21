@@ -28,7 +28,7 @@ public partial class DateTimeView
     }
 
     [Parameter]
-    public DateTime? DateTime
+    public DateTimeOffset? DateTime
     {
         get;
         set;
@@ -73,13 +73,13 @@ public partial class DateTimeView
     {
         if (null != DateTime)
         {
-            var dateTime = DateTime.Value;
+            var dateTime = DateTime.Value.LocalDateTime;
 
             switch (Mode)
             {
                 case DateTimeMode.DateOnly:
                 {
-                    return dateTime.ToShortDateString(); // d
+                    return dateTime. ToShortDateString(); // d
                 }
 
                 case DateTimeMode.TimeOnly:

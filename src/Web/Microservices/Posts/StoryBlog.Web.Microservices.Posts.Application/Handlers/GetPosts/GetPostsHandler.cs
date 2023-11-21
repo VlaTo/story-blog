@@ -21,25 +21,24 @@ public sealed class GetPostsHandler : HandlerBase, IRequestHandler<GetPostsQuery
     public async Task<Result<IReadOnlyList<Brief>>> Handle(GetPostsQuery request, CancellationToken cancellationToken)
     {
         var authenticated = request.CurrentUser.IsAuthenticated();
-        string? userId = null;
-        //var canEdit = false;
-        //var canDelete = false;
 
         if (authenticated)
         {
             if (false == request.CurrentUser.HasPermission(Permissions.Blogs.View))
             {
-                //var temp = request.CurrentUser.IsInRole(Roles.Blog.Viewer);
                 return new Result<IReadOnlyList<Brief>>(new Exception("Insufficient permissions"));
             }
 
-            userId = request.CurrentUser.GetSubject();
+            var userId = request.CurrentUser.GetSubject();
 
-            if (false == String.IsNullOrEmpty(userId))
+            if (String.IsNullOrEmpty(userId))
             {
-                //canEdit = request.CurrentUser.HasPermission(Permissions.Blogs.Update);
-                //canDelete = request.CurrentUser.HasPermission(Permissions.Blogs.Delete);
+                return new Result<IReadOnlyList<Brief>>(new Exception("No user identity"));
             }
+        }
+        else
+        {
+            return new Result<IReadOnlyList<Brief>>(new Exception("User not authenticated"));
         }
 
         await using (var repository = context.GetRepository<Domain.Entities.Post>())

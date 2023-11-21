@@ -211,6 +211,15 @@ public class IdentityServerOptions
     }
 
     /// <summary>
+    /// Gets or sets options for token generation.
+    /// </summary>
+    public TokenGenerationOptions TokenGeneration
+    {
+        get;
+        set;
+    }
+
+    /// <summary>
     /// Gets or sets the caching options.
     /// </summary>
     /// <value>
@@ -264,6 +273,7 @@ public class IdentityServerOptions
         Csp = new CspOptions();
         Validation = new ValidationOptions();
         UserInteraction = new UserInteractionOptions();
+        TokenGeneration = new TokenGenerationOptions();
         Logging = new LoggingOptions();
         Ciba = new CibaOptions();
         DeviceFlow = new DeviceFlowOptions();

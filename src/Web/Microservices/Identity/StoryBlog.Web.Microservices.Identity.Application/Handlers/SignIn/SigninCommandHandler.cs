@@ -22,7 +22,7 @@ public sealed class SigninCommandHandler : IRequestHandler<SigninCommand, AnyOf<
 {
     private readonly UserManager<StoryBlogUser> userManager;
     private readonly SignInManager<StoryBlogUser> signInManager;
-    private readonly RoleManager<StoryBlogUserRole> roleManager;
+    private readonly RoleManager<StoryBlogRole> roleManager;
     private readonly ISystemClock clock;
     private readonly IAuthenticationEventSink eventSink;
     private readonly StoryBlogIdentityServerOptions<StoryBlogIdentityOptions> options;
@@ -31,7 +31,7 @@ public sealed class SigninCommandHandler : IRequestHandler<SigninCommand, AnyOf<
     public SigninCommandHandler(
         UserManager<StoryBlogUser> userManager,
         SignInManager<StoryBlogUser> signInManager,
-        RoleManager<StoryBlogUserRole> roleManager,
+        RoleManager<StoryBlogRole> roleManager,
         ISystemClock clock,
         IAuthenticationEventSink eventSink,
         IOptions<StoryBlogIdentityServerOptions<StoryBlogIdentityOptions>> options,

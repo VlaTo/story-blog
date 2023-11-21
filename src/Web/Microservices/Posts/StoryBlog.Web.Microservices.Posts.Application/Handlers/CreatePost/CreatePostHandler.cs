@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using SlimMessageBus;
 using StoryBlog.Web.Common.Application;
+using StoryBlog.Web.Common.Application.Extensions;
 using StoryBlog.Web.Common.Domain;
 using StoryBlog.Web.Common.Events;
 using StoryBlog.Web.Common.Result;
@@ -35,7 +36,8 @@ public sealed class CreatePostHandler : HandlerBase, MediatR.IRequestHandler<Cre
         var post = new Post
         {
             Title = request.Details.Title,
-            Status = PostStatus.Pending
+            Status = PostStatus.Pending,
+            AuthorId = request.CurrentUser.GetSubject() ?? Guid.Empty.ToString("D")
         };
         
         post.Slug = new Slug

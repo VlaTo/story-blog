@@ -14,14 +14,14 @@ public sealed class CreateUserCommandHandler : IRequestHandler<CreateUserCommand
 {
     private readonly UserManager<StoryBlogUser> userManager;
     private readonly SignInManager<StoryBlogUser> signInManager;
-    private readonly RoleManager<StoryBlogUserRole> roleManager;
+    private readonly RoleManager<StoryBlogRole> roleManager;
     private readonly ISystemClock clock;
     private readonly IOptions<StoryBlogIdentityServerOptions<StoryBlogIdentityOptions>> options;
 
     public CreateUserCommandHandler(
         UserManager<StoryBlogUser> userManager,
         SignInManager<StoryBlogUser> signInManager,
-        RoleManager<StoryBlogUserRole> roleManager,
+        RoleManager<StoryBlogRole> roleManager,
         ISystemClock clock,
         IOptions<StoryBlogIdentityServerOptions<StoryBlogIdentityOptions>> options)
     {
@@ -48,7 +48,7 @@ public sealed class CreateUserCommandHandler : IRequestHandler<CreateUserCommand
 
             result = await userManager.AddClaimAsync(user, new Claim(ClaimTypes.GivenName, "Guest", ClaimValueTypes.String));
 
-            var viewerRole = new StoryBlogUserRole
+            var viewerRole = new StoryBlogRole
             {
                 Name = Permissions.Blogs.View,
                 Description = "Blog Viewer"

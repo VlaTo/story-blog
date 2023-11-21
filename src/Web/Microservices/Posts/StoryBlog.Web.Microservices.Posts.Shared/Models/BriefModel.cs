@@ -40,7 +40,7 @@ public class BriefModel : PostDetailsModel
 
     [DataMember]
     [JsonPropertyName(nameof(CreatedAt))]
-    public DateTime CreatedAt
+    public DateTimeOffset CreatedAt
     {
         get;
         set;

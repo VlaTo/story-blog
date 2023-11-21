@@ -358,6 +358,7 @@ public static class IdentityServiceBuilderExtensions
             options.Cookie.IsEssential = true;
             // we need to disable to allow iframe for authorize requests
             options.Cookie.SameSite = SameSiteMode.None;
+            options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
         });
 
         builder.Services.ConfigureExternalCookie(options =>
@@ -365,6 +366,7 @@ public static class IdentityServiceBuilderExtensions
             options.Cookie.IsEssential = true;
             // https://github.com/IdentityServer/IdentityServer4/issues/2595
             options.Cookie.SameSite = SameSiteMode.None;
+            options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
         });
 
         builder.Services.Configure<CookieAuthenticationOptions>(IdentityConstants.TwoFactorRememberMeScheme, options =>

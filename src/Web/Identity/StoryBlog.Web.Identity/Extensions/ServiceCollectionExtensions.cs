@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using System.IdentityModel.Tokens.Jwt;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -8,6 +9,7 @@ using StoryBlog.Web.Identity.Configuration;
 using System.Security.Claims;
 using System.Text;
 using StoryBlog.Web.Common.Identity.Permission;
+using JsonClaimValueTypes = Microsoft.IdentityModel.JsonWebTokens.JsonClaimValueTypes;
 
 namespace StoryBlog.Web.Identity.Extensions;
 
@@ -52,6 +54,7 @@ public static class ServiceCollectionExtensions
                 bearer.SaveToken = true;
                 bearer.TokenValidationParameters = new TokenValidationParameters
                 {
+                    NameClaimType = JwtRegisteredClaimNames.Name,
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(securityKey),
                     ValidateIssuer = jwt.ValidateIssuer.GetValueOrDefault(false),
@@ -77,7 +80,7 @@ public static class ServiceCollectionExtensions
 
                         return context.Response.WriteJsonAsync(
                             StatusCodes.Status500InternalServerError,
-                            Result.Fail(new Exception("An unhandler error has occured"))
+                            Result.Fail(context.Exception)
                         );
                     },
                     OnChallenge = context =>
@@ -107,7 +110,7 @@ public static class ServiceCollectionExtensions
         services
             .AddAuthorization(authorization =>
             {
-                const string permission = "Permission";
+                /*const string permission = "Permission";
                 var permissions = Permissions.GetRegisteredPermissions();
 
                 for (var index = 0; index < permissions.Count; index++)
@@ -117,7 +120,7 @@ public static class ServiceCollectionExtensions
                         name,
                         policy => policy.RequireClaim(permission, name)
                     );
-                }
+                }*/
             });
 
         return services;

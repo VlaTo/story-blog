@@ -68,11 +68,11 @@ public class KeyManager : IKeyManager
                 foreach (var key in currentKeys)
                 {
                     var age = clock.GetAge(key.Created);
-                    var expiresIn = options.KeyManagement.RotationInterval.Subtract(age);
-                    var retiresIn = options.KeyManagement.KeyRetirementAge.Subtract(age);
+                    var expiresIn = key.Created + options.KeyManagement.RotationInterval.Subtract(age);
+                    var retiresIn = key.Created + options.KeyManagement.KeyRetirementAge.Subtract(age);
                     
                     logger.LogInformation(
-                        "Active signing key found with kid {kid} for alg {alg}. Expires in {KeyExpiration}. Retires in {KeyRetirement}",
+                        "Active signing key found with kid {0} for alg {1}. Expires in {2}. Retires in {3}",
                         key.Id, key.Algorithm, expiresIn, retiresIn
                     );
                 }
@@ -85,7 +85,7 @@ public class KeyManager : IKeyManager
     /// <inheritdoc />
     public async Task<IEnumerable<KeyContainer>> GetAllKeysAsync()
     {
-        using (Tracing.ActivitySource.StartActivity("KeyManageer.GetAllKey"))
+        using (Tracing.ActivitySource.StartActivity("KeyManager.GetAllKey"))
         {
             logger.LogDebug("Getting all the keys.");
 

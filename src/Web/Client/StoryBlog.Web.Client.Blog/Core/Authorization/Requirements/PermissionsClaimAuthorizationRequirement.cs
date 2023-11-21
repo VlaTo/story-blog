@@ -20,24 +20,22 @@ public sealed class PermissionsClaimAuthorizationRequirement : AuthorizationHand
         AuthorizationHandlerContext context,
         PermissionsClaimAuthorizationRequirement requirement)
     {
-        if (null != context.User)
+        if (null != context.User && requirement.AllowedPermissions.Any())
         {
-            bool found = false;
+            //var userClaims = context.User.Claims.ToArray();
+            //var claim = userClaims.FirstOrDefault(
+            var claim = context.User.Claims.FirstOrDefault(
+                x => String.Equals(x.Type, ClaimIdentityTypes.Permission, StringComparison.Ordinal)
+            );
 
-            if (requirement.AllowedPermissions.Any())
+            if (null != claim && String.Equals(claim.ValueType, ClaimValueTypes.String))
             {
-                var claim = context.User.Claims.FirstOrDefault(x => string.Equals(x.Type, ClaimIdentityTypes.Permission, StringComparison.Ordinal));
-
-                if (null != claim && String.Equals(claim.ValueType, ClaimValueTypes.String))
+                var values = ClaimStringValueCollection.Create(claim.Value);
+                    
+                if (values.Contains(requirement.AllowedPermissions))
                 {
-                    var values = ClaimStringValueCollection.Create(claim.Value);
-                    found = values.Contains(requirement.AllowedPermissions);
+                    context.Succeed(requirement);
                 }
-            }
-
-            if (found)
-            {
-                context.Succeed(requirement);
             }
         }
 

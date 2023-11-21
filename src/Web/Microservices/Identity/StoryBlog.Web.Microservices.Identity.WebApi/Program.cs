@@ -22,7 +22,8 @@ builder.Services.AddAutoMapper(configuration =>
 builder.Services.AddScoped<IAuthenticationEventSink, LogAuthenticationEventSink>();
 builder.Services.AddStoryBlogIdentity(options =>
 {
-    //options.Cors.CorsPolicyName = Constants.ClientPolicy;
+    options.Cors.CorsPolicyName = "__DefaultCorsPolicy";
+
     //options.UserInteraction.LoginUrl = "http://localhost:50376/Authenticate/login";
     //options.UserInteraction.ErrorUrl = "http://localhost:5000/error";
 
@@ -41,7 +42,7 @@ builder.Services.AddStoryBlogIdentity(options =>
 builder.Services.AddInfrastructure(builder.Configuration, "Database");
 builder.Services
     .AddIdentityServer()
-    .AddApiAuthorization<StoryBlogUser, StoryBlogUserRole>(options =>
+    .AddApiAuthorization<StoryBlogUser, StoryBlogRole>(options =>
     {
         options.Clients.AddSPA("288849a891664840975fa7992f247947", client =>
             client
@@ -57,11 +58,16 @@ builder.Services
     .AddConfigurationStore()
     .AddOperationalStore();
 
-// Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllersWithViews();
+builder.Services.AddCors(options => options
+    .AddDefaultPolicy(policy => policy
+        .AllowAnyOrigin()
+        .AllowAnyMethod()
+        .AllowAnyHeader()
+    )
+);
 
 var app = builder.Build();
 
@@ -69,12 +75,13 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
-    app.UseExceptionHandler("/Home/Error");
+    //app.UseExceptionHandler("/Home/Error");
 }
 
 app.UseIdentityServer();
 app.UseStaticFiles();
 app.UseRouting();
+app.UseCors();
 app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",

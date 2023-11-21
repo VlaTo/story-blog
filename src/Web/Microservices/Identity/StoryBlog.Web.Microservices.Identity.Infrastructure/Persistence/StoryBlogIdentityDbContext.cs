@@ -11,7 +11,12 @@ using StoryBlog.Web.Microservices.Identity.Infrastructure.Configuration;
 
 namespace StoryBlog.Web.Microservices.Identity.Infrastructure.Persistence;
 
-public sealed class StoryBlogIdentityDbContext : IdentityDbContext<StoryBlogUser, StoryBlogUserRole, string>, IGenericDbContext, IStoryBlogIdentityDbContext, IConfigurationDbContext, IPersistedGrantDbContext
+public sealed class StoryBlogIdentityDbContext
+    : IdentityDbContext<StoryBlogUser, StoryBlogRole, string, StoryBlogUserClaim, StoryBlogUserRole, StoryBlogUserLogin, StoryBlogRoleClaim, StoryBlogUserToken>,
+        IGenericDbContext,
+        IStoryBlogIdentityDbContext,
+        IConfigurationDbContext,
+        IPersistedGrantDbContext
 {
     #region IConfigurationDbContext
 
@@ -72,7 +77,41 @@ public sealed class StoryBlogIdentityDbContext : IdentityDbContext<StoryBlogUser
         get;
         set;
     }
-    
+
+    #endregion
+
+    #region Identity
+
+    public DbSet<StoryBlogRoleClaim> RoleClaims
+    {
+        get;
+        set;
+    }
+
+    public DbSet<StoryBlogUserClaim> UserClaims
+    {
+        get;
+        set;
+    }
+
+    public DbSet<StoryBlogUserRole> UserRoles
+    {
+        get;
+        set;
+    }
+
+    public DbSet<StoryBlogUserLogin> UserLogins
+    {
+        get;
+        set;
+    }
+
+    public DbSet<StoryBlogUserToken> UserTokens
+    {
+        get;
+        set;
+    }
+
     #endregion
 
     public ConfigurationStoreOptions? StoreOptions
@@ -137,59 +176,55 @@ public sealed class StoryBlogIdentityDbContext : IdentityDbContext<StoryBlogUser
             .ToTable(TableNames.AspNetUsers, SchemaNames.Identity);
 
         // Role
-        modelBuilder.Entity<StoryBlogUserRole>()
+        modelBuilder.Entity<StoryBlogRole>()
             .Property(x => x.Description)
             .HasMaxLength(256)
             .IsUnicode(unicode: true);
-        modelBuilder.Entity<StoryBlogUserRole>()
+        modelBuilder.Entity<StoryBlogRole>()
             .Property(x => x.Created)
             .HasValueGenerator<UtcNowDateTimeOffsetValueGenerator>()
             .ValueGeneratedOnAdd();
-        modelBuilder.Entity<StoryBlogUserRole>()
+        modelBuilder.Entity<StoryBlogRole>()
             .Property(x => x.Modified)
             .HasValueGenerator<UtcNowDateTimeOffsetValueGenerator>()
             .ValueGeneratedOnUpdate();
+        modelBuilder.Entity<StoryBlogRole>()
+            .ToTable(TableNames.AspNetRoles, SchemaNames.Identity);
+
+        // UserClaim
+        modelBuilder.Entity<StoryBlogUserClaim>()
+            .ToTable(TableNames.AspNetUserClaims, SchemaNames.Identity);
+
+        // UserRole
         modelBuilder.Entity<StoryBlogUserRole>()
             .ToTable(TableNames.AspNetUserRoles, SchemaNames.Identity);
 
-        // Claim
-        modelBuilder.Entity<StoryBlogUserRoleClaim>()
-            .Property(x => x.Description)
-            .HasMaxLength(256)
-            .IsUnicode(unicode: true);
-        modelBuilder.Entity<StoryBlogUserRoleClaim>()
-            .Property(x => x.Group)
-            .HasMaxLength(100)
-            .IsUnicode(unicode: true);
-        modelBuilder.Entity<StoryBlogUserRoleClaim>()
-            .Property(x => x.Created)
-            .HasValueGenerator<UtcNowDateTimeOffsetValueGenerator>()
-            .ValueGeneratedOnAdd();
-        modelBuilder.Entity<StoryBlogUserRoleClaim>()
-            .Property(x => x.Modified)
-            .HasValueGenerator<UtcNowDateTimeOffsetValueGenerator>()
-            .ValueGeneratedOnUpdate();
-        modelBuilder.Entity<StoryBlogUserRoleClaim>()
-            .ToTable(TableNames.AspNetUserRoleClaims, SchemaNames.Identity);
+        // UserLogin
+        modelBuilder.Entity<StoryBlogUserLogin>()
+            .ToTable(TableNames.AspNetUserLogins, SchemaNames.Identity);
 
-        // Claim
-        /*modelBuilder.Entity<Logins>()
+        // RoleClaim
+        modelBuilder.Entity<StoryBlogRoleClaim>()
             .Property(x => x.Description)
             .HasMaxLength(256)
             .IsUnicode(unicode: true);
-        modelBuilder.Entity<StoryBlogUserRoleClaim>()
+        modelBuilder.Entity<StoryBlogRoleClaim>()
             .Property(x => x.Group)
             .HasMaxLength(100)
             .IsUnicode(unicode: true);
-        modelBuilder.Entity<StoryBlogUserRoleClaim>()
+        modelBuilder.Entity<StoryBlogRoleClaim>()
             .Property(x => x.Created)
             .HasValueGenerator<UtcNowDateTimeOffsetValueGenerator>()
             .ValueGeneratedOnAdd();
-        modelBuilder.Entity<StoryBlogUserRoleClaim>()
+        modelBuilder.Entity<StoryBlogRoleClaim>()
             .Property(x => x.Modified)
             .HasValueGenerator<UtcNowDateTimeOffsetValueGenerator>()
             .ValueGeneratedOnUpdate();
-        modelBuilder.Entity<StoryBlogUserRoleClaim>()
-            .ToTable(TableNames.AspNetUserRoleClaims, SchemaNames.Identity);*/
+        modelBuilder.Entity<StoryBlogRoleClaim>()
+            .ToTable(TableNames.AspNetRoleClaims, SchemaNames.Identity);
+
+        // UserToken
+        modelBuilder.Entity<StoryBlogUserToken>()
+            .ToTable(TableNames.AspNetUserTokens, SchemaNames.Identity);
     }
 }

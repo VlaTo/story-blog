@@ -11,32 +11,32 @@ public interface IStoryBlogIdentityDbContext
         get;
     }
 
-    DbSet<StoryBlogUserRole> Roles
+    DbSet<StoryBlogRole> Roles
     {
         get;
     }
 
-    DbSet<IdentityRoleClaim<string>> RoleClaims
+    DbSet<StoryBlogRoleClaim> RoleClaims
     {
         get;
     }
 
-    DbSet<IdentityUserClaim<string>> UserClaims
+    DbSet<StoryBlogUserClaim> UserClaims
     {
         get;
     }
 
-    DbSet<IdentityUserRole<string>> UserRoles
+    DbSet<StoryBlogUserRole> UserRoles
     {
         get;
     }
 
-    DbSet<IdentityUserLogin<string>> UserLogins
+    DbSet<StoryBlogUserLogin> UserLogins
     {
         get;
     }
 
-    DbSet<IdentityUserToken<string>> UserTokens
+    DbSet<StoryBlogUserToken> UserTokens
     {
         get;
     }

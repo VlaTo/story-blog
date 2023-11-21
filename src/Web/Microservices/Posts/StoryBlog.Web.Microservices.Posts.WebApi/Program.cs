@@ -42,19 +42,26 @@ builder.Services.AddAutoMapper(configuration =>
     configuration.AddWebApiMappingProfiles();
 });
 builder.Services.AddSlimMessageBus(buses => buses
-    .AddChildBus("default", bus =>
-    {
-        bus.Consume<NewCommentCreatedEvent>(x => x
+    .AddChildBus("default", bus => bus
+        .Consume<NewCommentCreatedEvent>(x => x
             .Queue("storyblog.comment.created", durable: true)
             .PerMessageScopeEnabled(enabled: true)
             .ExchangeBinding("amq.topic", routingKey: "storyblog.comment.created")
             .WithConsumer<NewCommentCreatedEventHandler>()
-        );
-        bus.Produce<NewPostCreatedEvent>(x => x
+        )
+        .Produce<NewPostCreatedEvent>(x => x
             .Exchange("amp.topic", durable: true)
             .RoutingKeyProvider((a, b) => "storyblog.post.created")
-        );
-    })
+        )
+        .Produce<PostPublishedEvent>(x => x
+            .Exchange("amp.topic", durable: true)
+            .RoutingKeyProvider((a, b) => "storyblog.post.published")
+        )
+        .Produce<PostRemovedEvent>(x => x
+            .Exchange("amp.topic", durable: true)
+            .RoutingKeyProvider((a, b) => "storyblog.post.removed")
+        )
+    )
     .WithProviderRabbitMQ(rabbit =>
     {
         rabbit.ConnectionString = "amqp://admin:admin@localhost:5672";
@@ -62,39 +69,14 @@ builder.Services.AddSlimMessageBus(buses => buses
     .AddJsonSerializer()
     .AddAspNet()
 );
-/*builder.Services.AddSlimMessageBus(buses => buses
-    .WithProviderRabbitMQ(rabbit =>
-    {
-        rabbit.ConnectionFactory.HostName = "localhost";
-        rabbit.ConnectionFactory.Port = 5672;
-        rabbit.ConnectionFactory.UserName = "guest";
-        rabbit.ConnectionFactory.Password = "guest";
-        rabbit.ConnectionFactory.Ssl.Enabled = false;
-
-        rabbit.UseExchangeDefaults(durable: true);
-        rabbit.UseQueueDefaults(durable: true);
-        rabbit.UseMessagePropertiesModifier((o, properties) =>
-        {
-            properties.ContentType = MediaTypeNames.Application.Json;
-        });
-    })
-    .Produce<BlogPostEvent>(x => x
-        .Exchange("blog.created")
-    )
-    .AddJsonSerializer()
-    .AddAspNet()
-);*/
 builder.Services.AddHttpContextAccessor();
-builder.Services.AddCors(options =>
-{
-    options.AddDefaultPolicy(policy =>
-    {
-        policy
-            .AllowAnyOrigin()
-            .AllowAnyMethod()
-            .AllowAnyHeader();
-    });
-});
+builder.Services.AddCors(options => options
+    .AddDefaultPolicy(policy => policy
+        .AllowAnyOrigin()
+        .AllowAnyMethod()
+        .AllowAnyHeader()
+    )
+);
 builder.Services.AddStoryBlogAuthentication();
 builder.Services.AddMessageHub(options =>
 {
@@ -112,7 +94,7 @@ builder.Services
     {
         options.DefaultApiVersion = new ApiVersion(1, 0, "alpha");
         options.AssumeDefaultVersionWhenUnspecified = true;
-        options.ReportApiVersions = true;
+        options.ReportApiVersions = false;
         options.ApiVersionReader = new UrlSegmentApiVersionReader();
     })
     .AddApiExplorer(options =>
@@ -147,7 +129,6 @@ if (app.Environment.IsDevelopment())
 
 app
     .UseWebSockets()
-    //.UseApiVersioning()
     .UseCors()
     .UseAuthentication()
     .UseAuthorization()
@@ -155,6 +136,7 @@ app
     ;
 app
     .MapControllers()
-    .WithOpenApi();
+    .WithOpenApi()
+    ;
 
 await app.RunAsync();

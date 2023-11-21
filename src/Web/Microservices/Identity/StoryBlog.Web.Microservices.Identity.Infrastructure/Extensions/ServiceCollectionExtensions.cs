@@ -42,7 +42,7 @@ public static class ServiceCollectionExtensions
                     })
                     .EnableDetailedErrors(detailedErrorsEnabled: true);
             })
-            .AddIdentity<StoryBlogUser, StoryBlogUserRole>(options =>
+            .AddIdentity<StoryBlogUser, StoryBlogRole>(options =>
             {
                 options.Password.RequiredLength = 6;
                 options.SignIn.RequireConfirmedAccount = true;

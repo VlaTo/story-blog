@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using Asp.Versioning;
+using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -10,11 +11,10 @@ namespace StoryBlog.Web.Microservices.Posts.WebApi.Controllers;
 /// <summary>
 /// 
 /// </summary>
-//[ApiVersion("1.0-alpha")]
+[ApiVersion("1.0-alpha")]
 [AllowAnonymous]
 [ApiController]
-//[Route("api/v{version:apiVersion}/[controller]")]
-[Route("api/v1.0-alpha/[controller]")]
+[Route("api/v{version:apiVersion}/[controller]")]
 public class SlugsController : Controller
 {
     private readonly IMediator mediator;

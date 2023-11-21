@@ -3,15 +3,9 @@ using StoryBlog.Web.Common.Domain.Entities;
 
 namespace StoryBlog.Web.Microservices.Identity.Domain.Entities;
 
-public sealed class StoryBlogUserRoleClaim : IdentityRoleClaim<string>, IEntity
+public sealed class StoryBlogRole : IdentityRole, IEntity, IHasId<string>
 {
     public string? Description
-    {
-        get;
-        set;
-    }
-
-    public string? Group
     {
         get;
         set;

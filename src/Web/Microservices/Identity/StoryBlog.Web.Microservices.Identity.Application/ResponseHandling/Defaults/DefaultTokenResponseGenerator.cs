@@ -218,7 +218,8 @@ public class DefaultTokenResponseGenerator : ITokenResponseGenerator
                 Nonce = request.ValidatedRequest.AuthorizationCode.Nonce,
                 AccessTokenToHash = response.AccessToken,
                 StateHash = request.ValidatedRequest.AuthorizationCode.StateHash,
-                ValidatedRequest = request.ValidatedRequest
+                ValidatedRequest = request.ValidatedRequest,
+                IncludeAllIdentityClaims = request.ValidatedRequest.Options.TokenGeneration.IncludeAllIdentityClaims
             };
 
             var idToken = await TokenService.CreateIdentityTokenAsync(tokenRequest);
@@ -479,6 +480,7 @@ public class DefaultTokenResponseGenerator : ITokenResponseGenerator
             if (null != request.AuthorizationCode.ClientId)
             {
                 // todo: do we need this check?
+                // NOTE: use client = request.Client;
                 client = await Clients.FindEnabledClientByIdAsync(request.AuthorizationCode.ClientId);
             }
 

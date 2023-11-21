@@ -56,7 +56,15 @@ public static class TableNames
     
     public const string AspNetUsers = "Users";
     
+    public const string AspNetRoles = "Roles";
+
+    public const string AspNetUserClaims = "UserClaims";
+
     public const string AspNetUserRoles = "UserRoles";
+
+    public const string AspNetRoleClaims = "RoleClaims";
     
-    public const string AspNetUserRoleClaims = "UserRoleClaims";
+    public const string AspNetUserLogins = "UserLogins";
+
+    public const string AspNetUserTokens = "UserTokens";
 }

@@ -25,12 +25,7 @@ internal sealed class WebSocketMessageHubMiddleware : IMiddleware
     {
         if (context.Request.Path.Equals(options.Path))
         {
-            var isMethod = StringHelper.Equals(context.Request.Method, HttpMethods.Get, HttpMethods.Connect);
-            var isUpgrade = context.Request.Headers.Connection.Any(x => String.Equals(x, "Upgrade"));
-            var isWebSocket = context.Request.Headers.Upgrade.Any(x => String.Equals(x, "websocket"));
-
-            //if (context.WebSockets.IsWebSocketRequest)
-            if (isMethod && isUpgrade && isWebSocket)
+            if (context.WebSockets.IsWebSocketRequest)
             {
                 var socketManager = context.RequestServices.GetRequiredService<MessageHubService>();
 

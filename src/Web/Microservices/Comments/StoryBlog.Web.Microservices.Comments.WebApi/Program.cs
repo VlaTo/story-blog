@@ -1,8 +1,13 @@
 using Asp.Versioning;
 using Asp.Versioning.ApiExplorer;
+using SlimMessageBus.Host;
+using SlimMessageBus.Host.RabbitMQ;
+using SlimMessageBus.Host.Serialization.SystemTextJson;
+using StoryBlog.Web.Common.Events;
 using StoryBlog.Web.Identity.Extensions;
 using StoryBlog.Web.Microservices.Comments.Application.Contexts;
 using StoryBlog.Web.Microservices.Comments.Application.Extensions;
+using StoryBlog.Web.Microservices.Comments.Application.MessageBus.Handlers;
 using StoryBlog.Web.Microservices.Comments.Infrastructure.Extensions;
 using StoryBlog.Web.Microservices.Comments.WebApi.Configuration;
 using StoryBlog.Web.Microservices.Comments.WebApi.Core;
@@ -28,17 +33,43 @@ builder.Services.AddAutoMapper(configuration =>
     configuration.AddApplicationMappingProfiles();
     configuration.AddWebApiMappingProfiles();
 });
-/*builder.Services.AddSlimMessageBus(buses => buses
-    .AddChildBus("default", bus =>
+builder.Services.AddSlimMessageBus(buses => buses
+    .AddChildBus("default", bus => bus
+        .Consume<NewPostCreatedEvent>(x => x
+            .Queue("storyblog.post.created", durable: true)
+            .PerMessageScopeEnabled(enabled: true)
+            .ExchangeBinding("amq.topic", routingKey: "storyblog.post.created")
+            .WithConsumer<NewPostCreatedEventHandler>()
+        )
+        .Consume<PostPublishedEvent>(x => x
+            .Queue("storyblog.post.published", durable: true)
+            .PerMessageScopeEnabled(enabled: true)
+            .ExchangeBinding("amq.topic", routingKey: "storyblog.post.published")
+            .WithConsumer<PostPublishedEventHandler>()
+        )
+        .Consume<PostRemovedEvent>(x => x
+            .Queue("storyblog.post.removed", durable: true)
+            .PerMessageScopeEnabled(enabled: true)
+            .ExchangeBinding("amq.topic", routingKey: "storyblog.post.removed")
+            .WithConsumer<PostRemovedEventHandler>()
+        )
+        .Produce<NewCommentCreatedEvent>(x => x
+            .Exchange("amp.topic", durable: true)
+            .RoutingKeyProvider((a, b) => "storyblog.comment.created")
+        )
+    )
+    .WithProviderRabbitMQ(rabbit =>
     {
-        bus
+        rabbit.ConnectionString = "amqp://admin:admin@localhost:5672";
+    })
+    /*
+    {
+    bus
             .Consume<BlogPostEvent>(x => x
                 .Topic("blog-post")
                 .PerMessageScopeEnabled(true)
-                .WithConsumer<BlogPostEventHandler>()
-            )
-            .AutoStartConsumersEnabled(true)
-            .WithProviderNamedPipes();
+                .WithConsumer<NewPostCreatedEventHandler>()
+            );
 
         bus
             .Produce<BlogCommentEvent>(x => x.DefaultTopic("blog-comment"))
@@ -48,8 +79,13 @@ builder.Services.AddAutoMapper(configuration =>
             });
     })
     .AddJsonSerializer()
+    .WithProviderRabbitMQ(rabbit =>
+    {
+        ;
+    })*/
+    .AddJsonSerializer()
     .AddAspNet()
-);*/
+);
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddCors(options =>
 {

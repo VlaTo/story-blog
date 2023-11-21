@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
+using StoryBlog.Web.Common.Identity.Permission;
 using StoryBlog.Web.Microservices.Identity.Application;
 using StoryBlog.Web.Microservices.Identity.Domain;
 
@@ -9,6 +10,8 @@ public partial class InitialStructure
     private static void SeedIdentityData(MigrationBuilder migrationBuilder)
     {
         #region Api Resources
+
+        Console.WriteLine($"Processing {SchemaNames.Identity}::{TableNames.ApiResource} table");
 
         migrationBuilder.InsertData(
             table: TableNames.ApiResource,
@@ -21,53 +24,17 @@ public partial class InitialStructure
             },
             values: new object[]
             {
-                1, true, "SampleBlog API", "SampleBlog API", "SampleBlog Blogs API", "RS256", true, false,
-                new DateTime(2022, 7, 13, 6, 5, 50), null, null, false
-            }
-        );
-
-        #endregion
-
-        #region Api Resources scopes
-
-        migrationBuilder.InsertData(
-            table: TableNames.ApiResourceScope,
-            schema: SchemaNames.Identity,
-            columns: new[]
-            {
-                "Scope", "ApiResourceId"
-            },
-            values: new object[]
-            {
-                "blog", 2
-            }
-        );
-
-        #endregion
-
-        #region Api Resource Claims
-
-        migrationBuilder.InsertData(
-            table: TableNames.ApiResourceClaim,
-            schema: SchemaNames.Identity,
-            columns: new[]
-            {
-                "ApiResourceId", "Type"
-            },
-            values: new[]
-            {
-                new object?[]{ 1, "email" },
-                new object?[]{ 1, "email_verified" },
-                new object?[]{ 1, "role" },
-                new object?[]{ 1, "name" },
-                new object?[]{ 1, "preferred_username" },
-                new object?[]{ 1, "http://schemas.xmlsoap.org/ws/2009/09/identity/claims/actor" }
+                1, true, "StoryBlog API", "StoryBlog API", "StoryBlog Blogs API", "RS256", true, false,
+                new DateTimeOffset(2022, 7, 13, 6, 5, 50, TimeSpan.FromHours(3.0d)),
+                null, null, false
             }
         );
 
         #endregion
 
         #region Api scopes
+
+        Console.WriteLine($"Processing {SchemaNames.Identity}::{TableNames.ApiScope} table");
 
         migrationBuilder.InsertData(
             table: TableNames.ApiScope,
@@ -79,8 +46,79 @@ public partial class InitialStructure
             },
             values: new object?[]
             {
-                1, "blog", "StoryBlog API scope", "StoryBlog API scope", false, false, true,
-                new DateTime(2023, 6, 13, 20, 39, 14), null, null, false
+                true, "blog", "StoryBlog API scope", "StoryBlog API scope", false, false, true,
+                new DateTimeOffset(2023, 6, 13, 20, 39, 14, TimeSpan.FromHours(3.0d)),
+                null, null, false
+            }
+        );
+
+        #endregion
+
+        #region Api Resources scopes
+
+        Console.WriteLine($"Processing {SchemaNames.Identity}::{TableNames.ApiResourceScope} table");
+
+        migrationBuilder.InsertData(
+            table: TableNames.ApiResourceScope,
+            schema: SchemaNames.Identity,
+            columns: new[]
+            {
+                "Scope", "ApiResourceId"
+            },
+            values: new object[]
+            {
+                "blog", 1
+            }
+        );
+
+        #endregion
+
+        #region Api Resource Claims
+        
+        Console.WriteLine($"Processing {SchemaNames.Identity}::{TableNames.ApiResourceClaim} table");
+
+        migrationBuilder.InsertData(
+            table: TableNames.ApiResourceClaim,
+            schema: SchemaNames.Identity,
+            columns: new[]
+            {
+                "ApiResourceId", "Type"
+            },
+
+            values: new object?[,]
+            {
+                { 1, "email" },
+                { 1, "email_verified" },
+                { 1, "role" },
+                { 1, "name" },
+                { 1, "preferred_username" },
+                { 1, "http://schemas.xmlsoap.org/ws/2009/09/identity/claims/actor" },
+                { 1, ClaimIdentityTypes.Permission }
+            }
+        );
+
+        #endregion
+
+        #region Clients
+
+        Console.WriteLine($"Processing {SchemaNames.Identity}::{TableNames.Client} table");
+
+        migrationBuilder.InsertData(
+            table: TableNames.Client,
+            schema: SchemaNames.Identity,
+            columns: new[]
+            {
+                "ClientId", "ClientName", "Description", "ClientUri", "Enabled", "FrontChannelLogoutUri",
+                "BackChannelLogoutUri", "AllowedIdentityTokenSigningAlgorithms", "ConsentLifetime",
+                "UpdateAccessTokenClaimsOnRefresh","ClientClaimsPrefix", "PairWiseSubjectSalt", "UserSsoLifetime",
+                "UserCodeType", "RequireClientSecret", "CibaLifetime", "PollingInterval", "Created"
+            },
+            values: new object[]
+            {
+                "288849a891664840975fa7992f247947", "Sample Blog", "Sample Blog Client", "http://localhost:5035",
+                true, "http://localhost:5035/logout", "http://localhost:5035/logout-callback", "RS256", 150000000,
+                false, "sbc_", "k3jr23khk2e4jJKH2hjxbdw_jdTr", 500000000000, "numeric", false, 150000000, 15000000000,
+                new DateTimeOffset(2023, 05, 26, 11, 43, 39, TimeSpan.FromHours(3.0d))
             }
         );
 
@@ -88,6 +126,8 @@ public partial class InitialStructure
 
         #region Clients CORS
 
+        Console.WriteLine($"Processing {SchemaNames.Identity}::{TableNames.ClientCorsOrigin} table");
+        
         migrationBuilder.InsertData(
             table: TableNames.ClientCorsOrigin,
             schema: SchemaNames.Identity,
@@ -105,6 +145,8 @@ public partial class InitialStructure
 
         #region Clients grant types
 
+        Console.WriteLine($"Processing {SchemaNames.Identity}::{TableNames.ClientGrantType} table");
+
         migrationBuilder.InsertData(
             table: TableNames.ClientGrantType,
             schema: SchemaNames.Identity,
@@ -112,22 +154,18 @@ public partial class InitialStructure
             {
                 "GrantType", "ClientId"
             },
-            values: new object[][]
+            values: new object?[,]
             {
-                new object[]
-                {
-                    GrantType.AuthorizationCode, 1
-                },
-                new object[]
-                {
-                    GrantType.ClientCredentials, 1
-                }
+                { GrantType.AuthorizationCode, 1 },
+                { GrantType.ClientCredentials, 1 }
             }
         );
 
         #endregion
 
         #region Clients Properties
+
+        Console.WriteLine($"Processing {SchemaNames.Identity}::{TableNames.ClientProperty} table");
 
         migrationBuilder.InsertData(
             table: TableNames.ClientProperty,
@@ -146,6 +184,8 @@ public partial class InitialStructure
 
         #region Clients Redirect Uris
 
+        Console.WriteLine($"Processing {SchemaNames.Identity}::{TableNames.ClientRedirectUri} table");
+
         migrationBuilder.InsertData(
             table: TableNames.ClientRedirectUri,
             schema: SchemaNames.Identity,
@@ -161,30 +201,9 @@ public partial class InitialStructure
 
         #endregion
 
-        #region Clients
-
-        migrationBuilder.InsertData(
-            table: TableNames.Client,
-            schema: SchemaNames.Identity,
-            columns: new[]
-            {
-                "ClientId", "ClientName", "Description", "ClientUri", "Enabled", "FrontChannelLogoutUri",
-                "BackChannelLogoutUri", "AllowedIdentityTokenSigningAlgorithms", "ConsentLifetime",
-                "UpdateAccessTokenClaimsOnRefresh","ClientClaimsPrefix", "PairWiseSubjectSalt", "UserSsoLifetime",
-                "UserCodeType", "RequireClientSecret", "CibaLifetime", "PollingInterval", "Created"
-            },
-            values: new object[]
-            {
-                "288849a891664840975fa7992f247947", "Sample Blog", "Sample Blog Client", "http://localhost:5035",
-                true, "http://localhost:5035/logout", "http://localhost:5035/logout-callback", "RS256", 150000000,
-                false, "sbc_", "k3jr23khk2e4jJKH2hjxbdw_jdTr", 500000000000, "numeric", false, 150000000, 15000000000,
-                new DateTime(2023, 05, 26, 11, 43, 39)
-            }
-        );
-
-        #endregion
-
         #region Client Scopes
+
+        Console.WriteLine($"Processing {SchemaNames.Identity}::{TableNames.ClientScope} table");
 
         migrationBuilder.InsertData(
             table: TableNames.ClientScope,
@@ -193,17 +212,19 @@ public partial class InitialStructure
             {
                 "Scope", "ClientId"
             },
-            values: new object[][]
+            values: new object?[,]
             {
-                new object[] { "openid", 1 },
-                new object[] { "profile", 1 },
-                new object[] { "blog", 1 }
+                { "openid", 1 },
+                { "profile", 1 },
+                { "blog", 1 }
             }
         );
 
         #endregion
 
         #region Clients Secrets
+
+        Console.WriteLine($"Processing {SchemaNames.Identity}::{TableNames.ClientSecret} table");
 
         migrationBuilder.InsertData(
             table: TableNames.ClientSecret,
@@ -215,14 +236,17 @@ public partial class InitialStructure
             values: new object[]
             {
                 1, "StoryBlog basic secret", "l356jtlk3j5l6tk3j6ltk3j5;6tlk345j6l34k",
-                new DateTime(2030, 1, 1, 12, 00, 00), SecretTypes.SharedSecret,
-                new DateTime(2023, 5, 29, 12, 30, 00)
+                new DateTimeOffset(2030, 1, 1, 12, 00, 00, TimeSpan.FromHours(3.0d)), 
+                SecretTypes.SharedSecret,
+                new DateTimeOffset(2023, 5, 29, 12, 30, 00, TimeSpan.FromHours(3.0d))
             }
         );
 
         #endregion
 
         #region Identity Resources
+
+        Console.WriteLine($"Processing {SchemaNames.Identity}::{TableNames.IdentityResource} table");
 
         migrationBuilder.InsertData(
             table: TableNames.IdentityResource,
@@ -232,22 +256,22 @@ public partial class InitialStructure
                 "Id", "Enabled", "Name", "DisplayName", "Description", "Required", "Emphasize", "ShowInDiscoveryDocument",
                 "Created", "Updated", "NonEditable"
             },
-            values: new object[][]
+            values: new object?[,]
             {
-                new object[]
                 {
-                    1, 1, "profile", "SimpleBlog OpenID Profile resource", "SimpleBlog OpenID Profile resource", false,
-                    false, true, "2022-07-11 09:05:50.7431775", null, false
+                    1, true, "profile", "SimpleBlog OpenID Profile resource", "SimpleBlog OpenID Profile resource", false,
+                    false, true, new DateTimeOffset(2022, 7, 11, 9, 5, 50, TimeSpan.FromHours(3.0d)),
+                    null, false
                 },
-                new object[]
                 {
-                    2, 1, "openid", "SimpleBlog OpenID General resource", "SimpleBlog OpenID General resource", false,
-                    false, true, "2022-07-11 09:05:50.7731775", null, false
+                    2, true, "openid", "SimpleBlog OpenID General resource", "SimpleBlog OpenID General resource", false,
+                    false, true, new DateTimeOffset(2022, 7, 11, 9, 5, 50, TimeSpan.FromHours(3.0d)),
+                    null, false
                 },
-                new object[]
                 {
-                    3, 1, "email", "SimpleBlog OpenID Email resource", "SimpleBlog OpenID Email resource", false,
-                    false, true, "2022-07-11 09:05:50.7931775", null, false
+                    3, true, "email", "SimpleBlog OpenID Email resource", "SimpleBlog OpenID Email resource", false,
+                    false, true,new DateTimeOffset(2022, 7, 11, 9, 5, 50, TimeSpan.FromHours(3.0d)),
+                    null, false
                 }
             }
         );
@@ -256,6 +280,8 @@ public partial class InitialStructure
 
         #region Identity Resources Claims
 
+        Console.WriteLine($"Processing {SchemaNames.Identity}::{TableNames.IdentityResourceClaim} table");
+
         migrationBuilder.InsertData(
             table: TableNames.IdentityResourceClaim,
             schema: SchemaNames.Identity,
@@ -263,42 +289,24 @@ public partial class InitialStructure
             {
                 "IdentityResourceId", "Type"
             },
-            values: new object[][]
+            values: new object?[,]
             {
-                new object[]
-                {
-                    1, "name"
-                },
-                new object[]
-                {
-                    1, "given_name"
-                },
-                new object[]
-                {
-                    1, "nickname"
-                },
-                new object[]
-                {
-                    1, "gender"
-                },
-                new object[]
-                {
-                    1, "phone_number"
-                },
-                new object[]
-                {
-                    3, "email"
-                },
-                new object[]
-                {
-                    3, "email_confirmed"
-                }
+                { 1, "name" },
+                { 1, "given_name" },
+                { 1, "nickname" },
+                { 1, "gender" },
+                { 1, "phone_number" },
+                { 3, "email" },
+                { 3, "email_confirmed" },
+                { 3, ClaimIdentityTypes.Permission }
             }
         );
 
         #endregion
 
         #region Keys
+
+        Console.WriteLine($"Processing {SchemaNames.Identity}::{TableNames.Keys} table");
 
         migrationBuilder.InsertData(
             table: TableNames.Keys,
@@ -309,8 +317,8 @@ public partial class InitialStructure
             },
             values: new object[]
             {
-                    "BD5774334EADCDA65C39FEF2A01AEFB3", 1, "2023-05-26 16:43:42.4669521", "signing", "RS256", false,
-                    true,
+                    "BD5774334EADCDA65C39FEF2A01AEFB3", 1, new DateTimeOffset(2023, 5, 26, 16, 43, 42, TimeSpan.FromHours(3.0d)),
+                    "signing", "RS256", false, true,
                     "CfDJ8AoIYmakRP9JrsXlNs9fRz5eom3a0ypQNumXUqONuNrqYQ-tSj7j8uwryY-dQiv7OFYNRmL4Sfq3aL8iPItrTyxEx20"+
                     "amdcUrV5lr969F4xqiqRQsLpXRekg-drsbIndG4nAjnzJ7Wmj6WccpF6fYGs2TawvbCeBrEqp2OLXLqLbN3Vxkbs3bPEfoe"+
                     "tX03OYYRcykdemYKcEfr1WKwR_5EbBdu22jsMcIVRKsbwvMHWSeefTJM7V8L1P24Pw71hFhX86GX9X2l0pwvjYuWr130HII"+
@@ -342,8 +350,10 @@ public partial class InitialStructure
         );
 
         #endregion
-        
+
         #region Users
+
+        Console.WriteLine($"Processing {SchemaNames.Identity}::{TableNames.AspNetUsers} table");
 
         migrationBuilder.InsertData(
             table: TableNames.AspNetUsers,
@@ -357,30 +367,34 @@ public partial class InitialStructure
             },
             values: new object[]
             {
-                    "1b2696b7-7605-49be-b59c-ab577f6c1cc0", true, "2023-06-08 08:40:34.0273908",
-                    "2023-06-08 08:40:34.0348363", "guest@storyblog.net", "GUEST@STORYBLOG.NET", "guest@storyblog.net",
-                    "GUEST@STORYBLOG.NET", true,
+                    "1b2696b7-7605-49be-b59c-ab577f6c1cc0", true, new DateTimeOffset(2023, 6, 8, 8, 40, 34, TimeSpan.FromHours(3.0d)),
+                    new DateTimeOffset(2023, 6, 8, 8, 40, 34, TimeSpan.FromHours(3.0d)),
+                    "guest@storyblog.net", "GUEST@STORYBLOG.NET", "guest@storyblog.net", "GUEST@STORYBLOG.NET", true,
                     "AQAAAAIAAYagAAAAEP2omrptRd+Y6ldZrmgtyGyiS5lCKnBNVSZFOxOioe798g708HWi818ueedmCfjfKg==",
-                    "JUBOLHW6CITA22TQG4QV4FCUDQDYZCKA", "e96c8397-8d72-4ffb-9cf4-246d5fa2f36f", "8-800-444-55-66", true,
-                    false, null, true, 0
+                    "JUBOLHW6CITA22TQG4QV4FCUDQDYZCKA", "e96c8397-8d72-4ffb-9cf4-246d5fa2f36f", "8-800-444-55-66",
+                    true, false, null, true, 0
             }
         );
 
+        Console.WriteLine($"Processing {SchemaNames.Identity}::{TableNames.AspNetRoles} table");
+
         migrationBuilder.InsertData(
-            table: "AspNetRoles",
+            table: TableNames.AspNetRoles,
+            schema: SchemaNames.Identity,
             columns: new[]
             {
                     "Id", "Description", "Created", "Modified", "Name", "NormalizedName", "ConcurrencyStamp"
             },
             values: new object[]
             {
-                    "9e63463a-67ab-4bb7-a019-c151ea74a05b", "Blog Viewer", "2023-06-08 12:34:00.7029025", null,
-                    "Permissions.Blogs.View", "PERMISSIONS.BLOGS.VIEW", "7389d70d-c988-42f3-9712-5d1c607d60a7"
+                    "9e63463a-67ab-4bb7-a019-c151ea74a05b", "Sample Blog ordinal viewer", new DateTimeOffset(2023, 6, 8, 12, 34, 0, TimeSpan.FromHours(3.0d)),
+                    null, "BlogViewer", "BLOGVIEWER", "7389d70d-c988-42f3-9712-5d1c607d60a7"
             }
         );
 
         migrationBuilder.InsertData(
-            table: "AspNetUserRoles",
+            table: TableNames.AspNetUserRoles,
+            schema: SchemaNames.Identity,
             columns: new[]
             {
                     "UserId", "RoleId"
@@ -391,31 +405,59 @@ public partial class InitialStructure
             }
         );
 
+        Console.WriteLine($"Processing {SchemaNames.Identity}::{TableNames.AspNetUserClaims} table");
+
         migrationBuilder.InsertData(
-            table: "AspNetUserClaims",
+            table: TableNames.AspNetUserClaims,
+            schema: SchemaNames.Identity,
             columns: new[]
             {
                     "UserId", "ClaimType", "ClaimValue"
             },
-            values: new object[]
+            values: new object?[,]
             {
+                {
                     "1b2696b7-7605-49be-b59c-ab577f6c1cc0",
-                    "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname", "Guest"
+                    "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname",
+                    "Guest"
+                },
+                {
+                    "1b2696b7-7605-49be-b59c-ab577f6c1cc0",
+                    ClaimIdentityTypes.Permission,
+                    Permissions.Blogs.View
+                },
+                {
+                    "1b2696b7-7605-49be-b59c-ab577f6c1cc0",
+                    ClaimIdentityTypes.Permission,
+                    Permissions.Blogs.Create
+                },
+                {
+                    "1b2696b7-7605-49be-b59c-ab577f6c1cc0",
+                    ClaimIdentityTypes.Permission,
+                    Permissions.Blogs.Update
+                },
+                {
+                    "1b2696b7-7605-49be-b59c-ab577f6c1cc0",
+                    ClaimIdentityTypes.Permission,
+                    Permissions.Blogs.Delete
+                }
             }
         );
 
+        Console.WriteLine($"Processing {SchemaNames.Identity}::{TableNames.AspNetRoleClaims} table");
+
         migrationBuilder.InsertData(
-            table: "AspNetRoleClaims",
+            table: TableNames.AspNetRoleClaims,
+            schema: SchemaNames.Identity,
             columns: new[]
             {
-                    "RoleId", "ClaimType", "ClaimValue", "Discriminator", "Description", "Group", "Created",
-                    "Modified"
+                    "RoleId", "ClaimType", "ClaimValue", "Created"
             },
             values: new object[]
             {
                     "9e63463a-67ab-4bb7-a019-c151ea74a05b",
                     "http://schemas.xmlsoap.org/ws/2009/09/identity/claims/actor", "Viewer",
-                    "IdentityRoleClaim<string>", null, null, null, null
+                    new DateTimeOffset(2023, 11, 15, 18, 23, 45, TimeSpan.FromHours(3.0d))
             }
         );
 

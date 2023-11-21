@@ -228,6 +228,24 @@ namespace StoryBlog.Web.Microservices.Identity.Infrastructure.Persistence.Migrat
                 });
 
             migrationBuilder.CreateTable(
+                name: "Roles",
+                schema: "Identity",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "text", nullable: false),
+                    Description = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
+                    Created = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    Modified = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true),
+                    Name = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
+                    NormalizedName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
+                    ConcurrencyStamp = table.Column<string>(type: "text", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Roles", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ServerSideSessions",
                 schema: "Identity",
                 columns: table => new
@@ -247,24 +265,6 @@ namespace StoryBlog.Web.Microservices.Identity.Infrastructure.Persistence.Migrat
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ServerSideSessions", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "UserRoles",
-                schema: "Identity",
-                columns: table => new
-                {
-                    Id = table.Column<string>(type: "text", nullable: false),
-                    Description = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
-                    Created = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
-                    Modified = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true),
-                    Name = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
-                    NormalizedName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
-                    ConcurrencyStamp = table.Column<string>(type: "text", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_UserRoles", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -686,29 +686,35 @@ namespace StoryBlog.Web.Microservices.Identity.Infrastructure.Persistence.Migrat
                 });
 
             migrationBuilder.CreateTable(
-                name: "AspNetRoleClaims",
+                name: "RoleClaims",
+                schema: "Identity",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Description = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
+                    Group = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    Created = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    Modified = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true),
                     RoleId = table.Column<string>(type: "text", nullable: false),
                     ClaimType = table.Column<string>(type: "text", nullable: true),
                     ClaimValue = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AspNetRoleClaims", x => x.Id);
+                    table.PrimaryKey("PK_RoleClaims", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_AspNetRoleClaims_UserRoles_RoleId",
+                        name: "FK_RoleClaims_Roles_RoleId",
                         column: x => x.RoleId,
                         principalSchema: "Identity",
-                        principalTable: "UserRoles",
+                        principalTable: "Roles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "AspNetUserClaims",
+                name: "UserClaims",
+                schema: "Identity",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -719,9 +725,9 @@ namespace StoryBlog.Web.Microservices.Identity.Infrastructure.Persistence.Migrat
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AspNetUserClaims", x => x.Id);
+                    table.PrimaryKey("PK_UserClaims", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_AspNetUserClaims_Users_UserId",
+                        name: "FK_UserClaims_Users_UserId",
                         column: x => x.UserId,
                         principalSchema: "Identity",
                         principalTable: "Users",
@@ -730,7 +736,8 @@ namespace StoryBlog.Web.Microservices.Identity.Infrastructure.Persistence.Migrat
                 });
 
             migrationBuilder.CreateTable(
-                name: "AspNetUserLogins",
+                name: "UserLogins",
+                schema: "Identity",
                 columns: table => new
                 {
                     LoginProvider = table.Column<string>(type: "text", nullable: false),
@@ -740,9 +747,9 @@ namespace StoryBlog.Web.Microservices.Identity.Infrastructure.Persistence.Migrat
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AspNetUserLogins", x => new { x.LoginProvider, x.ProviderKey });
+                    table.PrimaryKey("PK_UserLogins", x => new { x.LoginProvider, x.ProviderKey });
                     table.ForeignKey(
-                        name: "FK_AspNetUserLogins_Users_UserId",
+                        name: "FK_UserLogins_Users_UserId",
                         column: x => x.UserId,
                         principalSchema: "Identity",
                         principalTable: "Users",
@@ -751,7 +758,8 @@ namespace StoryBlog.Web.Microservices.Identity.Infrastructure.Persistence.Migrat
                 });
 
             migrationBuilder.CreateTable(
-                name: "AspNetUserRoles",
+                name: "UserRoles",
+                schema: "Identity",
                 columns: table => new
                 {
                     UserId = table.Column<string>(type: "text", nullable: false),
@@ -759,16 +767,16 @@ namespace StoryBlog.Web.Microservices.Identity.Infrastructure.Persistence.Migrat
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AspNetUserRoles", x => new { x.UserId, x.RoleId });
+                    table.PrimaryKey("PK_UserRoles", x => new { x.UserId, x.RoleId });
                     table.ForeignKey(
-                        name: "FK_AspNetUserRoles_UserRoles_RoleId",
+                        name: "FK_UserRoles_Roles_RoleId",
                         column: x => x.RoleId,
                         principalSchema: "Identity",
-                        principalTable: "UserRoles",
+                        principalTable: "Roles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_AspNetUserRoles_Users_UserId",
+                        name: "FK_UserRoles_Users_UserId",
                         column: x => x.UserId,
                         principalSchema: "Identity",
                         principalTable: "Users",
@@ -777,7 +785,8 @@ namespace StoryBlog.Web.Microservices.Identity.Infrastructure.Persistence.Migrat
                 });
 
             migrationBuilder.CreateTable(
-                name: "AspNetUserTokens",
+                name: "UserTokens",
+                schema: "Identity",
                 columns: table => new
                 {
                     UserId = table.Column<string>(type: "text", nullable: false),
@@ -787,34 +796,12 @@ namespace StoryBlog.Web.Microservices.Identity.Infrastructure.Persistence.Migrat
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AspNetUserTokens", x => new { x.UserId, x.LoginProvider, x.Name });
+                    table.PrimaryKey("PK_UserTokens", x => new { x.UserId, x.LoginProvider, x.Name });
                     table.ForeignKey(
-                        name: "FK_AspNetUserTokens_Users_UserId",
+                        name: "FK_UserTokens_Users_UserId",
                         column: x => x.UserId,
                         principalSchema: "Identity",
                         principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "UserRoleClaims",
-                schema: "Identity",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false),
-                    Description = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
-                    Group = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
-                    Created = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
-                    Modified = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_UserRoleClaims", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_UserRoleClaims_AspNetRoleClaims_Id",
-                        column: x => x.Id,
-                        principalTable: "AspNetRoleClaims",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -890,26 +877,6 @@ namespace StoryBlog.Web.Microservices.Identity.Infrastructure.Persistence.Migrat
                 schema: "Identity",
                 table: "ApiScopes",
                 column: "Id");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AspNetRoleClaims_RoleId",
-                table: "AspNetRoleClaims",
-                column: "RoleId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AspNetUserClaims_UserId",
-                table: "AspNetUserClaims",
-                column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AspNetUserLogins_UserId",
-                table: "AspNetUserLogins",
-                column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AspNetUserRoles_RoleId",
-                table: "AspNetUserRoles",
-                column: "RoleId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ClientClaims_ClientId",
@@ -1053,17 +1020,41 @@ namespace StoryBlog.Web.Microservices.Identity.Infrastructure.Persistence.Migrat
                 column: "Key");
 
             migrationBuilder.CreateIndex(
+                name: "IX_RoleClaims_RoleId",
+                schema: "Identity",
+                table: "RoleClaims",
+                column: "RoleId");
+
+            migrationBuilder.CreateIndex(
+                name: "RoleNameIndex",
+                schema: "Identity",
+                table: "Roles",
+                column: "NormalizedName",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ServerSideSessions_Key",
                 schema: "Identity",
                 table: "ServerSideSessions",
                 column: "Key");
 
             migrationBuilder.CreateIndex(
-                name: "RoleNameIndex",
+                name: "IX_UserClaims_UserId",
+                schema: "Identity",
+                table: "UserClaims",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserLogins_UserId",
+                schema: "Identity",
+                table: "UserLogins",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserRoles_RoleId",
                 schema: "Identity",
                 table: "UserRoles",
-                column: "NormalizedName",
-                unique: true);
+                column: "RoleId");
 
             migrationBuilder.CreateIndex(
                 name: "EmailIndex",
@@ -1077,6 +1068,8 @@ namespace StoryBlog.Web.Microservices.Identity.Infrastructure.Persistence.Migrat
                 table: "Users",
                 column: "NormalizedUserName",
                 unique: true);
+
+            SeedIdentityData(migrationBuilder);
         }
 
         /// <inheritdoc />
@@ -1105,18 +1098,6 @@ namespace StoryBlog.Web.Microservices.Identity.Infrastructure.Persistence.Migrat
             migrationBuilder.DropTable(
                 name: "ApiScopeProperties",
                 schema: "Identity");
-
-            migrationBuilder.DropTable(
-                name: "AspNetUserClaims");
-
-            migrationBuilder.DropTable(
-                name: "AspNetUserLogins");
-
-            migrationBuilder.DropTable(
-                name: "AspNetUserRoles");
-
-            migrationBuilder.DropTable(
-                name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
                 name: "ClientClaims",
@@ -1179,11 +1160,27 @@ namespace StoryBlog.Web.Microservices.Identity.Infrastructure.Persistence.Migrat
                 schema: "Identity");
 
             migrationBuilder.DropTable(
+                name: "RoleClaims",
+                schema: "Identity");
+
+            migrationBuilder.DropTable(
                 name: "ServerSideSessions",
                 schema: "Identity");
 
             migrationBuilder.DropTable(
-                name: "UserRoleClaims",
+                name: "UserClaims",
+                schema: "Identity");
+
+            migrationBuilder.DropTable(
+                name: "UserLogins",
+                schema: "Identity");
+
+            migrationBuilder.DropTable(
+                name: "UserRoles",
+                schema: "Identity");
+
+            migrationBuilder.DropTable(
+                name: "UserTokens",
                 schema: "Identity");
 
             migrationBuilder.DropTable(
@@ -1195,10 +1192,6 @@ namespace StoryBlog.Web.Microservices.Identity.Infrastructure.Persistence.Migrat
                 schema: "Identity");
 
             migrationBuilder.DropTable(
-                name: "Users",
-                schema: "Identity");
-
-            migrationBuilder.DropTable(
                 name: "Clients",
                 schema: "Identity");
 
@@ -1207,10 +1200,11 @@ namespace StoryBlog.Web.Microservices.Identity.Infrastructure.Persistence.Migrat
                 schema: "Identity");
 
             migrationBuilder.DropTable(
-                name: "AspNetRoleClaims");
+                name: "Roles",
+                schema: "Identity");
 
             migrationBuilder.DropTable(
-                name: "UserRoles",
+                name: "Users",
                 schema: "Identity");
         }
     }
