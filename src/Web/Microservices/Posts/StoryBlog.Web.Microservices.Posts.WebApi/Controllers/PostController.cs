@@ -9,6 +9,7 @@ using StoryBlog.Web.Microservices.Posts.Application.Models;
 using StoryBlog.Web.Microservices.Posts.Shared.Models;
 using StoryBlog.Web.Microservices.Posts.WebApi.Core;
 using System.ComponentModel;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace StoryBlog.Web.Microservices.Posts.WebApi.Controllers;
 
@@ -100,11 +101,11 @@ public class PostController : Controller
     /// </summary>
     /// <param name="slugOrKey"></param>
     /// <returns></returns>
-    [ProducesResponseType(typeof(PostModel), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(PostDeletedResponse), StatusCodes.Status200OK)]
     [HttpDelete("{slugOrKey:required}")]
     public async Task<IActionResult> DeletePost([FromRoute] string slugOrKey)
     {
-        /*var command = new EditPostCommand(request.Title, request.Key, User);
+        /*var command = new DeletePostCommand(slugOrKey, User);
         var success = await mediator.Send(command).ConfigureAwait(false);
 
         if (success)
@@ -123,6 +124,11 @@ public class PostController : Controller
 
         return BadRequest();*/
 
-        return StatusCode(StatusCodes.Status501NotImplemented);
+        await Task.Delay(TimeSpan.FromSeconds(1.0d));
+
+        return Ok(new PostDeletedResponse
+        {
+
+        });
     }
 }

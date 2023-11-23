@@ -87,7 +87,7 @@ public class PostsController : Controller
         {
             Title = request.Title,
             Slug = request.Slug,
-            Text = "",
+            Text = request.Content,
             Brief = ""
         };
 

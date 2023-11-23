@@ -12,6 +12,7 @@ using StoryBlog.Web.Microservices.Comments.Infrastructure.Extensions;
 using StoryBlog.Web.Microservices.Comments.WebApi.Configuration;
 using StoryBlog.Web.Microservices.Comments.WebApi.Core;
 using StoryBlog.Web.Microservices.Comments.WebApi.Extensions;
+using System.Net.Mime;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -34,69 +35,48 @@ builder.Services.AddAutoMapper(configuration =>
     configuration.AddWebApiMappingProfiles();
 });
 builder.Services.AddSlimMessageBus(buses => buses
-    .AddChildBus("default", bus => bus
-        .Consume<NewPostCreatedEvent>(x => x
-            .Queue("storyblog.post.created", durable: true)
-            .PerMessageScopeEnabled(enabled: true)
-            .ExchangeBinding("amq.topic", routingKey: "storyblog.post.created")
-            .WithConsumer<NewPostCreatedEventHandler>()
-        )
-        .Consume<PostPublishedEvent>(x => x
-            .Queue("storyblog.post.published", durable: true)
-            .PerMessageScopeEnabled(enabled: true)
-            .ExchangeBinding("amq.topic", routingKey: "storyblog.post.published")
-            .WithConsumer<PostPublishedEventHandler>()
-        )
-        .Consume<PostRemovedEvent>(x => x
-            .Queue("storyblog.post.removed", durable: true)
-            .PerMessageScopeEnabled(enabled: true)
-            .ExchangeBinding("amq.topic", routingKey: "storyblog.post.removed")
-            .WithConsumer<PostRemovedEventHandler>()
-        )
-        .Produce<NewCommentCreatedEvent>(x => x
-            .Exchange("amp.topic", durable: true)
-            .RoutingKeyProvider((a, b) => "storyblog.comment.created")
-        )
+    .Consume<NewPostCreatedEvent>(x => x
+        .Queue("storyblog.post.created", durable: true)
+        .PerMessageScopeEnabled(enabled: true)
+        .ExchangeBinding("amq.topic", routingKey: "storyblog.post.created")
+        .WithConsumer<NewPostCreatedEventHandler>()
+    )
+    .Consume<PostPublishedEvent>(x => x
+        .Queue("storyblog.post.published", durable: true)
+        .PerMessageScopeEnabled(enabled: true)
+        .ExchangeBinding("amq.topic", routingKey: "storyblog.post.published")
+        .WithConsumer<PostPublishedEventHandler>()
+    )
+    .Consume<PostRemovedEvent>(x => x
+        .Queue("storyblog.post.removed", durable: true)
+        .PerMessageScopeEnabled(enabled: true)
+        .ExchangeBinding("amq.topic", routingKey: "storyblog.post.removed")
+        .WithConsumer<PostRemovedEventHandler>()
+    )
+    .Produce<NewCommentCreatedEvent>(x => x
+        .Exchange("amq.topic", exchangeType: ExchangeType.Topic)
+        .RoutingKeyProvider((a, b) => "storyblog.comment.created")
     )
     .WithProviderRabbitMQ(rabbit =>
     {
         rabbit.ConnectionString = "amqp://admin:admin@localhost:5672";
+        rabbit.UseExchangeDefaults(durable: true);
+        rabbit.UseMessagePropertiesModifier((message, properties) =>
+        {
+            properties.ContentType = MediaTypeNames.Application.Json;
+        });
     })
-    /*
-    {
-    bus
-            .Consume<BlogPostEvent>(x => x
-                .Topic("blog-post")
-                .PerMessageScopeEnabled(true)
-                .WithConsumer<NewPostCreatedEventHandler>()
-            );
-
-        bus
-            .Produce<BlogCommentEvent>(x => x.DefaultTopic("blog-comment"))
-            .WithProviderNamedPipes(settings =>
-            {
-                settings.Instances = 1;
-            });
-    })
-    .AddJsonSerializer()
-    .WithProviderRabbitMQ(rabbit =>
-    {
-        ;
-    })*/
     .AddJsonSerializer()
     .AddAspNet()
 );
 builder.Services.AddHttpContextAccessor();
-builder.Services.AddCors(options =>
-{
-    options.AddDefaultPolicy(policy =>
-    {
-        policy
-            .AllowAnyOrigin()
-            .AllowAnyMethod()
-            .AllowAnyHeader();
-    });
-});
+builder.Services.AddCors(options => options
+    .AddDefaultPolicy(policy => policy
+        .AllowAnyOrigin()
+        .AllowAnyMethod()
+        .AllowAnyHeader()
+    )
+);
 builder.Services.AddStoryBlogAuthentication();
 builder.Services.AddControllers();
 builder.Services

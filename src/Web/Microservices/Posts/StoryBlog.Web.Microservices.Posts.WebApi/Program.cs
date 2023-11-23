@@ -11,6 +11,7 @@ using StoryBlog.Web.Microservices.Posts.WebApi.Configuration;
 using StoryBlog.Web.Microservices.Posts.WebApi.Core;
 using StoryBlog.Web.Microservices.Posts.WebApi.Extensions;
 using System.Diagnostics.Tracing;
+using System.Net.Mime;
 using Asp.Versioning;
 using Asp.Versioning.ApiExplorer;
 using SlimMessageBus.Host.RabbitMQ;
@@ -42,29 +43,32 @@ builder.Services.AddAutoMapper(configuration =>
     configuration.AddWebApiMappingProfiles();
 });
 builder.Services.AddSlimMessageBus(buses => buses
-    .AddChildBus("default", bus => bus
-        .Consume<NewCommentCreatedEvent>(x => x
-            .Queue("storyblog.comment.created", durable: true)
-            .PerMessageScopeEnabled(enabled: true)
-            .ExchangeBinding("amq.topic", routingKey: "storyblog.comment.created")
-            .WithConsumer<NewCommentCreatedEventHandler>()
-        )
-        .Produce<NewPostCreatedEvent>(x => x
-            .Exchange("amp.topic", durable: true)
-            .RoutingKeyProvider((a, b) => "storyblog.post.created")
-        )
-        .Produce<PostPublishedEvent>(x => x
-            .Exchange("amp.topic", durable: true)
-            .RoutingKeyProvider((a, b) => "storyblog.post.published")
-        )
-        .Produce<PostRemovedEvent>(x => x
-            .Exchange("amp.topic", durable: true)
-            .RoutingKeyProvider((a, b) => "storyblog.post.removed")
-        )
+    .Consume<NewCommentCreatedEvent>(x => x
+        .Queue("storyblog.comment.created", durable: true)
+        .PerMessageScopeEnabled(enabled: true)
+        .ExchangeBinding("amq.topic", routingKey: "storyblog.comment.created")
+        .WithConsumer<NewCommentCreatedEventHandler>()
+    )
+    .Produce<NewPostCreatedEvent>(x => x
+        .Exchange("amq.topic", ExchangeType.Topic)
+        .RoutingKeyProvider((a, b) => "storyblog.post.created")
+    )
+    .Produce<PostPublishedEvent>(x => x
+        .Exchange("amq.topic", ExchangeType.Topic)
+        .RoutingKeyProvider((a, b) => "storyblog.post.published")
+    )
+    .Produce<PostRemovedEvent>(x => x
+        .Exchange("amq.topic", ExchangeType.Topic)
+        .RoutingKeyProvider((a, b) => "storyblog.post.removed")
     )
     .WithProviderRabbitMQ(rabbit =>
     {
         rabbit.ConnectionString = "amqp://admin:admin@localhost:5672";
+        rabbit.UseExchangeDefaults(durable: true);
+        rabbit.UseMessagePropertiesModifier((message, properties) =>
+        {
+            properties.ContentType = MediaTypeNames.Application.Json;
+        });
     })
     .AddJsonSerializer()
     .AddAspNet()

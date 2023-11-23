@@ -54,7 +54,7 @@ public partial class Edit
 
     private void OnSubmitForm(EditContext context)
     {
-        Dispatcher.Dispatch(new CreatePostAction(Model.Title, Model.Slug!));
+        Dispatcher.Dispatch(new CreatePostAction(Model.Title, Model.Slug!, Model.Content));
     }
 
     private void OnInvalidForm(EditContext context)

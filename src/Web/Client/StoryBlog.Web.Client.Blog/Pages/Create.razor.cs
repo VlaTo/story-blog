@@ -121,7 +121,7 @@ public partial class Create
 
     private void OnSubmitForm(EditContext context)
     {
-        Dispatcher.Dispatch(new CreatePostAction(Model.Title, Model.Slug!));
+        Dispatcher.Dispatch(new CreatePostAction(Model.Title, Model.Slug!, Text!));
     }
 
     private void OnInvalidForm(EditContext context)

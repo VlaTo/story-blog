@@ -41,7 +41,7 @@ public sealed class CreatePostEffect : Effect<CreatePostAction>
 
     public override async Task HandleAsync(CreatePostAction action, IDispatcher dispatcher)
     {
-        var result = await client.CreatePostAsync(action.Title, action.Slug);
+        var result = await client.CreatePostAsync(action.Title, action.Slug, action.Content);
 
         object next = null != result
             ? new CreatedPostReadyAction(result.Title, result.Slug, result.Status, result.CreatedAt)

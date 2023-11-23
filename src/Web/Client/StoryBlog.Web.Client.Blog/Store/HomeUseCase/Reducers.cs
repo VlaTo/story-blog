@@ -28,10 +28,8 @@ namespace StoryBlog.Web.Client.Blog.Store.HomeUseCase;
 /// </summary>
 public sealed class FetchPostsPageReducer : Reducer<HomeState, FetchPostsPageAction>
 {
-    public override HomeState Reduce(HomeState state, FetchPostsPageAction action)
-    {
-        return new HomeState(state.Posts, StoreState.Loading);
-    }
+    public override HomeState Reduce(HomeState state, FetchPostsPageAction action) =>
+        new(state.PageNumber, state.PageSize, state.Posts, StoreState.Loading);
 }
 
 /// <summary>
@@ -39,10 +37,8 @@ public sealed class FetchPostsPageReducer : Reducer<HomeState, FetchPostsPageAct
 /// </summary>
 public sealed class FetchPostsPageFailedReducer : Reducer<HomeState, FetchPostsPageFailedAction>
 {
-    public override HomeState Reduce(HomeState state, FetchPostsPageFailedAction action)
-    {
-        return new HomeState(state.Posts, StoreState.Failed);
-    }
+    public override HomeState Reduce(HomeState state, FetchPostsPageFailedAction action) =>
+        new(state.PageNumber, state.PageSize, state.Posts, StoreState.Failed);
 }
 
 /// <summary>
@@ -51,5 +47,14 @@ public sealed class FetchPostsPageFailedReducer : Reducer<HomeState, FetchPostsP
 public sealed class PostsPageReadyReducer : Reducer<HomeState, FetchPostsPageReadyAction>
 {
     public override HomeState Reduce(HomeState state, FetchPostsPageReadyAction action) =>
-        new HomeState(action.Posts, StoreState.Success);
+        new(state.PageNumber, state.PageSize, action.Posts, StoreState.Success);
+}
+
+/// <summary>
+/// 
+/// </summary>
+public sealed class ImmediatePostDeleteReducer : Reducer<HomeState, ImmediatePostDelete>
+{
+    public override HomeState Reduce(HomeState state, ImmediatePostDelete action) =>
+        new(state.PageNumber, state.PageSize, state.Posts, state.StoreState);
 }

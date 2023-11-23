@@ -31,5 +31,7 @@ public interface IPostsClient
 
     Task<PostModel?> GetPostAsync(string slugOrKey);
 
-    Task<Models.CreatedPostModel?> CreatePostAsync(string title, string slug);
+    Task<Models.CreatedPostModel?> CreatePostAsync(string title, string slug, string content);
+
+    Task<Result> DeletePostAsync(string slugOrKey);
 }

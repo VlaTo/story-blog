@@ -3,7 +3,7 @@
     "http": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "edit/lorem-ipsum-dolor-sit-amet-8eb975fc-74d2-4be1-bd95-f25ea308bd3b",
+      "launchUrl": "create",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },

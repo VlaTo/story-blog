@@ -10,7 +10,10 @@ public sealed record GenerateSlugAction(string Title);
 /// <summary>
 /// 
 /// </summary>
-public sealed record GeneratedSlugReadyAction(string Title, string Slug);
+public sealed record GeneratedSlugReadyAction(
+    string Title,
+    string Slug
+);
 
 /// <summary>
 /// 
@@ -20,12 +23,21 @@ public sealed record GenerateSlugFailedAction(string Title);
 /// <summary>
 /// 
 /// </summary>
-public sealed record CreatePostAction(string Title, string Slug);
+public sealed record CreatePostAction(
+    string Title,
+    string Slug,
+    string Content
+);
 
 /// <summary>
 /// 
 /// </summary>
-public sealed record CreatedPostReadyAction(string Title, string Slug, PostModelStatus Status, DateTime CreatedAt);
+public sealed record CreatedPostReadyAction(
+    string Title,
+    string Slug,
+    PostModelStatus Status,
+    DateTime CreatedAt
+);
 
 /// <summary>
 /// 

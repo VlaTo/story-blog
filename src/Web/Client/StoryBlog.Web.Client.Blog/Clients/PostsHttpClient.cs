@@ -110,16 +110,20 @@ internal sealed class PostsHttpClient : IPostsClient
     }
 
     /// <inheritdoc cref="IPostsClient.CreatePostAsync" />
-    public async Task<Models.CreatedPostModel?> CreatePostAsync(string title, string slug)
+    public async Task<Models.CreatedPostModel?> CreatePostAsync(string title, string slug, string content)
     {
         var uri = new Uri(options.Endpoints.Posts.BasePath, UriKind.Absolute);
-        var request = new HttpRequestMessage(HttpMethod.Post, uri);
-
-        request.Content = JsonContent.Create(new CreatePostRequest
+        var createPostRequest = new CreatePostRequest
         {
             Title = title,
-            Slug = slug
-        });
+            Slug = slug,
+            Content = content
+        };
+
+        var request = new HttpRequestMessage(HttpMethod.Post, uri)
+        {
+            Content = JsonContent.Create(createPostRequest)
+        };
 
         try
         {
@@ -148,6 +152,41 @@ internal sealed class PostsHttpClient : IPostsClient
         {
             Debug.WriteLine(exception);
             return null;
+        }
+    }
+
+    /// <inheritdoc cref="IPostsClient.DeletePostAsync" />
+    public async Task<Result> DeletePostAsync(string slugOrKey)
+    {
+        var basePath = new Uri(options.Endpoints.Post.BasePath, UriKind.Absolute);
+        var relativeUri = new Uri(slugOrKey, UriKind.Relative);
+
+        if (false == Uri.TryCreate(basePath, relativeUri, out var endpoint))
+        {
+            return new Exception("Failed to create Uri");
+        }
+
+        var request = new HttpRequestMessage(HttpMethod.Delete, endpoint);
+
+        try
+        {
+            var httpClient = httpClientFactory.CreateClient("PostsApi");
+
+            using (var response = await httpClient.SendAsync(request))
+            {
+                var message = response.EnsureSuccessStatusCode();
+
+                using (var stream = await message.Content.ReadAsStreamAsync())
+                {
+                    var postDeleted = await JsonSerializer.DeserializeAsync<PostDeletedResponse>(stream);
+
+                    return Result.Success;
+                }
+            }
+        }
+        catch (Exception exception)
+        {
+            return exception;
         }
     }
 }

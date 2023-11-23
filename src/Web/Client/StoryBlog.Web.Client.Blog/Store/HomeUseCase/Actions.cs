@@ -26,61 +26,44 @@ namespace StoryBlog.Web.Client.Blog.Store.HomeUseCase;
 /// <summary>
 /// 
 /// </summary>
-public class PostsPageAction
-{
-    public int PageNumber
-    {
-        get;
-    }
-
-    public int PageSize
-    {
-        get;
-    }
-
-    public PostsPageAction(int pageNumber, int pageSize)
-    {
-        PageNumber = pageNumber;
-        PageSize = pageSize;
-    }
-}
+public record PostsPageAction(
+    int PageNumber,
+    int PageSize
+);
 
 /// <summary>
 /// 
 /// </summary>
-public sealed class FetchPostsPageAction : PostsPageAction
-{
-    public FetchPostsPageAction(int pageNumber, int pageSize)
-        : base(pageNumber, pageSize)
-    {
-    }
-}
+public sealed record FetchPostsPageAction(
+        int PageNumber,
+        int PageSize)
+    : PostsPageAction(PageNumber, PageSize);
 
 /// <summary>
 /// 
 /// </summary>
-public sealed class FetchPostsPageReadyAction : PostsPageAction
-{
-    public IReadOnlyCollection<BriefModel> Posts
-    {
-        get; 
-        set;
-    }
-
-    public FetchPostsPageReadyAction(IReadOnlyCollection<BriefModel> posts, int pageNumber, int pageSize)
-        : base(pageNumber, pageSize)
-    {
-        Posts = posts;
-    }
-}
+public sealed record FetchPostsPageReadyAction(
+        IReadOnlyCollection<BriefModel> Posts,
+        int PageNumber,
+        int PageSize)
+    : PostsPageAction(PageNumber, PageSize);
 
 /// <summary>
 /// 
 /// </summary>
-public sealed class FetchPostsPageFailedAction : PostsPageAction
-{
-    public FetchPostsPageFailedAction(int pageNumber, int pageSize)
-        : base(pageNumber, pageSize)
-    {
-    }
-}
+public sealed record FetchPostsPageFailedAction(
+        int PageNumber,
+        int PageSize)
+    : PostsPageAction(PageNumber, PageSize);
+
+/// <summary>
+/// 
+/// </summary>
+/// <param name="PostKey"></param>
+/// <param name="PageNumber"></param>
+/// <param name="PageSize"></param>
+public sealed record ImmediatePostDelete(
+        Guid PostKey,
+        int PageNumber,
+        int PageSize)
+    :PostsPageAction(PageNumber, PageSize);

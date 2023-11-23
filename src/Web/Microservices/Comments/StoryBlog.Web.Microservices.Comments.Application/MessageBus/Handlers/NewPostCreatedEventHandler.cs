@@ -20,7 +20,7 @@ public sealed class NewPostCreatedEventHandler : IConsumer<NewPostCreatedEvent>
 
     public Task OnHandle(NewPostCreatedEvent message)
     {
-        logger.LogInformation($"Received {nameof(NewPostCreatedEvent)} event");
+        logger.LogInformation($"Received {nameof(NewPostCreatedEvent)} event: {{key: {message.Key}, created: {message.Created:G}, author: {message.AuthorId}}}");
 
         return Task.CompletedTask;
     }

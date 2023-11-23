@@ -56,3 +56,33 @@ public sealed class FetchAvailablePostsEffect : Effect<FetchPostsPageAction>
         dispatcher.Dispatch(next);
     }
 }
+
+/// <summary>
+/// 
+/// </summary>
+public sealed class ImmediatePostDeleteEffect : Effect<ImmediatePostDelete>
+{
+    private readonly AuthenticationStateProvider authenticationProvider;
+    private readonly IPostsClient client;
+
+    public ImmediatePostDeleteEffect(
+        AuthenticationStateProvider authenticationProvider,
+        IPostsClient client)
+    {
+        this.authenticationProvider = authenticationProvider;
+        this.client = client;
+    }
+
+    public override async Task HandleAsync(ImmediatePostDelete action, IDispatcher dispatcher)
+    {
+        var slugOrKey = action.PostKey.ToString();
+        var response = await client.DeletePostAsync(slugOrKey);
+
+        if (response.Succeeded)
+        {
+            dispatcher.Dispatch(new FetchPostsPageAction(action.PageNumber, action.PageSize));
+        }
+
+        //throw new NotImplementedException();
+    }
+}

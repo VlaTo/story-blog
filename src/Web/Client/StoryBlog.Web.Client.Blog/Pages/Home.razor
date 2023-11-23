@@ -46,7 +46,13 @@
                         }
                         @if (CanDelete(post))
                         {
-                            <MudIconButton Class="quick-action" Size=@Size.Small ButtonType=@ButtonType.Button Icon=@Icons.Material.Filled.Delete OnClick=@DoPostDelete />
+                            <MudIconButton 
+                                Class="quick-action" 
+                                Size=@Size.Small 
+                                ButtonType=@ButtonType.Button 
+                                Icon=@Icons.Material.Filled.Delete 
+                                OnClick=@(() => DoPostDelete(post.Key, post.Title))
+                            />
                         }
                     </HeaderContent>
                     <ChildContent>

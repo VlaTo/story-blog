@@ -3,12 +3,26 @@
 /// <summary>
 /// 
 /// </summary>
-/// <param name="Key"></param>
-public sealed record NewPostCreatedEvent(
-    Guid Key,
-    DateTimeOffset Created,
-    string? AuthorId
-);
+public sealed class NewPostCreatedEvent
+{
+    public Guid Key
+    {
+        get;
+        set;
+    }
+
+    public DateTimeOffset Created
+    {
+        get; 
+        set;
+    }
+
+    public string? AuthorId
+    {
+        get; 
+        set;
+    }
+}
 
 /// <summary>
 /// 

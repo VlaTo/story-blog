@@ -1,3 +1,3 @@
 ﻿namespace StoryBlog.Web.Client.Blog.Models;
 
-public record EmptyPostsResponse();
+public sealed record EmptyPostsResponse();
