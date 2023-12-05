@@ -21,12 +21,7 @@ public class TestController : ControllerBase
     [HttpPost(nameof(SendPostCreatedEvent))]
     public async Task<IActionResult> SendPostCreatedEvent([FromServices] IMessageBus messageBus)
     {
-        var createdEvent = new NewPostCreatedEvent
-        {
-            Key = Guid.NewGuid(),
-            Created = DateTimeOffset.Now,
-            AuthorId = "Test"
-        };
+        var createdEvent = new NewPostCreatedEvent(Guid.NewGuid(), DateTimeOffset.Now, "Test");
 
         await messageBus.Publish(createdEvent, cancellationToken: HttpContext.RequestAborted);
 

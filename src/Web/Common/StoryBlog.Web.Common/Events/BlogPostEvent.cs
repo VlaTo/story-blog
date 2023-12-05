@@ -3,26 +3,13 @@
 /// <summary>
 /// 
 /// </summary>
-public sealed class NewPostCreatedEvent
-{
-    public Guid Key
-    {
-        get;
-        set;
-    }
-
-    public DateTimeOffset Created
-    {
-        get; 
-        set;
-    }
-
-    public string? AuthorId
-    {
-        get; 
-        set;
-    }
-}
+/// <param name="Key"></param>
+/// <param name="Created"></param>
+/// <param name="AuthorId"></param>
+public sealed record NewPostCreatedEvent(
+    Guid Key,
+    DateTimeOffset Created,
+    string? AuthorId);
 
 /// <summary>
 /// 
@@ -36,6 +23,8 @@ public sealed record PostPublishedEvent(
 /// 
 /// </summary>
 /// <param name="Key"></param>
+/// <param name="Created"></param>
+/// <param name="AuthorId"></param>
 public sealed record PostRemovedEvent(
     Guid Key,
     DateTimeOffset Created,

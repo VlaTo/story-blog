@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using SlimMessageBus;
 using StoryBlog.Web.Common.Application;
+using StoryBlog.Web.Common.Application.Extensions;
 using StoryBlog.Web.Common.Domain;
 using StoryBlog.Web.Common.Events;
 using StoryBlog.Web.Common.Result;
@@ -55,12 +56,12 @@ public sealed class CreateCommentHandler : HandlerBase, MediatR.IRequestHandler<
             await repository.SaveChangesAsync(cancellationToken);
         }
 
-        var commentEvent = new BlogCommentEvent(
+        var commentEvent = new NewCommentCreatedEvent(
             comment.Key,
             comment.PostKey,
             comment.Parent?.Key,
             comment.CreateAt,
-            BlogCommentAction.Added
+            request.CurrentUser.GetSubject()
         );
 
         await messageBus.Publish(commentEvent, cancellationToken: cancellationToken);

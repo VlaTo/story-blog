@@ -88,12 +88,7 @@ public sealed class CreatePostHandler : HandlerBase, MediatR.IRequestHandler<Cre
 
         if (options.PublishCreatedEvent)
         {
-            var createdEvent = new NewPostCreatedEvent
-            {
-                Key = post.Key,
-                Created = post.CreateAt,
-                AuthorId = post.AuthorId
-            };
+            var createdEvent = new NewPostCreatedEvent(post.Key, post.CreateAt, post.AuthorId);
             tasks.Add(messageBus.Publish(createdEvent, cancellationToken: cancellationToken));
         }
 

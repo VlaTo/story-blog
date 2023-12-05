@@ -46,19 +46,31 @@ builder.Services.AddSlimMessageBus(buses => buses
     .Consume<NewCommentCreatedEvent>(x => x
         .Queue("storyblog.comment.created", durable: true)
         .PerMessageScopeEnabled(enabled: true)
-        .ExchangeBinding("amq.topic", routingKey: "storyblog.comment.created")
+        .ExchangeBinding("storyblog.direct", routingKey: "storyblog.comment.created")
         .WithConsumer<NewCommentCreatedEventHandler>()
     )
+    .Consume<CommentPublishedEvent>(x => x
+        .Queue("storyblog.comment.published", durable: true)
+        .PerMessageScopeEnabled(enabled: true)
+        .ExchangeBinding("storyblog.direct", routingKey: "storyblog.comment.published")
+        .WithConsumer<CommentPublishedEventHandler>()
+    )
+    .Consume<CommentRemovedEvent>(x => x
+        .Queue("storyblog.comment.removed", durable: true)
+        .PerMessageScopeEnabled(enabled: true)
+        .ExchangeBinding("storyblog.direct", routingKey: "storyblog.comment.removed")
+        .WithConsumer<CommentRemovedEventHandler>()
+    )
     .Produce<NewPostCreatedEvent>(x => x
-        .Exchange("amq.topic", ExchangeType.Topic)
+        .Exchange("storyblog.direct", ExchangeType.Direct)
         .RoutingKeyProvider((a, b) => "storyblog.post.created")
     )
     .Produce<PostPublishedEvent>(x => x
-        .Exchange("amq.topic", ExchangeType.Topic)
+        .Exchange("storyblog.direct", ExchangeType.Direct)
         .RoutingKeyProvider((a, b) => "storyblog.post.published")
     )
     .Produce<PostRemovedEvent>(x => x
-        .Exchange("amq.topic", ExchangeType.Topic)
+        .Exchange("storyblog.direct", ExchangeType.Direct)
         .RoutingKeyProvider((a, b) => "storyblog.post.removed")
     )
     .WithProviderRabbitMQ(rabbit =>
