@@ -20,12 +20,9 @@ public static class ServiceCollectionExtensions
             });
 
         services.AddTransient<IWordTransliterator, RussianWordTransliterator>();
-        services.AddSingleton<BackgroundWorkManager>();
-        services.AddTransient<IBackgroundWorkManager>(
-            serviceProvider => serviceProvider.GetRequiredService<BackgroundWorkManager>()
-        );
-
-        services.AddHostedService<SampleBackgroundService>();
+        services.AddSingleton<IBlogPostProcessingQueueProvider, BlogPostProcessingQueueProvider>();
+        services.AddTransient<IBlogPostProcessingManager, BlogPostProcessingManager>();
+        services.AddHostedService<BlogPostProcessingBackgroundService>();
 
         return services;
     }

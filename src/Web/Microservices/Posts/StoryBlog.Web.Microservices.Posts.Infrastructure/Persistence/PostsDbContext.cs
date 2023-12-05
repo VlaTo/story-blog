@@ -10,6 +10,8 @@ public sealed class PostsDbContext : GenericDbContext, IPostsDbContext
 {
     public DbSet<Post> Posts => Set<Post>();
 
+    public DbSet<PostProcessTask> PostProcessTasks => Set<PostProcessTask>();
+
     public PostsDbContext()
     {
     }
@@ -27,6 +29,7 @@ public sealed class PostsDbContext : GenericDbContext, IPostsDbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfiguration(new PostEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new PostProcessTaskEntityConfiguration());
 
         base.OnModelCreating(modelBuilder);
     }

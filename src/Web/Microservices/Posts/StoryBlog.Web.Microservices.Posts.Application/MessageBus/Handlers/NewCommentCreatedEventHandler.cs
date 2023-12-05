@@ -33,7 +33,7 @@ public sealed class NewCommentCreatedEventHandler : IConsumer<NewCommentCreatedE
     {
         await using (var repository = context.GetRepository<Domain.Entities.Post>())
         {
-            var post = await repository.FindAsync(new FindPostByKeySpecification(key));
+            var post = await repository.FindAsync(new FindPostByKeySpecification(key, includeAll: true));
 
             if (null == post)
             {

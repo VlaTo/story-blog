@@ -10,4 +10,9 @@ public interface IPostsDbContext : IAsyncDisposable, IGenericDbContext
     {
         get;
     }
+
+    DbSet<PostProcessTask> PostProcessTasks
+    {
+        get;
+    }
 }

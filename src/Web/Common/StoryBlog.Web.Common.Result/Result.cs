@@ -68,6 +68,13 @@ public class Result : IResult
         Succeeded = false,
         Error = error
     };
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="error"></param>
+    /// <returns></returns>
+    public static IResult<TValue> Fail<TValue>(Exception error) => new Result<TValue>(error);
     
     public static implicit operator Result(Exception exception) => new(exception);
 }

@@ -43,12 +43,12 @@ public class TestController : ControllerBase
     [HttpPost(nameof(QueueNewTask))]
     public async Task<IActionResult> QueueNewTask(
         [FromForm] double seconds,
-        [FromServices] IBackgroundWorkManager workManager,
+        [FromServices] IBlogPostProcessingManager workManager,
         [FromServices] ILogger<TestController> logger)
     {
-        var backgroundTask = await workManager.QueueNewTaskAsync(seconds, cancellationToken: HttpContext.RequestAborted);
+        //var backgroundTask = await workManager.AddPostTaskAsync(seconds, cancellationToken: HttpContext.RequestAborted);
 
-        logger.LogDebug($"New background task with ID: {backgroundTask.Id:D} queued");
+        //logger.LogDebug($"New background task with ID: {backgroundTask.Id:D} queued");
 
         return Ok();
     }

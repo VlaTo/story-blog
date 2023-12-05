@@ -51,7 +51,7 @@ public class PostHandlerBase : HandlerBase
 
                 Logger.LogDebug($"FindPostByKeySpecification(key=\"{key}\")");
 
-                specification = new FindPostByKeySpecification(key);
+                specification = new FindPostByKeySpecification(key, includeAll: true);
                 step++;
             }
             else

@@ -2,7 +2,12 @@
 
 public interface IBackgroundTask
 {
-    Guid Id
+    Guid TaskKey
+    {
+        get;
+    }
+
+    Guid PostKey
     {
         get;
     }

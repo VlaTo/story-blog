@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using StoryBlog.Web.Microservices.Posts.Infrastructure.Persistence;
@@ -11,9 +12,11 @@ using StoryBlog.Web.Microservices.Posts.Infrastructure.Persistence;
 namespace StoryBlog.Web.Microservices.Posts.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(PostsDbContext))]
-    partial class PostsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231205115436_PostProcessingTableAdded")]
+    partial class PostProcessingTableAdded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -4,19 +4,19 @@ namespace StoryBlog.Web.Microservices.Posts.Application.Models;
 
 public sealed class BackgroundTask : IBackgroundTask
 {
-    public Guid Id
+    public Guid TaskKey
     {
         get;
     }
 
-    public TimeSpan Timeout
+    public Guid PostKey
     {
         get;
     }
 
-    public BackgroundTask(Guid id, TimeSpan timeout)
+    public BackgroundTask(Guid taskKey, Guid postKey)
     {
-        Id = id;
-        Timeout = timeout;
+        TaskKey = taskKey;
+        PostKey = postKey;
     }
 }

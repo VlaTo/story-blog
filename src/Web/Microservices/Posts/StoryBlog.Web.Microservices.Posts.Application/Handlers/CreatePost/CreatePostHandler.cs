@@ -9,6 +9,7 @@ using StoryBlog.Web.Common.Result;
 using StoryBlog.Web.MessageHub;
 using StoryBlog.Web.Microservices.Posts.Application.Configuration;
 using StoryBlog.Web.Microservices.Posts.Application.Extensions;
+using StoryBlog.Web.Microservices.Posts.Application.Services;
 using StoryBlog.Web.Microservices.Posts.Domain.Entities;
 using StoryBlog.Web.Microservices.Posts.Shared.Messages;
 
@@ -19,6 +20,7 @@ public sealed class CreatePostHandler : HandlerBase, MediatR.IRequestHandler<Cre
     private readonly IAsyncUnitOfWork context;
     private readonly IMessageHub messageHub;
     private readonly IMessageBus messageBus;
+    private readonly IBlogPostProcessingManager postProcessingManager;
     private readonly PostsCreateOptions options;
     private readonly ILogger<CreatePostHandler> logger;
 
@@ -26,12 +28,14 @@ public sealed class CreatePostHandler : HandlerBase, MediatR.IRequestHandler<Cre
         IAsyncUnitOfWork context,
         IMessageHub messageHub,
         IMessageBus messageBus,
+        IBlogPostProcessingManager postProcessingManager,
         IOptions<PostsCreateOptions> options,
         ILogger<CreatePostHandler> logger)
     {
         this.context = context;
         this.messageHub = messageHub;
         this.messageBus = messageBus;
+        this.postProcessingManager = postProcessingManager;
         this.options = options.Value;
         this.logger = logger;
     }
@@ -77,7 +81,10 @@ public sealed class CreatePostHandler : HandlerBase, MediatR.IRequestHandler<Cre
 
     private async Task NotifyAsync(Post post, CancellationToken cancellationToken)
     {
-        var tasks = new List<Task>();
+        var tasks = new List<Task>
+        {
+            postProcessingManager.AddPostTaskAsync(post.Key, cancellationToken).AsTask()
+        };
 
         if (options.PublishCreatedEvent)
         {
