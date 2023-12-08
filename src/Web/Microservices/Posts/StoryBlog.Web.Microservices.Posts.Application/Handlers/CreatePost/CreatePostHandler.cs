@@ -62,8 +62,7 @@ public sealed class CreatePostHandler : HandlerBase, MediatR.IRequestHandler<Cre
         post.Content = new Content
         {
             Post = post,
-            Text = request.Details.Text,
-            Brief = request.Details.Brief
+            Text = request.Details.Text
         };
 
         logger.LogEntityCreated();
@@ -83,7 +82,7 @@ public sealed class CreatePostHandler : HandlerBase, MediatR.IRequestHandler<Cre
     {
         var tasks = new List<Task>
         {
-            postProcessingManager.AddPostTaskAsync(post.Key, cancellationToken).AsTask()
+            postProcessingManager.QueuePostProcessingTaskAsync(post.Key, cancellationToken)
         };
 
         if (options.PublishCreatedEvent)
@@ -95,7 +94,7 @@ public sealed class CreatePostHandler : HandlerBase, MediatR.IRequestHandler<Cre
         if (!String.IsNullOrEmpty(options.HubChannelName))
         {
             var publishedMessage = new NewPostPublishedMessage(post.Key, post.Slug.Text);
-            tasks.Add(messageHub.SendAsync(options.HubChannelName, publishedMessage, cancellationToken));
+            tasks.Add(messageHub.SendAsync(/*options.HubChannelName*/ "post.created", publishedMessage, cancellationToken));
         }
 
         if (0 < tasks.Count)

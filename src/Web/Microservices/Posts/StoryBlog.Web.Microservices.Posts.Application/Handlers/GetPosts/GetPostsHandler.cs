@@ -26,19 +26,19 @@ public sealed class GetPostsHandler : HandlerBase, IRequestHandler<GetPostsQuery
         {
             if (false == request.CurrentUser.HasPermission(Permissions.Blogs.View))
             {
-                return new Result<IReadOnlyList<Brief>>(new Exception("Insufficient permissions"));
+                return new Exception("Insufficient permissions");
             }
 
             var userId = request.CurrentUser.GetSubject();
 
             if (String.IsNullOrEmpty(userId))
             {
-                return new Result<IReadOnlyList<Brief>>(new Exception("No user identity"));
+                return new Exception("No user identity");
             }
         }
         else
         {
-            return new Result<IReadOnlyList<Brief>>(new Exception("User not authenticated"));
+            return new Exception("User not authenticated");
         }
 
         await using (var repository = context.GetRepository<Domain.Entities.Post>())

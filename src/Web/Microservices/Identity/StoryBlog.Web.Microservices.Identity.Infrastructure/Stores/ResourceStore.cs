@@ -19,7 +19,7 @@ public class ResourceStore : IResourceStore
     /// <summary>
     /// The DbContext.
     /// </summary>
-    protected readonly IUnitOfWork Context;
+    protected readonly IAsyncUnitOfWork Context;
 
     /// <summary>
     /// The CancellationToken provider.
@@ -39,7 +39,7 @@ public class ResourceStore : IResourceStore
     /// <param name="cancellationTokenProvider"></param>
     /// <exception cref="ArgumentNullException">context</exception>
     public ResourceStore(
-        IUnitOfWork context,
+        IAsyncUnitOfWork context,
         ILogger<ResourceStore> logger,
         ICancellationTokenProvider cancellationTokenProvider)
     {
@@ -53,13 +53,13 @@ public class ResourceStore : IResourceStore
     /// </summary>
     /// <param name="apiResourceNames">The names.</param>
     /// <returns></returns>
-    public virtual async Task<IEnumerable<ApiResource>> FindApiResourcesByNameAsync(IEnumerable<string> apiResourceNames)
+    public virtual async Task<IEnumerable<ApiResource>?> FindApiResourcesByNameAsync(IEnumerable<string> apiResourceNames)
     {
         using (var activity = Tracing.StoreActivitySource.StartActivity("ResourceStore.FindApiResourcesByName"))
         {
             activity?.SetTag(Tracing.Properties.ApiResourceNames, apiResourceNames.ToSpaceSeparatedString());
 
-            using (var repository = Context.GetRepository<Domain.Entities.ApiResource>())
+            await using (var repository = Context.GetRepository<Domain.Entities.ApiResource>())
             {
                 var specification = new FindApiResourcesByName(apiResourceNames.ToArray());
                 var result = await repository.QueryAsync(specification, CancellationTokenProvider.CancellationToken);
@@ -111,7 +111,7 @@ public class ResourceStore : IResourceStore
     /// </summary>
     /// <param name="scopeNames"></param>
     /// <returns></returns>
-    public async Task<IEnumerable<IdentityResource>> FindIdentityResourcesByScopeNameAsync(IEnumerable<string> scopeNames)
+    public async Task<IEnumerable<IdentityResource>?> FindIdentityResourcesByScopeNameAsync(IEnumerable<string> scopeNames)
     {
         using var activity = Tracing.StoreActivitySource.StartActivity("ResourceStore.FindIdentityResourcesByScopeName");
 
@@ -119,7 +119,7 @@ public class ResourceStore : IResourceStore
 
         try
         {
-            using (var repository = Context.GetRepository<Domain.Entities.IdentityResource>())
+            await using (var repository = Context.GetRepository<Domain.Entities.IdentityResource>())
             {
                 var specification = new FindIdentityResourcesByScopes(scopeNames.ToArray());
                 var resources = await repository.QueryAsync(specification, CancellationTokenProvider.CancellationToken);
@@ -138,13 +138,13 @@ public class ResourceStore : IResourceStore
         }
     }
 
-    public async Task<IEnumerable<ApiScope>> FindApiScopesByNameAsync(IEnumerable<string> scopeNames)
+    public async Task<IEnumerable<ApiScope>?> FindApiScopesByNameAsync(IEnumerable<string> scopeNames)
     {
         using (var activity = Tracing.StoreActivitySource.StartActivity("ResourceStore.FindApiScopesByName"))
         {
             activity?.SetTag(Tracing.Properties.ScopeNames, scopeNames.ToSpaceSeparatedString());
 
-            using (var repository = Context.GetRepository<Domain.Entities.ApiScope>())
+            await using (var repository = Context.GetRepository<Domain.Entities.ApiScope>())
             {
                 var specification = new FindApiScopesByScopes(scopeNames.ToArray());
                 var resources = await repository.QueryAsync(specification, CancellationTokenProvider.CancellationToken);
@@ -163,13 +163,13 @@ public class ResourceStore : IResourceStore
     /// </summary>
     /// <param name="scopeNames"></param>
     /// <returns></returns>
-    public virtual async Task<IEnumerable<ApiResource>> FindApiResourcesByScopeNameAsync(IEnumerable<string> scopeNames)
+    public virtual async Task<IEnumerable<ApiResource>?> FindApiResourcesByScopeNameAsync(IEnumerable<string> scopeNames)
     {
         using (var activity = Tracing.StoreActivitySource.StartActivity("ResourceStore.FindApiResourcesByScopeName"))
         {
             activity?.SetTag(Tracing.Properties.ScopeNames, scopeNames.ToSpaceSeparatedString());
 
-            using (var repository = Context.GetRepository<Domain.Entities.ApiResource>())
+            await using (var repository = Context.GetRepository<Domain.Entities.ApiResource>())
             {
                 var specification = new FindApiResourcesByScopeNames(scopeNames.ToArray());
                 var resources = await repository.QueryAsync(specification, CancellationTokenProvider.CancellationToken);
@@ -186,7 +186,7 @@ public class ResourceStore : IResourceStore
 
     private async Task<Domain.Entities.IdentityResource[]> GetAllIdentityResourcesAsync()
     {
-        using (var repository = Context.GetRepository<Domain.Entities.IdentityResource>())
+        await using (var repository = Context.GetRepository<Domain.Entities.IdentityResource>())
         {
             var specification = new QueryAllIdentityResources();
             return await repository.QueryAsync(specification, CancellationTokenProvider.CancellationToken);
@@ -195,7 +195,7 @@ public class ResourceStore : IResourceStore
 
     private async Task<Domain.Entities.ApiResource[]> GetAllApiResourcesAsync()
     {
-        using (var repository = Context.GetRepository<Domain.Entities.ApiResource>())
+        await using (var repository = Context.GetRepository<Domain.Entities.ApiResource>())
         {
             var specification = new QueryAllApiResources();
             return await repository.QueryAsync(specification, CancellationTokenProvider.CancellationToken);
@@ -204,7 +204,7 @@ public class ResourceStore : IResourceStore
 
     private async Task<Domain.Entities.ApiScope[]> GetAllApiScopedAsync()
     {
-        using (var repository = Context.GetRepository<Domain.Entities.ApiScope>())
+        await using (var repository = Context.GetRepository<Domain.Entities.ApiScope>())
         {
             var specification = new QueryAllApiScopes();
             return await repository.QueryAsync(specification, CancellationTokenProvider.CancellationToken);

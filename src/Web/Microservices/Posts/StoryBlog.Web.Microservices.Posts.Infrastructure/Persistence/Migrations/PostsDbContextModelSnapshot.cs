@@ -107,7 +107,7 @@ namespace StoryBlog.Web.Microservices.Posts.Infrastructure.Persistence.Migration
 
             modelBuilder.Entity("StoryBlog.Web.Microservices.Posts.Domain.Entities.Post", b =>
                 {
-                    b.OwnsOne("StoryBlog.Web.Microservices.Posts.Domain.Entities.CommentsCounter", "CommentsCounter", b1 =>
+                    b.OwnsOne("StoryBlog.Web.Microservices.Posts.Domain.Entities.Post.CommentsCounter#StoryBlog.Web.Microservices.Posts.Domain.Entities.CommentsCounter", "CommentsCounter", b1 =>
                         {
                             b1.Property<long>("PostId")
                                 .HasColumnType("bigint");
@@ -128,16 +128,14 @@ namespace StoryBlog.Web.Microservices.Posts.Infrastructure.Persistence.Migration
                             b1.Navigation("Post");
                         });
 
-                    b.OwnsOne("StoryBlog.Web.Microservices.Posts.Domain.Entities.Content", "Content", b1 =>
+                    b.OwnsOne("StoryBlog.Web.Microservices.Posts.Domain.Entities.Post.Content#StoryBlog.Web.Microservices.Posts.Domain.Entities.Content", "Content", b1 =>
                         {
                             b1.Property<long>("PostId")
                                 .HasColumnType("bigint");
 
                             b1.Property<string>("Brief")
-                                .IsRequired()
-                                .HasMaxLength(1024)
                                 .IsUnicode(true)
-                                .HasColumnType("character varying(1024)");
+                                .HasColumnType("text");
 
                             b1.Property<string>("Text")
                                 .IsRequired()
@@ -154,7 +152,7 @@ namespace StoryBlog.Web.Microservices.Posts.Infrastructure.Persistence.Migration
                             b1.Navigation("Post");
                         });
 
-                    b.OwnsOne("StoryBlog.Web.Microservices.Posts.Domain.Entities.Slug", "Slug", b1 =>
+                    b.OwnsOne("StoryBlog.Web.Microservices.Posts.Domain.Entities.Post.Slug#StoryBlog.Web.Microservices.Posts.Domain.Entities.Slug", "Slug", b1 =>
                         {
                             b1.Property<long>("PostId")
                                 .HasColumnType("bigint");

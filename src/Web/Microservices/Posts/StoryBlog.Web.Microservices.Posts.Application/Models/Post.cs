@@ -28,7 +28,7 @@ public sealed class Post : PostDetails
         set;
     }
 
-    public DateTime CreatedAt
+    public DateTimeOffset CreatedAt
     {
         get;
         set;

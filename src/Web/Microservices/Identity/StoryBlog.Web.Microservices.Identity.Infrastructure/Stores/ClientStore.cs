@@ -17,7 +17,7 @@ public class ClientStore : IClientStore
     /// <summary>
     /// The DbContext.
     /// </summary>
-    protected readonly IUnitOfWork Context;
+    protected readonly IAsyncUnitOfWork Context;
 
     /// <summary>
     /// The CancellationToken provider.
@@ -37,7 +37,7 @@ public class ClientStore : IClientStore
     /// <param name="cancellationTokenProvider"></param>
     /// <exception cref="ArgumentNullException">context</exception>
     public ClientStore(
-        IUnitOfWork context,
+        IAsyncUnitOfWork context,
         ICancellationTokenProvider cancellationTokenProvider,
         ILogger<ClientStore> logger)
     {
@@ -61,7 +61,7 @@ public class ClientStore : IClientStore
 
             try
             {
-                using (var repository = Context.GetRepository<Domain.Entities.Client>())
+                await using (var repository = Context.GetRepository<Domain.Entities.Client>())
                 {
                     var specification = new FindClientById(clientId);
                     var client = await repository.FindAsync(specification, CancellationTokenProvider.CancellationToken);

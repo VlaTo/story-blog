@@ -7,7 +7,7 @@ using StoryBlog.Web.Common.Application;
 
 namespace StoryBlog.Web.Common.Infrastructure;
 
-public sealed class UnitOfWork<T> : IUnitOfWork
+/*public sealed class UnitOfWork<T> : IUnitOfWork
     where T : class, IGenericDbContext
 {
     private readonly Hashtable repositories;
@@ -79,4 +79,4 @@ public sealed class UnitOfWork<T> : IUnitOfWork
             disposed = true;
         }
     }
-}
+}*/

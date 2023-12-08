@@ -10,7 +10,7 @@ public sealed class Content : Entity
         set;
     }
 
-    public string Brief
+    public string? Brief
     {
         get;
         set;

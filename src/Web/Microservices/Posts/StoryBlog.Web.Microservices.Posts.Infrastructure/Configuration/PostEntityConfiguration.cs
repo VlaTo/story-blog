@@ -34,13 +34,12 @@ internal sealed class PostEntityConfiguration : IEntityTypeConfiguration<Post>
                 content
                     .Property(x => x.Text)
                     .IsUnicode(unicode: true)
-                    .IsRequired();
+                    .IsRequired(required: true);
 
                 content
                     .Property(x => x.Brief)
-                    .HasMaxLength(1024)
                     .IsUnicode(unicode: true)
-                    .IsRequired();
+                    .IsRequired(required: false);
 
                 content.ToTable("Contents", "Blog");
             });

@@ -18,7 +18,8 @@ public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration, string connectionStringKey)
     {
-        services.AddScoped<IUnitOfWork, UnitOfWork<StoryBlogIdentityDbContext>>();
+        //services.AddScoped<IUnitOfWork, UnitOfWork<StoryBlogIdentityDbContext>>();
+        services.AddScoped<IAsyncUnitOfWork, AsyncUnitOfWork<StoryBlogIdentityDbContext>>();
 
         services.TryAddTransient<IUserConsentStore, UserConsentStore>();
         services.TryAddTransient<IRefreshTokenStore, DefaultRefreshTokenStore>();

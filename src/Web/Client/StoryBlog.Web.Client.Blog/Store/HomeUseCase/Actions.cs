@@ -53,8 +53,8 @@ public sealed record FetchPostsPageReadyAction(
 /// </summary>
 public sealed record FetchPostsPageFailedAction(
         int PageNumber,
-        int PageSize)
-    : PostsPageAction(PageNumber, PageSize);
+        int PageSize
+) : PostsPageAction(PageNumber, PageSize);
 
 /// <summary>
 /// 
@@ -62,8 +62,47 @@ public sealed record FetchPostsPageFailedAction(
 /// <param name="PostKey"></param>
 /// <param name="PageNumber"></param>
 /// <param name="PageSize"></param>
-public sealed record ImmediatePostDelete(
+public sealed record ImmediatePostDeleteAction(
+        Guid PostKey,
+        Guid LastPostKey,
+        int PageNumber,
+        int PageSize
+) : PostsPageAction(PageNumber, PageSize);
+
+/// <summary>
+/// 
+/// </summary>
+/// <param name="PostKey"></param>
+/// <param name="PageNumber"></param>
+/// <param name="PageSize"></param>
+public sealed record ImmediatePostDeleteSuccessAction(
+        Guid PostKey,
+        Guid LastPostKey,
+        int PageNumber,
+        int PageSize
+) : PostsPageAction(PageNumber, PageSize);
+
+/// <summary>
+/// 
+/// </summary>
+/// <param name="PostKey"></param>
+/// <param name="PageNumber"></param>
+/// <param name="PageSize"></param>
+public sealed record ImmediatePostDeleteFailedAction(
         Guid PostKey,
         int PageNumber,
-        int PageSize)
-    :PostsPageAction(PageNumber, PageSize);
+        int PageSize
+) : PostsPageAction(PageNumber, PageSize);
+
+/// <summary>
+/// 
+/// </summary>
+/// <param name="PostKey"></param>
+/// <param name="PageNumber"></param>
+/// <param name="PageSize"></param>
+public sealed record TailPostsReadyAction(
+    Guid LastPostKey,
+    IReadOnlyCollection<BriefModel> Posts,
+    int PageNumber,
+    int PageSize
+) : PostsPageAction(PageNumber, PageSize);

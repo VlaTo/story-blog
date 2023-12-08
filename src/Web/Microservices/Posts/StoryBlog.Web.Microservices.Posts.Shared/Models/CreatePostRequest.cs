@@ -7,7 +7,7 @@ namespace StoryBlog.Web.Microservices.Posts.Shared.Models;
 public sealed class CreatePostRequest
 {
     [Required]
-    [StringLength(255)]
+    [StringLength(1024)]
     public string Title
     {
         get;
@@ -15,7 +15,6 @@ public sealed class CreatePostRequest
     }
 
     [Required]
-    [StringLength(255)]
     public string Slug
     {
         get;
@@ -23,8 +22,7 @@ public sealed class CreatePostRequest
     }
 
     [Required]
-    [DataType(DataType.MultilineText)]
-    [StringLength(4096)]
+    [DataType(DataType.Html)]
     public string Content
     {
         get;

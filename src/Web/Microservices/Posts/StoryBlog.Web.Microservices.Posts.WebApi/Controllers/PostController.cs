@@ -3,13 +3,12 @@ using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using StoryBlog.Web.Microservices.Posts.Application.Handlers.DeletePost;
 using StoryBlog.Web.Microservices.Posts.Application.Handlers.EditPost;
 using StoryBlog.Web.Microservices.Posts.Application.Handlers.GetPost;
 using StoryBlog.Web.Microservices.Posts.Application.Models;
 using StoryBlog.Web.Microservices.Posts.Shared.Models;
 using StoryBlog.Web.Microservices.Posts.WebApi.Core;
-using System.ComponentModel;
-using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace StoryBlog.Web.Microservices.Posts.WebApi.Controllers;
 
@@ -41,7 +40,6 @@ public class PostController : Controller
     /// </summary>
     /// <param name="slugOrKey">The slug -or- key for post to get.</param>
     /// <returns></returns>
-    [Description("Gets existing post by slug or key(Guid).")]
     [ProducesResponseType(typeof(PostModel), StatusCodes.Status200OK)]
     [HttpGet("{slugOrKey:required}", Name = RouteNames.GetPostRouteKey)]
     public async Task<IActionResult> GetPost([FromRoute] string slugOrKey)
@@ -105,30 +103,25 @@ public class PostController : Controller
     [HttpDelete("{slugOrKey:required}")]
     public async Task<IActionResult> DeletePost([FromRoute] string slugOrKey)
     {
-        /*var command = new DeletePostCommand(slugOrKey, User);
-        var success = await mediator.Send(command).ConfigureAwait(false);
+        var command = new DeletePostCommand(slugOrKey, User);
+        var result = await mediator.Send(command).ConfigureAwait(false);
 
-        if (success)
+        if (result.Succeeded)
         {
-            var query = new GetPostQuery(key, User);
-            var postResult = await mediator.Send(query).ConfigureAwait(false);
-
-            if (postResult.IsSuccess())
+            if (result.IsOfT1)
             {
-                var model = mapper.Map<PostModel>(postResult.Post);
-                return Ok(model);
+                // success
+                var response = new PostDeletedResponse();
+                return Ok(response);
+            }
+
+            if (result.IsOfT2)
+            {
+                // not found
+                return NotFound();
             }
         }
 
-        logger.LogDebug($"Post not found for key: {key}");
-
-        return BadRequest();*/
-
-        await Task.Delay(TimeSpan.FromSeconds(1.0d));
-
-        return Ok(new PostDeletedResponse
-        {
-
-        });
+        return StatusCode(StatusCodes.Status500InternalServerError, result.Error);
     }
 }

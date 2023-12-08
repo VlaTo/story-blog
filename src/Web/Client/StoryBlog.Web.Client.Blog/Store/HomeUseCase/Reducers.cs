@@ -20,13 +20,15 @@
 #endregion
 
 using Fluxor;
+using StoryBlog.Web.Client.Blog.Extensions;
+using StoryBlog.Web.Client.Blog.Models;
 
 namespace StoryBlog.Web.Client.Blog.Store.HomeUseCase;
 
 /// <summary>
 /// 
 /// </summary>
-public sealed class FetchPostsPageReducer : Reducer<HomeState, FetchPostsPageAction>
+internal sealed class FetchPostsPageReducer : Reducer<HomeState, FetchPostsPageAction>
 {
     public override HomeState Reduce(HomeState state, FetchPostsPageAction action) =>
         new(state.PageNumber, state.PageSize, state.Posts, StoreState.Loading);
@@ -35,7 +37,7 @@ public sealed class FetchPostsPageReducer : Reducer<HomeState, FetchPostsPageAct
 /// <summary>
 /// 
 /// </summary>
-public sealed class FetchPostsPageFailedReducer : Reducer<HomeState, FetchPostsPageFailedAction>
+internal sealed class FetchPostsPageFailedReducer : Reducer<HomeState, FetchPostsPageFailedAction>
 {
     public override HomeState Reduce(HomeState state, FetchPostsPageFailedAction action) =>
         new(state.PageNumber, state.PageSize, state.Posts, StoreState.Failed);
@@ -44,17 +46,57 @@ public sealed class FetchPostsPageFailedReducer : Reducer<HomeState, FetchPostsP
 /// <summary>
 /// 
 /// </summary>
-public sealed class PostsPageReadyReducer : Reducer<HomeState, FetchPostsPageReadyAction>
+internal sealed class PostsPageReadyReducer : Reducer<HomeState, FetchPostsPageReadyAction>
 {
-    public override HomeState Reduce(HomeState state, FetchPostsPageReadyAction action) =>
-        new(state.PageNumber, state.PageSize, action.Posts, StoreState.Success);
+    public override HomeState Reduce(HomeState state, FetchPostsPageReadyAction action)
+    {
+        var posts = action.Posts
+            .Select(x => x.ToModel(PostState.Active))
+            .ToArray();
+        return new(state.PageNumber, state.PageSize, posts, StoreState.Success);
+    }
 }
 
 /// <summary>
 /// 
 /// </summary>
-public sealed class ImmediatePostDeleteReducer : Reducer<HomeState, ImmediatePostDelete>
+internal sealed class ImmediatePostDeleteReducer : Reducer<HomeState, ImmediatePostDeleteAction>
 {
-    public override HomeState Reduce(HomeState state, ImmediatePostDelete action) =>
-        new(state.PageNumber, state.PageSize, state.Posts, state.StoreState);
+    public override HomeState Reduce(HomeState state, ImmediatePostDeleteAction action)
+    {
+        var posts = state.Posts
+            .MapReduce(x => x.Key == action.PostKey, x => x with
+            {
+                State = PostState.Deleting
+            })
+            .ToArray();
+        return new HomeState(state.PageNumber, state.PageSize, posts, state.StoreState);
+    }
+}
+
+/// <summary>
+/// 
+/// </summary>
+internal sealed class ImmediatePostDeleteSuccessReducer : Reducer<HomeState, ImmediatePostDeleteSuccessAction>
+{
+    public override HomeState Reduce(HomeState state, ImmediatePostDeleteSuccessAction action)
+    {
+        var posts = state.Posts
+            .Exclude(x => x.Key == action.PostKey)
+            .ToArray();
+        return new HomeState(state.PageNumber, state.PageSize, posts, state.StoreState);
+    }
+}
+
+/// <summary>
+/// 
+/// </summary>
+internal sealed class TailPostsReadyReducer : Reducer<HomeState, TailPostsReadyAction>
+{
+    public override HomeState Reduce(HomeState state, TailPostsReadyAction action)
+    {
+        var posts = new List<BriefPostModel>(state.Posts);
+        posts.AddRange(action.Posts.Select(x => x.ToModel(PostState.Active)));
+        return new HomeState(state.PageNumber, state.PageSize, posts, state.StoreState);
+    }
 }

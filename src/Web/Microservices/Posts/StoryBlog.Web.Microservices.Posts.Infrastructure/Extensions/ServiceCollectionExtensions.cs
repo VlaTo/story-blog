@@ -23,6 +23,7 @@ public static class ServiceCollectionExtensions
             {
                 var connectionString = configuration.GetConnectionString(connectionStringKey);
                 options
+                    .EnableSensitiveDataLogging(sensitiveDataLoggingEnabled: true)
                     .UseNpgsql(connectionString, context =>
                     {
                         var assemblyName = typeof(PostsDbContext).Assembly.FullName;

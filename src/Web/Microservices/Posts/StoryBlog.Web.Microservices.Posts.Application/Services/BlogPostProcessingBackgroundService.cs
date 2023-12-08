@@ -3,25 +3,28 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using StoryBlog.Web.Common.Domain;
 using StoryBlog.Web.Common.Result;
-using StoryBlog.Web.Common.Result.Extensions;
+using StoryBlog.Web.Microservices.Posts.Application.Models;
 using StoryBlog.Web.Microservices.Posts.Domain.Entities;
 using StoryBlog.Web.Microservices.Posts.Domain.Specifications;
+using System.Threading.Channels;
+using StoryBlog.Web.Common.Result.Extensions;
 
 namespace StoryBlog.Web.Microservices.Posts.Application.Services;
 
 internal sealed class BlogPostProcessingBackgroundService : BackgroundService
 {
+
     private readonly IServiceProvider serviceProvider;
-    private readonly IBlogPostProcessingManager processingManager;
+    private readonly IBlogPostProcessingQueue queue;
     private readonly ILogger<BlogPostProcessingBackgroundService> logger;
 
     public BlogPostProcessingBackgroundService(
         IServiceProvider serviceProvider,
-        IBlogPostProcessingManager processingManager,
+        IBlogPostProcessingQueue queue,
         ILogger<BlogPostProcessingBackgroundService> logger)
     {
         this.serviceProvider = serviceProvider;
-        this.processingManager = processingManager;
+        this.queue = queue;
         this.logger = logger;
     }
 
@@ -32,31 +35,35 @@ internal sealed class BlogPostProcessingBackgroundService : BackgroundService
         try
         {
             // queue persisted backgroundTask from store
-            await processingManager.QueuePendingPostTasksAsync(cancellationToken: stoppingToken);
+            await QueuePendingTasksAsync(cancellationToken: stoppingToken);
 
             // main propessing loop
             while (true)
             {
                 logger.LogDebug("Ready to process");
 
-                var result = await processingManager.ReadPostTaskAsync(stoppingToken);
-                    
+                var result = await queue.DequeueTaskAsync(cancellationToken: stoppingToken);
+
                 if (result.Failed())
+                {
+                    throw result.Error!;
+                }
+
+                if (result.IsOfT2)
                 {
                     break;
                 }
 
-                await using (var token = await processingManager.StartProcessingAsync(result.Value!, cancellationToken: stoppingToken))
-                {
-                    var processingResult = await ProcessBlogPostAsync(result.Value!, stoppingToken);
+                var backgroundTask = result.Item1!;
 
-                    if (processingResult.Succeeded)
+                await using (var scope = serviceProvider.CreateAsyncScope())
+                {
+                    await using (var token = await StartProcessingAsync(scope.ServiceProvider, backgroundTask, cancellationToken: stoppingToken))
                     {
-                        await token.SuccessAsync(cancellationToken: stoppingToken);
-                    }
-                    else
-                    {
-                        await token.SkipAsync(cancellationToken: stoppingToken);
+                        var service = ActivatorUtilities.CreateInstance<BlogPostProcessingService>(scope.ServiceProvider);
+
+                        await service.ProcessAsync(backgroundTask, stoppingToken);
+                        await token.UpdateStatusAsync(PostProcessStatus.Success, cancellationToken: stoppingToken);
                     }
                 }
             }
@@ -67,37 +74,80 @@ internal sealed class BlogPostProcessingBackgroundService : BackgroundService
         }
     }
 
-    private async Task<IResult> ProcessBlogPostAsync(IBackgroundTask backgroundTask, CancellationToken cancellationToken)
+    private async Task<ProcessingToken> StartProcessingAsync(
+        IServiceProvider provider,
+        IBackgroundTask backgroundTask,
+        CancellationToken cancellationToken)
     {
-        logger.LogDebug($"Processing task with ID: {backgroundTask.TaskKey:D}");
+        var token = new ProcessingToken(provider, backgroundTask.TaskKey);
 
-        await using (var services= serviceProvider.CreateAsyncScope())
+        await token.UpdateStatusAsync(PostProcessStatus.Processing, cancellationToken);
+
+        return token;
+    }
+
+    private async Task QueuePendingTasksAsync(CancellationToken cancellationToken)
+    {
+        await using (var scope = serviceProvider.CreateAsyncScope())
         {
-            var context = services.ServiceProvider.GetRequiredService<IAsyncUnitOfWork>();
+            var context = scope.ServiceProvider.GetRequiredService<IAsyncUnitOfWork>();
 
-            await using (var repository = context.GetRepository<Post>())
+            await using (var repository = context.GetRepository<PostProcessTask>())
             {
-                var specification = new FindPostByKeySpecification(backgroundTask.PostKey, true);
-                var post = await repository.FindAsync(specification, cancellationToken);
+                var specification = new AllPendingPostProcessingTasksSpecification();
+                var postProcessingTasks = await repository.QueryAsync(specification, cancellationToken);
 
-                if (null == post)
+                foreach (var task in postProcessingTasks)
                 {
-                    return Result.Fail();
-                }
-
-                try
-                {
-                    post.Content.Brief = post.Content.Text;
-
-                    await repository.SaveChangesAsync(cancellationToken);
-
-                    return Result.Success;
-                }
-                catch (Exception exception)
-                {
-                    return Result.Fail(exception);
+                    await queue.EnqueueTaskAsync(task.Key, task.PostKey, cancellationToken);
                 }
             }
         }
     }
+
+    #region class: ProcessingToken
+
+    private sealed class ProcessingToken : IAsyncDisposable
+    {
+        private readonly IServiceProvider serviceProvider;
+        private readonly Guid taskKey;
+
+        public ProcessingToken(IServiceProvider serviceProvider, Guid taskKey)
+        {
+            this.serviceProvider = serviceProvider;
+            this.taskKey = taskKey;
+        }
+
+        public async ValueTask UpdateStatusAsync(PostProcessStatus status, CancellationToken cancellationToken)
+        {
+            var context = serviceProvider.GetRequiredService<IAsyncUnitOfWork>();
+
+            await using (var repository = context.GetRepository<PostProcessTask>())
+            {
+                var specification = new FindTaskByKeySpecification(taskKey);
+                var entity = await repository.FindAsync(specification, cancellationToken);
+
+                if (null == entity)
+                {
+                    return ;
+                }
+
+                entity.Status = status;
+
+                if (PostProcessStatus.Pending != status && PostProcessStatus.Processing != status)
+                {
+                    entity.Completed = DateTimeOffset.Now;
+                }
+
+                await repository.SaveChangesAsync(cancellationToken);
+            }
+        }
+
+        public ValueTask DisposeAsync()
+        {
+            return ValueTask.CompletedTask;
+        }
+    }
+
+    #endregion
 }

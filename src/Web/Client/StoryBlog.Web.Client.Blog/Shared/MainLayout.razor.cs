@@ -41,9 +41,15 @@ public partial class MainLayout
             .WithUrl("ws://localhost:5033/notification")
             .Build();
 
-        hub.On<NewPostPublishedMessage>("Test", message =>
+        hub.On<NewPostPublishedMessage>("post.created", message =>
         {
-            Snackbar.Add($"New Post with slug: '{message.Slug}' created!");
+            Snackbar.Add("New Post created");
+            return Task.CompletedTask;
+        });
+
+        hub.On<PostRemovedMessage>("post.removed", message =>
+        {
+            Snackbar.Add("Post deleted");
             return Task.CompletedTask;
         });
 

@@ -1,12 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using StoryBlog.Web.Common.Domain;
-using StoryBlog.Web.Microservices.Identity.Application.Contexts;
 using StoryBlog.Web.Microservices.Identity.Application.Core;
 using StoryBlog.Web.Microservices.Identity.Application.Services;
 using StoryBlog.Web.Microservices.Identity.Application.Storage;
 using StoryBlog.Web.Microservices.Identity.Application.Stores;
-using StoryBlog.Web.Microservices.Identity.Domain.Entities;
 using StoryBlog.Web.Microservices.Identity.Infrastructure.Extensions;
 using StoryBlog.Web.Microservices.Identity.Infrastructure.Specifications;
 
@@ -21,12 +18,7 @@ public class PersistedGrantStore : IPersistedGrantStore
     /// <summary>
     /// The DbContext.
     /// </summary>
-    //protected readonly IPersistedGrantDbContext Context;
-
-    /// <summary>
-    /// The DbContext.
-    /// </summary>
-    protected readonly IUnitOfWork Context;
+    protected readonly IAsyncUnitOfWork Context;
 
     /// <summary>
     /// The CancellationToken service.
@@ -45,8 +37,7 @@ public class PersistedGrantStore : IPersistedGrantStore
     /// <param name="logger">The logger.</param>
     /// <param name="cancellationTokenProvider"></param>
     public PersistedGrantStore(
-        //IPersistedGrantDbContext context,
-        IUnitOfWork context,
+        IAsyncUnitOfWork context,
         ICancellationTokenProvider cancellationTokenProvider,
         ILogger<PersistedGrantStore> logger)
     {
@@ -56,11 +47,11 @@ public class PersistedGrantStore : IPersistedGrantStore
     }
 
     /// <inheritdoc/>
-    public virtual async Task StoreAsync(Application.Storage.PersistedGrant grant)
+    public virtual async Task StoreAsync(PersistedGrant grant)
     {
         using var activity = Tracing.StoreActivitySource.StartActivity("PersistedGrantStore.StoreAsync");
 
-        using (var repository = Context.GetRepository<Domain.Entities.PersistedGrant>())
+        await using (var repository = Context.GetRepository<Domain.Entities.PersistedGrant>())
         {
             var specification = new FindPersistedGrantByKey(grant.Key);
             var existing = await repository.FindAsync(specification, CancellationTokenProvider.CancellationToken);
@@ -115,11 +106,11 @@ public class PersistedGrantStore : IPersistedGrantStore
     }
 
     /// <inheritdoc/>
-    public virtual async Task<Application.Storage.PersistedGrant?> GetAsync(string key)
+    public virtual async Task<PersistedGrant?> GetAsync(string key)
     {
         using var activity = Tracing.StoreActivitySource.StartActivity("PersistedGrantStore.GetAsync");
 
-        using (var repository = Context.GetRepository<Domain.Entities.PersistedGrant>())
+        await using (var repository = Context.GetRepository<Domain.Entities.PersistedGrant>())
         {
             var specification = new FindPersistedGrantByKey(key);
             var persistedGrant = await repository.FindAsync(specification, CancellationTokenProvider.CancellationToken);
@@ -138,7 +129,7 @@ public class PersistedGrantStore : IPersistedGrantStore
     }
 
     /// <inheritdoc/>
-    public Task<IEnumerable<Application.Storage.PersistedGrant>> GetAllAsync(PersistedGrantFilter filter)
+    public Task<IEnumerable<PersistedGrant>> GetAllAsync(PersistedGrantFilter filter)
     {
         using var activity = Tracing.StoreActivitySource.StartActivity("PersistedGrantStore.GetAllAsync");
 
@@ -155,7 +146,7 @@ public class PersistedGrantStore : IPersistedGrantStore
 
         return grants;*/
 
-        return Task.FromResult(Enumerable.Empty<Application.Storage.PersistedGrant>());
+        return Task.FromResult(Enumerable.Empty<PersistedGrant>());
     }
 
     /// <inheritdoc/>

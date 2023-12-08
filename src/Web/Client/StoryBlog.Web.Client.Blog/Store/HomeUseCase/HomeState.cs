@@ -20,12 +20,12 @@
 #endregion
 
 using Fluxor;
-using StoryBlog.Web.Microservices.Posts.Shared.Models;
+using StoryBlog.Web.Client.Blog.Models;
 
 namespace StoryBlog.Web.Client.Blog.Store.HomeUseCase;
 
 [FeatureState]
-public sealed class HomeState : AbstractStore
+internal sealed class HomeState : AbstractStore
 {
     public int PageNumber
     {
@@ -37,20 +37,20 @@ public sealed class HomeState : AbstractStore
         get;
     }
 
-    public IReadOnlyCollection<BriefModel> Posts
+    public IReadOnlyCollection<BriefPostModel> Posts
     {
         get;
     }
 
     public HomeState()
-        : this(0, 0, Array.Empty<BriefModel>(), storeState: StoreState.Empty)
+        : this(0, 0, Array.Empty<BriefPostModel>(), storeState: StoreState.Empty)
     {
     }
 
     public HomeState(
         int pageNumber,
         int pageSize,
-        IReadOnlyCollection<BriefModel> posts,
+        IReadOnlyCollection<BriefPostModel> posts,
         StoreState storeState = StoreState.Empty)
         : base(storeState)
     {

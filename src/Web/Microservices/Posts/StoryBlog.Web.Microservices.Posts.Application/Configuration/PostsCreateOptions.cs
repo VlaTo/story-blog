@@ -14,6 +14,12 @@ public sealed class PostsCreateOptions
         set;
     }
 
+    public bool PublishRemovedEvent
+    {
+        get;
+        set;
+    }
+
     public string HubChannelName
     {
         get;

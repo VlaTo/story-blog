@@ -63,10 +63,10 @@ public sealed class AsyncUnitOfWork<T> : IAsyncUnitOfWork
         {
             if (dispose)
             {
-                if (context!.HasChanges())
+                /*if (context!.HasChanges())
                 {
                     await context!.RollbackAsync();
-                }
+                }*/
 
                 context = null;
             }

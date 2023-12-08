@@ -70,7 +70,7 @@ public static class ApplicationBuilderExtensions
 
         logger.LogInformation("Starting {name} version {version} ({netversion})", Name, attribute.InformationalVersion, RuntimeInformation.FrameworkDescription);
 
-        var scopeFactory = app.ApplicationServices.GetService<IServiceScopeFactory>();
+        /*var scopeFactory = app.ApplicationServices.GetService<IServiceScopeFactory>();
 
         using (var scope = scopeFactory.CreateScope())
         {
@@ -84,8 +84,8 @@ public static class ApplicationBuilderExtensions
                 ;
             }
 
-            //LicenseValidator.Initalize(loggerFactory, options, env.IsDevelopment());
-            //LicenseValidator.ValidateLicense();
+            --LicenseValidator.Initalize(loggerFactory, options, env.IsDevelopment());
+            --LicenseValidator.ValidateLicense();
 
             TestService(serviceProvider, typeof(IPersistedGrantStore), logger, "No storage mechanism for grants specified. Use the 'AddInMemoryPersistedGrants' extension method to register a development version.");
             TestService(serviceProvider, typeof(IClientStore), logger, "No storage mechanism for clients specified. Use the 'AddInMemoryClients' extension method to register a development version.");
@@ -93,14 +93,14 @@ public static class ApplicationBuilderExtensions
 
             var persistedGrants = serviceProvider.GetService(typeof(IPersistedGrantStore));
 
-            /*if (persistedGrants.GetType().FullName == typeof(InMemoryPersistedGrantStore).FullName)
+            /-if (persistedGrants.GetType().FullName == typeof(InMemoryPersistedGrantStore).FullName)
             {
                 logger.LogInformation("You are using the in-memory version of the persisted grant store. This will store consent decisions, authorization codes, refresh and reference tokens in memory only. If you are using any of those features in production, you want to switch to a different store implementation.");
-            }*/
+            }-/
 
             ValidateOptions(options, logger);
             ValidateAsync(serviceProvider, logger).GetAwaiter().GetResult();
-        }
+        }*/
     }
 
     private static async Task ValidateAsync(IServiceProvider services, ILogger logger)

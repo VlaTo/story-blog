@@ -20,7 +20,7 @@ public class SigningKeyStore : ISigningKeyStore
     /// <summary>
     /// The DbContext.
     /// </summary>
-    protected IUnitOfWork Context
+    protected IAsyncUnitOfWork Context
     {
         init;
         get;
@@ -52,7 +52,7 @@ public class SigningKeyStore : ISigningKeyStore
     /// <param name="cancellationTokenProvider"></param>
     /// <exception cref="ArgumentNullException">context</exception>
     public SigningKeyStore(
-        IUnitOfWork context,
+        IAsyncUnitOfWork context,
         ICancellationTokenProvider cancellationTokenProvider,
         ILogger<SigningKeyStore> logger)
     {
@@ -71,7 +71,7 @@ public class SigningKeyStore : ISigningKeyStore
         {
             Key[] entities;
 
-            using (var repository = Context.GetRepository<Key>())
+            await using (var repository = Context.GetRepository<Key>())
             {
                 var specification = new QueryKeysByUse(Use);
                 
@@ -117,7 +117,7 @@ public class SigningKeyStore : ISigningKeyStore
                 IsX509Certificate = key.IsX509Certificate
             };
 
-            using (var repository = Context.GetRepository<Key>())
+            await using (var repository = Context.GetRepository<Key>())
             {
                 await repository.AddAsync(entity, CancellationTokenProvider.CancellationToken);
                 await repository.SaveChangesAsync(CancellationTokenProvider.CancellationToken);
@@ -134,14 +134,14 @@ public class SigningKeyStore : ISigningKeyStore
     {
         using (Tracing.ActivitySource.StartActivity("SigningKeyStore.DeleteKey"))
         {
-            using (var repository = Context.GetRepository<Key>())
+            await using (var repository = Context.GetRepository<Key>())
             {
                 var query = new FindKeyByIdAndUse(id, Use);
                 var key = await repository.FindAsync(query, CancellationTokenProvider.CancellationToken);
 
                 if (null != key)
                 {
-                    await repository.DeleteAsync(key, CancellationTokenProvider.CancellationToken);
+                    await repository.RemoveAsync(key, CancellationTokenProvider.CancellationToken);
                 }
 
                 await repository.SaveChangesAsync(CancellationTokenProvider.CancellationToken);

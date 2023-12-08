@@ -22,6 +22,7 @@
 using Fluxor;
 using Microsoft.AspNetCore.Components.Authorization;
 using StoryBlog.Web.Client.Blog.Clients.Interfaces;
+using StoryBlog.Web.Common.Result.Extensions;
 using StoryBlog.Web.Microservices.Posts.Shared.Models;
 
 namespace StoryBlog.Web.Client.Blog.Store.HomeUseCase;
@@ -60,29 +61,51 @@ public sealed class FetchAvailablePostsEffect : Effect<FetchPostsPageAction>
 /// <summary>
 /// 
 /// </summary>
-public sealed class ImmediatePostDeleteEffect : Effect<ImmediatePostDelete>
+public sealed class ImmediatePostDeleteEffect : Effect<ImmediatePostDeleteAction>
 {
-    private readonly AuthenticationStateProvider authenticationProvider;
     private readonly IPostsClient client;
 
-    public ImmediatePostDeleteEffect(
-        AuthenticationStateProvider authenticationProvider,
-        IPostsClient client)
+    public ImmediatePostDeleteEffect(IPostsClient client)
     {
-        this.authenticationProvider = authenticationProvider;
         this.client = client;
     }
 
-    public override async Task HandleAsync(ImmediatePostDelete action, IDispatcher dispatcher)
+    public override async Task HandleAsync(ImmediatePostDeleteAction action, IDispatcher dispatcher)
     {
         var slugOrKey = action.PostKey.ToString();
         var response = await client.DeletePostAsync(slugOrKey);
 
-        if (response.Succeeded)
+        object nextAction = response.Succeeded
+            ? new ImmediatePostDeleteSuccessAction(action.PostKey, action.LastPostKey, action.PageNumber, action.PageSize)
+            : new ImmediatePostDeleteFailedAction(action.PostKey, action.PageNumber, action.PageSize);
+
+        dispatcher.Dispatch(nextAction);
+    }
+}
+
+/// <summary>
+/// 
+/// </summary>
+public sealed class ImmediatePostDeleteSuccessEffect : Effect<ImmediatePostDeleteSuccessAction>
+{
+    private readonly IPostsClient client;
+
+    public ImmediatePostDeleteSuccessEffect(IPostsClient client)
+    {
+        this.client = client;
+    }
+
+    public override async Task HandleAsync(ImmediatePostDeleteSuccessAction action, IDispatcher dispatcher)
+    {
+        var response = await client.GetTailPostsAsync(action.LastPostKey, 1);
+
+        if (response.Failed())
         {
-            dispatcher.Dispatch(new FetchPostsPageAction(action.PageNumber, action.PageSize));
+            throw new Exception();
         }
 
-        //throw new NotImplementedException();
+        dispatcher.Dispatch(
+            new TailPostsReadyAction(action.LastPostKey, response.Item2!, action.PageNumber, action.PageSize)
+        );
     }
 }

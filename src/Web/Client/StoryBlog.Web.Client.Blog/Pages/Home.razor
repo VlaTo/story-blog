@@ -1,74 +1,57 @@
 ﻿@page "/"
 
-@using StoryBlog.Web.Client.Blog.Store
 @using StoryBlog.Web.Microservices.Posts.Shared.Models
+@using StoryBlog.Web.Client.Blog.Models
 @inherits Fluxor.Blazor.Web.Components.FluxorComponent
 
 <PageTitle>Home</PageTitle>
 
-@switch (Store.Value.StoreState)
+<MudOverlay LightBackground=true AutoClose=false Visible=IsLoading>
+    <MudProgressCircular Color=Color.Primary Indeterminate=true></MudProgressCircular>
+</MudOverlay>
+
+@foreach (var post in Store.Value.Posts)
 {
-    case StoreState.Loading:
-    {
-        <text>Loading...</text>
-
-        break;
-    }
-
-    case StoreState.Success:
-    {
-        @foreach (var post in Store.Value.Posts)
-        {
-            <MudPaper Square=true Class="storyblog-home-blog" Elevation=0>
-                <BlogEntry Title=@post.Title data-test="test-value" Slug=@post.Slug>
-                    <HeaderContent>
-                        <div class="mr-2">
-                            <strong>@@@post.Author</strong>
-                        </div>
-                        <DateTimeView Class="mr-2" Typo=@Typo.caption Mode=@DateTimeMode.RelativeFromCurrent DateTime=@post.CreatedAt />
-                        <div>
-                            <MudText Typo=@Typo.caption>@post.CommentsCount комментариев</MudText>
-                        </div>
-                        <MudSpacer />
-                        @if (PostModelStatus.Pending == post.Status)
-                        {
-                            <MudChip Variant=@Variant.Outlined Disabled=true Size=@Size.Small>Pending</MudChip>
-                        }
-                        @if (CanEdit(post))
-                        {
-                            <MudIconButton
-                                Class="quick-action"
-                                Size=@Size.Small
-                                ButtonType=@ButtonType.Button
-                                Icon=@Icons.Material.Filled.Edit
-                                OnClick=@(() => DoPostEdit(post.Slug))
-                            />
-                        }
-                        @if (CanDelete(post))
-                        {
-                            <MudIconButton 
-                                Class="quick-action" 
-                                Size=@Size.Small 
-                                ButtonType=@ButtonType.Button 
-                                Icon=@Icons.Material.Filled.Delete 
-                                OnClick=@(() => DoPostDelete(post.Key, post.Title))
-                            />
-                        }
-                    </HeaderContent>
-                    <ChildContent>
-                        @post.Text
-                    </ChildContent>
-                </BlogEntry>
-            </MudPaper>
-        }
-
-        break;
-    }
-
-    case StoreState.Failed:
-    {
-        <text>Loading...</text>
-
-        break;
-    }
+    <MudPaper @key=post.Key Square=true Class="storyblog-home-blog" Elevation=0>
+        <MudOverlay LightBackground=true AutoClose=false Absolute=true Visible=@(PostState.Deleting == post.State)>
+            <MudProgressCircular Color=Color.Secondary Indeterminate=true></MudProgressCircular>
+        </MudOverlay>
+        <BlogEntry Title=@post.Title data-test="test-value" Slug=@post.Slug>
+            <HeaderContent>
+                <div class="mr-2">
+                    <strong>@@@post.Author</strong>
+                </div>
+                <DateTimeView Class="mr-2" Typo=@Typo.caption Mode=@DateTimeMode.RelativeFromCurrent DateTime=@post.CreatedAt/>
+                <div>
+                    <MudText Typo=@Typo.caption>@post.CommentsCount комментариев</MudText>
+                </div>
+                <MudSpacer/>
+                @if (PostModelStatus.Pending == post.Status)
+                {
+                    <MudChip Variant=@Variant.Outlined Disabled=true Size=@Size.Small>Pending</MudChip>
+                }
+                @if (CanEdit(post))
+                {
+                    <MudIconButton
+                        Class="quick-action"
+                        Size=@Size.Small
+                        ButtonType=@ButtonType.Button
+                        Icon=@Icons.Material.Filled.Edit
+                        OnClick=@(() => DoPostEdit(post.Slug))/>
+                }
+                @if (CanDelete(post))
+                {
+                    <MudIconButton
+                        Class="quick-action"
+                        Size=@Size.Small
+                        ButtonType=@ButtonType.Button
+                        Icon=@Icons.Material.Filled.Delete
+                        OnClick=@(() => DoPostDelete(post.Key, post.Title))/>
+                }
+            </HeaderContent>
+            <ChildContent>
+                @(new MarkupString(post.Text))
+            </ChildContent>
+        </BlogEntry>
+    </MudPaper>
 }

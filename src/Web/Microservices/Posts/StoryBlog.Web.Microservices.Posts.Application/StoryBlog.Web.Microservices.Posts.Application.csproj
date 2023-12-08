@@ -19,6 +19,8 @@
     <Folder Include="Handlers\GenerateSlug\" />
     <Folder Include="Core\" />
     <Folder Include="Handlers\GetPostReference\" />
+    <Folder Include="Handlers\DeletePost\" />
+    <Folder Include="Handlers\GetTailPosts\" />
   </ItemGroup>
 
   <ItemGroup>

@@ -5,7 +5,7 @@ using StoryBlog.Web.Common.Domain.Specifications;
 
 namespace StoryBlog.Web.Common.Infrastructure.Repositories;
 
-public class GenericRepository<TEntity, TDbContext> : IGenericRepository<TEntity>
+/*public class GenericRepository<TEntity, TDbContext> : IGenericRepository<TEntity>
     where TEntity : class, IEntity
     where TDbContext : DbContext
 {
@@ -78,4 +78,4 @@ public class GenericRepository<TEntity, TDbContext> : IGenericRepository<TEntity
     }
 
     #endregion
-}
+}*/

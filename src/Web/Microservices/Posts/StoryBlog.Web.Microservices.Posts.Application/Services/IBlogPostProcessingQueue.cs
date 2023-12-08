@@ -1,10 +1,11 @@
-﻿using StoryBlog.Web.Common.Result;
+﻿using StoryBlog.Web.Common.Application;
+using StoryBlog.Web.Common.Result;
 
 namespace StoryBlog.Web.Microservices.Posts.Application.Services;
 
-public interface IBlogPostProcessingQueue
+internal interface IBlogPostProcessingQueue
 {
-    ValueTask EnqueueTaskAsync(IBackgroundTask backgroundTask, CancellationToken cancellationToken);
-
-    ValueTask<Result<IBackgroundTask>> DequeueTaskAsync(CancellationToken cancellationToken);
+    ValueTask<Result<IBackgroundTask, TaskCancelled>> DequeueTaskAsync(CancellationToken cancellationToken);
+    
+    ValueTask EnqueueTaskAsync(Guid taskKey, Guid postKey, CancellationToken cancellationToken);
 }

@@ -2,6 +2,9 @@
 using SlimMessageBus;
 using StoryBlog.Web.Common.Domain;
 using StoryBlog.Web.Common.Events;
+using StoryBlog.Web.Microservices.Comments.Application.Extensions;
+using StoryBlog.Web.Microservices.Comments.Domain.Entities;
+using StoryBlog.Web.Microservices.Comments.Domain.Specifications;
 
 namespace StoryBlog.Web.Microservices.Comments.Application.MessageBus.Handlers;
 
@@ -18,10 +21,17 @@ public sealed class NewPostCreatedEventHandler : IConsumer<NewPostCreatedEvent>
         this.logger = logger;
     }
 
-    public Task OnHandle(NewPostCreatedEvent message)
+    public async Task OnHandle(NewPostCreatedEvent message)
     {
-        logger.LogInformation($"Received {nameof(NewPostCreatedEvent)} event: {{key: {message.Key}, created: {message.Created:G}, author: {message.AuthorId}}}");
+        await using (var repository = context.GetRepository<Comment>())
+        {
+            var specification = new FindCommentsForPost(message.Key);
+            var exists = await repository.ExistsAsync(specification);
 
-        return Task.CompletedTask;
+            if (exists)
+            {
+                logger.LogCommentsForPostAlreadyExists(message.Key);
+            }
+        }
     }
 }

@@ -43,6 +43,20 @@ public class AsyncGenericRepository<TEntity, TDbContext> : IAsyncGenericReposito
         return 0 < await query.CountAsync(cancellationToken);
     }
 
+    public Task RemoveAsync(TEntity entity, CancellationToken cancellationToken = default)
+    {
+        var collection = context.Set<TEntity>();
+        collection.Remove(entity);
+        return Task.CompletedTask;
+    }
+
+    public Task<int> RemoveAsync(ISpecification<TEntity> specification, CancellationToken cancellationToken = default)
+    {
+        var entities = context.Set<TEntity>().AsQueryable();
+        var query = SpecificationEvaluator<TEntity>.Query(entities, specification);
+        return query.ExecuteDeleteAsync(cancellationToken);
+    }
+
     public Task SaveChangesAsync(CancellationToken cancellationToken = default)
     {
         return context.SaveChangesAsync(cancellationToken);

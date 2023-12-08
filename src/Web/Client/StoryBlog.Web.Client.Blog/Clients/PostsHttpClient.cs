@@ -28,6 +28,7 @@ using StoryBlog.Web.Microservices.Posts.Shared.Models;
 using System.Diagnostics;
 using System.Net.Http.Json;
 using System.Text.Json;
+using StoryBlog.Web.Client.Blog.Extensions;
 using CreatedPostModel = StoryBlog.Web.Microservices.Posts.Shared.Models.CreatedPostModel;
 
 namespace StoryBlog.Web.Client.Blog.Clients;
@@ -46,12 +47,21 @@ internal sealed class PostsHttpClient : IPostsClient
     }
 
     /// <inheritdoc cref="IPostsClient.GetPostsAsync" />
-    public async Task<Result<EmptyPostsResponse, ListAllResponse>> GetPostsAsync(int pageNumber, int pageSize)
+    public async Task<Result<EmptyList, ListAllResponse>> GetPostsAsync(int pageNumber, int pageSize)
     {
         try
         {
+            var uri = QueryHelpers.AddQueryString(
+                options.Endpoints.Posts.BasePath,
+                new Dictionary<string, string?>
+                {
+                    { "pageNumber", pageNumber.ToString() },
+                    { "pageSize", pageSize.ToString() }
+                }
+            );
+
             var httpClient = httpClientFactory.CreateClient("PostsApi");
-            var request = new HttpRequestMessage(HttpMethod.Get, options.Endpoints.Posts.BasePath);
+            var request = new HttpRequestMessage(HttpMethod.Get, uri);
             
             using (var response = await httpClient.SendAsync(request))
             {
@@ -59,14 +69,14 @@ internal sealed class PostsHttpClient : IPostsClient
 
                 using (var stream = await message.Content.ReadAsStreamAsync())
                 {
-                    var model = await JsonSerializer.DeserializeAsync<ListAllResponse>(stream);
+                    var list = await JsonSerializer.DeserializeAsync<ListAllResponse>(stream);
 
-                    if (null == model)
+                    if (null == list)
                     {
-                        return new EmptyPostsResponse();
+                        return EmptyList.Instance;
                     }
 
-                    return model;
+                    return list;
                 }
             }
         }
@@ -106,6 +116,45 @@ internal sealed class PostsHttpClient : IPostsClient
         {
             Debug.WriteLine(exception);
             return null;
+        }
+    }
+
+    /// <inheritdoc cref="IPostsClient.GetTailPostsAsync" />
+    public async Task<Result<EmptyList, IReadOnlyCollection<BriefModel>>> GetTailPostsAsync(Guid postKey, int count)
+    {
+        try
+        {
+            var basePath = new Uri(options.Endpoints.Tail.BasePath, UriKind.Absolute);
+            var relativeUri = new Uri($"{postKey:D}/{count}", UriKind.Relative);
+
+            if (false == Uri.TryCreate(basePath, relativeUri, out var endpoint))
+            {
+                return new Exception();
+            }
+
+            var httpClient = httpClientFactory.CreateClient("PostsApi");
+            var request = new HttpRequestMessage(HttpMethod.Get, endpoint);
+
+            using (var response = await httpClient.SendAsync(request))
+            {
+                var message = response.EnsureSuccessStatusCode();
+
+                using (var stream = await message.Content.ReadAsStreamAsync())
+                {
+                    var list = await JsonSerializer.DeserializeAsync<IReadOnlyCollection<BriefModel>>(stream);
+
+                    if (null == list)
+                    {
+                        return EmptyList.Instance;
+                    }
+
+                    return new Result<EmptyList, IReadOnlyCollection<BriefModel>>(list);
+                }
+            }
+        }
+        catch (Exception exception)
+        {
+            return exception;
         }
     }
 
@@ -179,6 +228,8 @@ internal sealed class PostsHttpClient : IPostsClient
                 using (var stream = await message.Content.ReadAsStreamAsync())
                 {
                     var postDeleted = await JsonSerializer.DeserializeAsync<PostDeletedResponse>(stream);
+
+                    await Task.Delay(TimeSpan.FromSeconds(5.0d));
 
                     return Result.Success;
                 }

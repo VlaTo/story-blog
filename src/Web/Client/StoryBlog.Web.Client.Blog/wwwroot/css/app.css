@@ -43,6 +43,7 @@ html, body {
 
 .storyblog-home-blog {
     background: var(--mud-palette-white);
+    position: relative;
 }
 
 .storyblog-blog-entry .storyblog-blog-entry-header .storyblog-blog-entry-header-actions .quick-action {

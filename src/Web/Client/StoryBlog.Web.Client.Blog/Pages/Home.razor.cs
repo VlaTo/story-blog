@@ -8,6 +8,8 @@ using StoryBlog.Web.Client.Blog.Store.HomeUseCase;
 using StoryBlog.Web.Common.Identity.Permission;
 using StoryBlog.Web.Microservices.Posts.Shared.Models;
 using System.Security.Claims;
+using StoryBlog.Web.Client.Blog.Models;
+using StoryBlog.Web.Client.Blog.Store;
 
 namespace StoryBlog.Web.Client.Blog.Pages;
 
@@ -49,6 +51,8 @@ public partial class Home
         set;
     }
 
+    private bool IsLoading => StoreState.Loading == Store.Value.StoreState;
+
     private ClaimsPrincipal? CurrentUser
     {
         get;
@@ -59,7 +63,7 @@ public partial class Home
     {
         base.OnInitialized();
 
-        Dispatcher.Dispatch(new FetchPostsPageAction(1, 10));
+        Dispatcher.Dispatch(new FetchPostsPageAction(1, 3));
     }
 
     protected override async Task OnInitializedAsync()
@@ -69,11 +73,11 @@ public partial class Home
         CurrentUser = authenticationState.User;
     }
 
-    private bool CanEdit(BriefModel post) => HasPermission(post, Permissions.Blogs.Update);
+    private bool CanEdit(BriefPostModel post) => HasPermission(post, Permissions.Blogs.Update);
 
-    private bool CanDelete(BriefModel post) => HasPermission(post, Permissions.Blogs.Delete);
+    private bool CanDelete(BriefPostModel post) => HasPermission(post, Permissions.Blogs.Delete);
 
-    private bool HasPermission(BriefModel post, string permission)
+    private bool HasPermission(BriefPostModel post, string permission)
     {
         if (CurrentUser?.IsAuthenticated() ?? false)
         {
@@ -110,7 +114,10 @@ public partial class Home
 
         if (result.HasValue && result.Value)
         {
-            var action = new ImmediatePostDelete(postKey, Store.Value.PageNumber, Store.Value.PageSize);
+            var lastPost = Store.Value.Posts
+                .Last(x => x.Key != postKey);
+
+            var action = new ImmediatePostDeleteAction(postKey, lastPost.Key, Store.Value.PageNumber, Store.Value.PageSize);
             Dispatcher.Dispatch(action);
         }
     }

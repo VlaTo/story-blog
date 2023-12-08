@@ -12,7 +12,7 @@ public sealed class CreatedPostModel : PostDetailsModel
         set;
     }
 
-    public DateTime CreatedAt
+    public DateTimeOffset CreatedAt
     {
         get;
         set;

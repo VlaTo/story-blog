@@ -27,9 +27,11 @@ namespace StoryBlog.Web.Client.Blog.Clients.Interfaces;
 
 public interface IPostsClient
 {
-    Task<Result<EmptyPostsResponse, ListAllResponse>> GetPostsAsync(int pageNumber, int pageSize);
+    Task<Result<EmptyList, ListAllResponse>> GetPostsAsync(int pageNumber, int pageSize);
 
     Task<PostModel?> GetPostAsync(string slugOrKey);
+
+    Task<Result<EmptyList, IReadOnlyCollection<BriefModel>>> GetTailPostsAsync(Guid postKey, int count);
 
     Task<Models.CreatedPostModel?> CreatePostAsync(string title, string slug, string content);
 

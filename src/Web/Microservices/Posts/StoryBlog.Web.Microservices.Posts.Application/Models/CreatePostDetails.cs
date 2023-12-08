@@ -7,10 +7,4 @@ public sealed class CreatePostDetails : PostDetails
         get;
         init;
     }
-
-    public string Brief
-    {
-        get;
-        init;
-    }
 }

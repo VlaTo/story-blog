@@ -35,6 +35,12 @@ public sealed class HttpClientEndpoints
         set;
     }
 
+    public HttpClientEndpoint Tail
+    {
+        get;
+        set;
+    }
+
     public HttpClientEndpoint Slugs
     {
         get;
