@@ -54,12 +54,13 @@ public class PostsController : Controller
 
         if (result.Succeeded)
         {
-            var models = mapper.Map<IReadOnlyCollection<BriefModel>>(result.Value);
+            var models = mapper.Map<IReadOnlyCollection<BriefModel>>(result.Value.Posts);
             return Ok(new ListAllResponse
             {
                 Posts = models,
-                PageNumber = pageNumber,
-                PageSize = pageSize
+                PageSize = result.Value.PageSize,
+                PageNumber = result.Value.PageNumber,
+                PagesCount = result.Value.PagesCount
             });
         }
 
@@ -118,17 +119,5 @@ public class PostsController : Controller
         }
 
         return StatusCode(StatusCodes.Status500InternalServerError);
-    }
-
-    [HttpPost("test")]
-    public async Task<IActionResult> Test([FromServices]IMessageHub messageHub)
-    {
-        await messageHub.SendAsync(
-            "Test",
-            new NewPostPublishedMessage(Guid.NewGuid(), "test-post-slug"),
-            HttpContext.RequestAborted
-        );
-
-        return Ok();
     }
 }

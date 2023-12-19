@@ -30,6 +30,14 @@ public sealed class ListAllResponse
         set;
     }
 
+    [DataMember]
+    [JsonPropertyName(nameof(PagesCount))]
+    public int PagesCount
+    {
+        get;
+        set;
+    }
+
     public ListAllResponse()
     {
         Posts = Array.Empty<BriefModel>();

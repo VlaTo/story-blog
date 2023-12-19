@@ -1,1 +1,7 @@
 ﻿/* local CSS */
+.storyblog-blog-list {
+    min-height: 80vh;
+}
+
+.storyblog-pager {
+}

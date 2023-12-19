@@ -3,5 +3,5 @@
 public enum PostState
 {
     Active,
-    Deleting,
+    Updating
 }

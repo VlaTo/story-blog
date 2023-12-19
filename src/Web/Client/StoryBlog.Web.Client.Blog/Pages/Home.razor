@@ -2,9 +2,12 @@
 
 @using StoryBlog.Web.Microservices.Posts.Shared.Models
 @using StoryBlog.Web.Client.Blog.Models
+@using StoryBlog.Web.Client.Blog.Store
 @inherits Fluxor.Blazor.Web.Components.FluxorComponent
 
 <PageTitle>Home</PageTitle>
+
+<div class="storyblog-blog-list">
 
 <MudOverlay LightBackground=true AutoClose=false Visible=IsLoading>
     <MudProgressCircular Color=Color.Primary Indeterminate=true></MudProgressCircular>
@@ -13,7 +16,7 @@
 @foreach (var post in Store.Value.Posts)
 {
     <MudPaper @key=post.Key Square=true Class="storyblog-home-blog" Elevation=0>
-        <MudOverlay LightBackground=true AutoClose=false Absolute=true Visible=@(PostState.Deleting == post.State)>
+        <MudOverlay LightBackground=true AutoClose=false Absolute=true Visible=@(PostState.Updating == post.State)>
             <MudProgressCircular Color=Color.Secondary Indeterminate=true></MudProgressCircular>
         </MudOverlay>
         <BlogEntry Title=@post.Title data-test="test-value" Slug=@post.Slug>
@@ -26,27 +29,43 @@
                     <MudText Typo=@Typo.caption>@post.CommentsCount комментариев</MudText>
                 </div>
                 <MudSpacer/>
-                @if (PostModelStatus.Pending == post.Status)
+                @if (IsAuthorOf(post))
                 {
-                    <MudChip Variant=@Variant.Outlined Disabled=true Size=@Size.Small>Pending</MudChip>
-                }
-                @if (CanEdit(post))
-                {
+                    <MudChip
+                        Variant=@Variant.Outlined
+                        Disabled=@(false == post.IsPublic)
+                        Color=@Color.Info
+                        Size=@Size.Small>
+                        Public
+                    </MudChip>
+                    if (PostModelStatus.Pending == post.Status)
+                    {
+                        <MudChip Variant=@Variant.Outlined Color=@Color.Primary Size=@Size.Small>Pending</MudChip>
+                    }
                     <MudIconButton
                         Class="quick-action"
+                        Size=@Size.Small
+                        Disabled=@IsTogglePublicDisabled(post)
+                        ButtonType=@ButtonType.Button
+                        Icon=@Icons.Material.Filled.Visibility
+                        OnClick=@(() => DoTogglePublic(post.Key, !post.IsPublic))
+                    />
+                    <MudIconButton
+                        Class="quick-action"
+                        Disabled=@IsEditDisabled(post)
                         Size=@Size.Small
                         ButtonType=@ButtonType.Button
                         Icon=@Icons.Material.Filled.Edit
-                        OnClick=@(() => DoPostEdit(post.Slug))/>
-                }
-                @if (CanDelete(post))
-                {
+                        OnClick=@(() => DoPostEdit(post.Slug))
+                    />
                     <MudIconButton
                         Class="quick-action"
+                        Disabled=@IsDeleteDisabled(post)
                         Size=@Size.Small
                         ButtonType=@ButtonType.Button
                         Icon=@Icons.Material.Filled.Delete
-                        OnClick=@(() => DoPostDelete(post.Key, post.Title))/>
+                        OnClick=@(() => DoPostDelete(post.Key, post.Title))
+                    />
                 }
             </HeaderContent>
             <ChildContent>
@@ -54,4 +73,19 @@
             </ChildContent>
         </BlogEntry>
     </MudPaper>
+}
+</div>
+
+@if ((StoreState.Loading != Store.Value.StoreState) || (0 < Store.Value.Posts.Count))
+{
+    <div class="d-flex justify-center mt-2">
+        <MudPagination
+            Class="my-2 storyblog-pager"
+            Variant=@Variant.Outlined
+            ShowFirstButton=@true
+            ShowLastButton=@true
+            @bind-Selected=@SelectedPageNumber
+            Count=@Store.Value.PagesCount>
+        </MudPagination>
+    </div>
 }

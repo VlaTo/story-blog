@@ -11,6 +11,7 @@ internal sealed record BriefPostModel(
     string Text,
     AllowedActions AllowedActions,
     PostState State,
+    bool IsPublic,
     long CommentsCount,
     DateTimeOffset CreatedAt
 );

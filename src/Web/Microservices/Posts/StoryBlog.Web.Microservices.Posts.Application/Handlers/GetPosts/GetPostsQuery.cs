@@ -5,7 +5,7 @@ using StoryBlog.Web.Microservices.Posts.Application.Models;
 
 namespace StoryBlog.Web.Microservices.Posts.Application.Handlers.GetPosts;
 
-public class GetPostsQuery : IRequest<Result<IReadOnlyList<Brief>>>
+public class GetPostsQuery : IRequest<Result<(IReadOnlyList<Brief> Posts, int PageNumber, int PageSize, int PagesCount)>>
 {
     public int PageNumber
     {

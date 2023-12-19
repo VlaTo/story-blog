@@ -31,6 +31,14 @@ public class BriefModel : PostDetailsModel
     }
 
     [DataMember]
+    [JsonPropertyName(nameof(IsPublic))]
+    public bool IsPublic
+    {
+        get;
+        set;
+    }
+
+    [DataMember]
     [JsonPropertyName(nameof(CommentsCount))]
     public long CommentsCount
     {

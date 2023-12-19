@@ -37,25 +37,32 @@ internal sealed class HomeState : AbstractStore
         get;
     }
 
+    public int PagesCount
+    {
+        get;
+    }
+
     public IReadOnlyCollection<BriefPostModel> Posts
     {
         get;
     }
 
     public HomeState()
-        : this(0, 0, Array.Empty<BriefPostModel>(), storeState: StoreState.Empty)
+        : this(0, 0, 0, Array.Empty<BriefPostModel>(), storeState: StoreState.Empty)
     {
     }
 
     public HomeState(
         int pageNumber,
         int pageSize,
+        int pagesCount,
         IReadOnlyCollection<BriefPostModel> posts,
         StoreState storeState = StoreState.Empty)
         : base(storeState)
     {
         PageNumber = pageNumber;
         PageSize = pageSize;
+        PagesCount = pagesCount;
         Posts = posts;
     }
 }

@@ -16,6 +16,10 @@ namespace StoryBlog.Web.Client.Blog.Pages;
 [AllowAnonymous]
 public partial class Home
 {
+    private const int PageSize = 3;
+
+    private int selectedPageNumber;
+
     [Inject]
     private IState<HomeState> Store
     {
@@ -51,6 +55,21 @@ public partial class Home
         set;
     }
 
+    private int SelectedPageNumber
+    {
+        get => selectedPageNumber;
+        set
+        {
+            if (selectedPageNumber == value)
+            {
+                return ;
+            }
+
+            selectedPageNumber = value;
+            Dispatcher.Dispatch(new FetchPostsPageAction(value, PageSize));
+        }
+    }
+
     private bool IsLoading => StoreState.Loading == Store.Value.StoreState;
 
     private ClaimsPrincipal? CurrentUser
@@ -63,21 +82,37 @@ public partial class Home
     {
         base.OnInitialized();
 
-        Dispatcher.Dispatch(new FetchPostsPageAction(1, 3));
+        selectedPageNumber = 1;
+        Dispatcher.Dispatch(new FetchPostsPageAction(selectedPageNumber, PageSize));
     }
 
     protected override async Task OnInitializedAsync()
     {
-        //return base.OnInitializedAsync();
         var authenticationState = await AuthenticationStateTask;
         CurrentUser = authenticationState.User;
     }
 
-    private bool CanEdit(BriefPostModel post) => HasPermission(post, Permissions.Blogs.Update);
+    private bool IsAuthorOf(BriefPostModel post)
+    {
+        if (CurrentUser?.IsAuthenticated() ?? false)
+        {
+            var subject = CurrentUser.GetSubject();
+            return String.Equals(post.Author, subject);
+        }
 
-    private bool CanDelete(BriefPostModel post) => HasPermission(post, Permissions.Blogs.Delete);
+        return false;
+    }
 
-    private bool HasPermission(BriefPostModel post, string permission)
+    private bool IsTogglePublicDisabled(BriefPostModel post) =>
+        false == HasPermission(post, Permissions.Blogs.Update, AllowedActions.CanTogglePublic);
+
+    private bool IsEditDisabled(BriefPostModel post) =>
+        false == HasPermission(post, Permissions.Blogs.Update, AllowedActions.CanEdit);
+
+    private bool IsDeleteDisabled(BriefPostModel post) =>
+        false == HasPermission(post, Permissions.Blogs.Delete, AllowedActions.CanDelete);
+
+    private bool HasPermission(BriefPostModel post, string permission, AllowedActions action)
     {
         if (CurrentUser?.IsAuthenticated() ?? false)
         {
@@ -86,9 +121,7 @@ public partial class Home
             if (String.Equals(post.Author, subject))
             {
                 var hasPermission = CurrentUser.HasPermission(permission);
-                var allowed = AllowedActions.CanEdit == (post.AllowedActions & AllowedActions.CanEdit);
-                
-                return hasPermission && allowed;
+                return hasPermission && action == (post.AllowedActions & action);
             }
         }
 
@@ -114,10 +147,10 @@ public partial class Home
 
         if (result.HasValue && result.Value)
         {
-            var lastPost = Store.Value.Posts
-                .Last(x => x.Key != postKey);
+            var store = Store.Value;
+            var lastPost = store.Posts.Last(x => x.Key != postKey);
+            var action = new ImmediatePostDeleteAction(postKey, lastPost.Key, store.PageNumber, store.PageSize);
 
-            var action = new ImmediatePostDeleteAction(postKey, lastPost.Key, Store.Value.PageNumber, Store.Value.PageSize);
             Dispatcher.Dispatch(action);
         }
     }
@@ -125,5 +158,11 @@ public partial class Home
     private void DoPostEdit(string slug)
     {
         NavigationManager.NavigateTo($"edit/{slug}");
+    }
+
+    private void DoTogglePublic(Guid postKey, bool isPublic)
+    {
+        var action = new TogglePostPublicityAction(postKey, isPublic);
+        Dispatcher.Dispatch(action);
     }
 }

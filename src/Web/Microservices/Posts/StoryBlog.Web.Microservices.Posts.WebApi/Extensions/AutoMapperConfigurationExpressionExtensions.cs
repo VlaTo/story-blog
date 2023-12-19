@@ -21,6 +21,7 @@ internal static class AutoMapperConfigurationExpressionExtensions
             .ForMember(destination => destination.Status, source => source.MapFrom(x => x.Status))
             .ForMember(destination => destination.AllowedActions, source => source.MapFrom(x => x.AllowedActions))
             .ForMember(destination => destination.CommentsCount, source => source.MapFrom(x => x.CommentsCount))
+            .ForMember(destination => destination.IsPublic, source => source.MapFrom(x => x.IsPublic))
             .ForMember(destination => destination.CreatedAt, source => source.MapFrom(x => x.CreatedAt))
             ;
 

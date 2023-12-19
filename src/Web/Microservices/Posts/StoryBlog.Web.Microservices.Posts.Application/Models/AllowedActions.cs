@@ -9,10 +9,15 @@ public enum AllowedActions : byte
     /// <summary>
     /// 
     /// </summary>
-    CanEdit,
+    CanEdit = 0x01,
 
     /// <summary>
     /// 
     /// </summary>
-    CanDelete
+    CanDelete = 0x02,
+
+    /// <summary>
+    /// 
+    /// </summary>
+    CanTogglePublic = 0x04
 }

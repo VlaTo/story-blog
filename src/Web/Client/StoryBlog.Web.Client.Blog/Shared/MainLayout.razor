@@ -24,15 +24,28 @@
                 <MudNavLink Href="create" Match=@NavLinkMatch.All>Write a post</MudNavLink>
             </AuthorizeView>
         </MudNavMenu>
+        <AboutBox></AboutBox>
     </MudDrawer>
-    <MudMainContent Class="d-flex align-start">
-        <MudContainer Class="d-block flex-2" MaxWidth=@MaxWidth.ExtraLarge>
+    <MudMainContent Class="d-flex flex-column mb-2">
+        <MudContainer Class="d-block" MaxWidth=@MaxWidth.ExtraLarge>
             @Body
         </MudContainer>
-        <MudContainer Class="d-block flex-1" MaxWidth=@MaxWidth.ExtraSmall>
-            <AboutBox>
-
-            </AboutBox>
+        <MudContainer Class="d-flex flex-row mt-6 storyblog-main-footer">
+            <div class="d-inline-flex flex-column flex-1">
+                <div class="d-flex justify-center">
+                    <MudText Typo=@Typo.h6>Контакты</MudText>
+                </div>
+            </div>
+            <div class="d-inline-flex flex-column flex-1">
+                <div class="d-flex justify-center">
+                    <MudText Typo=@Typo.h6>Недавние посты</MudText>
+                </div>
+            </div>
+            <div class="d-inline-flex flex-column flex-1">
+                <div class="d-flex justify-center">
+                    <MudText Typo=@Typo.h6>Подписаться</MudText>
+                </div>
+            </div>
         </MudContainer>
     </MudMainContent>
 </MudLayout>

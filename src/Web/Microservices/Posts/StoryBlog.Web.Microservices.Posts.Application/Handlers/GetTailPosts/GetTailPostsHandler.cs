@@ -7,7 +7,6 @@ using StoryBlog.Web.Common.Identity.Permission;
 using StoryBlog.Web.Common.Result;
 using StoryBlog.Web.Microservices.Posts.Application.Models;
 using StoryBlog.Web.Microservices.Posts.Domain.Specifications;
-using System;
 
 namespace StoryBlog.Web.Microservices.Posts.Application.Handlers.GetTailPosts;
 

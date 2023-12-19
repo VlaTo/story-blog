@@ -64,6 +64,15 @@ public sealed class Brief : PostDetails
     /// <summary>
     /// 
     /// </summary>
+    public bool IsPublic
+    {
+        get;
+        set;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
     public DateTimeOffset CreatedAt
     {
         get;

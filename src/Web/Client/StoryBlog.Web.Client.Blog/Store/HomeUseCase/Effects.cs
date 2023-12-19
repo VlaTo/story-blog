@@ -49,8 +49,8 @@ public sealed class FetchAvailablePostsEffect : Effect<FetchPostsPageAction>
 
         var response = await client.GetPostsAsync(action.PageNumber, action.PageSize);
         var next = response.Select<object>(
-            empty => new FetchPostsPageReadyAction(Array.Empty<BriefModel>(), action.PageNumber, action.PageSize),
-            result => new FetchPostsPageReadyAction(result.Posts, result.PageNumber, result.PageSize),
+            empty => new FetchPostsPageReadyAction(Array.Empty<BriefModel>(), action.PageNumber, action.PageSize, 0),
+            result => new FetchPostsPageReadyAction(result.Posts, result.PageNumber, result.PageSize, result.PagesCount),
             exception => new FetchPostsPageFailedAction(action.PageNumber, action.PageSize)
         );
 
@@ -106,6 +106,33 @@ public sealed class ImmediatePostDeleteSuccessEffect : Effect<ImmediatePostDelet
 
         dispatcher.Dispatch(
             new TailPostsReadyAction(action.LastPostKey, response.Item2!, action.PageNumber, action.PageSize)
+        );
+    }
+}
+
+/// <summary>
+/// 
+/// </summary>
+public sealed class TogglePostPublicityActionEffect : Effect<TogglePostPublicityAction>
+{
+    private readonly IPostsClient client;
+
+    public TogglePostPublicityActionEffect(IPostsClient client)
+    {
+        this.client = client;
+    }
+
+    public override async Task HandleAsync(TogglePostPublicityAction action, IDispatcher dispatcher)
+    {
+        var response = await client.UpdatePostPublicityAsync(action.PostKey, action.IsPublic);
+
+        if (false == response.Succeeded)
+        {
+            throw response.Error!;
+        }
+
+        dispatcher.Dispatch(
+            new TogglePublicitySuccessAction(action.PostKey, action.IsPublic)
         );
     }
 }

@@ -53,6 +53,12 @@ public sealed class HttpClientEndpoints
         set;
     }
 
+    public HttpClientEndpoint Toggle
+    {
+        get;
+        set;
+    }
+
     public HttpClientEndpoint Comments
     {
         get;

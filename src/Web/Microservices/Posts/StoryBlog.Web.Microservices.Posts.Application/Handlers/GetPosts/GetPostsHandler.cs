@@ -2,14 +2,16 @@
 using StoryBlog.Web.Common.Application;
 using StoryBlog.Web.Common.Application.Extensions;
 using StoryBlog.Web.Common.Domain;
+using StoryBlog.Web.Common.Domain.Specifications;
 using StoryBlog.Web.Common.Result;
 using StoryBlog.Web.Microservices.Posts.Application.Models;
 using StoryBlog.Web.Microservices.Posts.Domain.Specifications;
 using StoryBlog.Web.Common.Identity.Permission;
+using Post = StoryBlog.Web.Microservices.Posts.Domain.Entities.Post;
 
 namespace StoryBlog.Web.Microservices.Posts.Application.Handlers.GetPosts;
 
-public sealed class GetPostsHandler : HandlerBase, IRequestHandler<GetPostsQuery, Result<IReadOnlyList<Brief>>>
+public sealed class GetPostsHandler : HandlerBase, IRequestHandler<GetPostsQuery, Result<(IReadOnlyList<Brief> Posts, int PageNumber, int PageSize, int PagesCount)>>
 {
     private readonly IAsyncUnitOfWork context;
 
@@ -18,7 +20,7 @@ public sealed class GetPostsHandler : HandlerBase, IRequestHandler<GetPostsQuery
         this.context = context;
     }
 
-    public async Task<Result<IReadOnlyList<Brief>>> Handle(GetPostsQuery request, CancellationToken cancellationToken)
+    public async Task<Result<(IReadOnlyList<Brief> Posts, int PageNumber, int PageSize, int PagesCount)>> Handle(GetPostsQuery request, CancellationToken cancellationToken)
     {
         var authenticated = request.CurrentUser.IsAuthenticated();
 
@@ -41,10 +43,14 @@ public sealed class GetPostsHandler : HandlerBase, IRequestHandler<GetPostsQuery
             return new Exception("User not authenticated");
         }
 
-        await using (var repository = context.GetRepository<Domain.Entities.Post>())
+        await using (var repository = context.GetRepository<Post>())
         {
-            var specification = new AllAvailablePostsSpecification(authenticated, request.PageNumber, request.PageSize);
+            ISpecification<Post> specification = new AllPostsSpecification(authenticated);
+            var postsCount = await repository.CountAsync(specification, cancellationToken);
+
+            specification = new PagedPostsSpecification(authenticated, request.PageNumber, request.PageSize);
             var posts = await repository.QueryAsync(specification, cancellationToken);
+            
             var briefs = new Brief[posts.Length];
 
             for (var index = 0; index < posts.Length; index++)
@@ -58,14 +64,18 @@ public sealed class GetPostsHandler : HandlerBase, IRequestHandler<GetPostsQuery
                     Slug = source.Slug.Text,
                     Status = source.Status,
                     Author = source.AuthorId,
-                    Text = source.Content.Brief,
+                    Text = source.Content.Brief!,
                     CommentsCount = source.CommentsCounter.Counter,
-                    AllowedActions = AllowedActions.CanEdit | AllowedActions.CanDelete,
+                    IsPublic = source.IsPublic,
+                    AllowedActions = AllowedActions.CanTogglePublic | AllowedActions.CanEdit | AllowedActions.CanDelete,
                     CreatedAt = source.CreateAt
                 };
             }
 
-            return briefs;
+            var (quotient, remainder) = Math.DivRem(postsCount, request.PageSize);
+            var pagesCount = quotient + (remainder > 0 ? 1 : 0);
+
+            return (Posts: briefs, request.PageNumber, request.PageSize, PagesCount: pagesCount);
         }
     }
 }

@@ -36,4 +36,6 @@ public interface IPostsClient
     Task<Models.CreatedPostModel?> CreatePostAsync(string title, string slug, string content);
 
     Task<Result> DeletePostAsync(string slugOrKey);
+
+    Task<Result> UpdatePostPublicityAsync(Guid postKey, bool isPublic);
 }

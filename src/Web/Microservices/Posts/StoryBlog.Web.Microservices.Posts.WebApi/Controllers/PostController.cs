@@ -19,7 +19,7 @@ namespace StoryBlog.Web.Microservices.Posts.WebApi.Controllers;
 [AllowAnonymous]
 [ApiController]
 [Route("api/v{version:apiVersion}/[controller]")]
-public class PostController : Controller
+public sealed class PostController : Controller
 {
     private readonly IMediator mediator;
     private readonly IMapper mapper;

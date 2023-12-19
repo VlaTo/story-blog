@@ -228,9 +228,46 @@ internal sealed class PostsHttpClient : IPostsClient
                 using (var stream = await message.Content.ReadAsStreamAsync())
                 {
                     var postDeleted = await JsonSerializer.DeserializeAsync<PostDeletedResponse>(stream);
+                    return Result.Success;
+                }
+            }
+        }
+        catch (Exception exception)
+        {
+            return exception;
+        }
+    }
 
-                    await Task.Delay(TimeSpan.FromSeconds(5.0d));
+    /// <inheritdoc cref="IPostsClient.UpdatePostPublicityAsync" />
+    public async Task<Result> UpdatePostPublicityAsync(Guid postKey, bool isPublic)
+    {
+        var basePath = new Uri(options.Endpoints.Toggle.BasePath, UriKind.Absolute);
+        var relativeUri = new Uri(postKey.ToString("N"), UriKind.Relative);
 
+        if (false == Uri.TryCreate(basePath, relativeUri, out var endpoint))
+        {
+            return new Exception("Failed to create Uri");
+        }
+
+        var request = new HttpRequestMessage(HttpMethod.Put, endpoint)
+        {
+            Content = JsonContent.Create(new PostPublicityRequest
+            {
+                IsPublic = isPublic
+            })
+        };
+
+        try
+        {
+            var httpClient = httpClientFactory.CreateClient("PostsApi");
+
+            using (var response = await httpClient.SendAsync(request))
+            {
+                var message = response.EnsureSuccessStatusCode();
+
+                using (var stream = await message.Content.ReadAsStreamAsync())
+                {
+                    var temp = await JsonSerializer.DeserializeAsync<PostPublicityResponse>(stream);
                     return Result.Success;
                 }
             }

@@ -21,10 +21,12 @@
     <Folder Include="Handlers\GetPostReference\" />
     <Folder Include="Handlers\DeletePost\" />
     <Folder Include="Handlers\GetTailPosts\" />
+    <Folder Include="Handlers\TogglePublicity\" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="12.0.1" />
+    <PackageReference Include="Hashids.net" Version="1.7.0" />
     <PackageReference Include="MediatR" Version="12.1.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="7.0.13" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.1" />

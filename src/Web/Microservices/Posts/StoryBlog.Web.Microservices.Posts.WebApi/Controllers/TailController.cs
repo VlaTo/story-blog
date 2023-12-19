@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using StoryBlog.Web.Microservices.Posts.Application.Handlers.GetTailPosts;
 using StoryBlog.Web.Microservices.Posts.Shared.Models;
-using StoryBlog.Web.Microservices.Posts.WebApi.Core;
 
 namespace StoryBlog.Web.Microservices.Posts.WebApi.Controllers;
 
@@ -39,7 +38,7 @@ public sealed class TailController : Controller
     [ProducesResponseType(typeof(IReadOnlyCollection<BriefModel>), StatusCodes.Status200OK)]
     [ProducesErrorResponseType(typeof(void))]
     [HttpGet("{postKey:guid}/{postsCount:int}")]
-    public async Task<IActionResult> ListAll([FromRoute] Guid postKey, [FromRoute] int postsCount = 1)
+    public async Task<IActionResult> GetTailPosts([FromRoute] Guid postKey, [FromRoute] int postsCount = 1)
     {
         var query = new GetTailPostsQuery(User, postKey, postsCount, includeAll: true);
         var result = await mediator.Send(query);

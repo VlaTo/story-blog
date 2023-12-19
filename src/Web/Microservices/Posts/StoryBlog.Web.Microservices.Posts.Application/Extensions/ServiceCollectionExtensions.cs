@@ -21,6 +21,7 @@ public static class ServiceCollectionExtensions
 
         services.AddTransient<IWordTransliterator, RussianWordTransliterator>();
         services.AddSingleton<BlogPostProcessingManager>();
+        services.AddSingleton<IBriefPostsPagingInfoProvider, BriefPostsPagingInfoProvider>();
         services.AddTransient<IBlogPostProcessingManager>(
             serviceProvider => serviceProvider.GetRequiredService<BlogPostProcessingManager>()
         );

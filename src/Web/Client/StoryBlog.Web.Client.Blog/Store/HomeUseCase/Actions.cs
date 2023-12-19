@@ -45,7 +45,8 @@ public sealed record FetchPostsPageAction(
 public sealed record FetchPostsPageReadyAction(
         IReadOnlyCollection<BriefModel> Posts,
         int PageNumber,
-        int PageSize)
+        int PageSize,
+        int PagesCount)
     : PostsPageAction(PageNumber, PageSize);
 
 /// <summary>
@@ -106,3 +107,29 @@ public sealed record TailPostsReadyAction(
     int PageNumber,
     int PageSize
 ) : PostsPageAction(PageNumber, PageSize);
+
+/// <summary>
+/// 
+/// </summary>
+/// <param name="PostKey"></param>
+public sealed record TogglePostPublicityAction(
+    Guid PostKey,
+    bool IsPublic
+);
+
+/// <summary>
+/// 
+/// </summary>
+/// <param name="PostKey"></param>
+public sealed record TogglePublicitySuccessAction(
+    Guid PostKey,
+    bool IsPublic
+);
+
+/// <summary>
+/// 
+/// </summary>
+/// <param name="PostKey"></param>
+public sealed record TogglePublicityFailedAction(
+    Guid PostKey
+);

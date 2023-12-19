@@ -15,6 +15,7 @@ internal static class BriefModelExtensions
             brief.Text,
             brief.AllowedActions,
             state,
+            brief.IsPublic,
             brief.CommentsCount,
             brief.CreatedAt
         );

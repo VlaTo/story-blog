@@ -16,7 +16,6 @@ public partial class Blog : ICommentsObserver
     private IDisposable? subscription;
 
     [Parameter]
-    [SupplyParameterFromQuery]
     public string SlugOrKey
     {
         get;

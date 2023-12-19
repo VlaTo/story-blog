@@ -31,7 +31,7 @@ namespace StoryBlog.Web.Client.Blog.Store.HomeUseCase;
 internal sealed class FetchPostsPageReducer : Reducer<HomeState, FetchPostsPageAction>
 {
     public override HomeState Reduce(HomeState state, FetchPostsPageAction action) =>
-        new(state.PageNumber, state.PageSize, state.Posts, StoreState.Loading);
+        new(state.PageNumber, state.PageSize, state.PagesCount, state.Posts, StoreState.Loading);
 }
 
 /// <summary>
@@ -40,7 +40,7 @@ internal sealed class FetchPostsPageReducer : Reducer<HomeState, FetchPostsPageA
 internal sealed class FetchPostsPageFailedReducer : Reducer<HomeState, FetchPostsPageFailedAction>
 {
     public override HomeState Reduce(HomeState state, FetchPostsPageFailedAction action) =>
-        new(state.PageNumber, state.PageSize, state.Posts, StoreState.Failed);
+        new(state.PageNumber, state.PageSize, state.PagesCount, state.Posts, StoreState.Failed);
 }
 
 /// <summary>
@@ -53,7 +53,7 @@ internal sealed class PostsPageReadyReducer : Reducer<HomeState, FetchPostsPageR
         var posts = action.Posts
             .Select(x => x.ToModel(PostState.Active))
             .ToArray();
-        return new(state.PageNumber, state.PageSize, posts, StoreState.Success);
+        return new(action.PageNumber, action.PageSize, action.PagesCount, posts, StoreState.Success);
     }
 }
 
@@ -67,10 +67,10 @@ internal sealed class ImmediatePostDeleteReducer : Reducer<HomeState, ImmediateP
         var posts = state.Posts
             .MapReduce(x => x.Key == action.PostKey, x => x with
             {
-                State = PostState.Deleting
+                State = PostState.Updating
             })
             .ToArray();
-        return new HomeState(state.PageNumber, state.PageSize, posts, state.StoreState);
+        return new HomeState(state.PageNumber, state.PageSize, state.PagesCount, posts, state.StoreState);
     }
 }
 
@@ -84,7 +84,7 @@ internal sealed class ImmediatePostDeleteSuccessReducer : Reducer<HomeState, Imm
         var posts = state.Posts
             .Exclude(x => x.Key == action.PostKey)
             .ToArray();
-        return new HomeState(state.PageNumber, state.PageSize, posts, state.StoreState);
+        return new HomeState(state.PageNumber, state.PageSize, state.PagesCount, posts, state.StoreState);
     }
 }
 
@@ -97,6 +97,42 @@ internal sealed class TailPostsReadyReducer : Reducer<HomeState, TailPostsReadyA
     {
         var posts = new List<BriefPostModel>(state.Posts);
         posts.AddRange(action.Posts.Select(x => x.ToModel(PostState.Active)));
-        return new HomeState(state.PageNumber, state.PageSize, posts, state.StoreState);
+        return new HomeState(state.PageNumber, state.PageSize, state.PagesCount, posts, state.StoreState);
+    }
+}
+
+/// <summary>
+/// 
+/// </summary>
+internal sealed class TogglePostPublicityReducer : Reducer<HomeState, TogglePostPublicityAction>
+{
+    public override HomeState Reduce(HomeState state, TogglePostPublicityAction action)
+    {
+        var posts = state.Posts
+            .MapReduce(x => x.Key == action.PostKey, x => x with
+            {
+                State = PostState.Updating
+            })
+            .ToArray();
+        return new HomeState(state.PageNumber, state.PageSize, state.PagesCount, posts, state.StoreState);
+    }
+}
+
+
+/// <summary>
+/// 
+/// </summary>
+internal sealed class TogglePublicitySuccessReducer : Reducer<HomeState, TogglePublicitySuccessAction>
+{
+    public override HomeState Reduce(HomeState state, TogglePublicitySuccessAction action)
+    {
+        var posts = state.Posts
+            .MapReduce(x => x.Key == action.PostKey, x => x with
+            {
+                State = PostState.Active,
+                IsPublic = action.IsPublic
+            })
+            .ToArray();
+        return new HomeState(state.PageNumber, state.PageSize, state.PagesCount, posts, state.StoreState);
     }
 }

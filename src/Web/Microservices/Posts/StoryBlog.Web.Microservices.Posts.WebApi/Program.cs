@@ -30,6 +30,7 @@ builder.Services.AddInfrastructureServices();
 builder.Services.AddInfrastructureDbContext(builder.Configuration, "Database");
 builder.Services.AddScoped<ILocationProvider, AspNetCoreLocationProvider>();
 builder.Services.AddApplicationServices();
+builder.Services.AddWebApiServices();
 builder.Services
     .AddOptions<PostLocationProviderOptions>()
     .BindConfiguration(PostLocationProviderOptions.SectionName);

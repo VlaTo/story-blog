@@ -29,6 +29,13 @@ public class AsyncGenericRepository<TEntity, TDbContext> : IAsyncGenericReposito
         return query.ToArrayAsync(cancellationToken);
     }
 
+    public Task<int> CountAsync(ISpecification<TEntity> specification, CancellationToken cancellationToken = default)
+    {
+        var entities = context.Set<TEntity>().AsQueryable();
+        var query = SpecificationEvaluator<TEntity>.Query(entities, specification);
+        return query.CountAsync(cancellationToken);
+    }
+
     public Task<TEntity?> FindAsync(ISpecification<TEntity> specification, CancellationToken cancellationToken = default)
     {
         var entities = context.Set<TEntity>().AsQueryable();

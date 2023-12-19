@@ -1,6 +1,7 @@
 ﻿using Fluxor;
 using Microsoft.AspNetCore.Components.Authorization;
 using StoryBlog.Web.Client.Blog.Clients.Interfaces;
+using StoryBlog.Web.Client.Blog.Extensions;
 
 namespace StoryBlog.Web.Client.Blog.Store.BlogUseCase;
 
@@ -23,7 +24,9 @@ public sealed class FetchPostEffect : Effect<FetchPostAction>
 
     public override async Task HandleAsync(FetchPostAction action, IDispatcher dispatcher)
     {
-         await authenticationProvider.GetAuthenticationStateAsync();
+        var authenticationState = await authenticationProvider.GetAuthenticationStateAsync();
+
+        Console.WriteLine($"Is User authenticated: {authenticationState.User.IsAuthenticated()}");
 
         try
         {

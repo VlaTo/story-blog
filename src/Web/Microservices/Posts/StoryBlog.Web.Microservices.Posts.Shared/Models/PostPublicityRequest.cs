@@ -4,17 +4,10 @@ using System.Runtime.Serialization;
 namespace StoryBlog.Web.Microservices.Posts.Shared.Models;
 
 [DataContract]
-public sealed class EditPostRequest
+public sealed class PostPublicityRequest
 {
     [Required]
-    public string Title
-    {
-        get;
-        set;
-    }
-
-    [Required]
-    public string Slug
+    public bool IsPublic
     {
         get;
         set;

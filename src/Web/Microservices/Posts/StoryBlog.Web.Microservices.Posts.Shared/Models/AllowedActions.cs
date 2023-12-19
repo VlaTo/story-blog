@@ -6,6 +6,7 @@ namespace StoryBlog.Web.Microservices.Posts.Shared.Models;
 [Flags]
 public enum AllowedActions : byte
 {
-    CanEdit,
-    CanDelete
+    CanEdit = 0x01,
+    CanDelete = 0x02,
+    CanTogglePublic = 0x04
 }
