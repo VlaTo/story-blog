@@ -18,10 +18,10 @@ internal static class AutoMapperConfigurationExpressionExtensions
             .ForMember(destination => destination.Slug, source => source.MapFrom(x => x.Slug))
             .ForMember(destination => destination.Text, source => source.MapFrom(x => x.Text))
             .ForMember(destination => destination.Author, source => source.MapFrom(x => x.Author))
-            .ForMember(destination => destination.Status, source => source.MapFrom(x => x.Status))
+            .ForMember(destination => destination.PublicationStatus, source => source.MapFrom(x => x.PublicationStatus))
             .ForMember(destination => destination.AllowedActions, source => source.MapFrom(x => x.AllowedActions))
             .ForMember(destination => destination.CommentsCount, source => source.MapFrom(x => x.CommentsCount))
-            .ForMember(destination => destination.IsPublic, source => source.MapFrom(x => x.IsPublic))
+            .ForMember(destination => destination.VisibilityStatus, source => source.MapFrom(x => x.VisibilityStatus))
             .ForMember(destination => destination.CreatedAt, source => source.MapFrom(x => x.CreatedAt))
             ;
 
@@ -30,7 +30,7 @@ internal static class AutoMapperConfigurationExpressionExtensions
             .ForMember(destination => destination.Title, source => source.MapFrom(x => x.Title))
             .ForMember(destination => destination.Slug, source => source.MapFrom(x => x.Slug))
             .ForMember(destination => destination.Text, source => source.MapFrom(x => x.Text))
-            .ForMember(destination => destination.Status, source => source.MapFrom(x => x.Status))
+            .ForMember(destination => destination.PublicationStatus, source => source.MapFrom(x => x.PublicationStatus))
             .ForMember(destination => destination.CommentsCount, source => source.MapFrom(x => x.CommentsCount))
             .ForMember(destination => destination.CreatedAt, source => source.MapFrom(x => x.CreatedAt))
             ;
@@ -44,7 +44,7 @@ internal static class AutoMapperConfigurationExpressionExtensions
             .ForMember(destination => destination.Key, source => source.MapFrom(x => x.Key))
             .ForMember(destination => destination.Title, source => source.MapFrom(x => x.Title))
             .ForMember(destination => destination.Slug, source => source.MapFrom(x => x.Slug))
-            .ForMember(destination => destination.Status, source => source.MapFrom(x => x.Status))
+            .ForMember(destination => destination.PublicationStatus, source => source.MapFrom(x => x.PublicationStatus))
             .ForMember(destination => destination.CreatedAt, source => source.MapFrom(x => x.CreatedAt))
             ;
 
@@ -52,7 +52,7 @@ internal static class AutoMapperConfigurationExpressionExtensions
             .ForMember(destination => destination.Key, source => source.MapFrom(x => x.Key))
             .ForMember(destination => destination.Title, source => source.MapFrom(x => x.Title))
             .ForMember(destination => destination.Slug, source => source.MapFrom(x => x.Slug))
-            .ForMember(destination => destination.Status, source => source.MapFrom(x => x.Status))
+            .ForMember(destination => destination.Status, source => source.MapFrom(x => x.PublicationStatus))
             ;
 
         return expression;

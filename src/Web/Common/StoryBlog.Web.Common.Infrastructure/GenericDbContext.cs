@@ -14,22 +14,43 @@ public abstract class GenericDbContext : DbContext, IGenericDbContext
     {
     }
 
-    /*public virtual async Task<int> CommitAsync(CancellationToken cancellationToken = default)
-    {
-        if (ChangeTracker.HasChanges())
-        {
-            return await SaveChangesAsync(true, cancellationToken);
-        }
-
-        return 0;
-    }*/
-
     public virtual bool HasChanges() => ChangeTracker.HasChanges();
 
     public abstract Task RollbackAsync(CancellationToken cancellationToken = default);
 
-    public virtual void Rollback()
+    /*
+    public override int SaveChanges(bool acceptAllChangesOnSuccess)
     {
-        ;
+        GenerateOnUpdate();
+        return base.SaveChanges(acceptAllChangesOnSuccess);
     }
+
+    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    {
+        GenerateOnUpdate();
+        return base.SaveChangesAsync(cancellationToken);
+    }
+
+    private void GenerateOnUpdate()
+    {
+        foreach (var entityEntry in ChangeTracker.Entries())
+        {
+            foreach (var propertyEntry in entityEntry.Properties)
+            {
+                var property = propertyEntry.Metadata;
+                var valueGeneratorFactory = property.GetValueGeneratorFactory();
+                var generatedOnUpdate = (property.ValueGenerated & ValueGenerated.OnUpdate) == ValueGenerated.OnUpdate;
+
+                if (false == generatedOnUpdate || null == valueGeneratorFactory)
+                {
+                    continue;
+                }
+
+                var valueGenerator = valueGeneratorFactory.Invoke(property, entityEntry.Metadata);
+                propertyEntry.CurrentValue = valueGenerator.Next(entityEntry);
+                propertyEntry.IsModified = true;
+            }
+        }
+    }
+    */
 }

@@ -1,4 +1,5 @@
-﻿using System.IdentityModel.Tokens.Jwt;
+﻿using System.Diagnostics;
+using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
@@ -8,8 +9,8 @@ using StoryBlog.Web.Common.Result;
 using StoryBlog.Web.Identity.Configuration;
 using System.Security.Claims;
 using System.Text;
-using StoryBlog.Web.Common.Identity.Permission;
-using JsonClaimValueTypes = Microsoft.IdentityModel.JsonWebTokens.JsonClaimValueTypes;
+using System.Net.Mime;
+using System.Text.Json;
 
 namespace StoryBlog.Web.Identity.Extensions;
 
@@ -78,10 +79,21 @@ public static class ServiceCollectionExtensions
                             );
                         }
 
-                        return context.Response.WriteJsonAsync(
+                        //context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+                        //context.Response.ContentType = MediaTypeNames.Application.Json;
+
+                        Debug.WriteLine(context.Exception.Message);
+
+                        //var bytes = Encoding.UTF8.GetBytes(context.Exception.Message);
+                        //return context.Response.BodyWriter.WriteAsync(bytes).AsTask();
+                        //return context.Response.Body.WriteAsync(bytes).AsTask();
+
+                        /*return context.Response.WriteJsonAsync(
                             StatusCodes.Status500InternalServerError,
-                            Result.Fail(context.Exception)
-                        );
+                            context.Exception.Message
+                        );*/
+
+                        return Task.CompletedTask;
                     },
                     OnChallenge = context =>
                     {

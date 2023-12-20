@@ -24,6 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Clients\Interfaces\" />
     <Folder Include="Middlewares\" />
     <Folder Include="Store\BlogUseCase\" />
     <Folder Include="Store\CreatePostUseCase\" />

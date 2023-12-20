@@ -29,7 +29,7 @@ public sealed class GetPostReferenceHandler : HandlerBase, IRequestHandler<GetPo
     {
         await using (var repository = context.GetRepository<Domain.Entities.Post>())
         {
-            var specification = new FindPostBySlugSpecification(request.Slug);
+            var specification = new FindPostBySlugSpecification(request.Slug, includeAll: false);
             var entity = await repository
                 .FindAsync(specification, cancellationToken)
                 .ConfigureAwait(false);

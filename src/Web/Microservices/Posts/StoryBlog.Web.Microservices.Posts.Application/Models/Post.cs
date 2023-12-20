@@ -1,4 +1,4 @@
-﻿using StoryBlog.Web.Microservices.Posts.Domain.Entities;
+﻿using StoryBlog.Web.Common.Domain.Entities;
 
 namespace StoryBlog.Web.Microservices.Posts.Application.Models;
 
@@ -16,7 +16,7 @@ public sealed class Post : PostDetails
         set;
     }
 
-    public PostStatus Status
+    public PublicationStatus PublicationStatus
     {
         get;
         set;

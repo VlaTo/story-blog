@@ -1,4 +1,4 @@
-﻿using StoryBlog.Web.Microservices.Posts.Domain.Entities;
+﻿using StoryBlog.Web.Common.Domain.Entities;
 
 namespace StoryBlog.Web.Microservices.Posts.Application.Models;
 
@@ -28,7 +28,16 @@ public sealed class Brief : PostDetails
     /// <summary>
     /// 
     /// </summary>
-    public PostStatus Status
+    public PublicationStatus PublicationStatus
+    {
+        get;
+        set;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public VisibilityStatus VisibilityStatus
     {
         get;
         set;
@@ -49,7 +58,7 @@ public sealed class Brief : PostDetails
     public AllowedActions AllowedActions
     {
         get;
-        init;
+        set;
     }
 
     /// <summary>

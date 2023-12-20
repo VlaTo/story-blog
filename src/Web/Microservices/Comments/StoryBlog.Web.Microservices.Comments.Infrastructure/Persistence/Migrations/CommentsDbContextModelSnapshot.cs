@@ -17,7 +17,7 @@ namespace StoryBlog.Web.Microservices.Comments.Infrastructure.Persistence.Migrat
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.13")
+                .HasAnnotation("ProductVersion", "7.0.14")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -30,15 +30,12 @@ namespace StoryBlog.Web.Microservices.Comments.Infrastructure.Persistence.Migrat
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
+                    b.Property<string>("AuthorId")
+                        .HasColumnType("text");
+
                     b.Property<DateTimeOffset>("CreateAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTimeOffset?>("DeletedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<bool>("IsPublic")
-                        .HasColumnType("boolean");
 
                     b.Property<Guid>("Key")
                         .ValueGeneratedOnAdd()
@@ -54,7 +51,7 @@ namespace StoryBlog.Web.Microservices.Comments.Infrastructure.Persistence.Migrat
                     b.Property<Guid>("PostKey")
                         .HasColumnType("uuid");
 
-                    b.Property<int>("Status")
+                    b.Property<int>("PublicationStatus")
                         .HasColumnType("integer");
 
                     b.Property<string>("Text")
@@ -62,6 +59,9 @@ namespace StoryBlog.Web.Microservices.Comments.Infrastructure.Persistence.Migrat
                         .HasMaxLength(1024)
                         .IsUnicode(true)
                         .HasColumnType("character varying(1024)");
+
+                    b.Property<int>("VisibilityStatus")
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 

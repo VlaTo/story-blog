@@ -15,8 +15,8 @@ public class PostModel : PostDetailsModel
     }
 
     [DataMember]
-    [JsonPropertyName(nameof(Status))]
-    public PostModelStatus Status
+    [JsonPropertyName(nameof(PublicationStatus))]
+    public PostPublicationStatus PublicationStatus
     {
         get;
         set;

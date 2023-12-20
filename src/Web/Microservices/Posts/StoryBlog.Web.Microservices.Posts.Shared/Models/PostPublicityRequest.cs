@@ -7,7 +7,7 @@ namespace StoryBlog.Web.Microservices.Posts.Shared.Models;
 public sealed class PostPublicityRequest
 {
     [Required]
-    public bool IsPublic
+    public PostVisibilityStatus VisibilityStatus
     {
         get;
         set;

@@ -206,7 +206,13 @@ public sealed class PublishReplyReducer : Reducer<CommentsState, PublishReplyAct
 
                 if (source.Key == action.ParentKey)
                 {
-                    var commentReply = new CommentReplyModel(action.ParentKey, action.CorrelationId, CommentReplyResult.Publishing, DateTime.MinValue);
+                    var commentReply = new CommentReplyModel(
+                        action.ParentKey,
+                        action.CorrelationId,
+                        authorId: null,
+                        CommentReplyResult.Publishing,
+                        DateTimeOffset.MinValue
+                    );
                     comments = source.Comments.Append(commentReply, source.Comments.State);
                 }
                 else if (0 < source.Comments.Count)
@@ -232,8 +238,9 @@ public sealed class PublishReplyReducer : Reducer<CommentsState, PublishReplyAct
             var commentReply = new CommentReplyModel(
                 action.ParentKey,
                 action.CorrelationId,
+                authorId: null,
                 CommentReplyResult.Publishing,
-                DateTime.MinValue
+                DateTimeOffset.MinValue
             );
 
             return comments.Append(commentReply, comments.State);
@@ -269,6 +276,7 @@ public sealed class PublishReplySuccessReducer : Reducer<CommentsState, PublishR
                         action.Comment.PostKey,
                         action.Comment.ParentKey,
                         action.Comment.Text,
+                        action.Comment.AuthorId,
                         CommentsCollection.Unknown,
                         action.Comment.CreatedAt,
                         action.CorrelationId
@@ -313,6 +321,7 @@ public sealed class PublishReplyFailedReducer : Reducer<CommentsState, PublishRe
                 result[sourceIndex] = new CommentReplyModel(
                     reply.ParentKey,
                     reply.CorrelationKey,
+                    reply.AuthorId,
                     CommentReplyResult.Failed,
                     reply.CreateAt
                 );

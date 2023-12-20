@@ -35,7 +35,7 @@ public sealed record CreatePostAction(
 public sealed record CreatedPostReadyAction(
     string Title,
     string Slug,
-    PostModelStatus Status,
+    PostPublicationStatus Status,
     DateTimeOffset CreatedAt
 );
 

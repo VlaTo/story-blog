@@ -7,7 +7,7 @@ public interface ICommentBase
         get;
     }
     
-    DateTime CreateAt
+    DateTimeOffset CreateAt
     {
         get;
     }

@@ -1,7 +1,10 @@
 ﻿using AutoMapper;
 using Microsoft.Extensions.Logging;
+using StoryBlog.Web.Common.Application.Extensions;
 using StoryBlog.Web.Common.Domain;
+using StoryBlog.Web.Common.Identity.Permission;
 using StoryBlog.Web.Common.Result;
+using StoryBlog.Web.Microservices.Posts.Application.Extensions;
 using StoryBlog.Web.Microservices.Posts.Domain.Entities;
 
 namespace StoryBlog.Web.Microservices.Posts.Application.Handlers.GetPost;
@@ -23,9 +26,30 @@ public class GetPostHandler : PostHandlerBase, MediatR.IRequestHandler<GetPostQu
 
     public async Task<Result<Models.Post>> Handle(GetPostQuery request, CancellationToken cancellationToken)
     {
+        var authenticated = request.CurrentUser.IsAuthenticated();
+
+        if (authenticated)
+        {
+            if (false == request.CurrentUser.HasPermission(Permissions.Blogs.View))
+            {
+                return new Exception("Insufficient permissions");
+            }
+
+            var userId = request.CurrentUser.GetSubject();
+
+            if (String.IsNullOrEmpty(userId))
+            {
+                return new Exception("No user identity");
+            }
+        }
+        else
+        {
+            return new Exception("User not authenticated");
+        }
+
         await using (var repository = context.GetRepository<Post>())
         {
-            var entity = await FindPostAsync(repository, request.SlugOrKey, cancellationToken);
+            var entity = await repository.FindPostBySlugOrKeyAsync(request.SlugOrKey, cancellationToken: cancellationToken);
 
             if (null != entity)
             {

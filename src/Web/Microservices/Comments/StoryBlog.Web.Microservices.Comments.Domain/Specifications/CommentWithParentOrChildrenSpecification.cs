@@ -3,9 +3,9 @@ using StoryBlog.Web.Microservices.Comments.Domain.Entities;
 
 namespace StoryBlog.Web.Microservices.Comments.Domain.Specifications;
 
-public sealed class FindParentCommentSpecification : SpecificationBase<Comment>
+public sealed class CommentWithParentOrChildrenSpecification : SpecificationBase<Comment>
 {
-    public FindParentCommentSpecification(Guid postKey, Guid parentKey, bool includeChildren = false, bool includeParent = false)
+    public CommentWithParentOrChildrenSpecification(Guid postKey, Guid parentKey, bool includeChildren = false, bool includeParent = false)
     {
         Criteria = entity => entity.PostKey == postKey && entity.Key == parentKey;
 

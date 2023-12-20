@@ -19,23 +19,14 @@
 // DEALINGS IN THE SOFTWARE.
 #endregion
 
-using StoryBlog.Web.Client.Blog.Models;
-using StoryBlog.Web.Common.Result;
-using StoryBlog.Web.Microservices.Posts.Shared.Models;
+using System.Runtime.Serialization;
 
-namespace StoryBlog.Web.Client.Blog.Clients.Interfaces;
+namespace StoryBlog.Web.Microservices.Posts.Shared.Models;
 
-public interface IPostsClient
+[DataContract]
+public enum PostPublicationStatus
 {
-    Task<Result<EmptyList, ListAllResponse>> GetPostsAsync(int pageNumber, int pageSize);
-
-    Task<PostModel?> GetPostAsync(string slugOrKey);
-
-    Task<Result<EmptyList, IReadOnlyCollection<BriefModel>>> GetTailPostsAsync(Guid postKey, int count);
-
-    Task<Models.CreatedPostModel?> CreatePostAsync(string title, string slug, string content);
-
-    Task<Result> DeletePostAsync(string slugOrKey);
-
-    Task<Result> UpdatePostPublicityAsync(Guid postKey, bool isPublic);
+    Pending,
+    Approved,
+    Rejected
 }

@@ -7,7 +7,7 @@
         <div class="d-flex flex-column flex-auto">
             <div class="d-flex flex-row align-center px-2 comment-header">
                 <div class="mr-1">
-                    <strong>Unknown</strong>
+                    <strong>@(Author ?? "Unknown")</strong>
                 </div>
                 <DateTimeView DateTime=@CreatedDateTime Typo=@Typo.caption Mode=@DateTimeMode.RelativeFromCurrent />
                 <MudSpacer />
@@ -79,7 +79,14 @@
                     {
                         if (Comments[index] is CommentModel comment)
                         {
-                            <Comment Key=@comment.Key ParentKey=@Key CreatedDateTime=@comment.CreateAt Comments=@comment.Comments Class="pa-1">
+                            <Comment 
+                                @key=@comment.Key
+                                Key=@comment.Key
+                                ParentKey=@Key
+                                Author=@comment.AuthorId
+                                CreatedDateTime=@comment.CreateAt
+                                Comments=@comment.Comments
+                                Class="pa-1">
                                 <ChildContent>
                                     @comment.Text
                                 </ChildContent>
@@ -87,7 +94,16 @@
                         }
                         else if (Comments[index] is NewCommentModel newComment)
                         {
-                            <Comment Key=@newComment.Key ParentKey=@Key IsNew=true CreatedDateTime=@newComment.CreateAt Comments=@newComment.Comments Class="pa-1">
+                            <Comment
+                                @key=@newComment.Key
+                                Key=@newComment.Key
+                                ParentKey=@Key
+                                IsNew=true
+                                Author=@newComment.AuthorId
+                                CreatedDateTime=@newComment.CreateAt
+                                Comments=@newComment.Comments
+                                Class="pa-1">
+
                                 <ChildContent>
                                     @newComment.Text
                                 </ChildContent>

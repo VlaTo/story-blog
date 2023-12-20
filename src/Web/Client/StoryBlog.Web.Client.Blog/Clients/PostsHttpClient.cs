@@ -20,33 +20,30 @@
 #endregion
 
 using Microsoft.Extensions.Options;
-using StoryBlog.Web.Client.Blog.Clients.Interfaces;
 using StoryBlog.Web.Client.Blog.Configuration;
+using StoryBlog.Web.Client.Blog.Extensions;
 using StoryBlog.Web.Client.Blog.Models;
 using StoryBlog.Web.Common.Result;
 using StoryBlog.Web.Microservices.Posts.Shared.Models;
 using System.Diagnostics;
 using System.Net.Http.Json;
 using System.Text.Json;
-using StoryBlog.Web.Client.Blog.Extensions;
 using CreatedPostModel = StoryBlog.Web.Microservices.Posts.Shared.Models.CreatedPostModel;
 
 namespace StoryBlog.Web.Client.Blog.Clients;
 
-internal sealed class PostsHttpClient : IPostsClient
+internal sealed class PostsHttpClient : HttpClientBase
 {
-    private readonly IHttpClientFactory httpClientFactory;
     private readonly HttpClientOptions options;
 
     public PostsHttpClient(
-        IHttpClientFactory httpClientFactory,
+        HttpClient httpClient,
         IOptions<HttpClientOptions> options)
+        : base(httpClient)
     {
-        this.httpClientFactory = httpClientFactory;
         this.options = options.Value;
     }
 
-    /// <inheritdoc cref="IPostsClient.GetPostsAsync" />
     public async Task<Result<EmptyList, ListAllResponse>> GetPostsAsync(int pageNumber, int pageSize)
     {
         try
@@ -60,10 +57,9 @@ internal sealed class PostsHttpClient : IPostsClient
                 }
             );
 
-            var httpClient = httpClientFactory.CreateClient("PostsApi");
             var request = new HttpRequestMessage(HttpMethod.Get, uri);
             
-            using (var response = await httpClient.SendAsync(request))
+            using (var response = await HttpClient.SendAsync(request))
             {
                 var message = response.EnsureSuccessStatusCode();
 
@@ -86,7 +82,6 @@ internal sealed class PostsHttpClient : IPostsClient
         }
     }
 
-    /// <inheritdoc cref="IPostsClient.GetPostAsync" />
     public async Task<PostModel?> GetPostAsync(string slugOrKey)
     {
         var basePath = new Uri(options.Endpoints.Post.BasePath, UriKind.Absolute);
@@ -99,10 +94,9 @@ internal sealed class PostsHttpClient : IPostsClient
 
         try
         {
-            var httpClient = httpClientFactory.CreateClient("PostsApi");
             var request = new HttpRequestMessage(HttpMethod.Get, endpoint);
 
-            using (var response = await httpClient.SendAsync(request))
+            using (var response = await HttpClient.SendAsync(request))
             {
                 var message = response.EnsureSuccessStatusCode();
 
@@ -119,7 +113,6 @@ internal sealed class PostsHttpClient : IPostsClient
         }
     }
 
-    /// <inheritdoc cref="IPostsClient.GetTailPostsAsync" />
     public async Task<Result<EmptyList, IReadOnlyCollection<BriefModel>>> GetTailPostsAsync(Guid postKey, int count)
     {
         try
@@ -132,10 +125,9 @@ internal sealed class PostsHttpClient : IPostsClient
                 return new Exception();
             }
 
-            var httpClient = httpClientFactory.CreateClient("PostsApi");
             var request = new HttpRequestMessage(HttpMethod.Get, endpoint);
 
-            using (var response = await httpClient.SendAsync(request))
+            using (var response = await HttpClient.SendAsync(request))
             {
                 var message = response.EnsureSuccessStatusCode();
 
@@ -158,7 +150,6 @@ internal sealed class PostsHttpClient : IPostsClient
         }
     }
 
-    /// <inheritdoc cref="IPostsClient.CreatePostAsync" />
     public async Task<Models.CreatedPostModel?> CreatePostAsync(string title, string slug, string content)
     {
         var uri = new Uri(options.Endpoints.Posts.BasePath, UriKind.Absolute);
@@ -176,9 +167,7 @@ internal sealed class PostsHttpClient : IPostsClient
 
         try
         {
-            var httpClient = httpClientFactory.CreateClient("PostsApi");
-
-            using (var response = await httpClient.SendAsync(request))
+            using (var response = await HttpClient.SendAsync(request))
             {
                 var message = response.EnsureSuccessStatusCode();
 
@@ -190,7 +179,7 @@ internal sealed class PostsHttpClient : IPostsClient
                     {
                         Title = createdPost.Title,
                         Slug = createdPost.Slug,
-                        Status = createdPost.Status,
+                        Status = createdPost.PublicationStatus,
                         CreatedAt = createdPost.CreatedAt,
                         Location = message.Headers.Location
                     };
@@ -204,7 +193,6 @@ internal sealed class PostsHttpClient : IPostsClient
         }
     }
 
-    /// <inheritdoc cref="IPostsClient.DeletePostAsync" />
     public async Task<Result> DeletePostAsync(string slugOrKey)
     {
         var basePath = new Uri(options.Endpoints.Post.BasePath, UriKind.Absolute);
@@ -219,9 +207,7 @@ internal sealed class PostsHttpClient : IPostsClient
 
         try
         {
-            var httpClient = httpClientFactory.CreateClient("PostsApi");
-
-            using (var response = await httpClient.SendAsync(request))
+            using (var response = await HttpClient.SendAsync(request))
             {
                 var message = response.EnsureSuccessStatusCode();
 
@@ -238,8 +224,7 @@ internal sealed class PostsHttpClient : IPostsClient
         }
     }
 
-    /// <inheritdoc cref="IPostsClient.UpdatePostPublicityAsync" />
-    public async Task<Result> UpdatePostPublicityAsync(Guid postKey, bool isPublic)
+    public async Task<Result> ChangePostVisibilityAsync(Guid postKey, PostVisibilityStatus visibilityStatus)
     {
         var basePath = new Uri(options.Endpoints.Toggle.BasePath, UriKind.Absolute);
         var relativeUri = new Uri(postKey.ToString("N"), UriKind.Relative);
@@ -253,28 +238,90 @@ internal sealed class PostsHttpClient : IPostsClient
         {
             Content = JsonContent.Create(new PostPublicityRequest
             {
-                IsPublic = isPublic
+                VisibilityStatus = visibilityStatus
             })
         };
 
         try
         {
-            var httpClient = httpClientFactory.CreateClient("PostsApi");
-
-            using (var response = await httpClient.SendAsync(request))
+            using (var response = await HttpClient.SendAsync(request))
             {
                 var message = response.EnsureSuccessStatusCode();
 
-                using (var stream = await message.Content.ReadAsStreamAsync())
+                /*using (var stream = await message.Content.ReadAsStreamAsync())
                 {
                     var temp = await JsonSerializer.DeserializeAsync<PostPublicityResponse>(stream);
                     return Result.Success;
-                }
+                }*/
+
+                return Result.Success;
             }
         }
         catch (Exception exception)
         {
             return exception;
+        }
+    }
+
+    public async Task<GeneratedSlugModel?> GenerateSlugAsync(string title)
+    {
+        try
+        {
+            var uri = QueryHelpers.AddQueryString(
+                options.Endpoints.Slugs.BasePath,
+                new Dictionary<string, string?>
+                {
+                    { "title", title }
+                }
+            );
+
+            var request = new HttpRequestMessage(HttpMethod.Get, uri);
+
+            using (var response = await HttpClient.SendAsync(request))
+            {
+                var message = response.EnsureSuccessStatusCode();
+
+                using (var stream = await message.Content.ReadAsStreamAsync())
+                {
+                    return await JsonSerializer.DeserializeAsync<GeneratedSlugModel>(stream);
+                }
+            }
+        }
+        catch (Exception exception)
+        {
+            Debug.WriteLine(exception);
+            return null;
+        }
+    }
+
+    public async Task<PostReferenceModel?> FetchPostReferenceAsync(string slug)
+    {
+        try
+        {
+            var basePath = new Uri(options.Endpoints.Slug.BasePath);
+            var relativeUri = new Uri(slug, UriKind.Relative);
+
+            if (false == Uri.TryCreate(basePath, relativeUri, out var endpoint))
+            {
+                return null;
+            }
+
+            var request = new HttpRequestMessage(HttpMethod.Get, endpoint);
+
+            using (var response = await HttpClient.SendAsync(request))
+            {
+                var message = response.EnsureSuccessStatusCode();
+
+                using (var stream = await message.Content.ReadAsStreamAsync())
+                {
+                    return await JsonSerializer.DeserializeAsync<PostReferenceModel>(stream);
+                }
+            }
+        }
+        catch (Exception exception)
+        {
+            Debug.WriteLine(exception);
+            return null;
         }
     }
 }

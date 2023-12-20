@@ -24,7 +24,7 @@ public sealed class CreatedCommentModel
         get;
     }
 
-    public CommentModelStatus Status
+    public CommentPublicationStatus Status
     {
         get;
     }
@@ -39,7 +39,7 @@ public sealed class CreatedCommentModel
         Guid postKey,
         Guid? parentKey,
         string text,
-        CommentModelStatus status,
+        CommentPublicationStatus status,
         DateTime createdAt)
     {
         Key=key;

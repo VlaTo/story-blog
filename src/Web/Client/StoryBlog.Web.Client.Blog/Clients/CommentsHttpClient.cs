@@ -1,20 +1,21 @@
 ﻿using Microsoft.Extensions.Options;
-using StoryBlog.Web.Client.Blog.Clients.Interfaces;
 using StoryBlog.Web.Client.Blog.Configuration;
+using StoryBlog.Web.Client.Blog.Extensions;
 using StoryBlog.Web.Microservices.Comments.Shared.Models;
 using System.Diagnostics;
 using System.Net.Http.Json;
 using System.Text.Json;
-using StoryBlog.Web.Client.Blog.Extensions;
 
 namespace StoryBlog.Web.Client.Blog.Clients;
 
-internal sealed class CommentsHttpClient : HttpClientBase, ICommentsClient
+internal sealed class CommentsHttpClient : HttpClientBase
 {
     private readonly HttpClientOptions options;
 
-    public CommentsHttpClient(HttpClient httpClientFactory, IOptions<HttpClientOptions> options)
-        : base(httpClientFactory)
+    public CommentsHttpClient(
+        HttpClient httpClient,
+        IOptions<HttpClientOptions> options)
+        : base(httpClient)
     {
         this.options = options.Value;
     }
@@ -36,7 +37,7 @@ internal sealed class CommentsHttpClient : HttpClientBase, ICommentsClient
 
         try
         {
-            using (var response = await ClientFactory.SendAsync(request))
+            using (var response = await HttpClient.SendAsync(request))
             {
                 var message = response.EnsureSuccessStatusCode();
 
@@ -57,14 +58,6 @@ internal sealed class CommentsHttpClient : HttpClientBase, ICommentsClient
     {
         var request = new HttpRequestMessage(HttpMethod.Post, options.Endpoints.Comments.BasePath);
 
-        /*var uri = QueryHelpers.AddQueryString(
-            options.Endpoints.Slugs.BasePath,
-            new Dictionary<string, string>
-            {
-                { "title", title }
-            }
-        );*/
-
         request.Content = JsonContent.Create(new CreateCommentRequest
         {
             PostKey = postKey,
@@ -74,25 +67,13 @@ internal sealed class CommentsHttpClient : HttpClientBase, ICommentsClient
 
         try
         {
-            using (var response = await ClientFactory.SendAsync(request))
+            using (var response = await HttpClient.SendAsync(request))
             {
                 var message = response.EnsureSuccessStatusCode();
 
                 using (var stream = await message.Content.ReadAsStreamAsync())
                 {
                     var createdComment = await JsonSerializer.DeserializeAsync<CreatedCommentModel>(stream);
-
-                    /*if (null != createdComment)
-                    {
-                        return new CreatedCommentModel(
-                            createdComment.Key,
-                            createdComment.PostKey,
-                            createdComment.ParentKey,
-                            createdComment.Text,
-                            createdComment.Status,
-                            createdComment.CreatedAt
-                        );
-                    }*/
 
                     return createdComment;
                 }
@@ -138,7 +119,7 @@ internal sealed class CommentsHttpClient : HttpClientBase, ICommentsClient
 
         try
         {
-            using (var response = await ClientFactory.SendAsync(request))
+            using (var response = await HttpClient.SendAsync(request))
             {
                 var message = response.EnsureSuccessStatusCode();
 

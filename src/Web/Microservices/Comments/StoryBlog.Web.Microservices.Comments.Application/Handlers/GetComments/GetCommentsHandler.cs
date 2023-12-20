@@ -30,8 +30,8 @@ public sealed class GetCommentsHandler : HandlerBase, IRequestHandler<GetComment
     {
         IReadOnlyList<Domain.Entities.Comment>? comments;
         ISpecification<Domain.Entities.Comment> specification = null == request.ParentKey
-            ? new FindRootCommentsForPost(request.PostKey, request.PageNumber, request.PageSize)
-            : new FindChildrenCommentsForPost(request.PostKey, request.ParentKey!.Value);
+            ? new RootCommentsForPostByPagesSpecification(request.PostKey, request.PageNumber, request.PageSize)
+            : new ChildCommentsForPostCommentSpecification(request.PostKey, request.ParentKey!.Value);
 
         await using (var repository = context.GetRepository<Domain.Entities.Comment>())
         {

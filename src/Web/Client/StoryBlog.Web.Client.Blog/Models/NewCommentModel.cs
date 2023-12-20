@@ -14,10 +14,11 @@ public sealed class NewCommentModel : CommentModel
         Guid postKey,
         Guid? parentKey,
         string text,
+        string? authorId,
         CommentsCollection comments,
-        DateTime createAt,
+        DateTimeOffset createAt,
         string correlationKey)
-        : base(key, postKey, parentKey, text, comments, createAt)
+        : base(key, postKey, parentKey, text, authorId, comments, createAt)
     {
         CorrelationKey = correlationKey;
     }

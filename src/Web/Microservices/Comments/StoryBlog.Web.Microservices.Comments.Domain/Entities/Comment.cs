@@ -28,25 +28,31 @@ public sealed class Comment : Entity, IHasId<long>
         set;
     }
 
+    public string? AuthorId
+    {
+        get;
+        set;
+    }
+
     public string Text
     {
         get;
         set;
     }
 
-    public CommentStatus Status
-    {
-        get;
-        set;
-    }
-
-    public bool IsPublic
+    public PublicationStatus PublicationStatus
     {
         get;
         set;
     }
 
     public Comment? Parent
+    {
+        get;
+        set;
+    }
+
+    public VisibilityStatus VisibilityStatus
     {
         get;
         set;
@@ -65,12 +71,6 @@ public sealed class Comment : Entity, IHasId<long>
     }
 
     public DateTimeOffset? ModifiedAt
-    {
-        get;
-        set;
-    }
-
-    public DateTimeOffset? DeletedAt
     {
         get;
         set;

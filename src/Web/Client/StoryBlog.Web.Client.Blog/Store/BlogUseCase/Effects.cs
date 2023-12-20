@@ -1,6 +1,6 @@
 ﻿using Fluxor;
 using Microsoft.AspNetCore.Components.Authorization;
-using StoryBlog.Web.Client.Blog.Clients.Interfaces;
+using StoryBlog.Web.Client.Blog.Clients;
 using StoryBlog.Web.Client.Blog.Extensions;
 
 namespace StoryBlog.Web.Client.Blog.Store.BlogUseCase;
@@ -11,12 +11,14 @@ namespace StoryBlog.Web.Client.Blog.Store.BlogUseCase;
 /// 
 /// </summary>
 // ReSharper disable once UnusedMember.Global
-public sealed class FetchPostEffect : Effect<FetchPostAction>
+internal sealed class FetchPostEffect : Effect<FetchPostAction>
 {
-    private readonly IPostsClient client;
+    private readonly PostsHttpClient client;
     private readonly AuthenticationStateProvider authenticationProvider;
 
-    public FetchPostEffect(IPostsClient client, AuthenticationStateProvider authenticationProvider)
+    public FetchPostEffect(
+        PostsHttpClient client,
+        AuthenticationStateProvider authenticationProvider)
     {
         this.client = client;
         this.authenticationProvider = authenticationProvider;
@@ -72,11 +74,11 @@ public sealed class FetchPostReadyEffect : Effect<FetchPostReadyAction>
 /// 
 /// </summary>
 // ReSharper disable once UnusedMember.Global
-public sealed class FetchRootCommentsEffect : Effect<FetchRootCommentsAction>
+internal sealed class FetchRootCommentsEffect : Effect<FetchRootCommentsAction>
 {
-    private readonly ICommentsClient client;
+    private readonly CommentsHttpClient client;
 
-    public FetchRootCommentsEffect(ICommentsClient client)
+    public FetchRootCommentsEffect(CommentsHttpClient client)
     {
         this.client = client;
     }
@@ -109,11 +111,11 @@ public sealed class FetchRootCommentsEffect : Effect<FetchRootCommentsAction>
 /// 
 /// </summary>
 // ReSharper disable once UnusedMember.Global
-public sealed class FetchChildCommentsEffect : Effect<FetchChildCommentsAction>
+internal sealed class FetchChildCommentsEffect : Effect<FetchChildCommentsAction>
 {
-    private readonly ICommentsClient client;
+    private readonly CommentsHttpClient client;
 
-    public FetchChildCommentsEffect(ICommentsClient client)
+    public FetchChildCommentsEffect(CommentsHttpClient client)
     {
         this.client = client;
     }
@@ -146,11 +148,11 @@ public sealed class FetchChildCommentsEffect : Effect<FetchChildCommentsAction>
 /// 
 /// </summary>
 // ReSharper disable once UnusedMember.Global
-public sealed class PublishReplyEffect : Effect<PublishReplyAction>
+internal sealed class PublishReplyEffect : Effect<PublishReplyAction>
 {
-    private readonly ICommentsClient client;
+    private readonly CommentsHttpClient client;
 
-    public PublishReplyEffect(ICommentsClient client)
+    public PublishReplyEffect(CommentsHttpClient client)
     {
         this.client = client;
     }

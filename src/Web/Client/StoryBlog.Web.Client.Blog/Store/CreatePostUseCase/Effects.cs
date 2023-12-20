@@ -1,16 +1,16 @@
 ﻿using Fluxor;
-using StoryBlog.Web.Client.Blog.Clients.Interfaces;
+using StoryBlog.Web.Client.Blog.Clients;
 
 namespace StoryBlog.Web.Client.Blog.Store.CreatePostUseCase;
 
 /// <summary>
 /// 
 /// </summary>
-public sealed class GenerateSlugEffect : Effect<GenerateSlugAction>
+internal sealed class GenerateSlugEffect : Effect<GenerateSlugAction>
 {
-    private readonly ISlugClient client;
+    private readonly PostsHttpClient client;
 
-    public GenerateSlugEffect(ISlugClient client)
+    public GenerateSlugEffect(PostsHttpClient client)
     {
         this.client = client;
     }
@@ -30,11 +30,11 @@ public sealed class GenerateSlugEffect : Effect<GenerateSlugAction>
 /// <summary>
 /// 
 /// </summary>
-public sealed class CreatePostEffect : Effect<CreatePostAction>
+internal sealed class CreatePostEffect : Effect<CreatePostAction>
 {
-    private readonly IPostsClient client;
+    private readonly PostsHttpClient client;
 
-    public CreatePostEffect(IPostsClient client)
+    public CreatePostEffect(PostsHttpClient client)
     {
         this.client = client;
     }

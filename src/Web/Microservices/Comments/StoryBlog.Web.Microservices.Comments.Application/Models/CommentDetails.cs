@@ -1,4 +1,4 @@
-﻿using StoryBlog.Web.Microservices.Comments.Domain.Entities;
+﻿using StoryBlog.Web.Common.Domain.Entities;
 
 namespace StoryBlog.Web.Microservices.Comments.Application.Models;
 
@@ -28,7 +28,13 @@ public class CommentDetails
         set;
     }
 
-    public CommentStatus Status
+    public string? Author
+    {
+        get;
+        set;
+    }
+
+    public PublicationStatus PublicationStatus
     {
         get;
         set;
@@ -40,7 +46,13 @@ public class CommentDetails
         set;
     }
 
-    public DateTime CreatedAt
+    public VisibilityStatus VisibilityStatus
+    {
+        get;
+        set;
+    }
+
+    public DateTimeOffset CreatedAt
     {
         get;
         set;

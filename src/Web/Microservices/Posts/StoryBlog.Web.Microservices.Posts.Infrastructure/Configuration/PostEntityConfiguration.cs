@@ -43,10 +43,10 @@ internal sealed class PostEntityConfiguration : IEntityTypeConfiguration<Post>
 
                 content.ToTable("Contents", "Blog");
             });
-
-        builder.Property(x => x.IsPublic);
         
-        builder.Property(x => x.Status);
+        builder.Property(x => x.PublicationStatus);
+
+        builder.Property(x => x.VisibilityStatus);
 
         builder.Property(x => x.AuthorId)
             .IsRequired(required: true)
@@ -59,8 +59,6 @@ internal sealed class PostEntityConfiguration : IEntityTypeConfiguration<Post>
         builder.Property(x => x.ModifiedAt)
             .HasValueGenerator<UtcNowDateTimeOffsetValueGenerator>()
             .ValueGeneratedOnUpdate();
-
-        builder.Property(x => x.DeletedAt);
 
         builder.OwnsOne(
             x => x.Slug,

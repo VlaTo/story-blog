@@ -22,11 +22,16 @@ public partial class InitialStructure
                 "ShowInDiscoveryDocument", "RequireResourceIndicator", "Created", "Updated", "LastAccessed",
                 "NonEditable"
             },
-            values: new object[]
+            values: new object?[,]
             {
-                1, true, "StoryBlog API", "StoryBlog API", "StoryBlog Blogs API", "RS256", true, false,
-                new DateTimeOffset(2022, 7, 13, 6, 5, 50, TimeSpan.FromHours(3.0d)),
-                null, null, false
+                {
+                    1, true, "StoryBlog API", "StoryBlog API", "StoryBlog Blogs API", "RS256", true, false,
+                    DateTimeOffset.Now, null, null, false
+                },
+                {
+                    2, true, "Comments API", "Comments API", "StoryBlog Comments API", "RS256", true, false,
+                    DateTimeOffset.Now, null, null, false
+                }
             }
         );
 
@@ -44,11 +49,16 @@ public partial class InitialStructure
                 "Enabled", "Name", "DisplayName", "Description", "Required", "Emphasize", "ShowInDiscoveryDocument",
                 "Created", "Updated", "LastAccessed", "NonEditable"
             },
-            values: new object?[]
+            values: new object?[,]
             {
-                true, "blog", "StoryBlog API scope", "StoryBlog API scope", false, false, true,
-                new DateTimeOffset(2023, 6, 13, 20, 39, 14, TimeSpan.FromHours(3.0d)),
-                null, null, false
+                {
+                    true, "blog", "StoryBlog API scope", "StoryBlog API scope", false, false, true,
+                    DateTimeOffset.Now, null, null, false
+                },
+                {
+                    true, "comments", "StoryBlog Comments API scope", "StoryBlog Comments API scope", false, false, true,
+                    DateTimeOffset.Now, null, null, false
+                }
             }
         );
 
@@ -65,9 +75,14 @@ public partial class InitialStructure
             {
                 "Scope", "ApiResourceId"
             },
-            values: new object[]
+            values: new object?[,]
             {
-                "blog", 1
+                {
+                    "blog", 1
+                },
+                {
+                    "comments", 2
+                },
             }
         );
 
@@ -118,7 +133,7 @@ public partial class InitialStructure
                 "288849a891664840975fa7992f247947", "Sample Blog", "Sample Blog Client", "http://localhost:5035",
                 true, "http://localhost:5035/logout", "http://localhost:5035/logout-callback", "RS256", 150000000,
                 false, "sbc_", "k3jr23khk2e4jJKH2hjxbdw_jdTr", 500000000000, "numeric", false, 150000000, 15000000000,
-                new DateTimeOffset(2023, 05, 26, 11, 43, 39, TimeSpan.FromHours(3.0d))
+                DateTimeOffset.Now
             }
         );
 
@@ -216,7 +231,8 @@ public partial class InitialStructure
             {
                 { "openid", 1 },
                 { "profile", 1 },
-                { "blog", 1 }
+                { "blog", 1 },
+                { "comments", 1 }
             }
         );
 
@@ -236,9 +252,9 @@ public partial class InitialStructure
             values: new object[]
             {
                 1, "StoryBlog basic secret", "l356jtlk3j5l6tk3j6ltk3j5;6tlk345j6l34k",
-                new DateTimeOffset(2030, 1, 1, 12, 00, 00, TimeSpan.FromHours(3.0d)), 
+                DateTimeOffset.Now, 
                 SecretTypes.SharedSecret,
-                new DateTimeOffset(2023, 5, 29, 12, 30, 00, TimeSpan.FromHours(3.0d))
+                DateTimeOffset.Now
             }
         );
 
@@ -260,18 +276,15 @@ public partial class InitialStructure
             {
                 {
                     1, true, "profile", "SimpleBlog OpenID Profile resource", "SimpleBlog OpenID Profile resource", false,
-                    false, true, new DateTimeOffset(2022, 7, 11, 9, 5, 50, TimeSpan.FromHours(3.0d)),
-                    null, false
+                    false, true, DateTimeOffset.Now, null, false
                 },
                 {
                     2, true, "openid", "SimpleBlog OpenID General resource", "SimpleBlog OpenID General resource", false,
-                    false, true, new DateTimeOffset(2022, 7, 11, 9, 5, 50, TimeSpan.FromHours(3.0d)),
-                    null, false
+                    false, true, DateTimeOffset.Now, null, false
                 },
                 {
                     3, true, "email", "SimpleBlog OpenID Email resource", "SimpleBlog OpenID Email resource", false,
-                    false, true,new DateTimeOffset(2022, 7, 11, 9, 5, 50, TimeSpan.FromHours(3.0d)),
-                    null, false
+                    false, true, DateTimeOffset.Now, null, false
                 }
             }
         );
@@ -317,7 +330,7 @@ public partial class InitialStructure
             },
             values: new object[]
             {
-                    "BD5774334EADCDA65C39FEF2A01AEFB3", 1, new DateTimeOffset(2023, 5, 26, 16, 43, 42, TimeSpan.FromHours(3.0d)),
+                    "BD5774334EADCDA65C39FEF2A01AEFB3", 1, DateTimeOffset.Now,
                     "signing", "RS256", false, true,
                     "CfDJ8AoIYmakRP9JrsXlNs9fRz5eom3a0ypQNumXUqONuNrqYQ-tSj7j8uwryY-dQiv7OFYNRmL4Sfq3aL8iPItrTyxEx20"+
                     "amdcUrV5lr969F4xqiqRQsLpXRekg-drsbIndG4nAjnzJ7Wmj6WccpF6fYGs2TawvbCeBrEqp2OLXLqLbN3Vxkbs3bPEfoe"+
@@ -367,8 +380,7 @@ public partial class InitialStructure
             },
             values: new object[]
             {
-                    "1b2696b7-7605-49be-b59c-ab577f6c1cc0", true, new DateTimeOffset(2023, 6, 8, 8, 40, 34, TimeSpan.FromHours(3.0d)),
-                    new DateTimeOffset(2023, 6, 8, 8, 40, 34, TimeSpan.FromHours(3.0d)),
+                    "1b2696b7-7605-49be-b59c-ab577f6c1cc0", true, DateTimeOffset.Now, DateTimeOffset.Now,
                     "guest@storyblog.net", "GUEST@STORYBLOG.NET", "guest@storyblog.net", "GUEST@STORYBLOG.NET", true,
                     "AQAAAAIAAYagAAAAEP2omrptRd+Y6ldZrmgtyGyiS5lCKnBNVSZFOxOioe798g708HWi818ueedmCfjfKg==",
                     "JUBOLHW6CITA22TQG4QV4FCUDQDYZCKA", "e96c8397-8d72-4ffb-9cf4-246d5fa2f36f", "8-800-444-55-66",
@@ -387,7 +399,7 @@ public partial class InitialStructure
             },
             values: new object[]
             {
-                    "9e63463a-67ab-4bb7-a019-c151ea74a05b", "Sample Blog ordinal viewer", new DateTimeOffset(2023, 6, 8, 12, 34, 0, TimeSpan.FromHours(3.0d)),
+                    "9e63463a-67ab-4bb7-a019-c151ea74a05b", "Sample Blog ordinal viewer", DateTimeOffset.Now,
                     null, "BlogViewer", "BLOGVIEWER", "7389d70d-c988-42f3-9712-5d1c607d60a7"
             }
         );
@@ -440,6 +452,26 @@ public partial class InitialStructure
                     "1b2696b7-7605-49be-b59c-ab577f6c1cc0",
                     ClaimIdentityTypes.Permission,
                     Permissions.Blogs.Delete
+                },
+                {
+                    "1b2696b7-7605-49be-b59c-ab577f6c1cc0",
+                    ClaimIdentityTypes.Permission,
+                    Permissions.Comments.View
+                },
+                {
+                    "1b2696b7-7605-49be-b59c-ab577f6c1cc0",
+                    ClaimIdentityTypes.Permission,
+                    Permissions.Comments.Create
+                },
+                {
+                    "1b2696b7-7605-49be-b59c-ab577f6c1cc0",
+                    ClaimIdentityTypes.Permission,
+                    Permissions.Comments.Update
+                },
+                {
+                    "1b2696b7-7605-49be-b59c-ab577f6c1cc0",
+                    ClaimIdentityTypes.Permission,
+                    Permissions.Comments.Delete
                 }
             }
         );
@@ -457,7 +489,7 @@ public partial class InitialStructure
             {
                     "9e63463a-67ab-4bb7-a019-c151ea74a05b",
                     "http://schemas.xmlsoap.org/ws/2009/09/identity/claims/actor", "Viewer",
-                    new DateTimeOffset(2023, 11, 15, 18, 23, 45, TimeSpan.FromHours(3.0d))
+                    DateTimeOffset.Now
             }
         );
 

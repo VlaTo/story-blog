@@ -21,7 +21,8 @@
 
 using Fluxor;
 using Microsoft.AspNetCore.Components.Authorization;
-using StoryBlog.Web.Client.Blog.Clients.Interfaces;
+using StoryBlog.Web.Client.Blog.Clients;
+using StoryBlog.Web.Client.Blog.Extensions;
 using StoryBlog.Web.Common.Result.Extensions;
 using StoryBlog.Web.Microservices.Posts.Shared.Models;
 
@@ -30,24 +31,30 @@ namespace StoryBlog.Web.Client.Blog.Store.HomeUseCase;
 /// <summary>
 /// 
 /// </summary>
-public sealed class FetchAvailablePostsEffect : Effect<FetchPostsPageAction>
+internal sealed class FetchAvailablePostsEffect : Effect<FetchPostsPageAction>
 {
     private readonly AuthenticationStateProvider authenticationProvider;
-    private readonly IPostsClient client;
+    private readonly PostsHttpClient client;
+    private readonly ILogger<FetchAvailablePostsEffect> logger;
 
     public FetchAvailablePostsEffect(
         AuthenticationStateProvider authenticationProvider,
-        IPostsClient client)
+        PostsHttpClient client,
+        ILogger<FetchAvailablePostsEffect> logger)
     {
         this.authenticationProvider = authenticationProvider;
         this.client = client;
+        this.logger = logger;
     }
 
     public override async Task HandleAsync(FetchPostsPageAction action, IDispatcher dispatcher)
     {
-        await authenticationProvider.GetAuthenticationStateAsync();
+        var authenticationState = await authenticationProvider.GetAuthenticationStateAsync();
+
+        logger.LogDebug($"User authenticated: {authenticationState.User.IsAuthenticated()}");
 
         var response = await client.GetPostsAsync(action.PageNumber, action.PageSize);
+
         var next = response.Select<object>(
             empty => new FetchPostsPageReadyAction(Array.Empty<BriefModel>(), action.PageNumber, action.PageSize, 0),
             result => new FetchPostsPageReadyAction(result.Posts, result.PageNumber, result.PageSize, result.PagesCount),
@@ -61,23 +68,23 @@ public sealed class FetchAvailablePostsEffect : Effect<FetchPostsPageAction>
 /// <summary>
 /// 
 /// </summary>
-public sealed class ImmediatePostDeleteEffect : Effect<ImmediatePostDeleteAction>
+internal sealed class ImmediatePostDeleteEffect : Effect<PermanentPostDeleteAction>
 {
-    private readonly IPostsClient client;
+    private readonly PostsHttpClient client;
 
-    public ImmediatePostDeleteEffect(IPostsClient client)
+    public ImmediatePostDeleteEffect(PostsHttpClient client)
     {
         this.client = client;
     }
 
-    public override async Task HandleAsync(ImmediatePostDeleteAction action, IDispatcher dispatcher)
+    public override async Task HandleAsync(PermanentPostDeleteAction action, IDispatcher dispatcher)
     {
         var slugOrKey = action.PostKey.ToString();
         var response = await client.DeletePostAsync(slugOrKey);
 
         object nextAction = response.Succeeded
-            ? new ImmediatePostDeleteSuccessAction(action.PostKey, action.LastPostKey, action.PageNumber, action.PageSize)
-            : new ImmediatePostDeleteFailedAction(action.PostKey, action.PageNumber, action.PageSize);
+            ? new PermanentPostDeleteSuccessAction(action.PostKey, action.LastPostKey, action.PageNumber, action.PageSize)
+            : new PermanentPostDeleteFailedAction(action.PostKey, action.PageNumber, action.PageSize);
 
         dispatcher.Dispatch(nextAction);
     }
@@ -86,16 +93,16 @@ public sealed class ImmediatePostDeleteEffect : Effect<ImmediatePostDeleteAction
 /// <summary>
 /// 
 /// </summary>
-public sealed class ImmediatePostDeleteSuccessEffect : Effect<ImmediatePostDeleteSuccessAction>
+internal sealed class ImmediatePostDeleteSuccessEffect : Effect<PermanentPostDeleteSuccessAction>
 {
-    private readonly IPostsClient client;
+    private readonly PostsHttpClient client;
 
-    public ImmediatePostDeleteSuccessEffect(IPostsClient client)
+    public ImmediatePostDeleteSuccessEffect(PostsHttpClient client)
     {
         this.client = client;
     }
 
-    public override async Task HandleAsync(ImmediatePostDeleteSuccessAction action, IDispatcher dispatcher)
+    public override async Task HandleAsync(PermanentPostDeleteSuccessAction action, IDispatcher dispatcher)
     {
         var response = await client.GetTailPostsAsync(action.LastPostKey, 1);
 
@@ -113,18 +120,18 @@ public sealed class ImmediatePostDeleteSuccessEffect : Effect<ImmediatePostDelet
 /// <summary>
 /// 
 /// </summary>
-public sealed class TogglePostPublicityActionEffect : Effect<TogglePostPublicityAction>
+internal sealed class ChangePostVisibilityActionEffect : Effect<ChangePostVisibilityAction>
 {
-    private readonly IPostsClient client;
+    private readonly PostsHttpClient client;
 
-    public TogglePostPublicityActionEffect(IPostsClient client)
+    public ChangePostVisibilityActionEffect(PostsHttpClient client)
     {
         this.client = client;
     }
 
-    public override async Task HandleAsync(TogglePostPublicityAction action, IDispatcher dispatcher)
+    public override async Task HandleAsync(ChangePostVisibilityAction action, IDispatcher dispatcher)
     {
-        var response = await client.UpdatePostPublicityAsync(action.PostKey, action.IsPublic);
+        var response = await client.ChangePostVisibilityAsync(action.PostKey, action.VisibilityStatus);
 
         if (false == response.Succeeded)
         {
@@ -132,7 +139,7 @@ public sealed class TogglePostPublicityActionEffect : Effect<TogglePostPublicity
         }
 
         dispatcher.Dispatch(
-            new TogglePublicitySuccessAction(action.PostKey, action.IsPublic)
+            new ChangePostVisibilitySuccessAction(action.PostKey, action.VisibilityStatus)
         );
     }
 }

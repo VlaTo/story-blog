@@ -103,7 +103,13 @@
                                     {
                                         if (store.Comments[index] is CommentModel comment)
                                         {
-                                            <Comment Key=@comment.Key Comments=@comment.Comments CreatedDateTime=@comment.CreateAt Class="pa-2">
+                                            <Comment
+                                                @key=@comment.Key
+                                                Key=@comment.Key
+                                                Author=@comment.AuthorId
+                                                Comments=@comment.Comments
+                                                CreatedDateTime=@comment.CreateAt
+                                                Class="pa-2">
                                                 <ChildContent>
                                                     @comment.Text
                                                 </ChildContent>
@@ -111,7 +117,14 @@
                                         }
                                         else if (store.Comments[index] is NewCommentModel newComment)
                                         {
-                                            <Comment Key=@newComment.Key IsNew=true Comments=@newComment.Comments CreatedDateTime=@newComment.CreateAt Class="pa-2">
+                                            <Comment
+                                                @key=@newComment.Key
+                                                Key=@newComment.Key
+                                                Author=@newComment.AuthorId
+                                                IsNew=true
+                                                Comments=@newComment.Comments
+                                                CreatedDateTime=@newComment.CreateAt
+                                                Class="pa-2">
                                                 <ChildContent>
                                                     @newComment.Text
                                                 </ChildContent>
@@ -126,7 +139,9 @@
 
                         case CommentsCollectionState.Failed:
                         {
-                            <div>No comments yet</div>
+                            <div>
+                                <MudText Typo=@Typo.body2>No comments yet</MudText>
+                            </div>
 
                             break;
                         }

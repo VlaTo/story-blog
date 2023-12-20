@@ -15,8 +15,8 @@ public class BriefModel : PostDetailsModel
     }
 
     [DataMember]
-    [JsonPropertyName(nameof(Status))]
-    public PostModelStatus Status
+    [JsonPropertyName(nameof(PublicationStatus))]
+    public PostPublicationStatus PublicationStatus
     {
         get;
         set;
@@ -31,8 +31,8 @@ public class BriefModel : PostDetailsModel
     }
 
     [DataMember]
-    [JsonPropertyName(nameof(IsPublic))]
-    public bool IsPublic
+    [JsonPropertyName(nameof(VisibilityStatus))]
+    public PostVisibilityStatus VisibilityStatus
     {
         get;
         set;

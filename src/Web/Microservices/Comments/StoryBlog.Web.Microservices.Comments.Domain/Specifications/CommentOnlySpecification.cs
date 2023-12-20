@@ -3,9 +3,9 @@ using StoryBlog.Web.Microservices.Comments.Domain.Entities;
 
 namespace StoryBlog.Web.Microservices.Comments.Domain.Specifications;
 
-public sealed class FindComment : SpecificationBase<Comment>
+public sealed class CommentOnlySpecification : SpecificationBase<Comment>
 {
-    public FindComment(Guid commentKey)
+    public CommentOnlySpecification(Guid commentKey)
     {
         Criteria = entity => entity.Key == commentKey;
     }

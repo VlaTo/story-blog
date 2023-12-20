@@ -3,8 +3,10 @@ using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using StoryBlog.Web.Common.Domain.Entities;
 using StoryBlog.Web.Microservices.Posts.Application.Handlers.TogglePublicity;
 using StoryBlog.Web.Microservices.Posts.Shared.Models;
+using StoryBlog.Web.Microservices.Posts.WebApi.Extensions;
 
 namespace StoryBlog.Web.Microservices.Posts.WebApi.Controllers;
 
@@ -37,24 +39,20 @@ public sealed class ToggleController : Controller
     /// <param name="slugOrKey"></param>
     /// <param name="request"></param>
     /// <returns></returns>
-    [ProducesResponseType(typeof(PostPublicityResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     [HttpPut("{slugOrKey:required}")]
     public async Task<IActionResult> TogglePostPublicity([FromRoute] string slugOrKey, [FromBody] PostPublicityRequest request)
     {
-        var command = new TogglePostPublicityCommand(slugOrKey, request.IsPublic, User);
+        var visibilityStatus = request.VisibilityStatus.AsEnum<VisibilityStatus>();
+        var command = new TogglePostPublicityCommand(slugOrKey, visibilityStatus, User);
         var result = await mediator.Send(command).ConfigureAwait(false);
 
         if (result.Succeeded)
         {
-            //var model = mapper.Map<PostPublicityResponse>(.Value);
-            return Ok(new PostPublicityResponse
-            {
-                PostKey = result.Value.PostKey,
-                IsPublic = result.Value.IsPublic
-            });
+            return Ok();
         }
 
-        logger.LogDebug($"Post not found for key: {slugOrKey}");
+        logger.LogDebug(result.Error!.Message);
 
         return BadRequest();
     }

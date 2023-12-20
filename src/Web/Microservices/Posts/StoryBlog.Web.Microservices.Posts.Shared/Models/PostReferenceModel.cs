@@ -16,7 +16,7 @@ public sealed class PostReferenceModel : PostDetailsModel
 
     [DataMember]
     [JsonPropertyName(nameof(Status))]
-    public PostModelStatus Status
+    public PostPublicationStatus Status
     {
         get;
         set;

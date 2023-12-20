@@ -25,7 +25,7 @@ public sealed class NewPostCreatedEventHandler : IConsumer<NewPostCreatedEvent>
     {
         await using (var repository = context.GetRepository<Comment>())
         {
-            var specification = new FindCommentsForPost(message.Key);
+            var specification = new RootCommentsForPostSpecification(message.Key);
             var exists = await repository.ExistsAsync(specification);
 
             if (exists)

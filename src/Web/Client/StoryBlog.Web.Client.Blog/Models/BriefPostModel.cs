@@ -7,11 +7,11 @@ internal sealed record BriefPostModel(
     string Slug,
     string Title,
     string Author,
-    PostModelStatus Status,
+    PostPublicationStatus PublicationStatus,
     string Text,
     AllowedActions AllowedActions,
     PostState State,
-    bool IsPublic,
+    PostVisibilityStatus VisibilityStatus,
     long CommentsCount,
     DateTimeOffset CreatedAt
 );

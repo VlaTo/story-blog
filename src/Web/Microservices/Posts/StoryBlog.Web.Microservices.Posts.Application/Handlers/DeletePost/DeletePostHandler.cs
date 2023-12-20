@@ -2,11 +2,14 @@
 using Microsoft.Extensions.Options;
 using SlimMessageBus;
 using StoryBlog.Web.Common.Application;
+using StoryBlog.Web.Common.Application.Extensions;
 using StoryBlog.Web.Common.Domain;
 using StoryBlog.Web.Common.Events;
+using StoryBlog.Web.Common.Identity.Permission;
 using StoryBlog.Web.Common.Result;
 using StoryBlog.Web.MessageHub;
 using StoryBlog.Web.Microservices.Posts.Application.Configuration;
+using StoryBlog.Web.Microservices.Posts.Application.Extensions;
 using StoryBlog.Web.Microservices.Posts.Domain.Entities;
 using StoryBlog.Web.Microservices.Posts.Shared.Messages;
 
@@ -35,11 +38,33 @@ public sealed class DeletePostHandler : PostHandlerBase, MediatR.IRequestHandler
 
     public async Task<Result<Success, NotFound>> Handle(DeletePostCommand request, CancellationToken cancellationToken)
     {
+        var authenticated = request.CurrentUser.IsAuthenticated();
+        string? author;
+
+        if (authenticated)
+        {
+            if (false == request.CurrentUser.HasPermission(Permissions.Blogs.Delete))
+            {
+                return new Exception("Insufficient permissions");
+            }
+
+            author = request.CurrentUser.GetSubject();
+
+            if (String.IsNullOrEmpty(author))
+            {
+                return new Exception("No user identity");
+            }
+        }
+        else
+        {
+            return new Exception("User not authenticated");
+        }
+
         try
         {
             await using (var repository = context.GetRepository<Post>())
             {
-                var post = await FindPostAsync(repository, request.SlugOrKey, cancellationToken);
+                var post = await repository.FindPostBySlugOrKeyAsync(request.SlugOrKey, cancellationToken: cancellationToken);
 
                 if (null == post)
                 {
@@ -48,6 +73,7 @@ public sealed class DeletePostHandler : PostHandlerBase, MediatR.IRequestHandler
 
                 await repository.RemoveAsync(post, cancellationToken);
                 await repository.SaveChangesAsync(cancellationToken);
+
                 await NotifyAsync(post, cancellationToken);
 
                 return Success.Instance;

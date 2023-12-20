@@ -24,12 +24,17 @@ public class CommentModel : ICommentBase
         get;
     }
 
+    public string? AuthorId
+    {
+        get;
+    }
+
     public CommentsCollection Comments
     {
         get;
     }
 
-    public DateTime CreateAt
+    public DateTimeOffset CreateAt
     {
         get;
     }
@@ -39,13 +44,15 @@ public class CommentModel : ICommentBase
         Guid postKey,
         Guid? parentKey,
         string text,
+        string? authorId,
         CommentsCollection comments,
-        DateTime createAt)
+        DateTimeOffset createAt)
     {
         Key = key;
         PostKey = postKey;
         ParentKey = parentKey;
         Text = text;
+        AuthorId = authorId;
         Comments = comments;
         CreateAt = createAt;
     }

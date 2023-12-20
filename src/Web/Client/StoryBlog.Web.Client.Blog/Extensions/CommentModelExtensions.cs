@@ -7,9 +7,25 @@ internal static class CommentModelExtensions
 {
     public static CommentModel MapComment(
         this Microservices.Comments.Shared.Models.CommentModel source,
-        CommentsCollection commentsCollection) =>
-        new(source.Key, source.PostKey, source.ParentKey, source.Text, commentsCollection, source.CreatedAt);
+        CommentsCollection commentsCollection) => new(
+        source.Key,
+        source.PostKey,
+        source.ParentKey,
+        source.Text,
+        source.AuthorId,
+        commentsCollection,
+        source.CreatedAt
+    );
 
-    public static CommentModel MapReplace(this CommentModel source, CommentsCollection commentsCollection) =>
-        new(source.Key, source.PostKey, source.ParentKey, source.Text, commentsCollection, source.CreateAt);
+    public static CommentModel MapReplace(
+        this CommentModel source,
+        CommentsCollection commentsCollection) => new(
+        source.Key,
+        source.PostKey,
+        source.ParentKey,
+        source.Text,
+        source.AuthorId,
+        commentsCollection,
+        source.CreateAt
+    );
 }

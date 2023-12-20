@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using AutoMapper;
+using MediatR;
 using Microsoft.Extensions.Logging;
 using StoryBlog.Web.Common.Application.Extensions;
 using StoryBlog.Web.Common.Domain;
@@ -13,18 +14,22 @@ namespace StoryBlog.Web.Microservices.Posts.Application.Handlers.GetTailPosts;
 public sealed class GetTailPostsHandler : PostHandlerBase, IRequestHandler<GetTailPostsQuery, Result<IReadOnlyList<Brief>>>
 {
     private readonly IAsyncUnitOfWork context;
+    private readonly IMapper mapper;
 
     public GetTailPostsHandler(
         IAsyncUnitOfWork context,
+        IMapper mapper,
         ILogger<GetTailPostsHandler> logger)
         : base(logger)
     {
         this.context = context;
+        this.mapper = mapper;
     }
 
     public async Task<Result<IReadOnlyList<Brief>>> Handle(GetTailPostsQuery request, CancellationToken cancellationToken)
     {
         var authenticated = request.CurrentUser.IsAuthenticated();
+        string? userId;
 
         if (authenticated)
         {
@@ -33,7 +38,7 @@ public sealed class GetTailPostsHandler : PostHandlerBase, IRequestHandler<GetTa
                 return new Exception("Insufficient permissions");
             }
 
-            var userId = request.CurrentUser.GetSubject();
+            userId = request.CurrentUser.GetSubject();
 
             if (String.IsNullOrEmpty(userId))
             {
@@ -55,10 +60,19 @@ public sealed class GetTailPostsHandler : PostHandlerBase, IRequestHandler<GetTa
                 return new Exception("Post not found");
             }
 
-            specification = new TailPostsSpecification(tailPost.CreateAt, request.NumberOfPosts, authenticated);
+            specification = new TailPostsSpecification(authenticated, userId, tailPost.CreateAt, request.NumberOfPosts);
             
             var posts = await repository.QueryAsync(specification, cancellationToken);
-            var briefs = new Brief[posts.Length];
+
+            var briefs = mapper.Map<IReadOnlyList<Brief>>(posts, options => options.AfterMap((_, list) =>
+            {
+                for (var index = 0; index < list.Count; index++)
+                {
+                    list[index].AllowedActions = AllowedActions.CanTogglePublic | AllowedActions.CanEdit | AllowedActions.CanDelete;
+                }
+            }));
+
+            /*var briefs = new Brief[posts.Length];
 
             for (var index = 0; index < posts.Length; index++)
             {
@@ -69,16 +83,16 @@ public sealed class GetTailPostsHandler : PostHandlerBase, IRequestHandler<GetTa
                     Key = source.Key,
                     Title = source.Title,
                     Slug = source.Slug.Text,
-                    Status = source.Status,
+                    Status = source.PublicationStatus,
                     Author = source.AuthorId,
                     Text = source.Content.Brief,
                     CommentsCount = source.CommentsCounter.Counter,
                     AllowedActions = AllowedActions.CanEdit | AllowedActions.CanDelete,
                     CreatedAt = source.CreateAt
                 };
-            }
+            }*/
 
-            return briefs;
+            return new Result<IReadOnlyList<Brief>>(briefs);
         }
     }
 }

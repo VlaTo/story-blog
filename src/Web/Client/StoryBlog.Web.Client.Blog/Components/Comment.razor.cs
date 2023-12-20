@@ -43,7 +43,14 @@ public partial class Comment : ICommentsObserver, IDisposable
     }
 
     [Parameter]
-    public DateTime CreatedDateTime
+    public string? Author
+    {
+        get;
+        set;
+    }
+
+    [Parameter]
+    public DateTimeOffset CreatedDateTime
     {
         get;
         set;

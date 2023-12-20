@@ -39,12 +39,6 @@ namespace StoryBlog.Web.Microservices.Posts.Infrastructure.Persistence.Migration
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<DateTimeOffset?>("DeletedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<bool>("IsPublic")
-                        .HasColumnType("boolean");
-
                     b.Property<Guid>("Key")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
@@ -53,7 +47,7 @@ namespace StoryBlog.Web.Microservices.Posts.Infrastructure.Persistence.Migration
                         .ValueGeneratedOnUpdate()
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int>("Status")
+                    b.Property<int>("PublicationStatus")
                         .HasColumnType("integer");
 
                     b.Property<string>("Title")
@@ -61,6 +55,9 @@ namespace StoryBlog.Web.Microservices.Posts.Infrastructure.Persistence.Migration
                         .HasMaxLength(1024)
                         .IsUnicode(true)
                         .HasColumnType("character varying(1024)");
+
+                    b.Property<int>("VisibilityStatus")
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
@@ -107,7 +104,7 @@ namespace StoryBlog.Web.Microservices.Posts.Infrastructure.Persistence.Migration
 
             modelBuilder.Entity("StoryBlog.Web.Microservices.Posts.Domain.Entities.Post", b =>
                 {
-                    b.OwnsOne("StoryBlog.Web.Microservices.Posts.Domain.Entities.Post.CommentsCounter#StoryBlog.Web.Microservices.Posts.Domain.Entities.CommentsCounter", "CommentsCounter", b1 =>
+                    b.OwnsOne("StoryBlog.Web.Microservices.Posts.Domain.Entities.CommentsCounter", "CommentsCounter", b1 =>
                         {
                             b1.Property<long>("PostId")
                                 .HasColumnType("bigint");
@@ -128,7 +125,7 @@ namespace StoryBlog.Web.Microservices.Posts.Infrastructure.Persistence.Migration
                             b1.Navigation("Post");
                         });
 
-                    b.OwnsOne("StoryBlog.Web.Microservices.Posts.Domain.Entities.Post.Content#StoryBlog.Web.Microservices.Posts.Domain.Entities.Content", "Content", b1 =>
+                    b.OwnsOne("StoryBlog.Web.Microservices.Posts.Domain.Entities.Content", "Content", b1 =>
                         {
                             b1.Property<long>("PostId")
                                 .HasColumnType("bigint");
@@ -152,7 +149,7 @@ namespace StoryBlog.Web.Microservices.Posts.Infrastructure.Persistence.Migration
                             b1.Navigation("Post");
                         });
 
-                    b.OwnsOne("StoryBlog.Web.Microservices.Posts.Domain.Entities.Post.Slug#StoryBlog.Web.Microservices.Posts.Domain.Entities.Slug", "Slug", b1 =>
+                    b.OwnsOne("StoryBlog.Web.Microservices.Posts.Domain.Entities.Slug", "Slug", b1 =>
                         {
                             b1.Property<long>("PostId")
                                 .HasColumnType("bigint");

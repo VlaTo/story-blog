@@ -63,7 +63,7 @@ public sealed record FetchPostsPageFailedAction(
 /// <param name="PostKey"></param>
 /// <param name="PageNumber"></param>
 /// <param name="PageSize"></param>
-public sealed record ImmediatePostDeleteAction(
+public sealed record PermanentPostDeleteAction(
         Guid PostKey,
         Guid LastPostKey,
         int PageNumber,
@@ -76,7 +76,7 @@ public sealed record ImmediatePostDeleteAction(
 /// <param name="PostKey"></param>
 /// <param name="PageNumber"></param>
 /// <param name="PageSize"></param>
-public sealed record ImmediatePostDeleteSuccessAction(
+public sealed record PermanentPostDeleteSuccessAction(
         Guid PostKey,
         Guid LastPostKey,
         int PageNumber,
@@ -89,7 +89,7 @@ public sealed record ImmediatePostDeleteSuccessAction(
 /// <param name="PostKey"></param>
 /// <param name="PageNumber"></param>
 /// <param name="PageSize"></param>
-public sealed record ImmediatePostDeleteFailedAction(
+public sealed record PermanentPostDeleteFailedAction(
         Guid PostKey,
         int PageNumber,
         int PageSize
@@ -112,18 +112,18 @@ public sealed record TailPostsReadyAction(
 /// 
 /// </summary>
 /// <param name="PostKey"></param>
-public sealed record TogglePostPublicityAction(
+public sealed record ChangePostVisibilityAction(
     Guid PostKey,
-    bool IsPublic
+    PostVisibilityStatus VisibilityStatus
 );
 
 /// <summary>
 /// 
 /// </summary>
 /// <param name="PostKey"></param>
-public sealed record TogglePublicitySuccessAction(
+public sealed record ChangePostVisibilitySuccessAction(
     Guid PostKey,
-    bool IsPublic
+    PostVisibilityStatus VisibilityStatus
 );
 
 /// <summary>

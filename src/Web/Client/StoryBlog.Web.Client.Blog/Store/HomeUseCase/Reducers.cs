@@ -46,7 +46,7 @@ internal sealed class FetchPostsPageFailedReducer : Reducer<HomeState, FetchPost
 /// <summary>
 /// 
 /// </summary>
-internal sealed class PostsPageReadyReducer : Reducer<HomeState, FetchPostsPageReadyAction>
+internal sealed class FetchPostsPageReadyReducer : Reducer<HomeState, FetchPostsPageReadyAction>
 {
     public override HomeState Reduce(HomeState state, FetchPostsPageReadyAction action)
     {
@@ -60,9 +60,9 @@ internal sealed class PostsPageReadyReducer : Reducer<HomeState, FetchPostsPageR
 /// <summary>
 /// 
 /// </summary>
-internal sealed class ImmediatePostDeleteReducer : Reducer<HomeState, ImmediatePostDeleteAction>
+internal sealed class PermanentPostDeleteReducer : Reducer<HomeState, PermanentPostDeleteAction>
 {
-    public override HomeState Reduce(HomeState state, ImmediatePostDeleteAction action)
+    public override HomeState Reduce(HomeState state, PermanentPostDeleteAction action)
     {
         var posts = state.Posts
             .MapReduce(x => x.Key == action.PostKey, x => x with
@@ -77,9 +77,9 @@ internal sealed class ImmediatePostDeleteReducer : Reducer<HomeState, ImmediateP
 /// <summary>
 /// 
 /// </summary>
-internal sealed class ImmediatePostDeleteSuccessReducer : Reducer<HomeState, ImmediatePostDeleteSuccessAction>
+internal sealed class PermanentPostDeleteSuccessReducer : Reducer<HomeState, PermanentPostDeleteSuccessAction>
 {
-    public override HomeState Reduce(HomeState state, ImmediatePostDeleteSuccessAction action)
+    public override HomeState Reduce(HomeState state, PermanentPostDeleteSuccessAction action)
     {
         var posts = state.Posts
             .Exclude(x => x.Key == action.PostKey)
@@ -104,9 +104,9 @@ internal sealed class TailPostsReadyReducer : Reducer<HomeState, TailPostsReadyA
 /// <summary>
 /// 
 /// </summary>
-internal sealed class TogglePostPublicityReducer : Reducer<HomeState, TogglePostPublicityAction>
+internal sealed class ChangePostVisibilityReducer : Reducer<HomeState, ChangePostVisibilityAction>
 {
-    public override HomeState Reduce(HomeState state, TogglePostPublicityAction action)
+    public override HomeState Reduce(HomeState state, ChangePostVisibilityAction action)
     {
         var posts = state.Posts
             .MapReduce(x => x.Key == action.PostKey, x => x with
@@ -118,19 +118,18 @@ internal sealed class TogglePostPublicityReducer : Reducer<HomeState, TogglePost
     }
 }
 
-
 /// <summary>
 /// 
 /// </summary>
-internal sealed class TogglePublicitySuccessReducer : Reducer<HomeState, TogglePublicitySuccessAction>
+internal sealed class ChangePostVisibilitySuccessReducer : Reducer<HomeState, ChangePostVisibilitySuccessAction>
 {
-    public override HomeState Reduce(HomeState state, TogglePublicitySuccessAction action)
+    public override HomeState Reduce(HomeState state, ChangePostVisibilitySuccessAction action)
     {
         var posts = state.Posts
             .MapReduce(x => x.Key == action.PostKey, x => x with
             {
                 State = PostState.Active,
-                IsPublic = action.IsPublic
+                VisibilityStatus = action.VisibilityStatus
             })
             .ToArray();
         return new HomeState(state.PageNumber, state.PageSize, state.PagesCount, posts, state.StoreState);

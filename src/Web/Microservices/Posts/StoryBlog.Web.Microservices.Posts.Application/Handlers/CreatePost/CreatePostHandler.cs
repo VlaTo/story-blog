@@ -4,7 +4,9 @@ using SlimMessageBus;
 using StoryBlog.Web.Common.Application;
 using StoryBlog.Web.Common.Application.Extensions;
 using StoryBlog.Web.Common.Domain;
+using StoryBlog.Web.Common.Domain.Entities;
 using StoryBlog.Web.Common.Events;
+using StoryBlog.Web.Common.Identity.Permission;
 using StoryBlog.Web.Common.Result;
 using StoryBlog.Web.MessageHub;
 using StoryBlog.Web.Microservices.Posts.Application.Configuration;
@@ -42,11 +44,33 @@ public sealed class CreatePostHandler : HandlerBase, MediatR.IRequestHandler<Cre
 
     public async Task<Result<Guid>> Handle(CreatePostCommand request, CancellationToken cancellationToken)
     {
+        var authenticated = request.CurrentUser.IsAuthenticated();
+        string? author;
+
+        if (authenticated)
+        {
+            if (false == request.CurrentUser.HasPermission(Permissions.Blogs.Create))
+            {
+                return new Exception("Insufficient permissions");
+            }
+
+            author = request.CurrentUser.GetSubject();
+
+            if (String.IsNullOrEmpty(author))
+            {
+                return new Exception("No user identity");
+            }
+        }
+        else
+        {
+            return new Exception("User not authenticated");
+        }
+
         var post = new Post
         {
             Title = request.Details.Title,
-            Status = options.ApprovePostWhenCreated ? PostStatus.Approved : PostStatus.Pending,
-            AuthorId = request.CurrentUser.GetSubject() ?? Guid.Empty.ToString("D")
+            PublicationStatus = options.ApprovePostWhenCreated ? PublicationStatus.Approved : PublicationStatus.Pending,
+            AuthorId = author
         };
         
         post.Slug = new Slug

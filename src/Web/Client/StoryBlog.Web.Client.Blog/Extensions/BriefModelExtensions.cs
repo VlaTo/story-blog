@@ -11,11 +11,11 @@ internal static class BriefModelExtensions
             brief.Slug,
             brief.Title,
             brief.Author,
-            brief.Status,
+            brief.PublicationStatus,
             brief.Text,
             brief.AllowedActions,
             state,
-            brief.IsPublic,
+            brief.VisibilityStatus,
             brief.CommentsCount,
             brief.CreatedAt
         );

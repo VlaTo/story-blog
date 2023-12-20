@@ -4,10 +4,11 @@ using StoryBlog.Web.Common.Application.Extensions;
 using StoryBlog.Web.Common.Domain;
 using StoryBlog.Web.Common.Identity.Permission;
 using StoryBlog.Web.Common.Result;
+using StoryBlog.Web.Microservices.Posts.Application.Extensions;
 
 namespace StoryBlog.Web.Microservices.Posts.Application.Handlers.TogglePublicity;
 
-internal sealed class TogglePostPublicityHandler : PostHandlerBase, IRequestHandler<TogglePostPublicityCommand, Result<(Guid PostKey, bool IsPublic)>>
+internal sealed class TogglePostPublicityHandler : PostHandlerBase, IRequestHandler<TogglePostPublicityCommand, Result>
 {
     private readonly IAsyncUnitOfWork context;
 
@@ -19,18 +20,19 @@ internal sealed class TogglePostPublicityHandler : PostHandlerBase, IRequestHand
         this.context = context;
     }
 
-    public async Task<Result<(Guid PostKey, bool IsPublic)>> Handle(TogglePostPublicityCommand request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(TogglePostPublicityCommand request, CancellationToken cancellationToken)
     {
         var authenticated = request.CurrentUser.IsAuthenticated();
+        string? userId;
 
         if (authenticated)
         {
-            if (false == request.CurrentUser.HasPermission(Permissions.Blogs.View))
+            if (false == request.CurrentUser.HasPermission(Permissions.Blogs.Update))
             {
                 return new Exception("Insufficient permissions");
             }
 
-            var userId = request.CurrentUser.GetSubject();
+            userId = request.CurrentUser.GetSubject();
 
             if (String.IsNullOrEmpty(userId))
             {
@@ -44,20 +46,28 @@ internal sealed class TogglePostPublicityHandler : PostHandlerBase, IRequestHand
 
         await using (var repository = context.GetRepository<Domain.Entities.Post>())
         {
-            var post = await FindPostAsync(repository, request.SlugOrKey, cancellationToken);
+            var post = await repository.FindPostBySlugOrKeyAsync(request.SlugOrKey, cancellationToken: cancellationToken);
 
-            if (null != post)
+            if (null == post)
             {
-                if (post.IsPublic != request.IsPublic)
-                {
-                    post.IsPublic = request.IsPublic;
-                    await repository.SaveChangesAsync(cancellationToken);
-                }
-
-                return (PostKey: post.Key, post.IsPublic);
+                return new Exception("Post not found");
             }
-        }
 
-        return new Exception("Failed to toggle publicity");
+            if (false == String.Equals(post.AuthorId, userId))
+            {
+                return new Exception("User is not a author of the post specified");
+            }
+
+            if (post.VisibilityStatus != request.VisibilityStatus)
+            {
+                post.VisibilityStatus = request.VisibilityStatus;
+
+                await repository.SaveChangesAsync(cancellationToken);
+                
+                Logger.LogDebug($"Post: '{request.SlugOrKey}' set {nameof(post.VisibilityStatus)} to: {request.VisibilityStatus}");
+            }
+
+            return Result.Success;
+        }
     }
 }

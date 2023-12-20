@@ -34,15 +34,22 @@ public class CommentDetailsModel
         set;
     }
 
-    [JsonPropertyName(nameof(Status))]
-    public CommentModelStatus Status
+    [JsonPropertyName(nameof(AuthorId))]
+    public string? AuthorId
+    {
+        get;
+        set;
+    }
+
+    [JsonPropertyName(nameof(PublicationStatus))]
+    public CommentPublicationStatus PublicationStatus
     {
         get;
         set;
     }
 
     [JsonPropertyName(nameof(CreatedAt))]
-    public DateTime CreatedAt
+    public DateTimeOffset CreatedAt
     {
         get;
         set;

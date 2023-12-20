@@ -3,7 +3,7 @@
 namespace StoryBlog.Web.Microservices.Comments.Shared.Models;
 
 [DataContract]
-public enum CommentModelStatus : byte
+public enum CommentPublicationStatus : byte
 {
     Pending,
     Approved,

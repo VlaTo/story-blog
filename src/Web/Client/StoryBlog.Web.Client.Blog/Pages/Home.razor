@@ -31,24 +31,19 @@
                 <MudSpacer/>
                 @if (IsAuthorOf(post))
                 {
-                    <MudChip
-                        Variant=@Variant.Outlined
-                        Disabled=@(false == post.IsPublic)
-                        Color=@Color.Info
-                        Size=@Size.Small>
-                        Public
-                    </MudChip>
-                    if (PostModelStatus.Pending == post.Status)
+                    if (PostPublicationStatus.Approved != post.PublicationStatus)
                     {
-                        <MudChip Variant=@Variant.Outlined Color=@Color.Primary Size=@Size.Small>Pending</MudChip>
+                        <MudChip Variant=@Variant.Outlined Color=@GetPublicationChipColor(post.PublicationStatus) Size=@Size.Small>
+                            @Enum.GetName(post.PublicationStatus)
+                        </MudChip>
                     }
                     <MudIconButton
                         Class="quick-action"
                         Size=@Size.Small
                         Disabled=@IsTogglePublicDisabled(post)
                         ButtonType=@ButtonType.Button
-                        Icon=@Icons.Material.Filled.Visibility
-                        OnClick=@(() => DoTogglePublic(post.Key, !post.IsPublic))
+                        Icon=@GetTogglePublicIcon(post.VisibilityStatus)
+                        OnClick=@(() => DoTogglePublicVisibility(post.Key, PostVisibilityStatus.Public != post.VisibilityStatus))
                     />
                     <MudIconButton
                         Class="quick-action"

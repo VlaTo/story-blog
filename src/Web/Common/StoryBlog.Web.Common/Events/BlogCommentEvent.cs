@@ -12,8 +12,8 @@ public sealed record NewCommentCreatedEvent(
     Guid Key,
     Guid PostKey,
     Guid? ParentKey,
-    DateTimeOffset CreateAt,
-    string? Author
+    string? Author,
+    int ApprovedCommentsCount
 );
 
 /// <summary>

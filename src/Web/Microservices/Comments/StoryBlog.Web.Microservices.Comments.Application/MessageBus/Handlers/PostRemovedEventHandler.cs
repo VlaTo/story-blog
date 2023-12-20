@@ -21,24 +21,12 @@ public sealed class PostRemovedEventHandler : IConsumer<PostRemovedEvent>
 
     public async Task OnHandle(PostRemovedEvent message)
     {
-        var dateTime = DateTimeOffset.Now;
-
         await using (var repository = context.GetRepository<Domain.Entities.Comment>())
         {
-            var specification = new FindRootCommentsForPost(message.Key, -1, 0);
-            var comments = await repository.QueryAsync(specification, CancellationToken.None);
+            var specification = new RootCommentsForPostSpecification(message.Key);
+            var commentDeleted = await repository.RemoveAsync(specification, CancellationToken.None);
 
-            if (0 < comments.Length)
-            {
-                logger.LogWarning($"No comments for post: {message.Key:D}");
-                return;
-            }
-
-            for (var index = 0; index < comments.Length; index++)
-            {
-                comments[index].DeletedAt = dateTime;
-                logger.LogDebug($"Comment id: {comments[index].Id} for post: {message.Key:D} was deleted");
-            }
+            logger.LogWarning($"Comments deleted: {commentDeleted} for post: {message.Key:N}");
 
             await repository.SaveChangesAsync(CancellationToken.None);
         }

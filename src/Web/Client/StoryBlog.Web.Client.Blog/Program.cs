@@ -2,12 +2,12 @@ using Fluxor;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.Configuration.Memory;
+using Microsoft.Extensions.Options;
 using MudBlazor;
 using MudBlazor.Services;
 using StoryBlog.Web.Blazor.Markdown.Editor.Extensions;
 using StoryBlog.Web.Client.Blog;
 using StoryBlog.Web.Client.Blog.Clients;
-using StoryBlog.Web.Client.Blog.Clients.Interfaces;
 using StoryBlog.Web.Client.Blog.Configuration;
 using StoryBlog.Web.Client.Blog.Core;
 using StoryBlog.Web.Client.Blog.Extensions;
@@ -47,22 +47,20 @@ builder.Services.AddAuthorizationCore(options =>
             .RequirePermissionClaim(Permissions.Blogs.Update)
     );
 });
-/*builder.Services.AddMessageHub(hub =>
-{
-    hub
-        .AddMessage<NewPostPublishedMessage>()
-        .WithHandler<NewPostPublishedMessageHandler>();
-});*/
-
-builder.Services.AddScoped<IPostsClient, PostsHttpClient>();
-builder.Services.AddScoped<ICommentsClient, CommentsHttpClient>();
-builder.Services.AddScoped<ISlugClient, SlugHttpClient>();
 builder.Services.AddScoped<StoryBlogApiAuthorizationMessageHandler>();
 builder.Services
-    .AddHttpClient(
-        "PostsApi",
-        client => client.BaseAddress = new Uri("http://localhost:5033")
-    )
+    .AddHttpClient<PostsHttpClient>((serviceProvider, client) =>
+    {
+        var httpClientOptions = serviceProvider.GetRequiredService<IOptions<HttpClientOptions>>().Value;
+        client.BaseAddress = new Uri(httpClientOptions.Endpoints.Posts.BasePath);
+    })
+    .AddHttpMessageHandler<StoryBlogApiAuthorizationMessageHandler>();
+builder.Services
+    .AddHttpClient<CommentsHttpClient>((serviceProvider, client) =>
+    {
+        var httpClientOptions = serviceProvider.GetRequiredService<IOptions<HttpClientOptions>>().Value;
+        client.BaseAddress = new Uri(httpClientOptions.Endpoints.Comments.BasePath);
+    })
     .AddHttpMessageHandler<StoryBlogApiAuthorizationMessageHandler>();
 builder.Services.AddMudServices();
 builder.Services.AddMudMarkdownServices();
@@ -77,10 +75,6 @@ builder.Services.AddFluxor(options =>
         .AddMiddleware<FluxorLoggingMiddleware>();
 });
 builder.Services.AddLocalization();
-builder.Services.AddScoped(provider => new HttpClient
-{
-    BaseAddress = new Uri(builder.HostEnvironment.BaseAddress)
-});
 
 var host = builder.Build();
 

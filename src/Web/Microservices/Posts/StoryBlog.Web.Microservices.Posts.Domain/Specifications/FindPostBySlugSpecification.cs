@@ -1,13 +1,10 @@
-﻿using StoryBlog.Web.Common.Domain.Specifications;
-using StoryBlog.Web.Microservices.Posts.Domain.Entities;
+﻿namespace StoryBlog.Web.Microservices.Posts.Domain.Specifications;
 
-namespace StoryBlog.Web.Microservices.Posts.Domain.Specifications;
-
-public sealed class FindPostBySlugSpecification : SpecificationBase<Post>
+public sealed class FindPostBySlugSpecification : FindPostSpecificationBase
 {
-    public FindPostBySlugSpecification(string slug)
+    public FindPostBySlugSpecification(string slug, bool includeAll)
+        : base(includeAll)
     {
         Criteria = entity => entity.Slug.Text == slug;
-        Includes.Add(entity => entity.Slug);
     }
 }

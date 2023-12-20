@@ -40,13 +40,13 @@ public class Post : Entity, IHasId<long>
         set;
     }
 
-    public bool IsPublic
+    public PublicationStatus PublicationStatus
     {
         get;
         set;
     }
 
-    public PostStatus Status
+    public VisibilityStatus VisibilityStatus
     {
         get;
         set;
@@ -65,12 +65,6 @@ public class Post : Entity, IHasId<long>
     }
 
     public DateTimeOffset? ModifiedAt
-    {
-        get;
-        set;
-    }
-
-    public DateTimeOffset? DeletedAt
     {
         get;
         set;

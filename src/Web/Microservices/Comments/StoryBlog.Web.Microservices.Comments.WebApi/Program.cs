@@ -1,5 +1,7 @@
+using System.Diagnostics.Tracing;
 using Asp.Versioning;
 using Asp.Versioning.ApiExplorer;
+using Microsoft.IdentityModel.Logging;
 using SlimMessageBus.Host;
 using SlimMessageBus.Host.RabbitMQ;
 using SlimMessageBus.Host.Serialization.SystemTextJson;
@@ -15,6 +17,9 @@ using StoryBlog.Web.Microservices.Comments.WebApi.Extensions;
 using System.Net.Mime;
 
 var builder = WebApplication.CreateBuilder(args);
+
+IdentityModelEventSource.Logger.LogLevel = EventLevel.Verbose;
+IdentityModelEventSource.ShowPII = true;
 
 builder.Configuration.AddJsonFile("appsettings.authentication.json", optional: true);
 builder.Configuration.AddJsonFile("appsettings.dbconnection.json", optional: true, reloadOnChange: true);

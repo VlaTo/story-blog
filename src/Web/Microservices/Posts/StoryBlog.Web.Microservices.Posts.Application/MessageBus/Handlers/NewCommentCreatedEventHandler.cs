@@ -23,13 +23,13 @@ public sealed class NewCommentCreatedEventHandler : IConsumer<NewCommentCreatedE
     {
         logger.LogInformation($"New Comment Created received event for key: \"{message.Key}\"");
 
-        if (false == await UpdateCommentsCountAsync(message.PostKey, 1))
+        if (false == await UpdateCommentsCountAsync(message.PostKey, message.ApprovedCommentsCount))
         {
             logger.LogWarning($"No post found for key: {message.PostKey}");
         }
     }
 
-    private async Task<bool> UpdateCommentsCountAsync(Guid key, int delta)
+    private async Task<bool> UpdateCommentsCountAsync(Guid key, int approvedCommentsCount)
     {
         await using (var repository = context.GetRepository<Domain.Entities.Post>())
         {
@@ -40,7 +40,7 @@ public sealed class NewCommentCreatedEventHandler : IConsumer<NewCommentCreatedE
                 return false;
             }
 
-            post.CommentsCounter.Counter += delta;
+            post.CommentsCounter.Counter = approvedCommentsCount;
 
             await repository.SaveChangesAsync();
         }

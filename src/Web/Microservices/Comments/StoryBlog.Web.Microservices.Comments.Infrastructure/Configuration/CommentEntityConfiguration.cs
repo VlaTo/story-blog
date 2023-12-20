@@ -29,10 +29,13 @@ internal sealed class CommentEntityConfiguration : IEntityTypeConfiguration<Comm
             .IsUnicode(unicode: true)
             .IsRequired();
 
-        builder.Property(x => x.IsPublic);
+        builder.Property(x => x.PublicationStatus);
 
-        builder.Property(x => x.Status);
-        
+        builder.Property(x => x.VisibilityStatus);
+
+        builder.Property(x => x.AuthorId)
+            .IsRequired(required: false);
+
         builder.Property(x => x.CreateAt)
             .HasValueGenerator<UtcNowDateTimeOffsetValueGenerator>()
             .ValueGeneratedOnAdd();
@@ -40,8 +43,6 @@ internal sealed class CommentEntityConfiguration : IEntityTypeConfiguration<Comm
         builder.Property(x => x.ModifiedAt)
             .HasValueGenerator<UtcNowDateTimeOffsetValueGenerator>()
             .ValueGeneratedOnUpdate();
-
-        builder.Property(x => x.DeletedAt);
 
         builder.HasKey(x => x.Id);
         builder.HasIndex(x => x.PostKey);

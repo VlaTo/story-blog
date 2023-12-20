@@ -149,7 +149,7 @@ public partial class Home
         {
             var store = Store.Value;
             var lastPost = store.Posts.Last(x => x.Key != postKey);
-            var action = new ImmediatePostDeleteAction(postKey, lastPost.Key, store.PageNumber, store.PageSize);
+            var action = new PermanentPostDeleteAction(postKey, lastPost.Key, store.PageNumber, store.PageSize);
 
             Dispatcher.Dispatch(action);
         }
@@ -160,9 +160,26 @@ public partial class Home
         NavigationManager.NavigateTo($"edit/{slug}");
     }
 
-    private void DoTogglePublic(Guid postKey, bool isPublic)
+    private void DoTogglePublicVisibility(Guid postKey, bool toggle)
     {
-        var action = new TogglePostPublicityAction(postKey, isPublic);
+        var action = new ChangePostVisibilityAction(postKey, toggle ? PostVisibilityStatus.Public : PostVisibilityStatus.Private);
         Dispatcher.Dispatch(action);
     }
+
+    private static Color GetPublicationChipColor(PostPublicationStatus status)
+        => status switch
+        {
+            PostPublicationStatus.Approved => Color.Primary,
+            PostPublicationStatus.Pending => Color.Default,
+            PostPublicationStatus.Rejected => Color.Error,
+            _ => Color.Dark
+        };
+
+    private static string? GetTogglePublicIcon(PostVisibilityStatus status)
+        => status switch
+        {
+            PostVisibilityStatus.Public => Icons.Material.Filled.VisibilityOff,
+            PostVisibilityStatus.Private => Icons.Material.Filled.Visibility,
+            _ => Icons.Material.Filled.DisabledByDefault
+        };
 }

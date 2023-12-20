@@ -6,7 +6,7 @@ namespace StoryBlog.Web.Client.Blog.Models;
 [DataContract]
 public sealed class CreatedPostModel : PostDetailsModel
 {
-    public PostModelStatus Status
+    public PostPublicationStatus Status
     {
         get;
         set;
