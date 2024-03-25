@@ -10,20 +10,30 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
-    <PackageReference Include="MSTest.TestAdapter" Version="3.1.1" />
-    <PackageReference Include="MSTest.TestFramework" Version="3.1.1" />
-    <PackageReference Include="coverlet.collector" Version="6.0.0">
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="7.0.17" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.9.0" />
+    <PackageReference Include="MSTest.TestAdapter" Version="3.2.2" />
+    <PackageReference Include="MSTest.TestFramework" Version="3.2.2" />
+    <PackageReference Include="coverlet.collector" Version="6.0.2">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Web\Microservices\Comments\StoryBlog.Web.Microservices.Comments.Application\StoryBlog.Web.Microservices.Comments.Application.csproj" />
+    <ProjectReference Include="..\..\Web\Microservices\Comments\StoryBlog.Web.Microservices.Comments.Domain\StoryBlog.Web.Microservices.Comments.Domain.csproj" />
+    <ProjectReference Include="..\..\Web\Microservices\Comments\StoryBlog.Web.Microservices.Comments.Infrastructure\StoryBlog.Web.Microservices.Comments.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Web\Microservices\Comments\StoryBlog.Web.Microservices.Comments.Shared\StoryBlog.Web.Microservices.Comments.Shared.csproj" />
+    <ProjectReference Include="..\..\Web\Microservices\Comments\StoryBlog.Web.Microservices.Comments.WebApi\StoryBlog.Web.Microservices.Comments.WebApi.csproj" />
     <ProjectReference Include="..\..\Web\Microservices\Posts\StoryBlog.Web.Microservices.Posts.Application\StoryBlog.Web.Microservices.Posts.Application.csproj" />
     <ProjectReference Include="..\..\Web\Microservices\Posts\StoryBlog.Web.Microservices.Posts.Domain\StoryBlog.Web.Microservices.Posts.Domain.csproj" />
     <ProjectReference Include="..\..\Web\Microservices\Posts\StoryBlog.Web.Microservices.Posts.Infrastructure\StoryBlog.Web.Microservices.Posts.Infrastructure.csproj" />
     <ProjectReference Include="..\..\Web\Microservices\Posts\StoryBlog.Web.Microservices.Posts.WebApi\StoryBlog.Web.Microservices.Posts.WebApi.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Controllers\Comments\" />
   </ItemGroup>
 
 </Project>

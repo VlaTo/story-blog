@@ -64,6 +64,13 @@ public class AsyncGenericRepository<TEntity, TDbContext> : IAsyncGenericReposito
         return query.ExecuteDeleteAsync(cancellationToken);
     }
 
+    public Task RemoveRangeAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken = default)
+    {
+        var collection = context.Set<TEntity>();
+        collection.RemoveRange(entities);
+        return Task.CompletedTask;
+    }
+
     public Task SaveChangesAsync(CancellationToken cancellationToken = default)
     {
         return context.SaveChangesAsync(cancellationToken);

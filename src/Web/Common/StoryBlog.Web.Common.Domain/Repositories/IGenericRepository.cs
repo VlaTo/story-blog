@@ -16,8 +16,10 @@ public interface IAsyncGenericRepository<TEntity> : IAsyncDisposable where TEnti
     Task<bool> ExistsAsync(ISpecification<TEntity> specification, CancellationToken cancellationToken = default);
     
     Task RemoveAsync(TEntity entity, CancellationToken cancellationToken = default);
-
-    Task<int> RemoveAsync(ISpecification<TEntity> specification, CancellationToken cancellationToken = default);
     
+    Task<int> RemoveAsync(ISpecification<TEntity> specification, CancellationToken cancellationToken = default);
+
+    Task RemoveRangeAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken = default);
+
     Task SaveChangesAsync(CancellationToken cancellationToken = default);
 }

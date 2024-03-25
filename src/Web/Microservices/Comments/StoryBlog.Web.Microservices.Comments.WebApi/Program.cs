@@ -26,6 +26,7 @@ builder.Configuration.AddJsonFile("appsettings.dbconnection.json", optional: tru
 
 builder.Services.AddInfrastructureServices();
 builder.Services.AddInfrastructureDbContext(builder.Configuration, "Database");
+
 builder.Services.AddScoped<ILocationProvider, AspNetCoreLocationProvider>();
 builder.Services
     .AddOptions<CommentLocationProviderOptions>()
