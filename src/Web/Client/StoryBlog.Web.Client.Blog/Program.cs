@@ -29,10 +29,12 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 
 builder.Services
     .AddOptions<HttpClientOptions>()
-    .Configure(options =>
-    {
-        builder.Configuration.Bind(HttpClientOptions.SectionName, options);
-    });
+    .BindConfiguration(HttpClientOptions.SectionName)
+    ;
+builder.Services
+    .AddOptions<MessageHubOptions>()
+    .BindConfiguration(MessageHubOptions.SectionName)
+    ;
 builder.Services.AddOidcAuthentication(options =>
 {
     // Configure your authentication provider options here.

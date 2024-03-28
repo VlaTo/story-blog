@@ -4,7 +4,7 @@ using StoryBlog.Web.Common.Domain;
 using StoryBlog.Web.Common.Events;
 using StoryBlog.Web.Microservices.Posts.Domain.Specifications;
 
-namespace StoryBlog.Web.Microservices.Posts.Application.MessageBus.Handlers;
+namespace StoryBlog.Web.Microservices.Posts.Infrastructure.MessageBus.Handlers;
 
 public sealed class NewCommentCreatedEventHandler : IConsumer<NewCommentCreatedEvent>
 {

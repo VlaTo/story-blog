@@ -1,4 +1,4 @@
-﻿namespace StoryBlog.Web.Hub.Common.Messages;
+﻿namespace StoryBlog.Web.MessageHub.Messages;
 
 public interface IHubMessage
 {

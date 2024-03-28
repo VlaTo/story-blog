@@ -1,4 +1,4 @@
-﻿using StoryBlog.Web.Hub.Common.Messages;
+﻿using StoryBlog.Web.MessageHub.Messages;
 
 namespace StoryBlog.Web.MessageHub;
 

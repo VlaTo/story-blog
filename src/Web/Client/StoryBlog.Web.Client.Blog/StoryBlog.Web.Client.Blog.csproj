@@ -36,6 +36,7 @@
     <ProjectReference Include="..\..\Identity\StoryBlog.Web.Common.Identity.Permission\StoryBlog.Web.Common.Identity.Permission.csproj" />
     <ProjectReference Include="..\..\MessageHub\StoryBlog.Web.MessageHub.Client\StoryBlog.Web.MessageHub.Client.csproj" />
     <ProjectReference Include="..\..\Microservices\Comments\StoryBlog.Web.Microservices.Comments.Shared\StoryBlog.Web.Microservices.Comments.Shared.csproj" />
+    <ProjectReference Include="..\..\Microservices\Communication\StoryBlog.Web.Microservices.Communication.Shared\StoryBlog.Web.Microservices.Communication.Shared.csproj" />
     <ProjectReference Include="..\..\Microservices\Posts\StoryBlog.Web.Microservices.Posts.Shared\StoryBlog.Web.Microservices.Posts.Shared.csproj" />
     <ProjectReference Include="..\StoryBlog.Web.Blazor.Markdown.Editor\StoryBlog.Web.Blazor.Markdown.Editor.csproj" />
     <ProjectReference Include="..\StoryBlog.Web.Client.Core\StoryBlog.Web.Client.Core.csproj" />

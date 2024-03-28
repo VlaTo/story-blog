@@ -1,45 +1,34 @@
 ﻿using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using SlimMessageBus;
 using StoryBlog.Web.Common.Application;
 using StoryBlog.Web.Common.Application.Extensions;
 using StoryBlog.Web.Common.Domain;
-using StoryBlog.Web.Common.Events;
 using StoryBlog.Web.Common.Identity.Permission;
 using StoryBlog.Web.Common.Result;
-using StoryBlog.Web.MessageHub;
-using StoryBlog.Web.Microservices.Posts.Application.Configuration;
 using StoryBlog.Web.Microservices.Posts.Application.Extensions;
+using StoryBlog.Web.Microservices.Posts.Application.Services;
 using StoryBlog.Web.Microservices.Posts.Domain.Entities;
-using StoryBlog.Web.Microservices.Posts.Shared.Messages;
 
 namespace StoryBlog.Web.Microservices.Posts.Application.Handlers.DeletePost;
 
+// ReSharper disable once UnusedMember.Global
 public sealed class DeletePostHandler : PostHandlerBase, MediatR.IRequestHandler<DeletePostCommand, Result<Success, NotFound>>
 {
     private readonly IAsyncUnitOfWork context;
-    private readonly IMessageHub messageHub;
-    private readonly IMessageBus messageBus;
-    private readonly PostsCreateOptions options;
+    private readonly IMessageBusNotification notification;
 
     public DeletePostHandler(
         IAsyncUnitOfWork context,
-        IMessageHub messageHub,
-        IMessageBus messageBus,
-        IOptionsSnapshot<PostsCreateOptions> options,
+        IMessageBusNotification notification,
         ILogger<DeletePostHandler> logger)
         : base(logger)
     {
         this.context = context;
-        this.messageHub = messageHub;
-        this.messageBus = messageBus;
-        this.options = options.Value;
+        this.notification = notification;
     }
 
     public async Task<Result<Success, NotFound>> Handle(DeletePostCommand request, CancellationToken cancellationToken)
     {
         var authenticated = request.CurrentUser.IsAuthenticated();
-        string? author;
 
         if (authenticated)
         {
@@ -48,7 +37,7 @@ public sealed class DeletePostHandler : PostHandlerBase, MediatR.IRequestHandler
                 return new Exception("Insufficient permissions");
             }
 
-            author = request.CurrentUser.GetSubject();
+            var author = request.CurrentUser.GetSubject();
 
             if (String.IsNullOrEmpty(author))
             {
@@ -74,7 +63,7 @@ public sealed class DeletePostHandler : PostHandlerBase, MediatR.IRequestHandler
                 await repository.RemoveAsync(post, cancellationToken);
                 await repository.SaveChangesAsync(cancellationToken);
 
-                await NotifyAsync(post, cancellationToken);
+                await notification.PostDeletedAsync(post.Key, post.AuthorId, cancellationToken);
 
                 return Success.Instance;
             }
@@ -85,25 +74,25 @@ public sealed class DeletePostHandler : PostHandlerBase, MediatR.IRequestHandler
         }
     }
 
-    private async Task NotifyAsync(Post post, CancellationToken cancellationToken)
+/*    private async Task NotifyAsync(Post post, CancellationToken cancellationToken)
     {
         var tasks = new List<Task>();
 
         if (options.PublishRemovedEvent)
         {
             var removedEvent = new PostRemovedEvent(post.Key, post.CreateAt, post.AuthorId);
-            tasks.Add(messageBus.Publish(removedEvent, cancellationToken: cancellationToken));
+            tasks.Add(notification.Publish(removedEvent, cancellationToken: cancellationToken));
         }
 
         if (!String.IsNullOrEmpty(options.HubChannelName))
         {
             var removedMessage = new PostRemovedMessage(post.Key, post.Slug.Text);
-            tasks.Add(messageHub.SendAsync(/*options.HubChannelName*/"post.removed", removedMessage, cancellationToken));
+            tasks.Add(messageHub.SendAsync(options.HubChannelName "post.removed", removedMessage, cancellationToken));
         }
 
         if (0 < tasks.Count)
         {
             await Task.WhenAll(tasks);
         }
-    }
+    }*/
 }

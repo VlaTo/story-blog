@@ -29,8 +29,10 @@
     <PackageReference Include="Hashids.net" Version="1.7.0" />
     <PackageReference Include="MediatR" Version="12.2.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="7.0.17" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.1" />
-    <PackageReference Include="SlimMessageBus" Version="2.0.2" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="7.0.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -39,7 +41,6 @@
     <ProjectReference Include="..\..\..\Common\StoryBlog.Web.Common.Result\StoryBlog.Web.Common.Result.csproj" />
     <ProjectReference Include="..\..\..\Common\StoryBlog.Web.Common\StoryBlog.Web.Common.csproj" />
     <ProjectReference Include="..\..\..\Identity\StoryBlog.Web.Common.Identity.Permission\StoryBlog.Web.Common.Identity.Permission.csproj" />
-    <ProjectReference Include="..\..\..\MessageHub\StoryBlog.Web.MessageHub.Server\StoryBlog.Web.MessageHub.Server.csproj" />
     <ProjectReference Include="..\StoryBlog.Web.Microservices.Posts.Domain\StoryBlog.Web.Microservices.Posts.Domain.csproj" />
     <ProjectReference Include="..\StoryBlog.Web.Microservices.Posts.Shared\StoryBlog.Web.Microservices.Posts.Shared.csproj" />
   </ItemGroup>

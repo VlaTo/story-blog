@@ -14,7 +14,7 @@ public static class ServiceCollectionExtensions
     {
         services.AddScoped<IAsyncUnitOfWork, AsyncUnitOfWork<CommentsDbContext>>();
 
-        services.AddScoped<NewPostCreatedEventHandler>();
+        services.AddScoped<NewPostCreatedMessageConsumer>();
         services.AddScoped<PostPublishedEventHandler>();
         services.AddScoped<PostRemovedEventHandler>();
 

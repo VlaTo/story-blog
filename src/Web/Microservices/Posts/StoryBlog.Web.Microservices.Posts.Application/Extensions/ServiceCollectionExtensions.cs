@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using StoryBlog.Web.Microservices.Posts.Application.Configuration;
 using StoryBlog.Web.Microservices.Posts.Application.Services;
 
@@ -11,11 +12,11 @@ public static class ServiceCollectionExtensions
         services
             .AddOptions<PostsCreateOptions>()
             .BindConfiguration("PostsCreate")
-            .PostConfigure(options =>
+            .PostConfigure((PostsCreateOptions options, ILogger<PostsCreateOptions> logger) =>
             {
-                if (String.IsNullOrEmpty(options.HubChannelName))
+                if (options.ApprovePostWhenCreated)
                 {
-                    ;
+                    logger.LogWarning("New post will be approved when created");
                 }
             });
 

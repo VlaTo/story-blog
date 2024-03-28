@@ -1,22 +1,21 @@
+using Asp.Versioning;
+using Asp.Versioning.ApiExplorer;
 using Microsoft.IdentityModel.Logging;
 using SlimMessageBus.Host;
+using SlimMessageBus.Host.RabbitMQ;
 using SlimMessageBus.Host.Serialization.SystemTextJson;
 using StoryBlog.Web.Common.Events;
 using StoryBlog.Web.Identity.Extensions;
 using StoryBlog.Web.Microservices.Posts.Application.Contexts;
 using StoryBlog.Web.Microservices.Posts.Application.Extensions;
-using StoryBlog.Web.Microservices.Posts.Application.MessageBus.Handlers;
 using StoryBlog.Web.Microservices.Posts.Infrastructure.Extensions;
 using StoryBlog.Web.Microservices.Posts.WebApi.Configuration;
 using StoryBlog.Web.Microservices.Posts.WebApi.Core;
 using StoryBlog.Web.Microservices.Posts.WebApi.Extensions;
 using System.Diagnostics.Tracing;
 using System.Net.Mime;
-using Asp.Versioning;
-using Asp.Versioning.ApiExplorer;
-using SlimMessageBus.Host.RabbitMQ;
-using StoryBlog.Web.MessageHub.Server.Extensions;
-using StoryBlog.Web.MessageHub.Services;
+using StoryBlog.Web.Microservices.Posts.Infrastructure.MessageBus.Handlers;
+using StoryBlog.Web.Microservices.Posts.Shared.Messages;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -44,7 +43,7 @@ builder.Services.AddAutoMapper(configuration =>
     configuration.AddWebApiMappingProfiles();
 });
 builder.Services.AddSlimMessageBus(buses => buses
-    .Consume<NewCommentCreatedEvent>(x => x
+    /*.Consume<NewCommentCreatedEvent>(x => x
         .Queue("storyblog.comment.created", durable: true)
         .PerMessageScopeEnabled(enabled: true)
         .ExchangeBinding("storyblog.direct", routingKey: "storyblog.comment.created")
@@ -61,18 +60,18 @@ builder.Services.AddSlimMessageBus(buses => buses
         .PerMessageScopeEnabled(enabled: true)
         .ExchangeBinding("storyblog.direct", routingKey: "storyblog.comment.removed")
         .WithConsumer<CommentRemovedEventHandler>()
-    )
-    .Produce<NewPostCreatedEvent>(x => x
-        .Exchange("storyblog.direct", ExchangeType.Direct)
+    )*/
+    .Produce<NewPostCreatedMessage>(x => x
+        .Exchange("storyblog.direct", exchangeType: ExchangeType.Fanout, durable: true)
         .RoutingKeyProvider((a, b) => "storyblog.post.created")
     )
-    .Produce<PostPublishedEvent>(x => x
+    /*.Produce<PostPublishedEvent>(x => x
         .Exchange("storyblog.direct", ExchangeType.Direct)
         .RoutingKeyProvider((a, b) => "storyblog.post.published")
-    )
-    .Produce<PostRemovedEvent>(x => x
-        .Exchange("storyblog.direct", ExchangeType.Direct)
-        .RoutingKeyProvider((a, b) => "storyblog.post.removed")
+    )*/
+    .Produce<PostDeletedMessage>(x => x
+        .Exchange("storyblog.direct", exchangeType: ExchangeType.Fanout, durable: true)
+        .RoutingKeyProvider((a, b) => "storyblog.post.deleted")
     )
     .WithProviderRabbitMQ(rabbit =>
     {
@@ -95,16 +94,6 @@ builder.Services.AddCors(options => options
     )
 );
 builder.Services.AddStoryBlogAuthentication();
-builder.Services.AddMessageHub(options =>
-{
-    options.Path = "/notification";
-    options.Serializer = new JsonHubMessageSerializer();
-
-    options.Channel("Test", channel =>
-    {
-        channel.AddHubMessageHandlers();
-    });
-});
 builder.Services.AddControllers();
 builder.Services
     .AddApiVersioning(options =>
@@ -149,8 +138,8 @@ app
     .UseCors()
     .UseAuthentication()
     .UseAuthorization()
-    .UseMessageHub()
     ;
+
 app
     .MapControllers()
     .WithOpenApi()

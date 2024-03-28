@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using StoryBlog.Web.Hub.Common.Messages;
 using StoryBlog.Web.MessageHub.Services;
 using System.Net.WebSockets;
+using StoryBlog.Web.MessageHub.Messages;
 using MessageHubOptions = StoryBlog.Web.MessageHub.Server.Configuration.MessageHubOptions;
 
 namespace StoryBlog.Web.MessageHub.Server.Services;
@@ -45,7 +45,7 @@ internal sealed class MessageHubService
 
     public void RemoveSocketHandler(MessageHubHandler handler)
     {
-        for (int index = 0; index < handlers.Count; index++)
+        for (var index = 0; index < handlers.Count; index++)
         {
             if (ReferenceEquals(handlers[index], handler))
             {

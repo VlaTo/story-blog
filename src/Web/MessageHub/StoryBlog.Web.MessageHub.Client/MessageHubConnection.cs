@@ -1,6 +1,6 @@
 ﻿using System.Net.WebSockets;
 using System.Text;
-using StoryBlog.Web.Hub.Common.Messages;
+using StoryBlog.Web.MessageHub.Messages;
 using StoryBlog.Web.MessageHub.Services;
 
 namespace StoryBlog.Web.MessageHub.Client;

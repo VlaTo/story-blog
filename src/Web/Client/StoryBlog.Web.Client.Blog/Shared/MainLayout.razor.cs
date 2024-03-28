@@ -1,7 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Options;
 using MudBlazor;
+using StoryBlog.Web.Client.Blog.Configuration;
 using StoryBlog.Web.MessageHub.Client;
+using StoryBlog.Web.Microservices.Communication.Shared.Messages;
 using StoryBlog.Web.Microservices.Posts.Shared.Messages;
 
 namespace StoryBlog.Web.Client.Blog.Shared;
@@ -15,6 +18,13 @@ public partial class MainLayout
     private ISnackbar Snackbar
     {
         get; 
+        set;
+    }
+
+    [Inject]
+    private IOptions<MessageHubOptions> Options
+    {
+        get;
         set;
     }
 
@@ -38,7 +48,7 @@ public partial class MainLayout
         await base.OnInitializedAsync();
 
         hub = new MessageHubConnectionBuilder()
-            .WithUrl("ws://localhost:5033/notification")
+            .WithUrl(Options.Value.ConnectionUri)
             .Build();
 
         hub.On<NewPostPublishedMessage>("post.created", message =>

@@ -7,22 +7,4 @@ public sealed class PostsCreateOptions
         get; 
         set;
     }
-
-    public bool PublishCreatedEvent
-    {
-        get;
-        set;
-    }
-
-    public bool PublishRemovedEvent
-    {
-        get;
-        set;
-    }
-
-    public string HubChannelName
-    {
-        get;
-        set;
-    }
 }

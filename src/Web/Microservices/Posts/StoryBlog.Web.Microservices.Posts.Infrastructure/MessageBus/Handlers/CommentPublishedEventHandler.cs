@@ -3,7 +3,7 @@ using SlimMessageBus;
 using StoryBlog.Web.Common.Domain;
 using StoryBlog.Web.Common.Events;
 
-namespace StoryBlog.Web.Microservices.Posts.Application.MessageBus.Handlers;
+namespace StoryBlog.Web.Microservices.Posts.Infrastructure.MessageBus.Handlers;
 
 public sealed class CommentPublishedEventHandler : IConsumer<CommentPublishedEvent>
 {

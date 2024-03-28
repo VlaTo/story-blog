@@ -15,6 +15,7 @@ using StoryBlog.Web.Microservices.Comments.WebApi.Configuration;
 using StoryBlog.Web.Microservices.Comments.WebApi.Core;
 using StoryBlog.Web.Microservices.Comments.WebApi.Extensions;
 using System.Net.Mime;
+using StoryBlog.Web.Microservices.Posts.Shared.Messages;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -41,13 +42,13 @@ builder.Services.AddAutoMapper(configuration =>
     configuration.AddWebApiMappingProfiles();
 });
 builder.Services.AddSlimMessageBus(buses => buses
-    .Consume<NewPostCreatedEvent>(x => x
-        .Queue("storyblog.post.created", durable: true)
+    .Consume<NewPostCreatedMessage>(x => x
+        .Queue("storyblog.comments.post.created", durable: true)
         .PerMessageScopeEnabled(enabled: true)
         .ExchangeBinding("storyblog.direct", routingKey: "storyblog.post.created")
-        .WithConsumer<NewPostCreatedEventHandler>()
+        .WithConsumer<NewPostCreatedMessageConsumer>()
     )
-    .Consume<PostPublishedEvent>(x => x
+    /*.Consume<PostPublishedEvent>(x => x
         .Queue("storyblog.post.published", durable: true)
         .PerMessageScopeEnabled(enabled: true)
         .ExchangeBinding("storyblog.direct", routingKey: "storyblog.post.published")
@@ -70,7 +71,7 @@ builder.Services.AddSlimMessageBus(buses => buses
     .Produce<CommentRemovedEvent>(x => x
         .Exchange("storyblog.direct", exchangeType: ExchangeType.Direct)
         .RoutingKeyProvider((a, b) => "storyblog.comment.removed")
-    )
+    )*/
     .WithProviderRabbitMQ(rabbit =>
     {
         rabbit.ConnectionString = "amqp://admin:admin@localhost:5672";

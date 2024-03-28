@@ -1,42 +1,35 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using SlimMessageBus;
 using StoryBlog.Web.Common.Application;
 using StoryBlog.Web.Common.Application.Extensions;
 using StoryBlog.Web.Common.Domain;
 using StoryBlog.Web.Common.Domain.Entities;
-using StoryBlog.Web.Common.Events;
 using StoryBlog.Web.Common.Identity.Permission;
 using StoryBlog.Web.Common.Result;
-using StoryBlog.Web.MessageHub;
 using StoryBlog.Web.Microservices.Posts.Application.Configuration;
 using StoryBlog.Web.Microservices.Posts.Application.Extensions;
 using StoryBlog.Web.Microservices.Posts.Application.Services;
 using StoryBlog.Web.Microservices.Posts.Domain.Entities;
-using StoryBlog.Web.Microservices.Posts.Shared.Messages;
 
 namespace StoryBlog.Web.Microservices.Posts.Application.Handlers.CreatePost;
 
 public sealed class CreatePostHandler : HandlerBase, MediatR.IRequestHandler<CreatePostCommand, Result<Guid>>
 {
     private readonly IAsyncUnitOfWork context;
-    private readonly IMessageHub messageHub;
-    private readonly IMessageBus messageBus;
+    private readonly IMessageBusNotification notification;
     private readonly IBlogPostProcessingManager postProcessingManager;
     private readonly PostsCreateOptions options;
     private readonly ILogger<CreatePostHandler> logger;
 
     public CreatePostHandler(
         IAsyncUnitOfWork context,
-        IMessageHub messageHub,
-        IMessageBus messageBus,
+        IMessageBusNotification notification,
         IBlogPostProcessingManager postProcessingManager,
         IOptions<PostsCreateOptions> options,
         ILogger<CreatePostHandler> logger)
     {
         this.context = context;
-        this.messageHub = messageHub;
-        this.messageBus = messageBus;
+        this.notification = notification;
         this.postProcessingManager = postProcessingManager;
         this.options = options.Value;
         this.logger = logger;
@@ -97,12 +90,15 @@ public sealed class CreatePostHandler : HandlerBase, MediatR.IRequestHandler<Cre
             await repository.SaveChangesAsync(cancellationToken);
         }
 
-        await NotifyAsync(post, cancellationToken);
+        await Task.WhenAll(
+            postProcessingManager.QueuePostProcessingTaskAsync(post.Key, cancellationToken),
+            notification.NewPostCreatedAsync(post.Key, post.CreateAt, post.AuthorId, cancellationToken)
+        );
 
         return post.Key;
     }
 
-    private async Task NotifyAsync(Post post, CancellationToken cancellationToken)
+    /*private Task NotifyAsync(Post post, CancellationToken cancellationToken)
     {
         var tasks = new List<Task>
         {
@@ -118,12 +114,9 @@ public sealed class CreatePostHandler : HandlerBase, MediatR.IRequestHandler<Cre
         if (!String.IsNullOrEmpty(options.HubChannelName))
         {
             var publishedMessage = new NewPostPublishedMessage(post.Key, post.Slug.Text);
-            tasks.Add(messageHub.SendAsync(/*options.HubChannelName*/ "post.created", publishedMessage, cancellationToken));
+            tasks.Add(messageHub.SendAsync(options.HubChannelName "post.created", publishedMessage, cancellationToken));
         }
 
-        if (0 < tasks.Count)
-        {
-            await Task.WhenAll(tasks);
-        }
-    }
+        return Task.WhenAll(tasks);
+    }*/
 }
