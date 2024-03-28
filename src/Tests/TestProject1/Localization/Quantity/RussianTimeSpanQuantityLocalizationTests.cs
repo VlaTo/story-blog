@@ -1,7 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StoryBlog.Web.Client.Core.Localization;
-using StoryBlog.Web.Microservices.Posts.Application.Services;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace TestProject1.Localization.Quantity;
 
@@ -40,7 +38,7 @@ public sealed class RussianTimeSpanQuantityLocalizationTests : TimeSpanQuantityL
     public override Task ActAsync()
     {
         var dateTime = new DateTime(2024, 3, 8, 13, 04, 23);
-        var elapsed = TimeSpan.FromDays(48.0d);
+        var elapsed = TimeSpan.FromDays(48.0d); // ~1,5 месяца
 
         QuanityString = TimeSpanQuantity.GetQuantityString(dateTime, elapsed);
 
@@ -52,6 +50,6 @@ public sealed class RussianTimeSpanQuantityLocalizationTests : TimeSpanQuantityL
     [TestMethod]
     public void Test()
     {
-        Assert.AreEqual("48 месяцев назад", QuanityString);
+        Assert.AreEqual("1 месяц назад", QuanityString);
     }
 }
