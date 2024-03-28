@@ -1,6 +1,6 @@
-﻿namespace StoryBlog.Web.Client.Blog.Core;
+﻿namespace StoryBlog.Web.Client.Core;
 
-internal abstract class DisposableBase : IDisposable
+public abstract class DisposableBase : IDisposable
 {
     private bool disposed;
 
@@ -36,7 +36,7 @@ internal abstract class DisposableBase : IDisposable
 /// <summary>
 /// 
 /// </summary>
-internal sealed class Disposable : DisposableBase
+public sealed class Disposable : DisposableBase
 {
     private readonly Action disposeAction;
 
@@ -52,7 +52,7 @@ internal sealed class Disposable : DisposableBase
 /// 
 /// </summary>
 /// <typeparam name="T"></typeparam>
-internal sealed class Disposable<T> : DisposableBase
+public sealed class Disposable<T> : DisposableBase
 {
     private readonly Action<T> disposeAction;
 
@@ -75,7 +75,7 @@ internal sealed class Disposable<T> : DisposableBase
 /// </summary>
 /// <typeparam name="T1"></typeparam>
 /// <typeparam name="T2"></typeparam>
-internal sealed class Disposable<T1, T2> : DisposableBase
+public sealed class Disposable<T1, T2> : DisposableBase
 {
     private readonly Action<T1, T2> disposeAction;
 

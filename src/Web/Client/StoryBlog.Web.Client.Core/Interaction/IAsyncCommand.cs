@@ -1,6 +1,6 @@
 ﻿using System.Windows.Input;
 
-namespace StoryBlog.Web.Client.Blog.Core;
+namespace StoryBlog.Web.Client.Core.Interaction;
 
 public interface IAsyncCommand : ICommand
 {

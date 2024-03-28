@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using MudBlazor.Utilities;
-using StoryBlog.Web.Client.Blog.Core;
+using StoryBlog.Web.Client.Core;
 
 namespace StoryBlog.Web.Client.Blog.Components;
 

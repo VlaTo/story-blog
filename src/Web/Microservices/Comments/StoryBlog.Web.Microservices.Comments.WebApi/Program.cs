@@ -134,7 +134,6 @@ if (app.Environment.IsDevelopment())
 
 app
     .UseHttpsRedirection()
-    //.UseApiVersioning()
     .UseCors()
     .UseAuthentication()
     .UseAuthorization();

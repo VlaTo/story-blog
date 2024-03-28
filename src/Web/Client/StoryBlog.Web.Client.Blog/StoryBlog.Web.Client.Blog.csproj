@@ -38,6 +38,7 @@
     <ProjectReference Include="..\..\Microservices\Comments\StoryBlog.Web.Microservices.Comments.Shared\StoryBlog.Web.Microservices.Comments.Shared.csproj" />
     <ProjectReference Include="..\..\Microservices\Posts\StoryBlog.Web.Microservices.Posts.Shared\StoryBlog.Web.Microservices.Posts.Shared.csproj" />
     <ProjectReference Include="..\StoryBlog.Web.Blazor.Markdown.Editor\StoryBlog.Web.Blazor.Markdown.Editor.csproj" />
+    <ProjectReference Include="..\StoryBlog.Web.Client.Core\StoryBlog.Web.Client.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>

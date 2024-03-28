@@ -1,6 +1,6 @@
-﻿namespace StoryBlog.Web.Client.Blog.Core;
+﻿namespace StoryBlog.Web.Client.Core;
 
-internal sealed class StringValueCollection
+public sealed class StringValueCollection
 {
     public static readonly StringValueCollection Empty;
 

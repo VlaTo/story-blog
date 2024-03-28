@@ -1,9 +1,9 @@
-﻿namespace StoryBlog.Web.Client.Blog.Core;
+﻿namespace StoryBlog.Web.Client.Core;
 
 /// <summary>
 /// 
 /// </summary>
-internal static class Stub
+public static class Stub
 {
     public static Action Nop => () => { };
 
@@ -14,7 +14,7 @@ internal static class Stub
 /// 
 /// </summary>
 /// <typeparam name="T"></typeparam>
-internal static class Stub<T>
+public static class Stub<T>
 {
     public static Action<T> Nop => _ => { };
 

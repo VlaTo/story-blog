@@ -127,15 +127,39 @@
     <value>{0:G} дней назад, в {1:t}</value>
   </data>
   <data name="CommentAge_months" xml:space="preserve">
-    <value>{0:G}</value>
+    <value>[0,"Months"] назад</value>
   </data>
   <data name="CommentAge_today" xml:space="preserve">
     <value>сегодня, в {1:t}</value>
   </data>
   <data name="CommentAge_years" xml:space="preserve">
-    <value>{0:G}</value>
+    <value>[{0:G}, "Years"] лет назад</value>
   </data>
   <data name="CommentAge_yesterday" xml:space="preserve">
     <value>вчера, в {1:t}</value>
+  </data>
+  <data name="Months_few" xml:space="preserve">
+    <value>{0:D} месяца</value>
+  </data>
+  <data name="Months_many" xml:space="preserve">
+    <value>{0:D} месяцев</value>
+  </data>
+  <data name="Months_one" xml:space="preserve">
+    <value>{0:D} месяц</value>
+  </data>
+  <data name="Months_other" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Months_zero" xml:space="preserve">
+    <value>{0:D}</value>
+  </data>
+  <data name="Years_few" xml:space="preserve">
+    <value>года</value>
+  </data>
+  <data name="Years_many" xml:space="preserve">
+    <value>лет</value>
+  </data>
+  <data name="Years_one" xml:space="preserve">
+    <value>год</value>
   </data>
 </root>

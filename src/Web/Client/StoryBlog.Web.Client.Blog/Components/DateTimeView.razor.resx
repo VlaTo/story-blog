@@ -127,7 +127,7 @@
     <value>{0:g}</value>
   </data>
   <data name="CommentAge_months" xml:space="preserve">
-    <value>{0:g}</value>
+    <value>{0:D}</value>
   </data>
   <data name="CommentAge_today" xml:space="preserve">
     <value>{0:g}</value>

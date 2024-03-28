@@ -1,7 +1,5 @@
-﻿using System.Collections.Specialized;
-using System.Diagnostics;
+﻿using StoryBlog.Web.Client.Core;
 using System.Security.Claims;
-using StoryBlog.Web.Client.Blog.Core;
 
 namespace StoryBlog.Web.Client.Blog.Extensions;
 

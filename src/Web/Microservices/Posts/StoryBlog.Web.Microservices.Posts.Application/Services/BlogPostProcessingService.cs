@@ -21,6 +21,8 @@ internal sealed class BlogPostProcessingService : IProcessor<IBackgroundTask>
 
     public async Task ProcessAsync(IBackgroundTask backgroundTask, CancellationToken cancellationToken)
     {
+        logger.LogDebug($"Running task: '{backgroundTask.TaskKey:B}' for post: '{backgroundTask.PostKey:B}'");
+
         await using (var repository = context.GetRepository<Post>())
         {
             var specification = new FindPostByKeySpecification(backgroundTask.PostKey, false);
@@ -28,7 +30,8 @@ internal sealed class BlogPostProcessingService : IProcessor<IBackgroundTask>
 
             if (null == post)
             {
-                return ;
+                logger.LogDebug($"No post with key: {backgroundTask.PostKey:B}'");
+                return;
             }
 
             post.Content.Brief = post.Content.Text;

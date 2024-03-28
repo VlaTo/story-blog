@@ -1,8 +1,8 @@
-﻿using StoryBlog.Web.Client.Blog.Extensions;
+﻿using StoryBlog.Web.Client.Core.Extensions;
 
-namespace StoryBlog.Web.Client.Blog.Core;
+namespace StoryBlog.Web.Client.Core;
 
-internal sealed class TaskRunner
+public sealed class TaskRunner
 {
     public static readonly TaskRunner Instance;
 
@@ -28,7 +28,7 @@ internal sealed class TaskRunner
         {
             var context = synchronizationContext ?? new SynchronizationContext();
             var completion = new NotifyTaskCompletion(task, context, completeCallback, cancellationToken);
-            
+
             collection.Add(completion);
             completion.RunAsync().FireAndForget();
         }

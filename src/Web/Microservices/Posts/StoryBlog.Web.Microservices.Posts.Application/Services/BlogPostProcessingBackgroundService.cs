@@ -2,12 +2,10 @@
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using StoryBlog.Web.Common.Domain;
-using StoryBlog.Web.Common.Result;
-using StoryBlog.Web.Microservices.Posts.Application.Models;
+using StoryBlog.Web.Common.Result.Extensions;
+using StoryBlog.Web.Microservices.Posts.Application.Extensions;
 using StoryBlog.Web.Microservices.Posts.Domain.Entities;
 using StoryBlog.Web.Microservices.Posts.Domain.Specifications;
-using System.Threading.Channels;
-using StoryBlog.Web.Common.Result.Extensions;
 
 namespace StoryBlog.Web.Microservices.Posts.Application.Services;
 
@@ -30,17 +28,17 @@ internal sealed class BlogPostProcessingBackgroundService : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        logger.LogDebug("Starting background processing");
+        logger.LogBackgroundProcessingStarting();
 
         try
         {
             // queue persisted backgroundTask from store
             await QueuePendingTasksAsync(cancellationToken: stoppingToken);
 
-            // main propessing loop
+            // main processing loop
             while (true)
             {
-                logger.LogDebug("Ready to process");
+                logger.LogBackgroundProcessingReady();
 
                 var result = await queue.DequeueTaskAsync(cancellationToken: stoppingToken);
 
@@ -56,21 +54,44 @@ internal sealed class BlogPostProcessingBackgroundService : BackgroundService
 
                 var backgroundTask = result.Item1!;
 
+                logger.LogCreatingServicesScope(backgroundTask);
+
                 await using (var scope = serviceProvider.CreateAsyncScope())
                 {
-                    await using (var token = await StartProcessingAsync(scope.ServiceProvider, backgroundTask, cancellationToken: stoppingToken))
-                    {
-                        var service = ActivatorUtilities.CreateInstance<BlogPostProcessingService>(scope.ServiceProvider);
-
-                        await service.ProcessAsync(backgroundTask, stoppingToken);
-                        await token.UpdateStatusAsync(PostProcessStatus.Success, cancellationToken: stoppingToken);
-                    }
+                    await ProcessBackgroundTaskAsync(backgroundTask, scope, stoppingToken);
                 }
             }
         }
         finally
         {
-            logger.LogDebug("Background processing completed");
+            logger.LogBackgroundProcessingCompleted();
+        }
+    }
+
+    private async Task ProcessBackgroundTaskAsync(IBackgroundTask backgroundTask, AsyncServiceScope scope, CancellationToken cancellationToken)
+    {
+        try
+        {
+            logger.LogStartBackgroundTaskProcessing(backgroundTask);
+
+            await using (var token = await StartProcessingAsync(scope.ServiceProvider, backgroundTask, cancellationToken))
+            {
+                var service = ActivatorUtilities.CreateInstance<BlogPostProcessingService>(scope.ServiceProvider);
+
+                await service.ProcessAsync(backgroundTask, cancellationToken);
+                await token.UpdateStatusAsync(PostProcessStatus.Success, cancellationToken: cancellationToken);
+            }
+
+            logger.LogBackgroundTaskProcessed(backgroundTask);
+        }
+        catch (Exception exception)
+        {
+            var exceptionInfo = System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(exception);
+            logger.LogBackgroundTaskProcessingFailed(backgroundTask, exception, exceptionInfo);
+        }
+        finally
+        {
+            logger.LogBackgroundTaskProcessingCompleted(backgroundTask);
         }
     }
 

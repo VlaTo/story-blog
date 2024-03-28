@@ -5,6 +5,7 @@ using StoryBlog.Web.Microservices.Comments.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.AspNetCore.Http;
+using StoryBlog.Web.Microservices.Comments.Domain.Specifications;
 using StoryBlog.Web.Microservices.Comments.Shared.Models;
 using TestProject1.Extensions;
 
@@ -106,6 +107,29 @@ public sealed class ListAllCommentsTests : TestComments
         {
             Assert.AreEqual(PostKey, commentModel.PostKey);
             Assert.IsTrue(CommentKeys.Contains(commentModel.Key));
+        }
+    }
+
+    [TestMethod]
+    public async Task HasAllCommentsInDb()
+    {
+        var comments = Result!.AsResult<OkObjectResult>().Value.As<ListAllResponse>()!.Comments;
+
+        await using (var uow = ActivatorUtilities.GetServiceOrCreateInstance<IAsyncUnitOfWork>(ServiceProvider))
+        {
+            await using (var repository = uow.GetRepository<Comment>())
+            {
+                foreach (var comment in comments)
+                {
+                    var entity = await repository.FindAsync(
+                        new CommentOnlySpecification(comment.Key),
+                        CancellationToken.None
+                    );
+                    Assert.AreEqual(PostKey, entity.PostKey);
+                    Assert.AreEqual(comment.Key, entity.Key);
+                    Assert.AreEqual(comment.AuthorId, entity.AuthorId);
+                }
+            }
         }
     }
 }

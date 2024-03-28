@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Localization;
 using MudBlazor;
 using MudBlazor.Utilities;
-using StoryBlog.Web.Client.Blog.Core;
+using StoryBlog.Web.Client.Core.Localization;
 
 namespace StoryBlog.Web.Client.Blog.Components;
 
@@ -40,14 +40,14 @@ public partial class DateTimeView
     {
         get;
         set;
-    }
+    } = Typo.body1;
 
     [Parameter]
     public DateTimeMode Mode
     {
         get;
         set;
-    }
+    } = DateTimeMode.DateOnly;
 
     [Parameter(CaptureUnmatchedValues = true)]
     public Dictionary<string, object?> UserAttributes
@@ -61,12 +61,6 @@ public partial class DateTimeView
     {
         get;
         set;
-    }
-
-    public DateTimeView()
-    {
-        Typo = Typo.body1;
-        Mode = DateTimeMode.DateOnly;
     }
 
     private string FormatValue()

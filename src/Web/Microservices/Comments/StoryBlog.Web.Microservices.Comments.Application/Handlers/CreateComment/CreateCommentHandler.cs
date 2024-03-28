@@ -5,6 +5,7 @@ using StoryBlog.Web.Common.Application.Extensions;
 using StoryBlog.Web.Common.Domain;
 using StoryBlog.Web.Common.Domain.Entities;
 using StoryBlog.Web.Common.Events;
+using StoryBlog.Web.Common.Identity.Permission;
 using StoryBlog.Web.Common.Result;
 using StoryBlog.Web.Microservices.Comments.Domain.Entities;
 using StoryBlog.Web.Microservices.Comments.Domain.Specifications;
@@ -29,16 +30,37 @@ public sealed class CreateCommentHandler : HandlerBase, MediatR.IRequestHandler<
 
     public async Task<Result<Guid>> Handle(CreateCommentCommand request, CancellationToken cancellationToken)
     {
-        var userId = request.CurrentUser.GetSubject();
+        var authenticated = request.CurrentUser.IsAuthenticated();
+        string? authorId;
+
+        if (authenticated)
+        {
+            if (false == request.CurrentUser.HasPermission(Permissions.Comments.Create))
+            {
+                return new Exception("Insufficient permissions");
+            }
+
+            authorId = request.CurrentUser.GetSubject();
+
+            if (String.IsNullOrEmpty(authorId))
+            {
+                return new Exception("No user identity");
+            }
+        }
+        else
+        {
+            return new Exception("User not authenticated");
+        }
+
         var comment = new Comment
         {
             PostKey = request.Details.PostKey,
             Text = request.Details.Text,
             PublicationStatus = PublicationStatus.Approved,
-            AuthorId = userId
+            AuthorId = authorId
         };
 
-        var approvedCommentsCount = 0;
+        int approvedCommentsCount;
 
         await using (var repository = context.GetRepository<Comment>())
         {
@@ -51,7 +73,7 @@ public sealed class CreateCommentHandler : HandlerBase, MediatR.IRequestHandler<
 
                 if (null == parentComment)
                 {
-                    return new Result<Guid>(new Exception("No parent"));
+                    return new Exception("No parent");
                 }
 
                 parentComment.Comments.Add(comment);
@@ -68,12 +90,12 @@ public sealed class CreateCommentHandler : HandlerBase, MediatR.IRequestHandler<
             comment.Key,
             comment.PostKey,
             comment.Parent?.Key,
-            userId,
+            authorId,
             approvedCommentsCount
         );
 
         await messageBus.Publish(commentEvent, cancellationToken: cancellationToken);
 
-        return new Result<Guid>(comment.Key);
+        return comment.Key;
     }
 }

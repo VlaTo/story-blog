@@ -20,7 +20,7 @@ public sealed class CreateCommentRequest
     }
 
     [Required]
-    [StringLength(255)]
+    [StringLength(1024)]
     public string Text
     {
         get;

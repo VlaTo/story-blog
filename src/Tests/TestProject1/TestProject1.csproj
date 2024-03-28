@@ -21,6 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Web\Client\StoryBlog.Web.Client.Core\StoryBlog.Web.Client.Core.csproj" />
     <ProjectReference Include="..\..\Web\Microservices\Comments\StoryBlog.Web.Microservices.Comments.Application\StoryBlog.Web.Microservices.Comments.Application.csproj" />
     <ProjectReference Include="..\..\Web\Microservices\Comments\StoryBlog.Web.Microservices.Comments.Domain\StoryBlog.Web.Microservices.Comments.Domain.csproj" />
     <ProjectReference Include="..\..\Web\Microservices\Comments\StoryBlog.Web.Microservices.Comments.Infrastructure\StoryBlog.Web.Microservices.Comments.Infrastructure.csproj" />
