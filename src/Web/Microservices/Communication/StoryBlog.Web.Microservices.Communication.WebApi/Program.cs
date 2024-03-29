@@ -7,18 +7,18 @@ using SlimMessageBus.Host.Serialization.SystemTextJson;
 using StoryBlog.Web.Identity.Extensions;
 using StoryBlog.Web.MessageHub.Server.Extensions;
 using StoryBlog.Web.MessageHub.Services;
+using StoryBlog.Web.Microservices.Comments.Events;
 using StoryBlog.Web.Microservices.Communication.Application.Contexts;
 using StoryBlog.Web.Microservices.Communication.Application.Extensions;
-using StoryBlog.Web.Microservices.Communication.Application.MessageHub.Handlers;
 using StoryBlog.Web.Microservices.Communication.Infrastructure.Extensions;
-using StoryBlog.Web.Microservices.Communication.Shared.Messages;
 using StoryBlog.Web.Microservices.Communication.WebApi.Configuration;
 using StoryBlog.Web.Microservices.Communication.WebApi.Extensions;
-using StoryBlog.Web.Microservices.Posts.Shared.Messages;
+using StoryBlog.Web.Microservices.Communication.WebApi.MessageBus.Consumers;
+using StoryBlog.Web.Microservices.Posts.Events;
 using System.Diagnostics.Tracing;
 using System.Net.Mime;
-using StoryBlog.Web.Microservices.Communication.WebApi.MessageBus.Consumers;
-using NewPostCreatedMessageConsumer = StoryBlog.Web.Microservices.Communication.WebApi.MessageBus.Consumers.NewPostCreatedMessageConsumer;
+using StoryBlog.Web.Microservices.Communication.MessageHub.Messages;
+using StoryBlog.Web.Microservices.Communication.WebApi.MessageHub.Handlers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,12 +31,7 @@ builder.Configuration.AddJsonFile("appsettings.dbconnection.json", optional: tru
 builder.Services.AddApplicationServices();
 builder.Services.AddInfrastructureServices();
 builder.Services.AddWebServices();
-//builder.Services.AddInfrastructureDbContext(builder.Configuration, "Database");
 
-/*builder.Services.AddScoped<ILocationProvider, AspNetCoreLocationProvider>();
-builder.Services
-    .AddOptions<CommentLocationProviderOptions>()
-    .BindConfiguration(CommentLocationProviderOptions.SectionName);*/
 builder.Services.AddMediatR(options =>
 {
     options.RegisterServicesFromAssembly(typeof(ICommunicationDbContext).Assembly);
@@ -47,20 +42,26 @@ builder.Services.AddAutoMapper(configuration =>
     configuration.AddWebApiMappingProfiles();
 });
 builder.Services.AddSlimMessageBus(buses => buses
-    .Consume<NewPostCreatedMessage>(x => x
+    .Consume<NewPostCreatedEvent>(x => x
         .Queue("storyblog.communication.post.created", durable: true)
         .PerMessageScopeEnabled(enabled: true)
-        .ExchangeBinding("storyblog.direct", routingKey: "storyblog.post.created")
-        .WithConsumer<NewPostCreatedMessageConsumer>()
+        .ExchangeBinding("storyblog.fanout", routingKey: "storyblog.post.created")
+        .WithConsumer<NewPostCreatedEventConsumer>()
+    )
+    .Consume<NewCommentCreatedEvent>(x => x
+        .Queue("storyblog.communication.comment.created", durable: true)
+        .PerMessageScopeEnabled(enabled: true)
+        .ExchangeBinding("storyblog.fanout", routingKey: "storyblog.comment.created")
+        .WithConsumer<NewCommentCreatedEventConsumer>()
     )
     /*.Consume<PostDeletedMessage>(x => x
         .Queue("storyblog.communication.post.deleted", durable: true)
         .PerMessageScopeEnabled(enabled: true)
         .ExchangeBinding("storyblog.direct", routingKey: "storyblog.post.deleted")
         .WithConsumer<PostDeletedMessageConsumer>()
-    )*/
+    )
 
-    /*.Consume<PostPublishedEvent>(x => x
+    .Consume<PostPublishedEvent>(x => x
         .Queue("storyblog.post.published", durable: true)
         .PerMessageScopeEnabled(enabled: true)
         .ExchangeBinding("storyblog.direct", routingKey: "storyblog.post.published")
@@ -113,8 +114,8 @@ builder.Services.AddMessageHub(options =>
 
     options.Channel("Test", channel =>
         channel
-            .AddMessage<NewPostPublishedMessage>()
-            .WithHandler<NewPostPublishedMessageHandler>()
+            .AddMessage<ClientActionRequestedHubMessage>()
+            .WithHandler<ClientActionRequestedEventHandler>()
     );
 });
 

@@ -23,14 +23,17 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\Identity\StoryBlog.Web.Identity\StoryBlog.Web.Identity.csproj" />
     <ProjectReference Include="..\..\..\MessageHub\StoryBlog.Web.MessageHub.Server\StoryBlog.Web.MessageHub.Server.csproj" />
-    <ProjectReference Include="..\..\Posts\StoryBlog.Web.Microservices.Posts.Shared\StoryBlog.Web.Microservices.Posts.Shared.csproj" />
+    <ProjectReference Include="..\..\Comments\StoryBlog.Web.Microservices.Comments.Events\StoryBlog.Web.Microservices.Comments.Events.csproj" />
+    <ProjectReference Include="..\..\Posts\StoryBlog.Web.Microservices.Posts.Events\StoryBlog.Web.Microservices.Posts.Events.csproj" />
     <ProjectReference Include="..\StoryBlog.Web.Microservices.Communication.Application\StoryBlog.Web.Microservices.Communication.Application.csproj" />
     <ProjectReference Include="..\StoryBlog.Web.Microservices.Communication.Infrastructure\StoryBlog.Web.Microservices.Communication.Infrastructure.csproj" />
+    <ProjectReference Include="..\StoryBlog.Web.Microservices.Communication.MessageHub\StoryBlog.Web.Microservices.Communication.MessageHub.csproj" />
     <ProjectReference Include="..\StoryBlog.Web.Microservices.Communication.Shared\StoryBlog.Web.Microservices.Communication.Shared.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Controllers\" />
+    <Folder Include="MessageHub\Handlers\" />
   </ItemGroup>
 
 </Project>

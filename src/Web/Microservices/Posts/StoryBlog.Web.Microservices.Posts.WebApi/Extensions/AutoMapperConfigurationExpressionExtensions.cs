@@ -1,4 +1,8 @@
 ﻿using AutoMapper;
+using StoryBlog.Web.Microservices.Comments.Events;
+using StoryBlog.Web.Microservices.Posts.Application.Handlers.NewCommentCreated;
+using StoryBlog.Web.Microservices.Posts.Application.Models;
+using StoryBlog.Web.Microservices.Posts.Events;
 using StoryBlog.Web.Microservices.Posts.Shared.Models;
 
 namespace StoryBlog.Web.Microservices.Posts.WebApi.Extensions;
@@ -7,12 +11,7 @@ internal static class AutoMapperConfigurationExpressionExtensions
 {
     public static IMapperConfigurationExpression AddWebApiMappingProfiles(this IMapperConfigurationExpression expression)
     {
-        /*expression.CreateMap<Application.Models.AllowedActions, AllowedActions>()
-            .ForMember(destination => destination.CanEdit, source => source.MapFrom(x => x.CanEdit))
-            .ForMember(destination => destination.CanDelete, source => source.MapFrom(x => x.CanDelete))
-            ;*/
-
-        expression.CreateMap<Application.Models.Brief, BriefModel>()
+        expression.CreateMap<Brief, BriefModel>()
             .ForMember(destination => destination.Key, source => source.MapFrom(x => x.Key))
             .ForMember(destination => destination.Title, source => source.MapFrom(x => x.Title))
             .ForMember(destination => destination.Slug, source => source.MapFrom(x => x.Slug))
@@ -25,7 +24,7 @@ internal static class AutoMapperConfigurationExpressionExtensions
             .ForMember(destination => destination.CreatedAt, source => source.MapFrom(x => x.CreatedAt))
             ;
 
-        expression.CreateMap<Application.Models.Post, PostModel>()
+        expression.CreateMap<Post, PostModel>()
             .ForMember(destination => destination.Key, source => source.MapFrom(x => x.Key))
             .ForMember(destination => destination.Title, source => source.MapFrom(x => x.Title))
             .ForMember(destination => destination.Slug, source => source.MapFrom(x => x.Slug))
@@ -35,12 +34,12 @@ internal static class AutoMapperConfigurationExpressionExtensions
             .ForMember(destination => destination.CreatedAt, source => source.MapFrom(x => x.CreatedAt))
             ;
 
-        expression.CreateMap<Application.Models.PostDetails, CreatedPostModel>()
+        expression.CreateMap<PostDetails, CreatedPostModel>()
             .ForMember(destination => destination.Title, source => source.MapFrom(x => x.Title))
             .ForMember(destination => destination.Slug, source => source.MapFrom(x => x.Slug))
             ;
 
-        expression.CreateMap<Application.Models.Post, CreatedPostModel>()
+        expression.CreateMap<Post, CreatedPostModel>()
             .ForMember(destination => destination.Key, source => source.MapFrom(x => x.Key))
             .ForMember(destination => destination.Title, source => source.MapFrom(x => x.Title))
             .ForMember(destination => destination.Slug, source => source.MapFrom(x => x.Slug))
@@ -48,13 +47,26 @@ internal static class AutoMapperConfigurationExpressionExtensions
             .ForMember(destination => destination.CreatedAt, source => source.MapFrom(x => x.CreatedAt))
             ;
 
-        expression.CreateMap<Application.Models.PostReference, PostReferenceModel>()
+        expression.CreateMap<PostReference, PostReferenceModel>()
             .ForMember(destination => destination.Key, source => source.MapFrom(x => x.Key))
             .ForMember(destination => destination.Title, source => source.MapFrom(x => x.Title))
             .ForMember(destination => destination.Slug, source => source.MapFrom(x => x.Slug))
             .ForMember(destination => destination.Status, source => source.MapFrom(x => x.PublicationStatus))
             ;
 
+        expression.CreateMap<NewPostCreated, NewPostCreatedEvent>()
+            .ForMember(destination => destination.PostKey, source => source.MapFrom(x => x.Key))
+            .ForMember(destination => destination.Created, source => source.MapFrom(x => x.CreatedAt))
+            .ForMember(destination => destination.AuthorId, source => source.MapFrom(x => x.AuthorId))
+            .ForMember(destination => destination.Slug, source => source.MapFrom(x => x.Slug))
+            ;
+
+        expression.CreateMap<NewCommentCreatedEvent, NewCommentCreatedCommand>()
+            .ForMember(destination => destination.Key, source => source.MapFrom(x => x.Key))
+            .ForMember(destination => destination.PostKey, source => source.MapFrom(x => x.PostKey))
+            .ForMember(destination => destination.ParentKey, source => source.MapFrom(x => x.ParentKey))
+            .ForMember(destination => destination.ApprovedCommentsCount, source => source.MapFrom(x => x.ApprovedCommentsCount))
+            ;
         return expression;
     }
 }

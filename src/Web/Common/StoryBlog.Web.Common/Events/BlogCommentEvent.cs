@@ -8,22 +8,6 @@
 /// <param name="ParentKey"></param>
 /// <param name="CreateAt"></param>
 /// <param name="Author"></param>
-public sealed record NewCommentCreatedEvent(
-    Guid Key,
-    Guid PostKey,
-    Guid? ParentKey,
-    string? Author,
-    int ApprovedCommentsCount
-);
-
-/// <summary>
-/// 
-/// </summary>
-/// <param name="Key"></param>
-/// <param name="PostKey"></param>
-/// <param name="ParentKey"></param>
-/// <param name="CreateAt"></param>
-/// <param name="Author"></param>
 public sealed record CommentPublishedEvent(
     Guid Key,
     Guid PostKey,

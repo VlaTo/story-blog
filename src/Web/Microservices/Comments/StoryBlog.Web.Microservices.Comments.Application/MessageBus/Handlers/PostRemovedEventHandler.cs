@@ -1,12 +1,6 @@
-﻿using Microsoft.Extensions.Logging;
-using SlimMessageBus;
-using StoryBlog.Web.Common.Domain;
-using StoryBlog.Web.Common.Events;
-using StoryBlog.Web.Microservices.Comments.Domain.Specifications;
+﻿namespace StoryBlog.Web.Microservices.Comments.Application.MessageBus.Handlers;
 
-namespace StoryBlog.Web.Microservices.Comments.Application.MessageBus.Handlers;
-
-public sealed class PostRemovedEventHandler : IConsumer<PostRemovedEvent>
+/*public sealed class PostRemovedEventHandler : IConsumer<PostRemovedEvent>
 {
     private readonly IAsyncUnitOfWork context;
     private readonly ILogger<NewPostCreatedMessageConsumer> logger;
@@ -31,4 +25,4 @@ public sealed class PostRemovedEventHandler : IConsumer<PostRemovedEvent>
             await repository.SaveChangesAsync(CancellationToken.None);
         }
     }
-}
+}*/

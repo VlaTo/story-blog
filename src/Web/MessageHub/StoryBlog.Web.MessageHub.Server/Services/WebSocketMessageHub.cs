@@ -16,7 +16,7 @@ internal sealed class WebSocketMessageHub : IMessageHub
         this.logger = logger;
     }
 
-    public Task SendAsync<TMessage>(string channel, TMessage message, CancellationToken cancellationToken = default)
+    public Task PublishAsync<TMessage>(string channel, TMessage message, CancellationToken cancellationToken = default)
         where TMessage : IHubMessage
     {
         logger.LogDebug($"Sending message to channel: {channel}");

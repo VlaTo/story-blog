@@ -15,6 +15,6 @@ public interface IMessageHub
     /// <param name="message"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task SendAsync<TMessage>(string channel, TMessage message, CancellationToken cancellationToken = default)
+    Task PublishAsync<TMessage>(string channel, TMessage message, CancellationToken cancellationToken = default)
         where TMessage : IHubMessage;
 }

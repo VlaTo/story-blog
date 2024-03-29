@@ -15,6 +15,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\Common\StoryBlog.Web.Common.Application\StoryBlog.Web.Common.Application.csproj" />
     <ProjectReference Include="..\..\..\Common\StoryBlog.Web.Common.Domain\StoryBlog.Web.Common.Domain.csproj" />
+    <ProjectReference Include="..\..\..\Common\StoryBlog.Web.Common.Result\StoryBlog.Web.Common.Result.csproj" />
     <ProjectReference Include="..\..\..\Common\StoryBlog.Web.Common\StoryBlog.Web.Common.csproj" />
     <ProjectReference Include="..\..\..\MessageHub\StoryBlog.Web.MessageHub\StoryBlog.Web.MessageHub.csproj" />
     <ProjectReference Include="..\StoryBlog.Web.Microservices.Communication.Domain\StoryBlog.Web.Microservices.Communication.Domain.csproj" />
@@ -23,6 +24,9 @@
 
   <ItemGroup>
     <Folder Include="Contexts\" />
+    <Folder Include="Handlers\NewPostCreated\" />
+    <Folder Include="Services\" />
+    <Folder Include="Models\" />
   </ItemGroup>
 
 </Project>

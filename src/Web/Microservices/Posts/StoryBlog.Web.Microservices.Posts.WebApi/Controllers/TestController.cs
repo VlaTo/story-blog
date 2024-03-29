@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SlimMessageBus;
-using StoryBlog.Web.Common.Events;
 using StoryBlog.Web.Microservices.Posts.Application.Services;
+using StoryBlog.Web.Microservices.Posts.Events;
 
 namespace StoryBlog.Web.Microservices.Posts.WebApi.Controllers;
 
@@ -21,7 +21,13 @@ public class TestController : ControllerBase
     [HttpPost(nameof(SendPostCreatedEvent))]
     public async Task<IActionResult> SendPostCreatedEvent([FromServices] IMessageBus messageBus)
     {
-        var createdEvent = new NewPostCreatedEvent(Guid.NewGuid(), DateTimeOffset.Now, "Test");
+        var createdEvent = new NewPostCreatedEvent
+        {
+            PostKey = Guid.NewGuid(),
+            Slug = "test-post-slug",
+            AuthorId = "Test",
+            Created = DateTimeOffset.Now
+        };
 
         await messageBus.Publish(createdEvent, cancellationToken: HttpContext.RequestAborted);
 

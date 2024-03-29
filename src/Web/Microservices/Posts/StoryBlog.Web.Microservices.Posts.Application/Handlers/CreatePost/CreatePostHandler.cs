@@ -8,8 +8,10 @@ using StoryBlog.Web.Common.Identity.Permission;
 using StoryBlog.Web.Common.Result;
 using StoryBlog.Web.Microservices.Posts.Application.Configuration;
 using StoryBlog.Web.Microservices.Posts.Application.Extensions;
+using StoryBlog.Web.Microservices.Posts.Application.Models;
 using StoryBlog.Web.Microservices.Posts.Application.Services;
 using StoryBlog.Web.Microservices.Posts.Domain.Entities;
+using Post = StoryBlog.Web.Microservices.Posts.Domain.Entities.Post;
 
 namespace StoryBlog.Web.Microservices.Posts.Application.Handlers.CreatePost;
 
@@ -90,9 +92,11 @@ public sealed class CreatePostHandler : HandlerBase, MediatR.IRequestHandler<Cre
             await repository.SaveChangesAsync(cancellationToken);
         }
 
+        var newPostCreated = new NewPostCreated(post.Id, post.Key, post.Slug.Text, post.CreateAt, post.AuthorId);
+
         await Task.WhenAll(
             postProcessingManager.QueuePostProcessingTaskAsync(post.Key, cancellationToken),
-            notification.NewPostCreatedAsync(post.Key, post.CreateAt, post.AuthorId, cancellationToken)
+            notification.NewPostCreatedAsync(newPostCreated, cancellationToken)
         );
 
         return post.Key;

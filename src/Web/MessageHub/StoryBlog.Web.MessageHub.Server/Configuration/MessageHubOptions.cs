@@ -7,31 +7,25 @@ public sealed class MessageHubOptions
     public Dictionary<string, MessageHubChannel> Channels
     {
         get;
-        private set;
-    }
+    } = new();
 
-    public string Path
+    public required string Path
     {
         get;
         set;
     }
 
-    public IHubMessageSerializer Serializer
+    public required IHubMessageSerializer Serializer
     {
         get;
         set;
     }
 
-    public MessageHubOptions()
-    {
-        Channels = new Dictionary<string, MessageHubChannel>();
-    }
-
-    public MessageHubOptions Channel(string channel, Action<MessageHubChannelBuilder> channelAction)
+    public MessageHubOptions Channel(string channel, Action<MessageHubChannelBuilder> channelConfiguration)
     {
         var channelBuilder = new MessageHubChannelBuilder(channel);
 
-        channelAction.Invoke(channelBuilder);
+        channelConfiguration.Invoke(channelBuilder);
 
         Channels.Add(
             channel,

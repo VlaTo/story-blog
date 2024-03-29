@@ -7,18 +7,17 @@ public class MessageBusOptions
     {
         get;
         set;
-    }
+    } = false;
 
     public bool PublishRemovedEvent
     {
         get;
         set;
-    }
+    } = false;
 
-    public string HubChannelName
+    public bool PublishPostPostProcessedEvent
     {
         get;
         set;
-    }
-
+    } = false;
 }

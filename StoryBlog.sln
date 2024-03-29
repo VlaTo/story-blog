@@ -97,15 +97,21 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StoryBlog.Web.Client.Core",
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Communication", "Communication", "{7AE9E9D3-12A5-4167-AC48-864C61C019B9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StoryBlog.Web.Microservices.Communication.WebApi", "src\Web\Microservices\Communication\StoryBlog.Web.Microservices.Communication.WebApi\StoryBlog.Web.Microservices.Communication.WebApi.csproj", "{7E262DD8-350F-4D56-B746-22AC1FB505FF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StoryBlog.Web.Microservices.Communication.WebApi", "src\Web\Microservices\Communication\StoryBlog.Web.Microservices.Communication.WebApi\StoryBlog.Web.Microservices.Communication.WebApi.csproj", "{7E262DD8-350F-4D56-B746-22AC1FB505FF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StoryBlog.Web.Microservices.Communication.Domain", "src\Web\Microservices\Communication\StoryBlog.Web.Microservices.Communication.Domain\StoryBlog.Web.Microservices.Communication.Domain.csproj", "{B24D9463-65AB-497C-B565-009FBCFEBE86}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StoryBlog.Web.Microservices.Communication.Domain", "src\Web\Microservices\Communication\StoryBlog.Web.Microservices.Communication.Domain\StoryBlog.Web.Microservices.Communication.Domain.csproj", "{B24D9463-65AB-497C-B565-009FBCFEBE86}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StoryBlog.Web.Microservices.Communication.Application", "src\Web\Microservices\Communication\StoryBlog.Web.Microservices.Communication.Application\StoryBlog.Web.Microservices.Communication.Application.csproj", "{673659A6-75BE-4038-98AA-9A605E1001A0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StoryBlog.Web.Microservices.Communication.Application", "src\Web\Microservices\Communication\StoryBlog.Web.Microservices.Communication.Application\StoryBlog.Web.Microservices.Communication.Application.csproj", "{673659A6-75BE-4038-98AA-9A605E1001A0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StoryBlog.Web.Microservices.Communication.Infrastructure", "src\Web\Microservices\Communication\StoryBlog.Web.Microservices.Communication.Infrastructure\StoryBlog.Web.Microservices.Communication.Infrastructure.csproj", "{A09155CE-D6B1-49DB-92C9-96CFFA5A7E18}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StoryBlog.Web.Microservices.Communication.Infrastructure", "src\Web\Microservices\Communication\StoryBlog.Web.Microservices.Communication.Infrastructure\StoryBlog.Web.Microservices.Communication.Infrastructure.csproj", "{A09155CE-D6B1-49DB-92C9-96CFFA5A7E18}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StoryBlog.Web.Microservices.Communication.Shared", "src\Web\Microservices\Communication\StoryBlog.Web.Microservices.Communication.Shared\StoryBlog.Web.Microservices.Communication.Shared.csproj", "{52B90E99-E04C-435E-892C-0216253C2B26}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StoryBlog.Web.Microservices.Communication.Shared", "src\Web\Microservices\Communication\StoryBlog.Web.Microservices.Communication.Shared\StoryBlog.Web.Microservices.Communication.Shared.csproj", "{52B90E99-E04C-435E-892C-0216253C2B26}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StoryBlog.Web.Microservices.Communication.MessageHub", "src\Web\Microservices\Communication\StoryBlog.Web.Microservices.Communication.MessageHub\StoryBlog.Web.Microservices.Communication.MessageHub.csproj", "{BC4D5C9B-DBE8-4B16-8493-7F9EEDEEB1B1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StoryBlog.Web.Microservices.Comments.Events", "src\Web\Microservices\Comments\StoryBlog.Web.Microservices.Comments.Events\StoryBlog.Web.Microservices.Comments.Events.csproj", "{C05B7A93-79C7-458A-B524-8C7A35043253}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StoryBlog.Web.Microservices.Posts.Events", "src\Web\Microservices\Posts\StoryBlog.Web.Microservices.Posts.Events\StoryBlog.Web.Microservices.Posts.Events.csproj", "{2923FDE3-9B29-4D4E-988A-B3A219243371}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -257,6 +263,18 @@ Global
 		{52B90E99-E04C-435E-892C-0216253C2B26}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{52B90E99-E04C-435E-892C-0216253C2B26}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{52B90E99-E04C-435E-892C-0216253C2B26}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BC4D5C9B-DBE8-4B16-8493-7F9EEDEEB1B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BC4D5C9B-DBE8-4B16-8493-7F9EEDEEB1B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BC4D5C9B-DBE8-4B16-8493-7F9EEDEEB1B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BC4D5C9B-DBE8-4B16-8493-7F9EEDEEB1B1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C05B7A93-79C7-458A-B524-8C7A35043253}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C05B7A93-79C7-458A-B524-8C7A35043253}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C05B7A93-79C7-458A-B524-8C7A35043253}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C05B7A93-79C7-458A-B524-8C7A35043253}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2923FDE3-9B29-4D4E-988A-B3A219243371}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2923FDE3-9B29-4D4E-988A-B3A219243371}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2923FDE3-9B29-4D4E-988A-B3A219243371}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2923FDE3-9B29-4D4E-988A-B3A219243371}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -306,6 +324,9 @@ Global
 		{673659A6-75BE-4038-98AA-9A605E1001A0} = {7AE9E9D3-12A5-4167-AC48-864C61C019B9}
 		{A09155CE-D6B1-49DB-92C9-96CFFA5A7E18} = {7AE9E9D3-12A5-4167-AC48-864C61C019B9}
 		{52B90E99-E04C-435E-892C-0216253C2B26} = {7AE9E9D3-12A5-4167-AC48-864C61C019B9}
+		{BC4D5C9B-DBE8-4B16-8493-7F9EEDEEB1B1} = {7AE9E9D3-12A5-4167-AC48-864C61C019B9}
+		{C05B7A93-79C7-458A-B524-8C7A35043253} = {92ABFCC3-3CAA-46AB-8B04-20DE41555628}
+		{2923FDE3-9B29-4D4E-988A-B3A219243371} = {CC9FD65D-640E-4040-9434-F3B664F9C7C1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D7123581-6A53-434A-BD68-656AB44693B4}

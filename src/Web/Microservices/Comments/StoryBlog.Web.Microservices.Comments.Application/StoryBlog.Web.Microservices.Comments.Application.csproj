@@ -10,7 +10,6 @@
     <PackageReference Include="AutoMapper" Version="13.0.1" />
     <PackageReference Include="MediatR" Version="12.2.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.1" />
-    <PackageReference Include="SlimMessageBus" Version="2.0.2" />
   </ItemGroup>
 
   <ItemGroup>
@@ -19,6 +18,8 @@
     <Folder Include="Handlers\CreateComment\" />
     <Folder Include="Handlers\GetComment\" />
     <Folder Include="Contexts\" />
+    <Folder Include="Handlers\NewPostCreated\" />
+    <Folder Include="Services\" />
   </ItemGroup>
 
   <ItemGroup>

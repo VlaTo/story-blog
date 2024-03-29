@@ -1,21 +1,21 @@
-using System.Diagnostics.Tracing;
 using Asp.Versioning;
 using Asp.Versioning.ApiExplorer;
 using Microsoft.IdentityModel.Logging;
 using SlimMessageBus.Host;
 using SlimMessageBus.Host.RabbitMQ;
 using SlimMessageBus.Host.Serialization.SystemTextJson;
-using StoryBlog.Web.Common.Events;
 using StoryBlog.Web.Identity.Extensions;
 using StoryBlog.Web.Microservices.Comments.Application.Contexts;
 using StoryBlog.Web.Microservices.Comments.Application.Extensions;
-using StoryBlog.Web.Microservices.Comments.Application.MessageBus.Handlers;
 using StoryBlog.Web.Microservices.Comments.Infrastructure.Extensions;
 using StoryBlog.Web.Microservices.Comments.WebApi.Configuration;
-using StoryBlog.Web.Microservices.Comments.WebApi.Core;
 using StoryBlog.Web.Microservices.Comments.WebApi.Extensions;
+using StoryBlog.Web.Microservices.Comments.WebApi.MessageBus.Consumers;
+using StoryBlog.Web.Microservices.Posts.Events;
+using System.Diagnostics.Tracing;
 using System.Net.Mime;
-using StoryBlog.Web.Microservices.Posts.Shared.Messages;
+using StoryBlog.Web.Microservices.Comments.Events;
+using CommentPublishedEvent = StoryBlog.Web.Microservices.Comments.Events.CommentPublishedEvent;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,11 +27,8 @@ builder.Configuration.AddJsonFile("appsettings.dbconnection.json", optional: tru
 
 builder.Services.AddInfrastructureServices();
 builder.Services.AddInfrastructureDbContext(builder.Configuration, "Database");
+builder.Services.AddWebApiServices();
 
-builder.Services.AddScoped<ILocationProvider, AspNetCoreLocationProvider>();
-builder.Services
-    .AddOptions<CommentLocationProviderOptions>()
-    .BindConfiguration(CommentLocationProviderOptions.SectionName);
 builder.Services.AddMediatR(options =>
 {
     options.RegisterServicesFromAssembly(typeof(ICommentsDbContext).Assembly);
@@ -42,10 +39,18 @@ builder.Services.AddAutoMapper(configuration =>
     configuration.AddWebApiMappingProfiles();
 });
 builder.Services.AddSlimMessageBus(buses => buses
-    .Consume<NewPostCreatedMessage>(x => x
+    .Produce<NewCommentCreatedEvent>(x => x
+        .Exchange("storyblog.fanout", exchangeType: ExchangeType.Fanout, durable: true)
+        .RoutingKeyProvider((a, b) => "storyblog.comment.created")
+    )
+    .Produce<CommentPublishedEvent>(x => x
+        .Exchange("storyblog.fanout", exchangeType: ExchangeType.Fanout, durable: true)
+        .RoutingKeyProvider((a, b) => "storyblog.comment.published")
+    )
+    .Consume<NewPostCreatedEvent>(x => x
         .Queue("storyblog.comments.post.created", durable: true)
         .PerMessageScopeEnabled(enabled: true)
-        .ExchangeBinding("storyblog.direct", routingKey: "storyblog.post.created")
+        .ExchangeBinding("storyblog.fanout", routingKey: "storyblog.post.created")
         .WithConsumer<NewPostCreatedMessageConsumer>()
     )
     /*.Consume<PostPublishedEvent>(x => x
@@ -59,12 +64,8 @@ builder.Services.AddSlimMessageBus(buses => buses
         .PerMessageScopeEnabled(enabled: true)
         .ExchangeBinding("storyblog.direct", routingKey: "storyblog.post.removed")
         .WithConsumer<PostRemovedEventHandler>()
-    )
-    .Produce<NewCommentCreatedEvent>(x => x
-        .Exchange("storyblog.direct", exchangeType: ExchangeType.Direct)
-        .RoutingKeyProvider((a, b) => "storyblog.comment.created")
-    )
-    .Produce<CommentPublishedEvent>(x => x
+    )*/
+    /*.Produce<CommentPublishedEvent>(x => x
         .Exchange("storyblog.direct", exchangeType: ExchangeType.Direct)
         .RoutingKeyProvider((a, b) => "storyblog.comment.published")
     )

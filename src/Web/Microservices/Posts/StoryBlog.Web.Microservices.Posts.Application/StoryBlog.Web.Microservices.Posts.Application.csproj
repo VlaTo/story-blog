@@ -22,6 +22,7 @@
     <Folder Include="Handlers\DeletePost\" />
     <Folder Include="Handlers\GetTailPosts\" />
     <Folder Include="Handlers\TogglePublicity\" />
+    <Folder Include="Handlers\NewCommentCreated\" />
   </ItemGroup>
 
   <ItemGroup>

@@ -9,13 +9,16 @@ namespace StoryBlog.Web.Microservices.Posts.Application.Services;
 internal sealed class BlogPostProcessingService : IProcessor<IBackgroundTask>
 {
     private readonly IAsyncUnitOfWork context;
+    private readonly IMessageBusNotification notification;
     private readonly ILogger<BlogPostProcessingService> logger;
 
     public BlogPostProcessingService(
         IAsyncUnitOfWork context,
+        IMessageBusNotification notification,
         ILogger<BlogPostProcessingService> logger)
     {
         this.context = context;
+        this.notification = notification;
         this.logger = logger;
     }
 
@@ -38,5 +41,7 @@ internal sealed class BlogPostProcessingService : IProcessor<IBackgroundTask>
 
             await repository.SaveChangesAsync(cancellationToken);
         }
+
+        await notification.PublishPostProcessedAsync(backgroundTask.PostKey, cancellationToken);
     }
 }

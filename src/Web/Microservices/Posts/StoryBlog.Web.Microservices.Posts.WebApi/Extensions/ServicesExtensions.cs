@@ -1,6 +1,7 @@
 ﻿using StoryBlog.Web.Microservices.Posts.Application.Services;
 using StoryBlog.Web.Microservices.Posts.WebApi.Configuration;
-using StoryBlog.Web.Microservices.Posts.WebApi.Services;
+using StoryBlog.Web.Microservices.Posts.WebApi.MessageBus.Consumers;
+using StoryBlog.Web.Microservices.Posts.WebApi.MessageBus.Notification;
 
 namespace StoryBlog.Web.Microservices.Posts.WebApi.Extensions;
 
@@ -13,6 +14,8 @@ internal static class ServicesExtensions
             .BindConfiguration("MessageBus");
 
         services.AddScoped<IMessageBusNotification, SlimMessageBusNotification>();
+
+        services.AddScoped<NewCommentCreatedEventConsumer>();
 
         return services;
     }

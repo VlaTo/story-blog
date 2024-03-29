@@ -4,8 +4,7 @@ using Microsoft.Extensions.Options;
 using MudBlazor;
 using StoryBlog.Web.Client.Blog.Configuration;
 using StoryBlog.Web.MessageHub.Client;
-using StoryBlog.Web.Microservices.Communication.Shared.Messages;
-using StoryBlog.Web.Microservices.Posts.Shared.Messages;
+using StoryBlog.Web.Microservices.Communication.MessageHub.Messages;
 
 namespace StoryBlog.Web.Client.Blog.Shared;
 
@@ -51,17 +50,17 @@ public partial class MainLayout
             .WithUrl(Options.Value.ConnectionUri)
             .Build();
 
-        hub.On<NewPostPublishedMessage>("post.created", message =>
+        hub.On<NewPostPublishedHubMessage>("post.created", message =>
         {
             Snackbar.Add("New Post created");
             return Task.CompletedTask;
         });
 
-        hub.On<PostRemovedMessage>("post.removed", message =>
+        /*hub.On<PostRemovedMessage>("post.removed", message =>
         {
             Snackbar.Add("Post deleted");
             return Task.CompletedTask;
-        });
+        });*/
 
         await hub.ConnectAsync();
     }

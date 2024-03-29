@@ -44,7 +44,11 @@ public sealed class CommentsController : Controller
     [ProducesResponseType(typeof(ListAllResponse), StatusCodes.Status200OK)]
     [ProducesErrorResponseType(typeof(void))]
     [HttpGet("{postKey:guid:required}")]
-    public async Task<IActionResult> ListAll([FromRoute] Guid postKey, [FromQuery] Guid? parentKey = null, [FromQuery] int pageNumber = -1, [FromQuery] int pageSize = 0)
+    public async Task<IActionResult> ListAll(
+        [FromRoute] Guid postKey,
+        [FromQuery] Guid? parentKey = null,
+        [FromQuery] int pageNumber = -1,
+        [FromQuery] int pageSize = 0)
     {
         var query = new GetCommentsQuery(postKey, parentKey, pageNumber, pageSize, includeAll: true);
         var result = await mediator.Send(query);

@@ -1,30 +1,31 @@
-﻿using Microsoft.Extensions.Logging;
-using SlimMessageBus;
+﻿using MediatR;
+using Microsoft.Extensions.Logging;
 using StoryBlog.Web.Common.Application;
 using StoryBlog.Web.Common.Application.Extensions;
 using StoryBlog.Web.Common.Domain;
 using StoryBlog.Web.Common.Domain.Entities;
-using StoryBlog.Web.Common.Events;
 using StoryBlog.Web.Common.Identity.Permission;
 using StoryBlog.Web.Common.Result;
-using StoryBlog.Web.Microservices.Comments.Domain.Entities;
+using StoryBlog.Web.Microservices.Comments.Application.Models;
+using StoryBlog.Web.Microservices.Comments.Application.Services;
 using StoryBlog.Web.Microservices.Comments.Domain.Specifications;
+using Comment = StoryBlog.Web.Microservices.Comments.Domain.Entities.Comment;
 
 namespace StoryBlog.Web.Microservices.Comments.Application.Handlers.CreateComment;
 
-public sealed class CreateCommentHandler : HandlerBase, MediatR.IRequestHandler<CreateCommentCommand, Result<Guid>>
+public sealed class CreateCommentHandler : HandlerBase, IRequestHandler<CreateCommentCommand, Result<Guid>>
 {
     private readonly IAsyncUnitOfWork context;
-    private readonly IMessageBus messageBus;
+    private readonly IMessageBusNotification notification;
     private readonly ILogger<CreateCommentHandler> logger;
 
     public CreateCommentHandler(
         IAsyncUnitOfWork context,
-        IMessageBus messageBus,
+        IMessageBusNotification notification,
         ILogger<CreateCommentHandler> logger)
     {
         this.context = context;
-        this.messageBus = messageBus;
+        this.notification = notification;
         this.logger = logger;
     }
 
@@ -86,7 +87,7 @@ public sealed class CreateCommentHandler : HandlerBase, MediatR.IRequestHandler<
             approvedCommentsCount = await repository.CountAsync(countSpecification, cancellationToken);
         }
 
-        var commentEvent = new NewCommentCreatedEvent(
+        var createdComment = new NewCommentCreated(
             comment.Key,
             comment.PostKey,
             comment.Parent?.Key,
@@ -94,7 +95,7 @@ public sealed class CreateCommentHandler : HandlerBase, MediatR.IRequestHandler<
             approvedCommentsCount
         );
 
-        await messageBus.Publish(commentEvent, cancellationToken: cancellationToken);
+        await notification.NewCommentCreatedAsync(createdComment, cancellationToken);
 
         return comment.Key;
     }

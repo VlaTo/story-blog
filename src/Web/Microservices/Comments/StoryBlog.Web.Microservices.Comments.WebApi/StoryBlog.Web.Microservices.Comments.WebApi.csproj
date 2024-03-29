@@ -24,8 +24,9 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\Identity\StoryBlog.Web.Identity\StoryBlog.Web.Identity.csproj" />
-    <ProjectReference Include="..\..\Posts\StoryBlog.Web.Microservices.Posts.Shared\StoryBlog.Web.Microservices.Posts.Shared.csproj" />
+    <ProjectReference Include="..\..\Posts\StoryBlog.Web.Microservices.Posts.Events\StoryBlog.Web.Microservices.Posts.Events.csproj" />
     <ProjectReference Include="..\StoryBlog.Web.Microservices.Comments.Application\StoryBlog.Web.Microservices.Comments.Application.csproj" />
+    <ProjectReference Include="..\StoryBlog.Web.Microservices.Comments.Events\StoryBlog.Web.Microservices.Comments.Events.csproj" />
     <ProjectReference Include="..\StoryBlog.Web.Microservices.Comments.Infrastructure\StoryBlog.Web.Microservices.Comments.Infrastructure.csproj" />
     <ProjectReference Include="..\StoryBlog.Web.Microservices.Comments.Shared\StoryBlog.Web.Microservices.Comments.Shared.csproj" />
   </ItemGroup>
@@ -33,6 +34,7 @@
   <ItemGroup>
     <Folder Include="Configuration\" />
     <Folder Include="Core\" />
+    <Folder Include="Services\" />
   </ItemGroup>
 
 </Project>

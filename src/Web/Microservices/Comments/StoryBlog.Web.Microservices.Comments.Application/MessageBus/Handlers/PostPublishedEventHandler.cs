@@ -1,11 +1,6 @@
-﻿using Microsoft.Extensions.Logging;
-using SlimMessageBus;
-using StoryBlog.Web.Common.Domain;
-using StoryBlog.Web.Common.Events;
+﻿namespace StoryBlog.Web.Microservices.Comments.Application.MessageBus.Handlers;
 
-namespace StoryBlog.Web.Microservices.Comments.Application.MessageBus.Handlers;
-
-public sealed class PostPublishedEventHandler : IConsumer<PostPublishedEvent>
+/*public sealed class PostPublishedEventHandler : IConsumer<PostPublishedEvent>
 {
     private readonly IAsyncUnitOfWork context;
     private readonly ILogger<NewPostCreatedMessageConsumer> logger;
@@ -24,4 +19,4 @@ public sealed class PostPublishedEventHandler : IConsumer<PostPublishedEvent>
 
         return Task.CompletedTask;
     }
-}
+}*/
