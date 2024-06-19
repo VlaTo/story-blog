@@ -1,23 +1,23 @@
 ﻿using AutoMapper;
 using MediatR;
 using SlimMessageBus;
-using StoryBlog.Web.Microservices.Comments.Application.Handlers.NewPostCreated;
+using StoryBlog.Web.Microservices.Comments.Application.Handlers.PostDeleted;
 using StoryBlog.Web.Microservices.Posts.Events;
 
 namespace StoryBlog.Web.Microservices.Comments.WebApi.MessageBus.Consumers;
 
-public sealed class NewPostCreatedMessageConsumer : IConsumer<NewPostCreatedEvent>
+internal sealed class PostDeletedEventConsumer : IConsumer<PostDeletedEvent>
 {
     private readonly IMediator mediator;
     private readonly IMapper mapper;
     private readonly IHttpContextAccessor contextAccessor;
-    private readonly ILogger<NewPostCreatedMessageConsumer> logger;
+    private readonly ILogger<PostDeletedEventConsumer> logger;
 
-    public NewPostCreatedMessageConsumer(
+    public PostDeletedEventConsumer(
         IMediator mediator,
         IMapper mapper,
         IHttpContextAccessor contextAccessor,
-        ILogger<NewPostCreatedMessageConsumer> logger)
+        ILogger<PostDeletedEventConsumer> logger)
     {
         this.mediator = mediator;
         this.mapper = mapper;
@@ -25,14 +25,13 @@ public sealed class NewPostCreatedMessageConsumer : IConsumer<NewPostCreatedEven
         this.logger = logger;
     }
 
-    public async Task OnHandle(NewPostCreatedEvent message)
+    public Task OnHandle(PostDeletedEvent message)
     {
-        logger.LogDebug("StoryBlog.Web.Microservices.Comments.Application.MessageBus.Handlers.NewPostCreatedEventHandler");
+        logger.LogDebug("StoryBlog.Web.Microservices.Comments.WebApi.MessageBus.Consumers.PostDeletedEventConsumer");
 
-        var command = mapper.Map<NewPostCreatedCommand>(message);
+        var command = mapper.Map<PostDeletedCommand>(message);
         var cancellationToken = contextAccessor.HttpContext?.RequestAborted ?? CancellationToken.None;
 
-        await mediator.Publish(command, cancellationToken);
-
+        return mediator.Publish(command, cancellationToken);
     }
 }

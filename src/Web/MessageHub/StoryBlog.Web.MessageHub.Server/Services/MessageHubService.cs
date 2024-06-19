@@ -38,9 +38,10 @@ internal sealed class MessageHubService
         where TMessage : IHubMessage
     {
         var payload = options.Serializer.Serialize(message);
-        var temp = new Message(channel, payload);
+        var hubMessage = new Message(channel, payload);
+        var data = hubMessage.ToBytes();
 
-        await handlers[0].SendAsync(temp.ToBytes(), cancellationToken);
+        await Task.WhenAll(handlers.Select(x => x.SendAsync(data, cancellationToken)));
     }
 
     public void RemoveSocketHandler(MessageHubHandler handler)

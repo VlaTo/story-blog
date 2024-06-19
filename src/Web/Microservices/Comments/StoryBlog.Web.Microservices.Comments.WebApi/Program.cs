@@ -7,15 +7,17 @@ using SlimMessageBus.Host.Serialization.SystemTextJson;
 using StoryBlog.Web.Identity.Extensions;
 using StoryBlog.Web.Microservices.Comments.Application.Contexts;
 using StoryBlog.Web.Microservices.Comments.Application.Extensions;
+using StoryBlog.Web.Microservices.Comments.Events;
 using StoryBlog.Web.Microservices.Comments.Infrastructure.Extensions;
 using StoryBlog.Web.Microservices.Comments.WebApi.Configuration;
 using StoryBlog.Web.Microservices.Comments.WebApi.Extensions;
+using StoryBlog.Web.Microservices.Comments.WebApi.MessageBus;
 using StoryBlog.Web.Microservices.Comments.WebApi.MessageBus.Consumers;
 using StoryBlog.Web.Microservices.Posts.Events;
 using System.Diagnostics.Tracing;
 using System.Net.Mime;
-using StoryBlog.Web.Microservices.Comments.Events;
 using CommentPublishedEvent = StoryBlog.Web.Microservices.Comments.Events.CommentPublishedEvent;
+using PostPublishedEvent = StoryBlog.Web.Microservices.Posts.Events.PostPublishedEvent;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -40,39 +42,35 @@ builder.Services.AddAutoMapper(configuration =>
 });
 builder.Services.AddSlimMessageBus(buses => buses
     .Produce<NewCommentCreatedEvent>(x => x
-        .Exchange("storyblog.fanout", exchangeType: ExchangeType.Fanout, durable: true)
-        .RoutingKeyProvider((a, b) => "storyblog.comment.created")
+        .Exchange(ExchangeNames.Default, exchangeType: ExchangeType.Fanout, durable: true)
+        .RoutingKeyProvider((_, _) => "storyblog.comment.created")
     )
     .Produce<CommentPublishedEvent>(x => x
-        .Exchange("storyblog.fanout", exchangeType: ExchangeType.Fanout, durable: true)
-        .RoutingKeyProvider((a, b) => "storyblog.comment.published")
+        .Exchange(ExchangeNames.Default, exchangeType: ExchangeType.Fanout, durable: true)
+        .RoutingKeyProvider((_, _) => "storyblog.comment.published")
+    )
+    .Produce<CommentDeletedEvent>(x => x
+        .Exchange(ExchangeNames.Default, exchangeType: ExchangeType.Fanout, durable:true)
+        .RoutingKeyProvider((_, _) => "storyblog.comment.removed")
     )
     .Consume<NewPostCreatedEvent>(x => x
         .Queue("storyblog.comments.post.created", durable: true)
         .PerMessageScopeEnabled(enabled: true)
-        .ExchangeBinding("storyblog.fanout", routingKey: "storyblog.post.created")
-        .WithConsumer<NewPostCreatedMessageConsumer>()
+        .ExchangeBinding(ExchangeNames.Default, routingKey: "storyblog.post.created")
+        .WithConsumer<NewPostCreatedEventConsumer>()
     )
-    /*.Consume<PostPublishedEvent>(x => x
-        .Queue("storyblog.post.published", durable: true)
+    .Consume<PostPublishedEvent>(x => x
+        .Queue("storyblog.comments.post.published", durable: true)
         .PerMessageScopeEnabled(enabled: true)
-        .ExchangeBinding("storyblog.direct", routingKey: "storyblog.post.published")
-        .WithConsumer<PostPublishedEventHandler>()
+        .ExchangeBinding(ExchangeNames.Default, routingKey: "storyblog.post.published")
+        .WithConsumer<PostPublishedEventConsumer>()
     )
-    .Consume<PostRemovedEvent>(x => x
-        .Queue("storyblog.post.removed", durable: true)
+    .Consume<PostDeletedEvent>(x => x
+        .Queue("storyblog.comments.post.removed", durable: true)
         .PerMessageScopeEnabled(enabled: true)
-        .ExchangeBinding("storyblog.direct", routingKey: "storyblog.post.removed")
-        .WithConsumer<PostRemovedEventHandler>()
-    )*/
-    /*.Produce<CommentPublishedEvent>(x => x
-        .Exchange("storyblog.direct", exchangeType: ExchangeType.Direct)
-        .RoutingKeyProvider((a, b) => "storyblog.comment.published")
+        .ExchangeBinding(ExchangeNames.Default, routingKey: "storyblog.post.removed")
+        .WithConsumer<PostDeletedEventConsumer>()
     )
-    .Produce<CommentRemovedEvent>(x => x
-        .Exchange("storyblog.direct", exchangeType: ExchangeType.Direct)
-        .RoutingKeyProvider((a, b) => "storyblog.comment.removed")
-    )*/
     .WithProviderRabbitMQ(rabbit =>
     {
         rabbit.ConnectionString = "amqp://admin:admin@localhost:5672";

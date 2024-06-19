@@ -14,7 +14,7 @@ internal static class ServiceCollectionExtensions
         
         services.AddScoped<ILocationProvider, AspNetCoreLocationProvider>();
 
-        services.AddScoped<NewPostCreatedMessageConsumer>();
+        services.AddScoped<NewPostCreatedEventConsumer>();
         
         services
             .AddOptions<CommentLocationProviderOptions>()

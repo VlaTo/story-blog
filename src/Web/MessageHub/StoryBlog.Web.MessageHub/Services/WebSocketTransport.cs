@@ -6,7 +6,7 @@ public abstract class WebSocketTransport : IDisposable
 {
     private bool disposed;
 
-    public WebSocket WebSocket
+    public WebSocket? WebSocket
     {
         get;
         protected set;
@@ -19,7 +19,7 @@ public abstract class WebSocketTransport : IDisposable
 
     protected async Task ReceiveAsync(Func<ArraySegment<byte>, Task> handle, CancellationToken cancellationToken)
     {
-        if (WebSocketState.Open != WebSocket.State)
+        if (WebSocketState.Open != WebSocket?.State)
         {
             throw new Exception();
         }
@@ -82,7 +82,7 @@ public abstract class WebSocketTransport : IDisposable
         {
             if (dispose)
             {
-                WebSocket.Dispose();
+                WebSocket?.Dispose();
                 DoDispose();
             }
         }

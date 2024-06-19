@@ -53,9 +53,14 @@ public class MessageHubConnection : WebSocketTransport
         where TMessage : IHubMessage
     {
         var json = System.Text.Json.JsonSerializer.Serialize(message);
-        var temp = new Message(channel, Encoding.UTF8.GetBytes(json));
+        var channelMessage = new Message(channel, Encoding.UTF8.GetBytes(json));
 
-        await WebSocket.SendAsync(temp.ToBytes(), WebSocketMessageType.Binary, true, cancellationToken);
+        if (null == WebSocket)
+        {
+            throw new Exception();
+        }
+
+        await WebSocket.SendAsync(channelMessage.ToBytes(), WebSocketMessageType.Binary, true, cancellationToken);
     }
 
     private async Task HandleMessage(ArraySegment<byte> data)

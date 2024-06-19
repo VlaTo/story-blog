@@ -106,7 +106,7 @@ internal sealed class MessageHubHandler : WebSocketTransport
 
         private async Task CreateAndInvokeHandlerAsync(TMessage message, CancellationToken cancellationToken)
         {
-            using (var scope = ServiceProvider.CreateAsyncScope())
+            await using (var scope = ServiceProvider.CreateAsyncScope())
             {
                 var handler = (IHubMessageHandler<TMessage>)ActivatorUtilities.CreateInstance<THandler>(scope.ServiceProvider);
                 await handler.HandleAsync(message, cancellationToken);

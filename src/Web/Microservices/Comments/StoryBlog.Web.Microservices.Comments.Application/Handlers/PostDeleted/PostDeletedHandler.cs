@@ -1,26 +1,25 @@
 ﻿using MediatR;
 using Microsoft.Extensions.Logging;
-using StoryBlog.Web.Common.Application;
 using StoryBlog.Web.Common.Domain;
 using StoryBlog.Web.Microservices.Comments.Domain.Entities;
 using StoryBlog.Web.Microservices.Comments.Domain.Specifications;
 
-namespace StoryBlog.Web.Microservices.Comments.Application.Handlers.NewPostCreated;
+namespace StoryBlog.Web.Microservices.Comments.Application.Handlers.PostDeleted;
 
-internal sealed class NewPostCreatedHandler : HandlerBase, INotificationHandler<NewPostCreatedCommand>
+internal sealed class PostDeletedHandler : INotificationHandler<PostDeletedCommand>
 {
     private readonly IAsyncUnitOfWork context;
-    private readonly ILogger<NewPostCreatedHandler> logger;
+    private readonly ILogger<PostDeletedHandler> logger;
 
-    public NewPostCreatedHandler(
+    public PostDeletedHandler(
         IAsyncUnitOfWork context,
-        ILogger<NewPostCreatedHandler> logger)
+        ILogger<PostDeletedHandler> logger)
     {
         this.context = context;
         this.logger = logger;
     }
 
-    public async Task Handle(NewPostCreatedCommand notification, CancellationToken cancellationToken)
+    public async Task Handle(PostDeletedCommand notification, CancellationToken cancellationToken)
     {
         await using (var repository = context.GetRepository<Comment>())
         {
