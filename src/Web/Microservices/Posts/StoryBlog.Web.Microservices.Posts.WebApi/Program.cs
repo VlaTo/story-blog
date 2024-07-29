@@ -57,6 +57,7 @@ builder.Services.AddSlimMessageBus(buses => buses
         .ExchangeBinding("storyblog.fanout", routingKey: "storyblog.comment.created")
         .WithConsumer<NewCommentCreatedEventConsumer>()
     )
+
     /*.Consume<CommentPublishedEvent>(x => x
         .Queue("storyblog.comment.published", durable: true)
         .PerMessageScopeEnabled(enabled: true)
@@ -77,6 +78,7 @@ builder.Services.AddSlimMessageBus(buses => buses
         .Exchange("storyblog.fanout", exchangeType: ExchangeType.Fanout, durable: true)
         .RoutingKeyProvider((a, b) => "storyblog.post.deleted")
     )*/
+
     .WithProviderRabbitMQ(rabbit =>
     {
         rabbit.ConnectionString = "amqp://admin:admin@localhost:5672";

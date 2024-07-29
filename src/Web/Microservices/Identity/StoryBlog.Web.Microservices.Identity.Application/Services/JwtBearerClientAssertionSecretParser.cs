@@ -2,9 +2,9 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using StoryBlog.Web.Microservices.Identity.Application.Configuration;
+using StoryBlog.Web.Microservices.Identity.Application.Extensions;
 using StoryBlog.Web.Microservices.Identity.Application.Models;
 using System.IdentityModel.Tokens.Jwt;
-using StoryBlog.Web.Microservices.Identity.Application.Extensions;
 
 namespace StoryBlog.Web.Microservices.Identity.Application.Services;
 
@@ -58,44 +58,40 @@ public sealed class JwtBearerClientAssertionSecretParser : ISecretParser
 
         var body = await context.Request.ReadFormAsync();
 
-        if (null != body)
+        var clientAssertionType = body[OidcConstants.TokenRequest.ClientAssertionType].FirstOrDefault();
+        var clientAssertion = body[OidcConstants.TokenRequest.ClientAssertion].FirstOrDefault();
+
+        if (clientAssertion.IsPresent() && OidcConstants.ClientAssertionTypes.JwtBearer == clientAssertionType)
         {
-            var clientAssertionType = body[OidcConstants.TokenRequest.ClientAssertionType].FirstOrDefault();
-            var clientAssertion = body[OidcConstants.TokenRequest.ClientAssertion].FirstOrDefault();
-
-            if (clientAssertion.IsPresent()
-                && clientAssertionType == OidcConstants.ClientAssertionTypes.JwtBearer)
+            if (clientAssertion!.Length > options.InputLengthRestrictions.Jwt)
             {
-                if (clientAssertion.Length > options.InputLengthRestrictions.Jwt)
-                {
-                    logger.LogError("Client assertion token exceeds maximum length.");
+                logger.LogError("Client assertion token exceeds maximum length.");
 
-                    return null;
-                }
-
-                var clientId = GetClientIdFromToken(clientAssertion);
-
-                if (String.IsNullOrEmpty(clientId))
-                {
-                    return null;
-                }
-
-                if (clientId.Length > options.InputLengthRestrictions.ClientId)
-                {
-                    logger.LogError("Client ID exceeds maximum length.");
-
-                    return null;
-                }
-
-                var parsedSecret = new ParsedSecret
-                {
-                    Id = clientId,
-                    Credential = clientAssertion,
-                    Type = IdentityServerConstants.ParsedSecretTypes.JwtBearer
-                };
-
-                return parsedSecret;
+                return null;
             }
+
+            var clientId = GetClientIdFromToken(clientAssertion);
+
+            if (String.IsNullOrEmpty(clientId))
+            {
+                return null;
+            }
+
+            if (options.InputLengthRestrictions.ClientId < clientId.Length)
+            {
+                logger.LogError("Client ID exceeds maximum length.");
+
+                return null;
+            }
+
+            var parsedSecret = new ParsedSecret
+            {
+                Id = clientId,
+                Credential = clientAssertion,
+                Type = IdentityServerConstants.ParsedSecretTypes.JwtBearer
+            };
+
+            return parsedSecret;
         }
 
         logger.LogDebug("No JWT client assertion found in post body");
@@ -110,9 +106,9 @@ public sealed class JwtBearerClientAssertionSecretParser : ISecretParser
             var jwt = new JwtSecurityToken(token);
             return jwt.Subject;
         }
-        catch (Exception e)
+        catch (Exception exception)
         {
-            logger.LogWarning("Could not parse client assertion", e);
+            logger.LogWarning(exception, "Could not parse client assertion");
 
             return null;
         }

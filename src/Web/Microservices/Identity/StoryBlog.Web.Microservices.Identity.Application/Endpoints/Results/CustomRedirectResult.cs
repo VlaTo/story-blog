@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
+using StoryBlog.Web.Common.Identity.Permission;
 using StoryBlog.Web.Microservices.Identity.Application.Configuration;
 using StoryBlog.Web.Microservices.Identity.Application.Extensions;
 using StoryBlog.Web.Microservices.Identity.Application.Hosting;
-using StoryBlog.Web.Microservices.Identity.Application.Models;
 using StoryBlog.Web.Microservices.Identity.Application.Models.Messages;
 using StoryBlog.Web.Microservices.Identity.Application.Services;
 using StoryBlog.Web.Microservices.Identity.Application.Stores;
@@ -64,9 +64,9 @@ public class CustomRedirectResult : IEndpointResult
 
     private void Init(HttpContext context)
     {
-        options = options ?? context.RequestServices.GetRequiredService<IdentityServerOptions>();
-        urls = urls ?? context.RequestServices.GetRequiredService<IServerUrls>();
-        authorizationParametersMessageStore = authorizationParametersMessageStore ?? context.RequestServices.GetService<IAuthorizationParametersMessageStore>();
+        options ??= context.RequestServices.GetRequiredService<IdentityServerOptions>();
+        urls ??= context.RequestServices.GetRequiredService<IServerUrls>();
+        authorizationParametersMessageStore ??= context.RequestServices.GetService<IAuthorizationParametersMessageStore>();
     }
 
     /// <summary>

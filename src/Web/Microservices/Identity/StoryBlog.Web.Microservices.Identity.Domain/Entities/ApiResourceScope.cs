@@ -10,7 +10,7 @@ public class ApiResourceScope : IEntity, IHasId<int>
         set;
     }
 
-    public string Scope
+    public required string Scope
     {
         get;
         set;
@@ -22,7 +22,7 @@ public class ApiResourceScope : IEntity, IHasId<int>
         set;
     }
 
-    public ApiResource ApiResource
+    public required ApiResource ApiResource
     {
         get;
         set;

@@ -6,6 +6,7 @@ using StoryBlog.Web.Microservices.Identity.Application.Models;
 using StoryBlog.Web.Microservices.Identity.Application.Storage;
 using StoryBlog.Web.Microservices.Identity.Application.Stores;
 using System.Security.Claims;
+using StoryBlog.Web.Common.Identity.Permission;
 
 namespace StoryBlog.Web.Microservices.Identity.Application.Services.Defaults;
 
@@ -110,7 +111,7 @@ public class DefaultConsentService : IConsentService
 
         // we always require consent for offline access if
         // the client has not disabled RequireConsent 
-        if (scopes.Contains(IdentityServerConstants.StandardScopes.OfflineAccess))
+        if (scopes.Contains(OidcConstants.StandardScopes.OfflineAccess))
         {
             Logger.LogDebug("Scopes contains offline_access, consent is required");
             return true;

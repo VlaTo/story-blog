@@ -10,7 +10,7 @@ public sealed class ClientGrantType : IEntity, IHasId<int>
         set;
     }
 
-    public string GrantType
+    public required string GrantType
     {
         get;
         set;
@@ -22,7 +22,7 @@ public sealed class ClientGrantType : IEntity, IHasId<int>
         set;
     }
 
-    public Client Client
+    public required Client Client
     {
         get;
         set;

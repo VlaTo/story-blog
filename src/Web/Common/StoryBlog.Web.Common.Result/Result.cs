@@ -1,4 +1,5 @@
-﻿using StoryBlog.Web.Common.Result.Extensions;
+﻿using System.Diagnostics.CodeAnalysis;
+using StoryBlog.Web.Common.Result.Extensions;
 
 namespace StoryBlog.Web.Common.Result;
 
@@ -105,6 +106,7 @@ public class Result<TValue> : Result, IResult<TValue>
         Value = default;
     }
 
+    [return: NotNull]
     public static implicit operator TValue(Result<TValue> result)
     {
         if (result.Failed())

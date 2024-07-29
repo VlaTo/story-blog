@@ -6,6 +6,24 @@ namespace StoryBlog.Web.Microservices.Identity.Application.Extensions;
 
 internal static class ClaimsExtensions
 {
+    public static bool NoValue(this IEnumerable<Claim>? claims)
+    {
+        if (null == claims)
+        {
+            return true;
+        }
+
+        if (claims is ICollection<Claim> claimsCollection)
+        {
+            return claimsCollection.Count == 0;
+        }
+
+        using (var enumerator = claims.GetEnumerator())
+        {
+            return false == enumerator.MoveNext();
+        }
+    }
+
     public static Dictionary<string, object> ToClaimsDictionary(this IEnumerable<Claim>? claims)
     {
         var dictionary = new Dictionary<string, object>();

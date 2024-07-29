@@ -5,6 +5,7 @@ using StoryBlog.Web.Microservices.Identity.Application.Core;
 using StoryBlog.Web.Microservices.Identity.Application.Hosting;
 using StoryBlog.Web.Microservices.Identity.Application.Services;
 using System.Net;
+using StoryBlog.Web.Common.Identity.Permission;
 using StoryBlog.Web.Microservices.Identity.Application.Endpoints.Results;
 using StoryBlog.Web.Microservices.Identity.Application.ResponseHandling.Generators;
 

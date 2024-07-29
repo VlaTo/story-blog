@@ -1,8 +1,9 @@
-﻿using IdentityModel;
+﻿using StoryBlog.Web.Common.Identity.Permission;
 using StoryBlog.Web.Microservices.Identity.Application.Authorization.Responses;
 using StoryBlog.Web.Microservices.Identity.Application.Extensions;
 using StoryBlog.Web.Microservices.Identity.Application.ResponseHandling.Models;
 using StoryBlog.Web.Microservices.Identity.Application.Validation.Results;
+using OidcConstants = IdentityModel.OidcConstants;
 
 namespace StoryBlog.Web.Microservices.Identity.Application.Core.Events;
 

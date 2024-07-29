@@ -43,7 +43,6 @@
                 <div class="d-flex flex-row mt-4">
                     <MudButton ButtonType=@ButtonType.Button
                                StartIcon=@Icons.Material.Filled.Reply
-                               IconSize=@Size.Medium
                                Size=@Size.Medium
                                OnClick=@DoOpenReplyComposer>
                         @Localizer["ButtonLeaveComment"]
@@ -111,7 +110,7 @@
                                                 CreatedDateTime=@comment.CreateAt
                                                 Class="pa-2">
                                                 <ChildContent>
-                                                    @comment.Text
+                                                    @(new MarkupString(comment.Text))
                                                 </ChildContent>
                                             </Comment>
                                         }

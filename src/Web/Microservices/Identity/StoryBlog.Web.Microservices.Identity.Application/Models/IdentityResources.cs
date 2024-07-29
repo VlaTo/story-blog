@@ -1,5 +1,7 @@
-﻿using IdentityModel;
+﻿using StoryBlog.Web.Common.Identity.Permission;
 using StoryBlog.Web.Microservices.Identity.Application.Storage;
+using JwtClaimTypes = StoryBlog.Web.Common.Identity.Permission.JwtClaimTypes;
+using OidcConstants = StoryBlog.Web.Common.Identity.Permission.OidcConstants;
 
 namespace StoryBlog.Web.Microservices.Identity.Application.Models;
 
@@ -20,7 +22,7 @@ public static class IdentityResources
         /// Initializes a new instance of the <see cref="OpenId"/> class.
         /// </summary>
         public OpenId()
-            : base(IdentityServerConstants.StandardScopes.OpenId)
+            : base(OidcConstants.StandardScopes.OpenId)
         {
             //Name = IdentityServerConstants.StandardScopes.OpenId;
             DisplayName = "Your user identifier";
@@ -43,13 +45,13 @@ public static class IdentityResources
         /// Initializes a new instance of the <see cref="Profile"/> class.
         /// </summary>
         public Profile()
-            : base(IdentityServerConstants.StandardScopes.Profile)
+            : base(OidcConstants.StandardScopes.Profile)
         {
             //Name = IdentityServerConstants.StandardScopes.Profile;
             DisplayName = "User profile";
             Description = "Your user profile information (first name, last name, etc.)";
             Emphasize = true;
-            UserClaims = Constants.ScopeToClaimsMapping[IdentityServerConstants.StandardScopes.Profile].ToList();
+            UserClaims = Constants.ScopeToClaimsMapping[OidcConstants.StandardScopes.Profile].ToList();
         }
     }
 

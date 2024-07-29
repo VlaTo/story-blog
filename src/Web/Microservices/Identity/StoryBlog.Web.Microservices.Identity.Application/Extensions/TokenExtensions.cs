@@ -64,7 +64,7 @@ public static class TokenExtensions
                 .Where(x => x.Type == JwtClaimTypes.Scope)
                 .ToArray();
 
-            if (false == scopeClaims.IsNullOrEmpty())
+            if (false == scopeClaims.NoValue())
             {
                 var scopeValues = scopeClaims.Select(x => x.Value).ToArray();
 
@@ -83,7 +83,7 @@ public static class TokenExtensions
                 .Where(x => x.Type == JwtClaimTypes.AuthenticationMethod)
                 .ToArray();
 
-            if (false == amrClaims.IsNullOrEmpty())
+            if (false == amrClaims.NoValue())
             {
                 var amrValues = amrClaims.Select(x => x.Value).Distinct().ToArray();
                 payload.Add(JwtClaimTypes.AuthenticationMethod, amrValues);

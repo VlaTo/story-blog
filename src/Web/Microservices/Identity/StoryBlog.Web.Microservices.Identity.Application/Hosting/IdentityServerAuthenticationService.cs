@@ -1,11 +1,13 @@
-﻿using IdentityModel;
-using Microsoft.AspNetCore.Authentication;
+﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using System.Security.Claims;
+using StoryBlog.Web.Common.Identity.Permission;
 using StoryBlog.Web.Microservices.Identity.Application.Core;
 using StoryBlog.Web.Microservices.Identity.Application.Extensions;
 using StoryBlog.Web.Microservices.Identity.Application.Services;
+using JwtClaimTypes = IdentityModel.JwtClaimTypes;
+using OidcConstants = IdentityModel.OidcConstants;
 
 namespace StoryBlog.Web.Microservices.Identity.Application.Hosting;
 

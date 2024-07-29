@@ -1,14 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.17" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.17">
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.7" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.7">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
@@ -20,8 +20,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Common\StoryBlog.Web.Common.Identity.Permission\StoryBlog.Web.Common.Identity.Permission.csproj" />
     <ProjectReference Include="..\..\Common\StoryBlog.Web.Common.Result\StoryBlog.Web.Common.Result.csproj" />
-    <ProjectReference Include="..\StoryBlog.Web.Common.Identity.Permission\StoryBlog.Web.Common.Identity.Permission.csproj" />
   </ItemGroup>
 
 </Project>

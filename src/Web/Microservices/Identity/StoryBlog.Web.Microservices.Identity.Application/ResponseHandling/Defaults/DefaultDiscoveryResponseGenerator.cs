@@ -9,6 +9,8 @@ using StoryBlog.Web.Microservices.Identity.Application.Services;
 using StoryBlog.Web.Microservices.Identity.Application.Stores;
 using StoryBlog.Web.Microservices.Identity.Application.Validation;
 using System.Security.Cryptography;
+using StoryBlog.Web.Common.Identity.Permission;
+using OidcConstants = IdentityModel.OidcConstants;
 
 namespace StoryBlog.Web.Microservices.Identity.Application.ResponseHandling.Defaults;
 
@@ -261,7 +263,7 @@ public class DefaultDiscoveryResponseGenerator : IDiscoveryResponseGenerator
                                 select scope.Name;
 
                 scopes.AddRange(apiScopes);
-                scopes.Add(IdentityServerConstants.StandardScopes.OfflineAccess);
+                scopes.Add(OidcConstants.StandardScopes.OfflineAccess);
             }
 
             if (scopes.Any())

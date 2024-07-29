@@ -1,4 +1,5 @@
-﻿using StoryBlog.Web.Microservices.Identity.Application.Configuration;
+﻿using StoryBlog.Web.Common.Identity.Permission;
+using StoryBlog.Web.Microservices.Identity.Application.Configuration;
 using StoryBlog.Web.Microservices.Identity.Application.Storage;
 
 namespace StoryBlog.Web.Microservices.Identity.Application.DependencyInjection.Options;
@@ -64,7 +65,7 @@ public class ClientBuilder
             .WithLogoutRedirectUri(NativeAppClientRedirectUri)
             .WithPkce()
             .WithoutClientSecrets()
-            .WithScopes(IdentityServerConstants.StandardScopes.OfflineAccess);
+            .WithScopes(OidcConstants.StandardScopes.OfflineAccess);
     }
 
     /// <summary>

@@ -8,7 +8,7 @@ public sealed class ApiScopeClaim : UserClaim
         set;
     }
 
-    public ApiScope Scope
+    public required ApiScope Scope
     {
         get;
         set;

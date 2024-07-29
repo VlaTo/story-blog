@@ -4,11 +4,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using StoryBlog.Web.Common.Result;
 using StoryBlog.Web.Microservices.Identity.Application.Configuration;
 using StoryBlog.Web.Microservices.Identity.Application.Core;
 using System.Security.Claims;
 using StoryBlog.Web.Common.Identity.Permission;
-using StoryBlog.Web.Common.Result;
 
 namespace StoryBlog.Web.Microservices.Identity.Application.Extensions;
 

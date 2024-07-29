@@ -1,11 +1,13 @@
-﻿using IdentityModel;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
+using StoryBlog.Web.Common.Identity.Permission;
 using StoryBlog.Web.Microservices.Identity.Application.Core;
+using StoryBlog.Web.Microservices.Identity.Application.Extensions;
 using StoryBlog.Web.Microservices.Identity.Application.Models;
 using StoryBlog.Web.Microservices.Identity.Application.Validation.Contexts;
 using StoryBlog.Web.Microservices.Identity.Application.Validation.Requests;
 using System.Security.Claims;
-using StoryBlog.Web.Microservices.Identity.Application.Extensions;
+using JwtClaimTypes = IdentityModel.JwtClaimTypes;
+using OidcConstants = IdentityModel.OidcConstants;
 
 namespace StoryBlog.Web.Microservices.Identity.Application.Services.Defaults;
 
@@ -158,7 +160,7 @@ public class DefaultClaimsService : IClaimsService
         // add scopes (filter offline_access)
         // we use the ScopeValues collection rather than the Resources.Scopes because we support dynamic scope values 
         // from the request, so this issues those in the token.
-        var scopes = resourceResult.RawScopeValues.Where(x => x != IdentityServerConstants.StandardScopes.OfflineAccess);
+        var scopes = resourceResult.RawScopeValues.Where(x => x != OidcConstants.StandardScopes.OfflineAccess);
 
         foreach (var scope in scopes)
         {
@@ -170,7 +172,7 @@ public class DefaultClaimsService : IClaimsService
         {
             if (resourceResult.Resources.OfflineAccess)
             {
-                outputClaims.Add(new Claim(JwtClaimTypes.Scope, IdentityServerConstants.StandardScopes.OfflineAccess));
+                outputClaims.Add(new Claim(JwtClaimTypes.Scope, OidcConstants.StandardScopes.OfflineAccess));
             }
 
             Logger.LogDebug("Getting claims for access token for subject: {subject}", subject.GetSubjectId());

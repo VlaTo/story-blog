@@ -1,12 +1,13 @@
-﻿using IdentityModel;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using StoryBlog.Web.Microservices.Identity.Application.Core;
 using StoryBlog.Web.Microservices.Identity.Application.Hosting;
 using StoryBlog.Web.Microservices.Identity.Application.Validation;
 using System.Net;
+using StoryBlog.Web.Common.Identity.Permission;
 using StoryBlog.Web.Microservices.Identity.Application.Endpoints.Results;
 using StoryBlog.Web.Microservices.Identity.Application.ResponseHandling.Generators;
+using OidcConstants = IdentityModel.OidcConstants;
 
 namespace StoryBlog.Web.Microservices.Identity.Application.Endpoints;
 

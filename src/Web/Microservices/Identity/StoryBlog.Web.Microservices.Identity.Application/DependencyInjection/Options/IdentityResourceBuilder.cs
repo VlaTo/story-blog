@@ -1,4 +1,5 @@
-﻿using StoryBlog.Web.Microservices.Identity.Application.Configuration;
+﻿using StoryBlog.Web.Common.Identity.Permission;
+using StoryBlog.Web.Microservices.Identity.Application.Configuration;
 using StoryBlog.Web.Microservices.Identity.Application.Models;
 using StoryBlog.Web.Microservices.Identity.Application.Storage;
 
@@ -33,13 +34,13 @@ public class IdentityResourceBuilder
     /// Creates an openid resource.
     /// </summary>
     public static IdentityResourceBuilder OpenId() =>
-        IdentityResource(IdentityServerConstants.StandardScopes.OpenId);
+        IdentityResource(OidcConstants.StandardScopes.OpenId);
 
     /// <summary>
     /// Creates a profile resource.
     /// </summary>
     public static IdentityResourceBuilder Profile() =>
-        IdentityResource(IdentityServerConstants.StandardScopes.Profile);
+        IdentityResource(OidcConstants.StandardScopes.Profile);
 
     /// <summary>
     /// Builds the API resource.
@@ -94,8 +95,8 @@ public class IdentityResourceBuilder
     {
         return name switch
         {
-            IdentityServerConstants.StandardScopes.OpenId => new IdentityResources.OpenId(),
-            IdentityServerConstants.StandardScopes.Profile => new IdentityResources.Profile(),
+            OidcConstants.StandardScopes.OpenId => new IdentityResources.OpenId(),
+            OidcConstants.StandardScopes.Profile => new IdentityResources.Profile(),
             /*
             IdentityServerConstants.StandardScopes.Address => new IdentityResources.Address(),
             IdentityServerConstants.StandardScopes.Email => new IdentityResources.Email(),

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using StoryBlog.Web.Common.Identity.Permission;
 
 namespace StoryBlog.Web.Microservices.Identity.Application.Configuration;
 

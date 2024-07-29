@@ -47,7 +47,7 @@ internal sealed class UserInfoRequestValidator : IUserInfoRequestValidator
         // the access token needs to be valid and have at least the openid scope
         var tokenResult = await tokenValidator.ValidateAccessTokenAsync(
             accessToken,
-            IdentityServerConstants.StandardScopes.OpenId
+            OidcConstants.StandardScopes.OpenId
         );
 
         if (tokenResult.IsError)
@@ -74,7 +74,7 @@ internal sealed class UserInfoRequestValidator : IUserInfoRequestValidator
         }
 
         // create subject from incoming access token
-        var claims = tokenResult.Claims.Where(x => !Constants.Filters.ProtocolClaimsFilter.Contains(x.Type));
+        var claims = tokenResult.Claims.Where(x => !Common.Identity.Permission.Constants.Filters.ProtocolClaimsFilter.Contains(x.Type));
         var subject = Principal.Create("UserInfo", claims.ToArray());
 
         // make sure user is still active

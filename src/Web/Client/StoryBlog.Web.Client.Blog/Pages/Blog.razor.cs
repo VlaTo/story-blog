@@ -16,7 +16,7 @@ public partial class Blog : ICommentsObserver
     private IDisposable? subscription;
 
     [Parameter]
-    public string SlugOrKey
+    public string? SlugOrKey
     {
         get;
         set;
@@ -76,6 +76,12 @@ public partial class Blog : ICommentsObserver
     protected override void OnInitialized()
     {
         base.OnInitialized();
+
+        if (String.IsNullOrEmpty(SlugOrKey))
+        {
+            return;
+        }
+
         Dispatcher.Dispatch(new FetchPostAction(SlugOrKey));
     }
 
@@ -101,37 +107,39 @@ public partial class Blog : ICommentsObserver
             return;
         }
 
-        if (null != store?.Comments)
+        if (null == store?.Comments)
         {
-            var comments = store.Comments;
+            return;
+        }
 
-            for (var index = 0; index < comments.Count; index++)
+        var availableComments = store.Comments;
+
+        for (var index = 0; index < availableComments.Count; index++)
+        {
+            if (availableComments[index] is CommentReplyModel reply)
             {
-                if (comments[index] is CommentReplyModel reply)
+                if (reply.CorrelationKey == correlationKey)
                 {
-                    if (reply.CorrelationKey == correlationKey)
+                    switch (reply.Result)
                     {
-                        switch (reply.Result)
+                        case CommentReplyResult.Publishing:
                         {
-                            case CommentReplyResult.Publishing:
-                            {
-                                break;
-                            }
+                            break;
+                        }
 
-                            case CommentReplyResult.Failed:
-                            {
-                                break;
-                            }
+                        case CommentReplyResult.Failed:
+                        {
+                            break;
                         }
                     }
                 }
-                else if (comments[index] is NewCommentModel newComment)
+            }
+            else if (availableComments[index] is NewCommentModel newComment)
+            {
+                if (newComment.CorrelationKey == correlationKey)
                 {
-                    if (newComment.CorrelationKey == correlationKey)
-                    {
-                        correlationKey = null;
-                        isReplyComposerOpened = false;
-                    }
+                    correlationKey = null;
+                    isReplyComposerOpened = false;
                 }
             }
         }

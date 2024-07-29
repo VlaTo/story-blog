@@ -1,9 +1,7 @@
-﻿using System.Collections.Specialized;
-using System.Text;
-using IdentityModel;
+﻿using IdentityModel;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Logging;
-using Microsoft.IdentityModel.Tokens;
+using StoryBlog.Web.Common.Identity.Permission;
 using StoryBlog.Web.Microservices.Identity.Application.Configuration;
 using StoryBlog.Web.Microservices.Identity.Application.Contexts;
 using StoryBlog.Web.Microservices.Identity.Application.Core;
@@ -16,6 +14,9 @@ using StoryBlog.Web.Microservices.Identity.Application.Stores;
 using StoryBlog.Web.Microservices.Identity.Application.Validation.Contexts;
 using StoryBlog.Web.Microservices.Identity.Application.Validation.Requests;
 using StoryBlog.Web.Microservices.Identity.Application.Validation.Results;
+using System.Collections.Specialized;
+using System.Text;
+using OidcConstants = StoryBlog.Web.Common.Identity.Permission.OidcConstants;
 
 namespace StoryBlog.Web.Microservices.Identity.Application.Validation;
 
@@ -517,7 +518,7 @@ internal class TokenRequestValidator : ITokenRequestValidator
         {
             logger.LogTrace("Client provided no scopes - checking allowed scopes list");
 
-            if (false == validatedRequest.Client.AllowedScopes.IsNullOrEmpty())
+            if (false == validatedRequest.Client?.AllowedScopes.NoValue())
             {
                 // this finds all the scopes the client is allowed to access
                 var clientAllowedScopes = new List<string>();
@@ -539,7 +540,7 @@ internal class TokenRequestValidator : ITokenRequestValidator
                 {
                     if (validatedRequest.Client.AllowOfflineAccess)
                     {
-                        clientAllowedScopes.Add(IdentityServerConstants.StandardScopes.OfflineAccess);
+                        clientAllowedScopes.Add(OidcConstants.StandardScopes.OfflineAccess);
                     }
                 }
 

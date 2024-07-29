@@ -1,4 +1,4 @@
-﻿using IdentityModel;
+﻿using StoryBlog.Web.Common.Identity.Permission;
 
 namespace StoryBlog.Web.Microservices.Identity.Application.Models;
 

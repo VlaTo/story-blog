@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using StoryBlog.Web.Common.Identity.Permission;
 using StoryBlog.Web.Microservices.Identity.Application.Core;
 using StoryBlog.Web.Microservices.Identity.Application.Extensions;
 using StoryBlog.Web.Microservices.Identity.Application.Models.Requests;
@@ -162,18 +163,18 @@ public class DefaultResourceValidator : IResourceValidator
         ParsedScopeValue requestedScope,
         ResourceValidationResult result)
     {
-        if (IdentityServerConstants.StandardScopes.OfflineAccess == requestedScope.ParsedName)
+        if (OidcConstants.StandardScopes.OfflineAccess == requestedScope.ParsedName)
         {
             if (await IsClientAllowedOfflineAccessAsync(client))
             {
                 //result.Resources.OfflineAccess = true;
                 result.ParsedScopes.Add(
-                    new ParsedScopeValue(IdentityServerConstants.StandardScopes.OfflineAccess)
+                    new ParsedScopeValue(OidcConstants.StandardScopes.OfflineAccess)
                 );
             }
             else
             {
-                result.InvalidScopes.Add(IdentityServerConstants.StandardScopes.OfflineAccess);
+                result.InvalidScopes.Add(OidcConstants.StandardScopes.OfflineAccess);
             }
         }
         else

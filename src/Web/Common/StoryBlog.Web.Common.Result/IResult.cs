@@ -31,7 +31,7 @@ public interface IResult<out TValue> : IResult
     /// <summary>
     /// 
     /// </summary>
-    TValue Value
+    TValue? Value
     {
         get;
     }

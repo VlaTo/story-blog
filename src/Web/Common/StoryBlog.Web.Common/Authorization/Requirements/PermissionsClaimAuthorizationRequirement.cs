@@ -1,8 +1,6 @@
-﻿using System.Security.Claims;
-using Microsoft.AspNetCore.Authorization.Infrastructure;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using StoryBlog.Web.Common.Identity.Permission;
-using System;
+using System.Security.Claims;
 
 namespace StoryBlog.Web.Common.Authorization.Requirements;
 

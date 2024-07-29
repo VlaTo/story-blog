@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
 
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <ServiceWorkerAssetsManifest>service-worker-assets.js</ServiceWorkerAssetsManifest>
@@ -9,14 +9,15 @@
   </PropertyGroup>
 	
   <ItemGroup>
-    <PackageReference Include="Fluxor.Blazor.Web" Version="5.9.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="7.0.17" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="7.0.17" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="7.0.17" PrivateAssets="all" />
-    <PackageReference Include="Microsoft.Extensions.Http" Version="7.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Localization" Version="7.0.17" />
-    <PackageReference Include="MudBlazor" Version="6.19.1" />
-    <PackageReference Include="MudBlazor.Markdown" Version="0.1.3" />
+    <PackageReference Include="Fluxor.Blazor.Web" Version="6.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.7" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="8.0.7" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.7" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Localization" Version="8.0.7" />
+    <PackageReference Include="MudBlazor" Version="7.4.0" />
+    <PackageReference Include="MudBlazor.Markdown" Version="1.0.2" />
+    <PackageReference Include="System.Text.Json" Version="8.0.4" />
   </ItemGroup>
 
   <ItemGroup>
@@ -32,8 +33,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Common\StoryBlog.Web.Common.Identity.Permission\StoryBlog.Web.Common.Identity.Permission.csproj" />
     <ProjectReference Include="..\..\Common\StoryBlog.Web.Common.Result\StoryBlog.Web.Common.Result.csproj" />
-    <ProjectReference Include="..\..\Identity\StoryBlog.Web.Common.Identity.Permission\StoryBlog.Web.Common.Identity.Permission.csproj" />
     <ProjectReference Include="..\..\MessageHub\StoryBlog.Web.MessageHub.Client\StoryBlog.Web.MessageHub.Client.csproj" />
     <ProjectReference Include="..\..\Microservices\Comments\StoryBlog.Web.Microservices.Comments.Shared\StoryBlog.Web.Microservices.Comments.Shared.csproj" />
     <ProjectReference Include="..\..\Microservices\Communication\StoryBlog.Web.Microservices.Communication.MessageHub\StoryBlog.Web.Microservices.Communication.MessageHub.csproj" />

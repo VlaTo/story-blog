@@ -1,4 +1,6 @@
-﻿namespace StoryBlog.Web.Microservices.Identity.Application.Extensions;
+﻿using StoryBlog.Web.Common.Identity.Permission;
+
+namespace StoryBlog.Web.Microservices.Identity.Application.Extensions;
 
 public static class ClientExtensions
 {

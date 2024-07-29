@@ -1,15 +1,11 @@
-﻿using System.Runtime.Serialization;
+﻿namespace StoryBlog.Web.Identity.Configuration;
 
-namespace StoryBlog.Web.Identity.Configuration;
-
-[DataContract]
 [Serializable]
 public sealed class StoryBlogAuthenticationOptions
 {
     public const string SectionName = "StoryBlogAuthentication";
 
-    [DataMember]
-    public JwtBearerAuthenticationOptions JwtBearer
+    public required JwtBearerAuthenticationOptions JwtBearer
     {
         get;
         set;

@@ -1,8 +1,6 @@
-﻿using System.Collections.Specialized;
-using System.Security.Claims;
-using System.Text;
-using IdentityModel;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
+using StoryBlog.Web.Common.Identity.Permission;
+using StoryBlog.Web.Identity;
 using StoryBlog.Web.Microservices.Identity.Application.Configuration;
 using StoryBlog.Web.Microservices.Identity.Application.Core;
 using StoryBlog.Web.Microservices.Identity.Application.Extensions;
@@ -13,6 +11,11 @@ using StoryBlog.Web.Microservices.Identity.Application.Stores;
 using StoryBlog.Web.Microservices.Identity.Application.Validation.Contexts;
 using StoryBlog.Web.Microservices.Identity.Application.Validation.Requests;
 using StoryBlog.Web.Microservices.Identity.Application.Validation.Results;
+using System.Collections.Specialized;
+using System.Security.Claims;
+using System.Text;
+using JwtClaimTypes = StoryBlog.Web.Common.Identity.Permission.JwtClaimTypes;
+using OidcConstants = StoryBlog.Web.Common.Identity.Permission.OidcConstants;
 
 namespace StoryBlog.Web.Microservices.Identity.Application.Validation;
 
@@ -588,7 +591,7 @@ internal sealed class AuthorizeRequestValidator : IAuthorizeRequestValidator
         }
 
         request.RequestedScopes = scope.FromSpaceSeparatedString().Distinct().ToList();
-        request.IsOpenIdRequest = request.RequestedScopes.Contains(IdentityServerConstants.StandardScopes.OpenId);
+        request.IsOpenIdRequest = request.RequestedScopes.Contains(OidcConstants.StandardScopes.OpenId);
 
         var requirement = Constants.ResponseTypeToScopeRequirement[request.ResponseType];
 

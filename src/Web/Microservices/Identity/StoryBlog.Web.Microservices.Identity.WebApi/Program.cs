@@ -1,3 +1,4 @@
+using StoryBlog.Web.Common.Identity.Permission;
 using StoryBlog.Web.Microservices.Identity.Application.Configuration;
 using StoryBlog.Web.Microservices.Identity.Application;
 using StoryBlog.Web.Microservices.Identity.Application.Extensions;
@@ -49,8 +50,8 @@ builder.Services
                 .WithScopes(
                     DefinedScopes.Blog.Api.Blogs,
                     DefinedScopes.Blog.Api.Comments,
-                    IdentityServerConstants.StandardScopes.OpenId,
-                    IdentityServerConstants.StandardScopes.Profile
+                    OidcConstants.StandardScopes.OpenId,
+                    OidcConstants.StandardScopes.Profile
                 )
         );
     })

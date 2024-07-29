@@ -9,6 +9,7 @@ using StoryBlog.Web.Microservices.Identity.Application.ResponseHandling.Generato
 using StoryBlog.Web.Microservices.Identity.Application.Services;
 using StoryBlog.Web.Microservices.Identity.Application.Stores;
 using System.Net;
+using StoryBlog.Web.Common.Identity.Permission;
 
 namespace StoryBlog.Web.Microservices.Identity.Application.Endpoints;
 

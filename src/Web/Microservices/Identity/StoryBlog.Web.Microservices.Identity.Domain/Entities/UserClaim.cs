@@ -10,7 +10,7 @@ public abstract class UserClaim : IEntity, IHasId<int>
         set;
     }
 
-    public string Type
+    public required string Type
     {
         get;
         set;

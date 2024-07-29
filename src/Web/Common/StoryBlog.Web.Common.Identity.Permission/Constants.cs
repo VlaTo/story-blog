@@ -1,19 +1,17 @@
-﻿using IdentityModel;
+﻿namespace StoryBlog.Web.Common.Identity.Permission;
 
-namespace StoryBlog.Web.Microservices.Identity.Application;
-
-internal static class Constants
+public static class Constants
 {
     public const string IdentityServerName = "SampleBlog.IdentityServer";
     public const string IdentityServerAuthenticationType = IdentityServerName;
     public const string ExternalAuthenticationMethod = "external";
-    public const string DefaultHashAlgorithm = "SHA256"; //HashAlgorithmType.Sha256  
+    public const string DefaultHashAlgorithm = "SHA256";
 
     public static readonly TimeSpan DefaultCookieTimeSpan = TimeSpan.FromHours(10);
     public static readonly TimeSpan DefaultCacheDuration = TimeSpan.FromMinutes(60);
 
-    public static readonly List<string> SupportedResponseTypes = new()
-    {
+    public static readonly List<string> SupportedResponseTypes =
+    [
         OidcConstants.ResponseTypes.Code,
         OidcConstants.ResponseTypes.Token,
         OidcConstants.ResponseTypes.IdToken,
@@ -21,7 +19,7 @@ internal static class Constants
         OidcConstants.ResponseTypes.CodeIdToken,
         OidcConstants.ResponseTypes.CodeToken,
         OidcConstants.ResponseTypes.CodeIdTokenToken
-    };
+    ];
 
     public static readonly Dictionary<string, string> ResponseTypeToGrantTypeMapping = new()
     {
@@ -113,7 +111,7 @@ internal static class Constants
         public const string HomeRealm = "idp:";
         public const string Tenant = "tenant:";
 
-        public static readonly string[] All = { HomeRealm, Tenant };
+        public static readonly string[] All = [HomeRealm, Tenant];
     }
 
     public static Dictionary<string, int> ProtectedResourceErrorStatusCodes = new()
@@ -126,7 +124,7 @@ internal static class Constants
 
     public static readonly Dictionary<string, IEnumerable<string>> ScopeToClaimsMapping = new()
     {
-        { IdentityServerConstants.StandardScopes.Profile, new[]
+        { OidcConstants.StandardScopes.Profile, new[]
         {
             JwtClaimTypes.Name,
             JwtClaimTypes.FamilyName,
@@ -143,21 +141,21 @@ internal static class Constants
             JwtClaimTypes.Locale,
             JwtClaimTypes.UpdatedAt
         }},
-        { IdentityServerConstants.StandardScopes.Email, new[]
+        { OidcConstants.StandardScopes.Email, new[]
         {
             JwtClaimTypes.Email,
             JwtClaimTypes.EmailVerified
         }},
-        { IdentityServerConstants.StandardScopes.Address, new[]
+        { OidcConstants.StandardScopes.Address, new[]
         {
             JwtClaimTypes.Address
         }},
-        { IdentityServerConstants.StandardScopes.Phone, new[]
+        { OidcConstants.StandardScopes.Phone, new[]
         {
             JwtClaimTypes.PhoneNumber,
             JwtClaimTypes.PhoneNumberVerified
         }},
-        { IdentityServerConstants.StandardScopes.OpenId, new[]
+        { OidcConstants.StandardScopes.OpenId, new[]
         {
             JwtClaimTypes.Subject
         }}

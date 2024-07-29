@@ -5,6 +5,7 @@ using StoryBlog.Web.Microservices.Identity.Application.Extensions;
 using StoryBlog.Web.Microservices.Identity.Application.Models.Requests;
 using StoryBlog.Web.Microservices.Identity.Application.Stores;
 using System.Collections.Specialized;
+using StoryBlog.Web.Common.Identity.Permission;
 
 namespace StoryBlog.Web.Microservices.Identity.Application.Services;
 

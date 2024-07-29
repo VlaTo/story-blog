@@ -11,11 +11,11 @@ public class AuthorizeResponse
         set;
     }
 
-    public string RedirectUri => Request.RedirectUri;
+    public string? RedirectUri => Request?.RedirectUri;
 
-    public string State => Request.State;
+    public string? State => Request?.State;
 
-    public string Scope => Request.ValidatedResources.RawScopeValues.ToSpaceSeparatedString();
+    public string? Scope => Request?.ValidatedResources.RawScopeValues.ToSpaceSeparatedString();
 
     public string? IdentityToken
     {
@@ -47,13 +47,13 @@ public class AuthorizeResponse
         set;
     }
 
-    public string Issuer
+    public string? Issuer
     {
         get;
         set;
     }
 
-    public string Error
+    public string? Error
     {
         get;
         set;

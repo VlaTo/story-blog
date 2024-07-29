@@ -8,7 +8,7 @@ public sealed class ApiResourceProperty : Property
         set;
     }
 
-    public ApiResource ApiResource
+    public required ApiResource ApiResource
     {
         get;
         set;

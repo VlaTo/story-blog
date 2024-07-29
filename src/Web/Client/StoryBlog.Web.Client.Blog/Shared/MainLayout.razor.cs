@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Options;
 using MudBlazor;
+using MudBlazor.Utilities;
 using StoryBlog.Web.Client.Blog.Configuration;
 using StoryBlog.Web.MessageHub.Client;
 using StoryBlog.Web.Microservices.Communication.MessageHub.Messages;
@@ -29,9 +30,9 @@ public partial class MainLayout
 
     private readonly MudTheme theme = new()
     {
-        Palette = new Palette
+        PaletteLight = new PaletteLight
         {
-            Primary = Colors.Grey.Default
+            Primary = Colors.Gray.Default
         },
         Typography = new Typography
         {

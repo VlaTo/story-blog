@@ -1,4 +1,4 @@
-﻿using Microsoft.IdentityModel.Tokens;
+﻿using StoryBlog.Web.Microservices.Identity.Application.Extensions;
 using StoryBlog.Web.Microservices.Identity.Application.Storage;
 
 namespace StoryBlog.Web.Microservices.Identity.Application.Validation;
@@ -17,7 +17,7 @@ public class StrictRedirectUriValidator : IRedirectUriValidator
     /// <returns></returns>
     protected bool StringCollectionContainsString(IEnumerable<string> uris, string requestedUri)
     {
-        if (uris.IsNullOrEmpty())
+        if (uris.NoValue())
         {
             return false;
         }

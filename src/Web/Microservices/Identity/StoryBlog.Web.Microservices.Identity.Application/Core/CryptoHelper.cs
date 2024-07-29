@@ -1,7 +1,8 @@
-﻿using IdentityModel;
-using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.IdentityModel.Tokens;
 using System.Security.Cryptography;
 using System.Text;
+using IdentityModel;
+using StoryBlog.Web.Common.Identity.Permission;
 
 namespace StoryBlog.Web.Microservices.Identity.Application.Core;
 

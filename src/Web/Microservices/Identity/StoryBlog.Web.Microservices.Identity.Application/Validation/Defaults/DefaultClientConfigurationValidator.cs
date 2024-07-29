@@ -1,4 +1,5 @@
-﻿using StoryBlog.Web.Microservices.Identity.Application.Configuration;
+﻿using StoryBlog.Web.Common.Identity.Permission;
+using StoryBlog.Web.Microservices.Identity.Application.Configuration;
 using StoryBlog.Web.Microservices.Identity.Application.Core;
 using StoryBlog.Web.Microservices.Identity.Application.Validation.Contexts;
 

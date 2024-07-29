@@ -27,9 +27,9 @@ internal sealed class NewCommentCreatedEventConsumer : MessageConsumer, IConsume
 
     public async Task OnHandle(NewCommentCreatedEvent message)
     {
-        var command = mapper.Map<NewCommentCreatedCommand>(message);
         var cancellationToken = contextAccessor.HttpContext?.RequestAborted ?? CancellationToken.None;
+        var command = mapper.Map<NewCommentCreatedCommand>(message);
 
-        await mediator.Publish(command, cancellationToken);
+        await mediator.Send(command, cancellationToken);
     }
 }

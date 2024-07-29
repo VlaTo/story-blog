@@ -85,7 +85,7 @@ public class LogoutMessage
     /// <summary>
     ///  Flag to indicate if the payload contains useful information or not to avoid serialization.
     /// </summary>
-    internal bool ContainsPayload => false == ClientId?.IsNullOrEmpty() || true == ClientIds?.Any();
+    internal bool ContainsPayload => ClientId.IsPresent() || true == ClientIds?.Any();
 
     /// <summary>
     /// Initializes a new instance of the <see cref="LogoutMessage"/> class.

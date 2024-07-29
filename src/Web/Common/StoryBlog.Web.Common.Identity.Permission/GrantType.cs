@@ -1,4 +1,4 @@
-﻿namespace StoryBlog.Web.Microservices.Identity.Application;
+﻿namespace StoryBlog.Web.Common.Identity.Permission;
 
 public static class GrantType
 {

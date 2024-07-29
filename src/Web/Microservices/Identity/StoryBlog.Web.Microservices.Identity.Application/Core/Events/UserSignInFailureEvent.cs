@@ -1,4 +1,6 @@
-﻿namespace StoryBlog.Web.Microservices.Identity.Application.Core.Events;
+﻿using StoryBlog.Web.Common.Identity.Permission;
+
+namespace StoryBlog.Web.Microservices.Identity.Application.Core.Events;
 
 /// <summary>
 /// Event for failed user authentication

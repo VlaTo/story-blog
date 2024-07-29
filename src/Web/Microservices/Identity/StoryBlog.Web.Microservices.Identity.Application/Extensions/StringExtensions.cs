@@ -102,19 +102,19 @@ public static class StringExtensions
     [DebuggerStepThrough]
     public static bool IsPresent(this string? value)
     {
-        return !String.IsNullOrWhiteSpace(value);
+        return false == String.IsNullOrWhiteSpace(value);
     }
     
     [DebuggerStepThrough]
     public static bool IsMissing(this string? value)
     {
-        return string.IsNullOrWhiteSpace(value);
+        return String.IsNullOrWhiteSpace(value);
     }
 
     [DebuggerStepThrough]
     public static bool IsLocalUrl(this string? url)
     {
-        if (string.IsNullOrEmpty(url))
+        if (String.IsNullOrEmpty(url))
         {
             return false;
         }

@@ -1,4 +1,5 @@
-﻿using StoryBlog.Web.Microservices.Identity.Application.Storage;
+﻿using StoryBlog.Web.Common.Identity.Permission;
+using StoryBlog.Web.Microservices.Identity.Application.Storage;
 using StoryBlog.Web.Microservices.Identity.Application.Stores;
 
 namespace StoryBlog.Web.Microservices.Identity.Application.Extensions;
@@ -23,7 +24,7 @@ public static class ResourceStoreExtensions
             identity,
             apiResources,
             scopes,
-            scopeNames.Contains(IdentityServerConstants.StandardScopes.OfflineAccess)
+            scopeNames.Contains(OidcConstants.StandardScopes.OfflineAccess)
         );
     }
 

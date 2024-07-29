@@ -1,5 +1,4 @@
-﻿using IdentityModel;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using StoryBlog.Web.Microservices.Identity.Application.Configuration;
 using StoryBlog.Web.Microservices.Identity.Application.Contexts;
@@ -11,6 +10,9 @@ using StoryBlog.Web.Microservices.Identity.Application.Validation.Requests;
 using StoryBlog.Web.Microservices.Identity.Application.Validation.Results;
 using System.Collections.Specialized;
 using System.Security.Claims;
+using StoryBlog.Web.Common.Identity.Permission;
+using JwtClaimTypes = IdentityModel.JwtClaimTypes;
+using OidcConstants = IdentityModel.OidcConstants;
 
 namespace StoryBlog.Web.Microservices.Identity.Application.Validation;
 

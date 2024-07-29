@@ -1,6 +1,6 @@
 ﻿using System.Collections.Specialized;
-using IdentityModel;
 using Microsoft.Extensions.Logging;
+using StoryBlog.Web.Common.Identity.Permission;
 using StoryBlog.Web.Microservices.Identity.Application.Configuration;
 using StoryBlog.Web.Microservices.Identity.Application.Core;
 using StoryBlog.Web.Microservices.Identity.Application.Extensions;
@@ -9,6 +9,8 @@ using StoryBlog.Web.Microservices.Identity.Application.Services;
 using StoryBlog.Web.Microservices.Identity.Application.Validation.Contexts;
 using StoryBlog.Web.Microservices.Identity.Application.Validation.Requests;
 using StoryBlog.Web.Microservices.Identity.Application.Validation.Results;
+using JwtClaimTypes = IdentityModel.JwtClaimTypes;
+using OidcConstants = IdentityModel.OidcConstants;
 
 namespace StoryBlog.Web.Microservices.Identity.Application.Validation;
 
@@ -130,7 +132,7 @@ internal sealed class BackchannelAuthenticationRequestValidator : IBackchannelAu
         //////////////////////////////////////////////////////////
         // openid scope required
         //////////////////////////////////////////////////////////
-        if (false == validatedRequest.RequestedScopes.Contains(IdentityServerConstants.StandardScopes.OpenId))
+        if (false == validatedRequest.RequestedScopes.Contains(OidcConstants.StandardScopes.OpenId))
         {
             LogError("openid scope missing.");
             return Invalid(OidcConstants.BackchannelAuthenticationRequestErrors.InvalidRequest, "Missing the openid scope");

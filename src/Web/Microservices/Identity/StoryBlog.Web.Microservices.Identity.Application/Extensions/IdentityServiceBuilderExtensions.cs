@@ -1,5 +1,4 @@
-﻿using IdentityModel;
-using Microsoft.AspNetCore.Authentication;
+﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Http;
@@ -9,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using StoryBlog.Web.Common.Identity.Permission;
 using StoryBlog.Web.Microservices.Identity.Application.Configuration;
 using StoryBlog.Web.Microservices.Identity.Application.Core;
 using StoryBlog.Web.Microservices.Identity.Application.DependencyInjection;
@@ -25,6 +25,7 @@ using StoryBlog.Web.Microservices.Identity.Application.Validation;
 using StoryBlog.Web.Microservices.Identity.Application.Validation.Defaults;
 using DiscoveryEndpoint = StoryBlog.Web.Microservices.Identity.Application.Endpoints.DiscoveryEndpoint;
 using Endpoint = StoryBlog.Web.Microservices.Identity.Application.Hosting.Endpoint;
+using JwtClaimTypes = IdentityModel.JwtClaimTypes;
 
 namespace StoryBlog.Web.Microservices.Identity.Application.Extensions;
 

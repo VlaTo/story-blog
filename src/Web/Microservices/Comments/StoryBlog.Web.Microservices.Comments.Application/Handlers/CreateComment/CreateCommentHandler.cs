@@ -83,7 +83,6 @@ public sealed class CreateCommentHandler : HandlerBase, IRequestHandler<CreateCo
             await repository.SaveChangesAsync(cancellationToken);
 
             var countSpecification = new ApprovedCommentsForPostSpecification(request.Details.PostKey);
-            
             approvedCommentsCount = await repository.CountAsync(countSpecification, cancellationToken);
         }
 

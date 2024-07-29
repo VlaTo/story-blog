@@ -1,14 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Primitives;
-using Microsoft.Net.Http.Headers;
+using StoryBlog.Web.Common.Identity.Permission;
 using StoryBlog.Web.Microservices.Identity.Application.Configuration;
 using StoryBlog.Web.Microservices.Identity.Application.Contexts;
 using StoryBlog.Web.Microservices.Identity.Application.Models.Messages;
 using StoryBlog.Web.Microservices.Identity.Application.Services;
 using StoryBlog.Web.Microservices.Identity.Application.Stores;
-using static StoryBlog.Web.Microservices.Identity.Application.Constants;
 
 namespace StoryBlog.Web.Microservices.Identity.Application.Extensions;
 
@@ -93,9 +91,9 @@ internal static class HttpContextExtensions
             var id = await endSessionMessageStore.WriteAsync(msg);
 
             var urls = context.RequestServices.GetRequiredService<IServerUrls>();
-            var signoutIframeUrl = urls.BaseUrl.EnsureTrailingSlash() + ProtocolRoutePaths.EndSessionCallback;
+            var signoutIframeUrl = urls.BaseUrl.EnsureTrailingSlash() + Constants.ProtocolRoutePaths.EndSessionCallback;
 
-            signoutIframeUrl = signoutIframeUrl.AddQueryString(UIConstants.DefaultRoutePathParams.EndSessionCallback, id);
+            signoutIframeUrl = signoutIframeUrl.AddQueryString(Constants.UIConstants.DefaultRoutePathParams.EndSessionCallback, id);
 
             return signoutIframeUrl;
         }
@@ -106,11 +104,11 @@ internal static class HttpContextExtensions
 
     internal static void SetSignOutCalled(this HttpContext context)
     {
-        context.Items[EnvironmentKeys.SignOutCalled] = "true";
+        context.Items[Constants.EnvironmentKeys.SignOutCalled] = "true";
     }
 
     internal static bool GetSignOutCalled(this HttpContext context)
     {
-        return context.Items.ContainsKey(EnvironmentKeys.SignOutCalled);
+        return context.Items.ContainsKey(Constants.EnvironmentKeys.SignOutCalled);
     }
 }

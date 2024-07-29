@@ -1,6 +1,6 @@
-﻿using IdentityModel;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
+using StoryBlog.Web.Common.Identity.Permission;
 using StoryBlog.Web.Microservices.Identity.Application.Core.Events;
 using StoryBlog.Web.Microservices.Identity.Application.Core;
 using StoryBlog.Web.Microservices.Identity.Application.Endpoints.Results;
@@ -11,6 +11,7 @@ using StoryBlog.Web.Microservices.Identity.Application.ResponseHandling.Models;
 using StoryBlog.Web.Microservices.Identity.Application.Services;
 using StoryBlog.Web.Microservices.Identity.Application.Validation.Results;
 using StoryBlog.Web.Microservices.Identity.Application.Validation;
+using OidcConstants = IdentityModel.OidcConstants;
 
 namespace StoryBlog.Web.Microservices.Identity.Application.Endpoints;
 

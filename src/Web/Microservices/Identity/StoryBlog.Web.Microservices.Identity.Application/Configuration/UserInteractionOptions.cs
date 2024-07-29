@@ -1,4 +1,5 @@
-﻿using StoryBlog.Web.Microservices.Identity.Application.Extensions;
+﻿using StoryBlog.Web.Common.Identity.Permission;
+using StoryBlog.Web.Microservices.Identity.Application.Extensions;
 
 namespace StoryBlog.Web.Microservices.Identity.Application.Configuration;
 

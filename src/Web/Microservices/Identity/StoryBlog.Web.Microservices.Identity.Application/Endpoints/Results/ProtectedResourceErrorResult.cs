@@ -1,10 +1,11 @@
-﻿using IdentityModel;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
+using Microsoft.Net.Http.Headers;
 using StoryBlog.Web.Microservices.Identity.Application.Extensions;
 using StoryBlog.Web.Microservices.Identity.Application.Hosting;
 using System.Net;
-using Microsoft.Net.Http.Headers;
+using StoryBlog.Web.Common.Identity.Permission;
+using OidcConstants = IdentityModel.OidcConstants;
 
 namespace StoryBlog.Web.Microservices.Identity.Application.Endpoints.Results;
 
@@ -33,9 +34,9 @@ internal sealed class ProtectedResourceErrorResult : IEndpointResult
         context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
         context.Response.SetNoCache();
 
-        if (Constants.ProtectedResourceErrorStatusCodes.ContainsKey(Error))
+        if (Constants.ProtectedResourceErrorStatusCodes.TryGetValue(Error, out var statusCode))
         {
-            context.Response.StatusCode = Constants.ProtectedResourceErrorStatusCodes[Error];
+            context.Response.StatusCode = statusCode;
         }
 
         if (Error == OidcConstants.ProtectedResourceErrors.ExpiredToken)
@@ -44,17 +45,14 @@ internal sealed class ProtectedResourceErrorResult : IEndpointResult
             ErrorDescription = "The access token expired";
         }
 
-        var errorString = string.Format($"error=\"{Error}\"");
+        var errorString = new List<string> { "Bearer realm=\"IdentityServer\"", $"error=\"{Error}\"" };
 
-        if (ErrorDescription.IsMissing())
+        if (ErrorDescription.IsPresent())
         {
-            context.Response.Headers.Add(HeaderNames.WWWAuthenticate, new StringValues(new[] { "Bearer realm=\"IdentityServer\"", errorString }).ToString());
+            errorString.Add($"error_description=\"{ErrorDescription}\"");
         }
-        else
-        {
-            var errorDescriptionString = string.Format($"error_description=\"{ErrorDescription}\"");
-            context.Response.Headers.Add(HeaderNames.WWWAuthenticate, new StringValues(new[] { "Bearer realm=\"IdentityServer\"", errorString, errorDescriptionString }).ToString());
-        }
+
+        context.Response.Headers[HeaderNames.WWWAuthenticate] = new StringValues(errorString.ToArray());
 
         return Task.CompletedTask;
     }

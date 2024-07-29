@@ -8,7 +8,7 @@ public sealed class ApiScopeProperty : Property
         set;
     }
 
-    public ApiScope Scope
+    public required ApiScope Scope
     {
         get;
         set;

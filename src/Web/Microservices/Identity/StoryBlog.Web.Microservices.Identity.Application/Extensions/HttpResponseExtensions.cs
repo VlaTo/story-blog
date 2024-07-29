@@ -1,10 +1,10 @@
-﻿using System.Net.Mime;
-using System.Text;
-using System.Text.Json;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
 using Microsoft.Net.Http.Headers;
 using StoryBlog.Web.Microservices.Identity.Application.Configuration;
+using System.Net.Mime;
+using System.Text;
+using System.Text.Json;
 
 namespace StoryBlog.Web.Microservices.Identity.Application.Extensions;
 
@@ -12,8 +12,8 @@ internal static class HttpResponseExtensions
 {
     public static void AddScriptCspHeaders(this HttpResponse response, CspOptions options, string hash)
     {
-        var csp1part = options.Level == CspLevel.One ? "'unsafe-inline' " : string.Empty;
-        var cspHeader = $"default-src 'none'; script-src {csp1part}'{hash}'";
+        var csp1Part = options.Level == CspLevel.One ? "'unsafe-inline' " : string.Empty;
+        var cspHeader = $"default-src 'none'; script-src {csp1Part}'{hash}'";
 
         AddCspHeaders(response.Headers, options, cspHeader);
     }
@@ -22,12 +22,12 @@ internal static class HttpResponseExtensions
     {
         if (false == headers.ContainsKey(HeaderNames.ContentSecurityPolicy))
         {
-            headers.Add(HeaderNames.ContentSecurityPolicy, cspHeader);
+            headers.Append(HeaderNames.ContentSecurityPolicy, cspHeader);
         }
 
         if (options.AddDeprecatedHeader && false == headers.ContainsKey(Core.HeaderNames.XContentSecurityPolicy))
         {
-            headers.Add(Core.HeaderNames.XContentSecurityPolicy, cspHeader);
+            headers.Append(Core.HeaderNames.XContentSecurityPolicy, cspHeader);
         }
     }
 
@@ -55,7 +55,7 @@ internal static class HttpResponseExtensions
 
         if (false == response.Headers.ContainsKey(HeaderNames.Pragma))
         {
-            response.Headers.Add(HeaderNames.Pragma, CacheControlHeaderValue.NoCacheString);
+            response.Headers.Append(HeaderNames.Pragma, CacheControlHeaderValue.NoCacheString);
         }
     }
 
@@ -73,8 +73,7 @@ internal static class HttpResponseExtensions
                 {
                     MaxAge = TimeSpan.FromSeconds(maxAge)
                 };
-                var value = new StringValues(cacheControl.ToString());
-                response.Headers.Add(HeaderNames.CacheControl, value);
+                response.Headers.Append(HeaderNames.CacheControl, new StringValues(cacheControl.ToString()));
             }
 
             if (true == varyBy?.Any())

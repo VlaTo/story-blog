@@ -3,6 +3,8 @@ using StoryBlog.Web.Microservices.Identity.Application.Validation.Requests;
 using System.Collections.Specialized;
 using System.Security.Cryptography;
 using System.Text;
+using StoryBlog.Web.Common.Identity.Permission;
+using OidcConstants = IdentityModel.OidcConstants;
 
 namespace StoryBlog.Web.Microservices.Identity.Application.Extensions;
 

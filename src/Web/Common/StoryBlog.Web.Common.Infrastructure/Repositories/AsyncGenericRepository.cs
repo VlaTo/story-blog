@@ -5,17 +5,10 @@ using StoryBlog.Web.Common.Domain.Specifications;
 
 namespace StoryBlog.Web.Common.Infrastructure.Repositories;
 
-public class AsyncGenericRepository<TEntity, TDbContext> : IAsyncGenericRepository<TEntity>
+public class AsyncGenericRepository<TEntity, TDbContext>(TDbContext context) : IAsyncGenericRepository<TEntity>
     where TEntity : class, IEntity
     where TDbContext : DbContext
 {
-    private readonly TDbContext context;
-
-    public AsyncGenericRepository(TDbContext context)
-    {
-        this.context = context;
-    }
-
     public async Task AddAsync(TEntity entity, CancellationToken cancellationToken)
     {
         var entities = context.Set<TEntity>();

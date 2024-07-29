@@ -1,4 +1,5 @@
-﻿using StoryBlog.Web.Microservices.Identity.Application.Storage;
+﻿using StoryBlog.Web.Common.Identity.Permission;
+using StoryBlog.Web.Microservices.Identity.Application.Storage;
 
 namespace StoryBlog.Web.Microservices.Identity.Application.Extensions;
 
@@ -17,7 +18,7 @@ public static class ResourcesExtensions
 
         if (resources.OfflineAccess)
         {
-            names.Add(IdentityServerConstants.StandardScopes.OfflineAccess);
+            names.Add(OidcConstants.StandardScopes.OfflineAccess);
         }
 
         return names;

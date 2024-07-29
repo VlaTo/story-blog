@@ -83,8 +83,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StoryBlog.Infrastructure.An
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StoryBlog.Web.Common.Result", "src\Web\Common\StoryBlog.Web.Common.Result\StoryBlog.Web.Common.Result.csproj", "{4665DAC1-E6BD-4B9E-8E19-E4C99C82EFC8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StoryBlog.Web.Common.Identity.Permission", "src\Web\Identity\StoryBlog.Web.Common.Identity.Permission\StoryBlog.Web.Common.Identity.Permission.csproj", "{5CF9088E-9844-4149-AEE6-A0691B299211}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MessageHub", "MessageHub", "{CAA20982-042B-41A1-9736-B087CFE2F855}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StoryBlog.Web.MessageHub", "src\Web\MessageHub\StoryBlog.Web.MessageHub\StoryBlog.Web.MessageHub.csproj", "{2CAFCB67-8A95-4E0E-965D-2BCC7EDA334C}"
@@ -107,11 +105,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StoryBlog.Web.Microservices
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StoryBlog.Web.Microservices.Communication.Shared", "src\Web\Microservices\Communication\StoryBlog.Web.Microservices.Communication.Shared\StoryBlog.Web.Microservices.Communication.Shared.csproj", "{52B90E99-E04C-435E-892C-0216253C2B26}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StoryBlog.Web.Microservices.Communication.MessageHub", "src\Web\Microservices\Communication\StoryBlog.Web.Microservices.Communication.MessageHub\StoryBlog.Web.Microservices.Communication.MessageHub.csproj", "{BC4D5C9B-DBE8-4B16-8493-7F9EEDEEB1B1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StoryBlog.Web.Microservices.Communication.MessageHub", "src\Web\Microservices\Communication\StoryBlog.Web.Microservices.Communication.MessageHub\StoryBlog.Web.Microservices.Communication.MessageHub.csproj", "{BC4D5C9B-DBE8-4B16-8493-7F9EEDEEB1B1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StoryBlog.Web.Microservices.Comments.Events", "src\Web\Microservices\Comments\StoryBlog.Web.Microservices.Comments.Events\StoryBlog.Web.Microservices.Comments.Events.csproj", "{C05B7A93-79C7-458A-B524-8C7A35043253}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StoryBlog.Web.Microservices.Comments.Events", "src\Web\Microservices\Comments\StoryBlog.Web.Microservices.Comments.Events\StoryBlog.Web.Microservices.Comments.Events.csproj", "{C05B7A93-79C7-458A-B524-8C7A35043253}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StoryBlog.Web.Microservices.Posts.Events", "src\Web\Microservices\Posts\StoryBlog.Web.Microservices.Posts.Events\StoryBlog.Web.Microservices.Posts.Events.csproj", "{2923FDE3-9B29-4D4E-988A-B3A219243371}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StoryBlog.Web.Microservices.Posts.Events", "src\Web\Microservices\Posts\StoryBlog.Web.Microservices.Posts.Events\StoryBlog.Web.Microservices.Posts.Events.csproj", "{2923FDE3-9B29-4D4E-988A-B3A219243371}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StoryBlog.Web.Identity.Client", "src\Web\Identity\StoryBlog.Web.Identity.Client\StoryBlog.Web.Identity.Client.csproj", "{3870A97A-222A-444C-BB2C-C7163804DC2F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StoryBlog.Web.Common.Identity.Permission", "src\Web\Common\StoryBlog.Web.Common.Identity.Permission\StoryBlog.Web.Common.Identity.Permission.csproj", "{24286B09-E2B0-46FC-934C-16444938AC4B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -223,10 +225,6 @@ Global
 		{4665DAC1-E6BD-4B9E-8E19-E4C99C82EFC8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4665DAC1-E6BD-4B9E-8E19-E4C99C82EFC8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4665DAC1-E6BD-4B9E-8E19-E4C99C82EFC8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5CF9088E-9844-4149-AEE6-A0691B299211}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5CF9088E-9844-4149-AEE6-A0691B299211}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5CF9088E-9844-4149-AEE6-A0691B299211}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5CF9088E-9844-4149-AEE6-A0691B299211}.Release|Any CPU.Build.0 = Release|Any CPU
 		{2CAFCB67-8A95-4E0E-965D-2BCC7EDA334C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{2CAFCB67-8A95-4E0E-965D-2BCC7EDA334C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2CAFCB67-8A95-4E0E-965D-2BCC7EDA334C}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -275,6 +273,14 @@ Global
 		{2923FDE3-9B29-4D4E-988A-B3A219243371}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2923FDE3-9B29-4D4E-988A-B3A219243371}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2923FDE3-9B29-4D4E-988A-B3A219243371}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3870A97A-222A-444C-BB2C-C7163804DC2F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3870A97A-222A-444C-BB2C-C7163804DC2F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3870A97A-222A-444C-BB2C-C7163804DC2F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3870A97A-222A-444C-BB2C-C7163804DC2F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{24286B09-E2B0-46FC-934C-16444938AC4B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{24286B09-E2B0-46FC-934C-16444938AC4B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{24286B09-E2B0-46FC-934C-16444938AC4B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{24286B09-E2B0-46FC-934C-16444938AC4B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -313,7 +319,6 @@ Global
 		{F0BDC558-53C1-437E-A5F7-CD01CF4B9A79} = {7699E9E6-BB87-42DE-A80C-86692C996C44}
 		{71C31742-8757-4D35-9C19-23DD6D5C0D29} = {7699E9E6-BB87-42DE-A80C-86692C996C44}
 		{4665DAC1-E6BD-4B9E-8E19-E4C99C82EFC8} = {9D593EF7-B4BD-40A7-9D40-B03DDA4D92E8}
-		{5CF9088E-9844-4149-AEE6-A0691B299211} = {9D593EF7-B4BD-40A7-9D40-B03DDA4D92E8}
 		{2CAFCB67-8A95-4E0E-965D-2BCC7EDA334C} = {CAA20982-042B-41A1-9736-B087CFE2F855}
 		{5DAE8A7C-4116-4F6F-B378-6EAD8D8444E8} = {CAA20982-042B-41A1-9736-B087CFE2F855}
 		{BEA082BE-E8A4-4BE6-B472-1F8CB2F97F1C} = {CAA20982-042B-41A1-9736-B087CFE2F855}
@@ -327,6 +332,8 @@ Global
 		{BC4D5C9B-DBE8-4B16-8493-7F9EEDEEB1B1} = {7AE9E9D3-12A5-4167-AC48-864C61C019B9}
 		{C05B7A93-79C7-458A-B524-8C7A35043253} = {92ABFCC3-3CAA-46AB-8B04-20DE41555628}
 		{2923FDE3-9B29-4D4E-988A-B3A219243371} = {CC9FD65D-640E-4040-9434-F3B664F9C7C1}
+		{3870A97A-222A-444C-BB2C-C7163804DC2F} = {5B6E0961-2C8C-49B7-8CEE-72E248418304}
+		{24286B09-E2B0-46FC-934C-16444938AC4B} = {9D593EF7-B4BD-40A7-9D40-B03DDA4D92E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D7123581-6A53-434A-BD68-656AB44693B4}

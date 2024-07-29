@@ -1,5 +1,4 @@
-﻿using IdentityModel;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 using StoryBlog.Web.Microservices.Identity.Application.Configuration;
@@ -9,6 +8,9 @@ using StoryBlog.Web.Microservices.Identity.Application.Storage;
 using StoryBlog.Web.Microservices.Identity.Application.Validation.Contexts;
 using StoryBlog.Web.Microservices.Identity.Application.Validation.Results;
 using System.Security.Claims;
+using StoryBlog.Web.Common.Identity.Permission;
+using JwtClaimTypes = IdentityModel.JwtClaimTypes;
+using OidcConstants = IdentityModel.OidcConstants;
 
 namespace StoryBlog.Web.Microservices.Identity.Application.Services;
 

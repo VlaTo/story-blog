@@ -1,4 +1,5 @@
-﻿using StoryBlog.Web.Microservices.Identity.Application.Extensions;
+﻿using StoryBlog.Web.Common.Identity.Permission;
+using StoryBlog.Web.Microservices.Identity.Application.Extensions;
 using StoryBlog.Web.Microservices.Identity.Application.Storage;
 
 namespace StoryBlog.Web.Microservices.Identity.Application.Models;
@@ -92,7 +93,7 @@ public class ResourceValidationResult
     public ResourceValidationResult Filter(IEnumerable<string>? scopeValues)
     {
         var scopeNames = (scopeValues ?? Enumerable.Empty<string>()).ToArray();
-        var offline = scopeNames.Contains(IdentityServerConstants.StandardScopes.OfflineAccess);
+        var offline = scopeNames.Contains(OidcConstants.StandardScopes.OfflineAccess);
 
         var parsedScopesToKeep = ParsedScopes
             .Where(x => scopeNames.Contains(x.RawValue))
@@ -152,7 +153,7 @@ public class ResourceValidationResult
 
             if (Resources.OfflineAccess)
             {
-                parsedScopesToKeepList.Add(new ParsedScopeValue(IdentityServerConstants.StandardScopes.OfflineAccess));
+                parsedScopesToKeepList.Add(new ParsedScopeValue(OidcConstants.StandardScopes.OfflineAccess));
             }
 
             parsedScopesToKeep = parsedScopesToKeepList;
