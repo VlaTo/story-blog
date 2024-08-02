@@ -12,18 +12,18 @@ internal sealed class StoryBlogApiAuthorizationMessageHandler : OptionalAuthoriz
         var endpoints = options.Value.Endpoints;
 
         ConfigureHandler(
-            urlsToAuthorize: new[]
-            {
+            urlsToAuthorize:
+            [
                 endpoints.Post.BasePath,
                 endpoints.Posts.BasePath,
                 endpoints.Comments.BasePath
-            },
-            scopes: new[]
-            {
+            ],
+            scopes:
+            [
                 "openid",
                 "profile",
                 "blog"
-            }
+            ]
         );
     }
 }

@@ -2,48 +2,8 @@
 
 public static class Constants
 {
-    public const string IdentityServerName = "SampleBlog.IdentityServer";
-    public const string IdentityServerAuthenticationType = IdentityServerName;
-    public const string ExternalAuthenticationMethod = "external";
-    public const string DefaultHashAlgorithm = "SHA256";
 
-    public static readonly TimeSpan DefaultCookieTimeSpan = TimeSpan.FromHours(10);
-    public static readonly TimeSpan DefaultCacheDuration = TimeSpan.FromMinutes(60);
 
-    public static readonly List<string> SupportedResponseTypes =
-    [
-        OidcConstants.ResponseTypes.Code,
-        OidcConstants.ResponseTypes.Token,
-        OidcConstants.ResponseTypes.IdToken,
-        OidcConstants.ResponseTypes.IdTokenToken,
-        OidcConstants.ResponseTypes.CodeIdToken,
-        OidcConstants.ResponseTypes.CodeToken,
-        OidcConstants.ResponseTypes.CodeIdTokenToken
-    ];
-
-    public static readonly Dictionary<string, string> ResponseTypeToGrantTypeMapping = new()
-    {
-        { OidcConstants.ResponseTypes.Code, GrantType.AuthorizationCode },
-        { OidcConstants.ResponseTypes.Token, GrantType.Implicit },
-        { OidcConstants.ResponseTypes.IdToken, GrantType.Implicit },
-        { OidcConstants.ResponseTypes.IdTokenToken, GrantType.Implicit },
-        { OidcConstants.ResponseTypes.CodeIdToken, GrantType.Hybrid },
-        { OidcConstants.ResponseTypes.CodeToken, GrantType.Hybrid },
-        { OidcConstants.ResponseTypes.CodeIdTokenToken, GrantType.Hybrid }
-    };
-
-    public static readonly List<string> AllowedGrantTypesForAuthorizeEndpoint = new()
-    {
-        GrantType.AuthorizationCode,
-        GrantType.Implicit,
-        GrantType.Hybrid
-    };
-
-    public static readonly List<string> SupportedCodeChallengeMethods = new()
-    {
-        OidcConstants.CodeChallengeMethods.Plain,
-        OidcConstants.CodeChallengeMethods.Sha256
-    };
 
     public enum ScopeRequirement
     {
@@ -53,58 +13,14 @@ public static class Constants
         Identity
     }
 
-    public static readonly Dictionary<string, ScopeRequirement> ResponseTypeToScopeRequirement = new()
-    {
-        { OidcConstants.ResponseTypes.Code, ScopeRequirement.None },
-        { OidcConstants.ResponseTypes.Token, ScopeRequirement.ResourceOnly },
-        { OidcConstants.ResponseTypes.IdToken, ScopeRequirement.IdentityOnly },
-        { OidcConstants.ResponseTypes.IdTokenToken, ScopeRequirement.Identity },
-        { OidcConstants.ResponseTypes.CodeIdToken, ScopeRequirement.Identity },
-        { OidcConstants.ResponseTypes.CodeToken, ScopeRequirement.Identity },
-        { OidcConstants.ResponseTypes.CodeIdTokenToken, ScopeRequirement.Identity }
-    };
 
-    public static readonly Dictionary<string, IEnumerable<string>> AllowedResponseModesForGrantType = new()
-    {
-        { GrantType.AuthorizationCode, new[] { OidcConstants.ResponseModes.Query, OidcConstants.ResponseModes.FormPost, OidcConstants.ResponseModes.Fragment } },
-        { GrantType.Hybrid, new[] { OidcConstants.ResponseModes.Fragment, OidcConstants.ResponseModes.FormPost }},
-        { GrantType.Implicit, new[] { OidcConstants.ResponseModes.Fragment, OidcConstants.ResponseModes.FormPost }}
-    };
-
-    public static readonly List<string> SupportedResponseModes = new()
-    {
-        OidcConstants.ResponseModes.FormPost,
-        OidcConstants.ResponseModes.Query,
-        OidcConstants.ResponseModes.Fragment
-    };
 
     public static string[] SupportedSubjectTypes =
     {
         "pairwise", "public"
     };
 
-    public static class SigningAlgorithms
-    {
-        public const string RSA_SHA_256 = "RS256";
-    }
 
-    public static readonly List<string> SupportedDisplayModes = new()
-    {
-        OidcConstants.DisplayModes.Page,
-        OidcConstants.DisplayModes.Popup,
-        OidcConstants.DisplayModes.Touch,
-        OidcConstants.DisplayModes.Wap
-    };
-
-    public static readonly List<string> SupportedPromptModes = new()
-    {
-        OidcConstants.PromptModes.None,
-        OidcConstants.PromptModes.Login,
-        OidcConstants.PromptModes.Consent,
-        OidcConstants.PromptModes.SelectAccount
-    };
-
-    public const string SuppressedPrompt = "suppressed_" + OidcConstants.AuthorizeRequest.Prompt;
 
     public static class KnownAcrValues
     {
@@ -114,52 +30,7 @@ public static class Constants
         public static readonly string[] All = [HomeRealm, Tenant];
     }
 
-    public static Dictionary<string, int> ProtectedResourceErrorStatusCodes = new()
-    {
-        { OidcConstants.ProtectedResourceErrors.InvalidToken,      401 },
-        { OidcConstants.ProtectedResourceErrors.ExpiredToken,      401 },
-        { OidcConstants.ProtectedResourceErrors.InvalidRequest,    400 },
-        { OidcConstants.ProtectedResourceErrors.InsufficientScope, 403 }
-    };
 
-    public static readonly Dictionary<string, IEnumerable<string>> ScopeToClaimsMapping = new()
-    {
-        { OidcConstants.StandardScopes.Profile, new[]
-        {
-            JwtClaimTypes.Name,
-            JwtClaimTypes.FamilyName,
-            JwtClaimTypes.GivenName,
-            JwtClaimTypes.MiddleName,
-            JwtClaimTypes.NickName,
-            JwtClaimTypes.PreferredUserName,
-            JwtClaimTypes.Profile,
-            JwtClaimTypes.Picture,
-            JwtClaimTypes.WebSite,
-            JwtClaimTypes.Gender,
-            JwtClaimTypes.BirthDate,
-            JwtClaimTypes.ZoneInfo,
-            JwtClaimTypes.Locale,
-            JwtClaimTypes.UpdatedAt
-        }},
-        { OidcConstants.StandardScopes.Email, new[]
-        {
-            JwtClaimTypes.Email,
-            JwtClaimTypes.EmailVerified
-        }},
-        { OidcConstants.StandardScopes.Address, new[]
-        {
-            JwtClaimTypes.Address
-        }},
-        { OidcConstants.StandardScopes.Phone, new[]
-        {
-            JwtClaimTypes.PhoneNumber,
-            JwtClaimTypes.PhoneNumberVerified
-        }},
-        { OidcConstants.StandardScopes.OpenId, new[]
-        {
-            JwtClaimTypes.Subject
-        }}
-    };
 
     public static class UIConstants
     {

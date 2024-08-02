@@ -4,7 +4,6 @@ using Microsoft.IdentityModel.Logging;
 using SlimMessageBus.Host;
 using SlimMessageBus.Host.RabbitMQ;
 using SlimMessageBus.Host.Serialization.SystemTextJson;
-using StoryBlog.Web.Identity.Extensions;
 using StoryBlog.Web.MessageHub.Server.Extensions;
 using StoryBlog.Web.MessageHub.Services;
 using StoryBlog.Web.Microservices.Comments.Events;
@@ -17,6 +16,7 @@ using StoryBlog.Web.Microservices.Communication.WebApi.MessageBus.Consumers;
 using StoryBlog.Web.Microservices.Posts.Events;
 using System.Diagnostics.Tracing;
 using System.Net.Mime;
+using StoryBlog.Web.Identity.DependencyInjection.Extensions;
 using StoryBlog.Web.Microservices.Communication.MessageHub.Messages;
 using StoryBlog.Web.Microservices.Communication.WebApi.MessageHub.Handlers;
 

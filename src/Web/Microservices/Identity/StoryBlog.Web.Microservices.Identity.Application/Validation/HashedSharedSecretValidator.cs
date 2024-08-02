@@ -1,4 +1,5 @@
-﻿using IdentityModel;
+﻿using System.Security.Cryptography;
+using IdentityModel;
 using Microsoft.Extensions.Logging;
 using StoryBlog.Web.Microservices.Identity.Application.Extensions;
 using StoryBlog.Web.Microservices.Identity.Application.Models;
@@ -46,9 +47,10 @@ public sealed class HashedSharedSecretValidator : ISecretValidator
         }
 
         var sharedSecrets = secrets
-            .Where(s => s.Type == IdentityServerConstants.SecretTypes.SharedSecret);
+            .Where(s => s.Type == IdentityServerConstants.SecretTypes.SharedSecret)
+            .ToArray();
 
-        if (false == sharedSecrets.Any())
+        if (0 == sharedSecrets.Length)
         {
             logger.LogDebug("No shared secret configured for client.");
             return fail;

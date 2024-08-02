@@ -1,4 +1,7 @@
 ﻿using Microsoft.IdentityModel.Tokens;
+using StoryBlog.Web.Common.Identity.Permission;
+using StoryBlog.Web.Identity;
+using static StoryBlog.Web.Common.Identity.Permission.Constants;
 
 namespace StoryBlog.Web.Microservices.Identity.Application;
 
@@ -11,6 +14,49 @@ public class IdentityServerConstants
     public const string DefaultCheckSessionCookieName = "sbid.session";
     public const string AccessTokenAudience = "{0}resources";
     public const string JwtRequestClientKey = "sbid.jwtrequesturi.client";
+    public const string IdentityServerName = "SampleBlog.IdentityServer";
+    public const string IdentityServerAuthenticationType = IdentityServerName;
+    public const string ExternalAuthenticationMethod = "external";
+    public const string DefaultHashAlgorithm = "SHA256";
+    public static readonly TimeSpan DefaultCookieTimeSpan = TimeSpan.FromHours(10);
+    public static readonly TimeSpan DefaultCacheDuration = TimeSpan.FromMinutes(60);
+    
+    public const string SuppressedPrompt = "suppressed_" + OidcConstants.AuthorizeRequest.Prompt;
+
+    public static readonly List<string> SupportedResponseTypes =
+    [
+        OidcConstants.ResponseTypes.Code,
+        OidcConstants.ResponseTypes.Token,
+        OidcConstants.ResponseTypes.IdToken,
+        OidcConstants.ResponseTypes.IdTokenToken,
+        OidcConstants.ResponseTypes.CodeIdToken,
+        OidcConstants.ResponseTypes.CodeToken,
+        OidcConstants.ResponseTypes.CodeIdTokenToken
+    ];
+    
+    public static readonly Dictionary<string, string> ResponseTypeToGrantTypeMapping = new()
+    {
+        { OidcConstants.ResponseTypes.Code, GrantType.AuthorizationCode },
+        { OidcConstants.ResponseTypes.Token, GrantType.Implicit },
+        { OidcConstants.ResponseTypes.IdToken, GrantType.Implicit },
+        { OidcConstants.ResponseTypes.IdTokenToken, GrantType.Implicit },
+        { OidcConstants.ResponseTypes.CodeIdToken, GrantType.Hybrid },
+        { OidcConstants.ResponseTypes.CodeToken, GrantType.Hybrid },
+        { OidcConstants.ResponseTypes.CodeIdTokenToken, GrantType.Hybrid }
+    };
+    
+    public static readonly List<string> SupportedCodeChallengeMethods =
+    [
+        OidcConstants.CodeChallengeMethods.Plain,
+        OidcConstants.CodeChallengeMethods.Sha256
+    ];
+
+    public static readonly List<string> AllowedGrantTypesForAuthorizeEndpoint =
+    [
+        GrantType.AuthorizationCode,
+        GrantType.Implicit,
+        GrantType.Hybrid
+    ];
 
     /// <summary>
     /// Constants for local IdentityServer access token authentication.
@@ -49,6 +95,92 @@ public class IdentityServerConstants
     public static class ClaimValueTypes
     {
         public const string Json = "json";
+    }
+    
+    public static readonly Dictionary<string, IEnumerable<string>> AllowedResponseModesForGrantType = new()
+    {
+        { GrantType.AuthorizationCode, new[] { OidcConstants.ResponseModes.Query, OidcConstants.ResponseModes.FormPost, OidcConstants.ResponseModes.Fragment } },
+        { GrantType.Hybrid, new[] { OidcConstants.ResponseModes.Fragment, OidcConstants.ResponseModes.FormPost }},
+        { GrantType.Implicit, new[] { OidcConstants.ResponseModes.Fragment, OidcConstants.ResponseModes.FormPost }}
+    };
+
+    public static readonly Dictionary<string, ScopeRequirement> ResponseTypeToScopeRequirement = new()
+    {
+        { OidcConstants.ResponseTypes.Code, ScopeRequirement.None },
+        { OidcConstants.ResponseTypes.Token, ScopeRequirement.ResourceOnly },
+        { OidcConstants.ResponseTypes.IdToken, ScopeRequirement.IdentityOnly },
+        { OidcConstants.ResponseTypes.IdTokenToken, ScopeRequirement.Identity },
+        { OidcConstants.ResponseTypes.CodeIdToken, ScopeRequirement.Identity },
+        { OidcConstants.ResponseTypes.CodeToken, ScopeRequirement.Identity },
+        { OidcConstants.ResponseTypes.CodeIdTokenToken, ScopeRequirement.Identity }
+    };
+
+    public static readonly List<string> SupportedResponseModes =
+    [
+        OidcConstants.ResponseModes.FormPost,
+        OidcConstants.ResponseModes.Query,
+        OidcConstants.ResponseModes.Fragment
+    ];
+
+    public static readonly List<string> SupportedDisplayModes =
+    [
+        OidcConstants.DisplayModes.Page,
+        OidcConstants.DisplayModes.Popup,
+        OidcConstants.DisplayModes.Touch,
+        OidcConstants.DisplayModes.Wap
+    ];
+
+    public static readonly List<string> SupportedPromptModes =
+    [
+        OidcConstants.PromptModes.None,
+        OidcConstants.PromptModes.Login,
+        OidcConstants.PromptModes.Consent,
+        OidcConstants.PromptModes.SelectAccount
+    ];
+
+    public static readonly Dictionary<string, IEnumerable<string>> ScopeToClaimsMapping = new()
+    {
+        { OidcConstants.StandardScopes.Profile, new[]
+        {
+            JwtClaimTypes.Name,
+            JwtClaimTypes.FamilyName,
+            JwtClaimTypes.GivenName,
+            JwtClaimTypes.MiddleName,
+            JwtClaimTypes.NickName,
+            JwtClaimTypes.PreferredUserName,
+            JwtClaimTypes.Profile,
+            JwtClaimTypes.Picture,
+            JwtClaimTypes.WebSite,
+            JwtClaimTypes.Gender,
+            JwtClaimTypes.BirthDate,
+            JwtClaimTypes.ZoneInfo,
+            JwtClaimTypes.Locale,
+            JwtClaimTypes.UpdatedAt
+        }},
+        { OidcConstants.StandardScopes.Email, new[]
+        {
+            JwtClaimTypes.Email,
+            JwtClaimTypes.EmailVerified
+        }},
+        { OidcConstants.StandardScopes.Address, new[]
+        {
+            JwtClaimTypes.Address
+        }},
+        { OidcConstants.StandardScopes.Phone, new[]
+        {
+            JwtClaimTypes.PhoneNumber,
+            JwtClaimTypes.PhoneNumberVerified
+        }},
+        { OidcConstants.StandardScopes.OpenId, new[]
+        {
+            JwtClaimTypes.Subject
+        }}
+    };
+
+    public static class SigningAlgorithms
+    {
+        public const string SHA_256 = "RS256";
+        public const string RSA_SHA_256 = "RS256";
     }
 
     public static class ParsedSecretTypes
@@ -90,8 +222,8 @@ public class IdentityServerConstants
         public const string BackchannelAuthenticationRequestIdValidation = "BackchannelAuthenticationRequestIdValidation";
     }
 
-    public static readonly IEnumerable<string> SupportedSigningAlgorithms = new List<string>
-    {
+    public static readonly IEnumerable<string> SupportedSigningAlgorithms =
+    [
         SecurityAlgorithms.RsaSha256,
         SecurityAlgorithms.RsaSha384,
         SecurityAlgorithms.RsaSha512,
@@ -103,6 +235,14 @@ public class IdentityServerConstants
         SecurityAlgorithms.EcdsaSha256,
         SecurityAlgorithms.EcdsaSha384,
         SecurityAlgorithms.EcdsaSha512
+    ];
+
+    public static Dictionary<string, int> ProtectedResourceErrorStatusCodes = new()
+    {
+        { OidcConstants.ProtectedResourceErrors.InvalidToken,      401 },
+        { OidcConstants.ProtectedResourceErrors.ExpiredToken,      401 },
+        { OidcConstants.ProtectedResourceErrors.InvalidRequest,    400 },
+        { OidcConstants.ProtectedResourceErrors.InsufficientScope, 403 }
     };
 
     public enum RsaSigningAlgorithm

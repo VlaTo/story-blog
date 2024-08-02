@@ -16,7 +16,6 @@ using StoryBlog.Web.Microservices.Identity.Application.Validation.Requests;
 using StoryBlog.Web.Microservices.Identity.Application.Validation.Results;
 using System.Collections.Specialized;
 using System.Text;
-using OidcConstants = StoryBlog.Web.Common.Identity.Permission.OidcConstants;
 
 namespace StoryBlog.Web.Microservices.Identity.Application.Validation;
 
@@ -441,7 +440,7 @@ internal class TokenRequestValidator : ITokenRequestValidator
             return Invalid(OidcConstants.TokenErrors.InvalidGrant);
         }
 
-        if (false == Constants.SupportedCodeChallengeMethods.Contains(authorizationCode.CodeChallengeMethod))
+        if (false == IdentityServerConstants.SupportedCodeChallengeMethods.Contains(authorizationCode.CodeChallengeMethod))
         {
             LogError("Unsupported code challenge method", new { codeChallengeMethod = authorizationCode.CodeChallengeMethod });
             return Invalid(OidcConstants.TokenErrors.InvalidGrant);

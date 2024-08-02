@@ -2,6 +2,7 @@
 using StoryBlog.Web.Microservices.Identity.Application.Core;
 using System.Collections.Specialized;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Encodings.Web;
@@ -100,19 +101,19 @@ public static class StringExtensions
     }
 
     [DebuggerStepThrough]
-    public static bool IsPresent(this string? value)
+    public static bool IsPresent([NotNullWhen(true)] this string? value)
     {
         return false == String.IsNullOrWhiteSpace(value);
     }
-    
+
     [DebuggerStepThrough]
-    public static bool IsMissing(this string? value)
+    public static bool IsMissing([MaybeNullWhen(true)] this string? value)
     {
         return String.IsNullOrWhiteSpace(value);
     }
 
     [DebuggerStepThrough]
-    public static bool IsLocalUrl(this string? url)
+    public static bool IsLocalUrl([NotNullWhen(true)] this string? url)
     {
         if (String.IsNullOrEmpty(url))
         {

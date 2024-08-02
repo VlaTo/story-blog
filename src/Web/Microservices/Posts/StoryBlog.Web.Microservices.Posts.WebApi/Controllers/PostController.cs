@@ -1,4 +1,5 @@
-﻿using Asp.Versioning;
+﻿using System.ComponentModel;
+using Asp.Versioning;
 using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -13,28 +14,19 @@ using StoryBlog.Web.Microservices.Posts.WebApi.Core;
 namespace StoryBlog.Web.Microservices.Posts.WebApi.Controllers;
 
 /// <summary>
-/// 
+/// Controller for work (manipulate) for single post-entry.
 /// </summary>
 [ApiVersion("1.0-alpha")]
 [AllowAnonymous]
 [ApiController]
 [Route("api/v{version:apiVersion}/[controller]")]
-public sealed class PostController : Controller
+[Description("PostsController description")]
+public sealed class PostController(
+    IMediator mediator,
+    IMapper mapper,
+    ILogger<PostController> logger)
+    : Controller
 {
-    private readonly IMediator mediator;
-    private readonly IMapper mapper;
-    private readonly ILogger<PostController> logger;
-
-    public PostController(
-        IMediator mediator,
-        IMapper mapper,
-        ILogger<PostController> logger)
-    {
-        this.mediator = mediator;
-        this.mapper = mapper;
-        this.logger = logger;
-    }
-
     /// <summary>
     /// Gets existing post by slug or key(Guid).
     /// </summary>
@@ -53,9 +45,13 @@ public sealed class PostController : Controller
             return Ok(model);
         }
 
-        logger.LogDebug($"Post not found for slug: {slugOrKey}");
+        if (null != getPostResult.Error)
+        {
+            logger.LogError(getPostResult.Error, "Failed to handle request");
+            return BadRequest(getPostResult.Error);
+        }
 
-        return BadRequest();
+        return NotFound();
     }
 
     /// <summary>

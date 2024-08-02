@@ -4,7 +4,6 @@ using Microsoft.Net.Http.Headers;
 using StoryBlog.Web.Microservices.Identity.Application.Extensions;
 using StoryBlog.Web.Microservices.Identity.Application.Hosting;
 using System.Net;
-using StoryBlog.Web.Common.Identity.Permission;
 using OidcConstants = IdentityModel.OidcConstants;
 
 namespace StoryBlog.Web.Microservices.Identity.Application.Endpoints.Results;
@@ -34,7 +33,7 @@ internal sealed class ProtectedResourceErrorResult : IEndpointResult
         context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
         context.Response.SetNoCache();
 
-        if (Constants.ProtectedResourceErrorStatusCodes.TryGetValue(Error, out var statusCode))
+        if (IdentityServerConstants.ProtectedResourceErrorStatusCodes.TryGetValue(Error, out var statusCode))
         {
             context.Response.StatusCode = statusCode;
         }

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using IdentityModel;
+using Microsoft.EntityFrameworkCore.Migrations;
 using StoryBlog.Web.Common.Identity.Permission;
 using StoryBlog.Web.Microservices.Identity.Application;
 using StoryBlog.Web.Microservices.Identity.Domain;
@@ -123,17 +124,26 @@ public partial class InitialStructure
             schema: SchemaNames.Identity,
             columns: new[]
             {
-                "ClientId", "ClientName", "Description", "ClientUri", "Enabled", "FrontChannelLogoutUri",
+                "Id", "ClientId", "ClientName", "Description", "ClientUri", "Enabled", "FrontChannelLogoutUri",
                 "BackChannelLogoutUri", "AllowedIdentityTokenSigningAlgorithms", "ConsentLifetime",
-                "UpdateAccessTokenClaimsOnRefresh","ClientClaimsPrefix", "PairWiseSubjectSalt", "UserSsoLifetime",
+                "UpdateAccessTokenClaimsOnRefresh", "ClientClaimsPrefix", "PairWiseSubjectSalt", "UserSsoLifetime",
                 "UserCodeType", "RequireClientSecret", "CibaLifetime", "PollingInterval", "Created"
             },
-            values: new object[]
+            values: new object?[,]
             {
-                "288849a891664840975fa7992f247947", "Sample Blog", "Sample Blog Client", "http://localhost:5035",
-                true, "http://localhost:5035/logout", "http://localhost:5035/logout-callback", "RS256", 150000000,
-                false, "sbc_", "k3jr23khk2e4jJKH2hjxbdw_jdTr", 500000000000, "numeric", false, 150000000, 15000000000,
-                DateTimeOffset.Now
+                {
+                    1, "288849a891664840975fa7992f247947", "Sample Blog", "Sample Blog Client",
+                    "http://localhost:5035", true, "http://localhost:5035/logout",
+                    "http://localhost:5035/logout-callback", OidcConstants.Algorithms.Asymmetric.RS256,
+                    150000000, false, "sbc_", "k3jr23khk2e4jJKH2hjxbdw_jdTr", 500000000000, "numeric",
+                    false, 150000000, 15000000000, DateTimeOffset.Now
+                },
+                {
+                    2, "09b7b9b3496a42299123ce88c5429d96", "Comments Api", "Comments Service API",
+                    "http://localhost:5034", true, null, null, OidcConstants.Algorithms.Asymmetric.RS256,
+                    150000000, false, "sbc_", "WMcoEjjP9mLVWKksoAUQ8^5uvBGP", 500000000000, "numeric",
+                    false, 150000000, 15000000000, DateTimeOffset.Now
+                }
             }
         );
 
@@ -150,9 +160,10 @@ public partial class InitialStructure
             {
                 "Origin", "ClientId"
             },
-            values: new object[]
+            values: new object?[,]
             {
-                "http://localhost:5030", 1
+                { "http://localhost:5030", 1},
+                { "http://localhost:5034", 2}
             }
         );
 
@@ -172,7 +183,8 @@ public partial class InitialStructure
             values: new object?[,]
             {
                 { GrantType.AuthorizationCode, 1 },
-                { GrantType.ClientCredentials, 1 }
+                { GrantType.ClientCredentials, 1 },
+                { GrantType.ClientCredentials, 2 }
             }
         );
 
@@ -185,13 +197,14 @@ public partial class InitialStructure
         migrationBuilder.InsertData(
             table: TableNames.ClientProperty,
             schema: SchemaNames.Identity,
-            columns: new[]
+            columns: new []
             {
                 "ClientId", "Key", "Value"
             },
-            values: new object[]
+            values: new object?[,]
             {
-                1, "Profile", "SPA"
+                { 1, "Profile", "SPA" },
+                { 2, "Profile", "SPA" }
             }
         );
 
@@ -232,7 +245,11 @@ public partial class InitialStructure
                 { "openid", 1 },
                 { "profile", 1 },
                 { "blog", 1 },
-                { "comments", 1 }
+                { "comments", 1 },
+
+                { "blog", 2 },
+                { "comments", 2 },
+                { "api", 2 }
             }
         );
 
@@ -249,12 +266,20 @@ public partial class InitialStructure
             {
                 "ClientId", "Description", "Value", "Expiration", "Type", "Created"
             },
-            values: new object[]
+            values: new object?[,]
             {
-                1, "StoryBlog basic secret", "l356jtlk3j5l6tk3j6ltk3j5;6tlk345j6l34k",
-                DateTimeOffset.Now, 
-                SecretTypes.SharedSecret,
-                DateTimeOffset.Now
+                {
+                    1, "StoryBlog basic secret", "l356jtlk3j5l6tk3j6ltk3j5;6tlk345j6l34k",
+                    DateTimeOffset.Now,
+                    SecretTypes.SharedSecret,
+                    DateTimeOffset.Now
+                },
+                {
+                    2, "Comments Service API secret", "3+2nUPyca8UdYF/+r/OUe4xP4nXbplrd5WzcwcEEJgw=",
+                    DateTimeOffset.Now,
+                    SecretTypes.SharedSecret,
+                    DateTimeOffset.Now
+                },
             }
         );
 

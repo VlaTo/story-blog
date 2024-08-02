@@ -1,4 +1,4 @@
-﻿namespace StoryBlog.Web.Identity.Configuration;
+﻿namespace StoryBlog.Web.Identity.DependencyInjection.Configuration;
 
 [Serializable]
 public sealed class StoryBlogAuthenticationOptions

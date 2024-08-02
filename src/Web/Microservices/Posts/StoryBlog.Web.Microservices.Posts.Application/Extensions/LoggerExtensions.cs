@@ -7,7 +7,7 @@ internal static class LoggerExtensions
 {
     public static void LogBackgroundProcessingStarting(this ILogger logger)
     {
-        logger.LogDebug("Start background processing");
+        logger.LogDebug("Starting background processing");
     }
 
     public static void LogBackgroundProcessingReady(this ILogger logger)
@@ -47,5 +47,10 @@ internal static class LoggerExtensions
     public static void LogBackgroundTaskProcessingCompleted(this ILogger logger, IBackgroundTask backgroundTask)
     {
         logger.LogDebug($"Complete processing task: '{backgroundTask.TaskKey:B}'");
+    }
+
+    public static void QueuePostProcessingTask(this ILogger logger, IBackgroundTask backgroundTask)
+    {
+        ;
     }
 }

@@ -35,22 +35,63 @@ public class TestController : ControllerBase
     }
 
     /// <summary>
-    /// Creates new post with parameters specified by <paramref name="request" />.
+    /// Creates new post with parameters specified by <paramref name="postKey" />.
     /// </summary>
     /// <returns>
-    /// 
+    /// OK result
     /// </returns>
     [ProducesResponseType(StatusCodes.Status200OK)]
     [HttpPost(nameof(QueueNewTask))]
     public async Task<IActionResult> QueueNewTask(
-        [FromForm] double seconds,
+        [FromForm] Guid postKey,
         [FromServices] IBlogPostProcessingManager workManager,
         [FromServices] ILogger<TestController> logger)
     {
-        //var backgroundTask = await workManager.AddPostTaskAsync(seconds, cancellationToken: HttpContext.RequestAborted);
-
-        //logger.LogDebug($"New background task with ID: {backgroundTask.Id:D} queued");
+        var backgroundTask = await workManager.QueuePostProcessingTaskAsync(postKey, cancellationToken: HttpContext.RequestAborted);
+        
+        logger.LogDebug($"New background task with Key: {backgroundTask.TaskKey:D} queued");
 
         return Ok();
+    }
+
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [HttpGet(nameof(ObserveRoutes))]
+    public Task<IActionResult> ObserveRoutes(
+        [FromServices] IEnumerable<EndpointDataSource> endpointSources,
+        [FromServices] ILogger<TestController> logger)
+    {
+        var paths = new List<KeyValuePair<string, string[]>>();
+
+        /*var context = new VirtualPathContext(HttpContext, RouteData.DataTokens, RouteData.Values);
+
+        foreach (var router in RouteData.Routers)
+        {
+            var pathData = router.GetVirtualPath(context);
+            paths.Add(pathData?.VirtualPath ?? "(none)");
+        }*/
+
+        foreach (var endpointSource in endpointSources)
+        {
+            var temp = new string[endpointSource.Endpoints.Count];
+
+            for (var index = 0; index < endpointSource.Endpoints.Count; index++)
+            {
+                if (endpointSource.Endpoints[index] is RouteEndpoint re)
+                {
+                    temp[index] = re.RoutePattern.RawText!;
+                }
+                else
+                {
+                    temp[index] = endpointSource.Endpoints[index].DisplayName;
+                }
+            }
+
+            paths.Add(new KeyValuePair<string, string[]>(endpointSource.GetHashCode().ToString(), temp));
+        }
+
+        return Task.FromResult<IActionResult>(Ok(new
+        {
+            Paths = paths.ToArray()
+        }));
     }
 }

@@ -1,4 +1,4 @@
-﻿using StoryBlog.Web.Common.Identity.Permission;
+﻿using StoryBlog.Web.Identity;
 using StoryBlog.Web.Microservices.Identity.Application.Extensions;
 using StoryBlog.Web.Microservices.Identity.Application.Storage;
 

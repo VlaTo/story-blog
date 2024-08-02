@@ -138,7 +138,7 @@ public static class ValidatedAuthorizeRequestExtensions
             suppress.Append(OidcConstants.PromptModes.SelectAccount);
         }
 
-        request.Raw.Add(Constants.SuppressedPrompt, suppress.ToString());
+        request.Raw.Add(IdentityServerConstants.SuppressedPrompt, suppress.ToString());
         request.PromptModes = request.PromptModes
             .Except(new[]
             {

@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using System.Security.Claims;
-using StoryBlog.Web.Common.Identity.Permission;
 using StoryBlog.Web.Microservices.Identity.Application.Core;
 using StoryBlog.Web.Microservices.Identity.Application.Extensions;
 using StoryBlog.Web.Microservices.Identity.Application.Services;
@@ -15,20 +14,20 @@ internal sealed class IdentityServerAuthenticationService : IAuthenticationServi
 {
     private readonly IAuthenticationService service;
     private readonly IAuthenticationSchemeProvider schemes;
-    private readonly ISystemClock clock;
+    private readonly TimeProvider timeProvider;
     private readonly IUserSession session;
     private readonly ILogger<IdentityServerAuthenticationService> logger;
 
     public IdentityServerAuthenticationService(
         Decorator<IAuthenticationService> decorator,
         IAuthenticationSchemeProvider schemes,
-        ISystemClock clock,
+        TimeProvider timeProvider,
         IUserSession session,
         ILogger<IdentityServerAuthenticationService> logger)
     {
         service = decorator.Instance;
         this.schemes = schemes;
-        this.clock = clock;
+        this.timeProvider = timeProvider;
         this.session = session;
         this.logger = logger;
     }
@@ -50,7 +49,7 @@ internal sealed class IdentityServerAuthenticationService : IAuthenticationServi
         if ((null == scheme && cookieScheme == defaultScheme?.Name) || scheme == cookieScheme)
         {
             AssertRequiredClaims(principal);
-            AugmentMissingClaims(principal, clock.UtcNow.UtcDateTime);
+            AugmentMissingClaims(principal, timeProvider.GetUtcNow().UtcDateTime);
 
             properties ??= new AuthenticationProperties();
 
@@ -108,8 +107,8 @@ internal sealed class IdentityServerAuthenticationService : IAuthenticationServi
             logger.LogDebug("Adding idp claim with value: {value}", amr.Value);
             identity.AddClaim(new Claim(JwtClaimTypes.IdentityProvider, amr.Value));
 
-            logger.LogDebug("Adding amr claim with value: {value}", Constants.ExternalAuthenticationMethod);
-            identity.AddClaim(new Claim(JwtClaimTypes.AuthenticationMethod, Constants.ExternalAuthenticationMethod));
+            logger.LogDebug("Adding amr claim with value: {value}", IdentityServerConstants.ExternalAuthenticationMethod);
+            identity.AddClaim(new Claim(JwtClaimTypes.AuthenticationMethod, IdentityServerConstants.ExternalAuthenticationMethod));
         }
 
         if (null == identity.FindFirst(JwtClaimTypes.IdentityProvider))
@@ -127,8 +126,8 @@ internal sealed class IdentityServerAuthenticationService : IAuthenticationServi
             }
             else
             {
-                logger.LogDebug("Adding amr claim with value: {value}", Constants.ExternalAuthenticationMethod);
-                identity.AddClaim(new Claim(JwtClaimTypes.AuthenticationMethod, Constants.ExternalAuthenticationMethod));
+                logger.LogDebug("Adding amr claim with value: {value}", IdentityServerConstants.ExternalAuthenticationMethod);
+                identity.AddClaim(new Claim(JwtClaimTypes.AuthenticationMethod, IdentityServerConstants.ExternalAuthenticationMethod));
             }
         }
 

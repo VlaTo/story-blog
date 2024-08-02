@@ -6,7 +6,7 @@ using StoryBlog.Web.Microservices.Identity.Application.Models;
 using StoryBlog.Web.Microservices.Identity.Application.Storage;
 using StoryBlog.Web.Microservices.Identity.Application.Stores;
 using System.Security.Claims;
-using StoryBlog.Web.Common.Identity.Permission;
+using StoryBlog.Web.Identity;
 
 namespace StoryBlog.Web.Microservices.Identity.Application.Services.Defaults;
 

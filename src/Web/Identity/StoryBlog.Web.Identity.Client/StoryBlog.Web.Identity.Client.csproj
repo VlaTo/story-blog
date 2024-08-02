@@ -7,11 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Extensions\" />
+    <PackageReference Include="System.Net.Http" Version="4.3.4" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\Common\StoryBlog.Web.Common.Identity.Permission\StoryBlog.Web.Common.Identity.Permission.csproj" />
+    <ProjectReference Include="..\StoryBlog.Web.Identity\StoryBlog.Web.Identity.csproj" />
   </ItemGroup>
 
 </Project>

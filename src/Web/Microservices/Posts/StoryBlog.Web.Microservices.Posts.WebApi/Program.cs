@@ -1,10 +1,12 @@
 using Asp.Versioning;
 using Asp.Versioning.ApiExplorer;
 using Microsoft.IdentityModel.Logging;
+using Microsoft.OpenApi.Models;
 using SlimMessageBus.Host;
 using SlimMessageBus.Host.RabbitMQ;
 using SlimMessageBus.Host.Serialization.SystemTextJson;
-using StoryBlog.Web.Identity.Extensions;
+using StoryBlog.Web.Common;
+using StoryBlog.Web.Identity.DependencyInjection.Extensions;
 using StoryBlog.Web.Microservices.Comments.Events;
 using StoryBlog.Web.Microservices.Posts.Application.Contexts;
 using StoryBlog.Web.Microservices.Posts.Application.Extensions;
@@ -14,8 +16,12 @@ using StoryBlog.Web.Microservices.Posts.WebApi.Configuration;
 using StoryBlog.Web.Microservices.Posts.WebApi.Core;
 using StoryBlog.Web.Microservices.Posts.WebApi.Extensions;
 using StoryBlog.Web.Microservices.Posts.WebApi.MessageBus.Consumers;
+using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Diagnostics.Tracing;
 using System.Net.Mime;
+using System.Reflection;
+using System.Runtime.Versioning;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -116,15 +122,18 @@ builder.Services
         options.SubstitutionFormat = "VVVV";
     });
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 
-builder.Services.ConfigureOptions<ConfigureSwaggerOptions>();
+var swaggerGeneratorConfigurator = new SwaggerGeneratorConfigurator();
+
+builder.Services.AddSwaggerGen(swaggerGeneratorConfigurator.ConfigureSwaggerOptions);
 
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
     var apiVersionDescriptionProvider = app.Services.GetRequiredService<IApiVersionDescriptionProvider>();
+
+    swaggerGeneratorConfigurator.ApiVersionDescriptionProvider = apiVersionDescriptionProvider;
 
     app.UseSwagger();
     app.UseSwaggerUI(options =>
@@ -133,7 +142,7 @@ if (app.Environment.IsDevelopment())
         {
             options.SwaggerEndpoint(
                 $"/swagger/{description.GroupName}/swagger.json",
-                description.GroupName.ToUpperInvariant()
+                description.GroupName
             );
         }
     });
@@ -152,3 +161,72 @@ app
     ;
 
 await app.RunAsync();
+
+internal class SwaggerGeneratorConfigurator
+{
+    public IApiVersionDescriptionProvider? ApiVersionDescriptionProvider
+    {
+        get;
+        set;
+    }
+
+    public void ConfigureSwaggerOptions(SwaggerGenOptions options)
+    {
+        if (null == ApiVersionDescriptionProvider)
+        {
+            throw new Exception();
+        }
+
+        foreach (var description in ApiVersionDescriptionProvider.ApiVersionDescriptions)
+        {
+            options.SwaggerDoc(description.GroupName, CreateVersionInfo(description));
+        }
+
+        var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+        var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+
+        options.IncludeXmlComments(xmlPath, includeControllerXmlComments: true);
+    }
+    
+    private static OpenApiInfo CreateVersionInfo(ApiVersionDescription desc)
+    {
+        var assembly = Assembly.GetEntryAssembly();
+        var titleAttribute = CustomAttributes.GetCustomAttribute<AssemblyTitleAttribute>(assembly);
+
+        var title = new StringBuilder();
+        var description = String.Empty;
+
+        if (null != titleAttribute)
+        {
+            var targetFrameworkAttribute = CustomAttributes.GetCustomAttribute<TargetFrameworkAttribute>(assembly);
+
+            title.Append(titleAttribute.Title);
+
+            if (targetFrameworkAttribute is { FrameworkDisplayName: not null })
+            {
+                title.AppendFormat(" ({0}).", targetFrameworkAttribute.FrameworkDisplayName);
+            }
+        }
+
+        var descriptionAttribute = CustomAttributes.GetCustomAttribute<AssemblyDescriptionAttribute>(assembly);
+
+        if (null != descriptionAttribute)
+        {
+            description = descriptionAttribute.Description;
+        }
+
+        var info = new OpenApiInfo
+        {
+            Title = title.ToString(),
+            Description = description,
+            Version = desc.ApiVersion.ToString()
+        };
+
+        if (desc.IsDeprecated)
+        {
+            info.Description += " This API version has been deprecated. Please use one of the new APIs available from the explorer.";
+        }
+
+        return info;
+    }
+}

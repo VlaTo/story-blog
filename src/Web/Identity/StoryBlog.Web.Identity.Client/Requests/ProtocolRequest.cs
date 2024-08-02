@@ -1,7 +1,5 @@
-﻿using System.Net;
-using System.Net.Http.Headers;
+﻿using System.Net.Http.Headers;
 using System.Net.Mime;
-using StoryBlog.Web.Common.Identity.Permission;
 
 namespace StoryBlog.Web.Identity.Client.Requests;
 
@@ -55,6 +53,11 @@ public class ProtocolRequest : HttpRequestMessage
         Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(MediaTypeNames.Application.Json));
     }
 
+    protected ProtocolRequest(ProtocolRequest source)
+    {
+        ApplyInternal(source);
+    }
+
     public ProtocolRequest Clone() => Clone<ProtocolRequest>();
 
     public TRequest Clone<TRequest>() where TRequest : ProtocolRequest, new ()
@@ -105,11 +108,11 @@ public class ProtocolRequest : HttpRequestMessage
                 {
                     if (BasicAuthenticationHeaderType.Rfc6749 == AuthenticationHeaderType)
                     {
-                        //this.SetBasicAuthenticationOAuth(ClientId, ClientSecret ?? "");
+                        SetBasicAuthenticationOAuth(ClientId, ClientSecret);
                     }
                     else if (BasicAuthenticationHeaderType.Rfc2617 == AuthenticationHeaderType)
                     {
-                        //this.SetBasicAuthentication(ClientId, ClientSecret ?? "");
+                        SetBasicAuthentication(ClientId, ClientSecret);
                     }
                     else
                     {
@@ -155,4 +158,43 @@ public class ProtocolRequest : HttpRequestMessage
             Content = new FormUrlEncodedContent(Parameters);
         }
     }
+
+    public void SetBasicAuthentication(string userName, string? password)
+    {
+        Headers.Authorization = new BasicAuthenticationHeaderValue(userName, password);
+    }
+
+    public void SetBasicAuthenticationOAuth(string userName, string? password)
+    {
+        Headers.Authorization = new BasicAuthenticationOAuthHeaderValue(userName, password);
+    }
+
+    protected virtual void Apply(ProtocolRequest request)
+    {
+        RequestUri = request.RequestUri;
+        Version = request.Version;
+        Method = request.Method;
+        Address = request.Address;
+        AuthenticationHeaderType = request.AuthenticationHeaderType;
+        ClientAssertion = request.ClientAssertion;
+        ClientCredentialType = request.ClientCredentialType;
+        ClientId = request.ClientId;
+        ClientSecret = request.ClientSecret;
+            //DPoPProofToken = DPoPProofToken,
+        Parameters = new Parameters(Parameters);
+
+        Headers.Clear();
+
+        foreach (var (key, values) in Headers)
+        {
+            Headers.TryAddWithoutValidation(key, values);
+        }
+
+        foreach (var (key, value) in Options)
+        {
+            Options.TryAdd(key, value);
+        }
+    }
+    
+    private void ApplyInternal(ProtocolRequest request) => Apply(request);
 }

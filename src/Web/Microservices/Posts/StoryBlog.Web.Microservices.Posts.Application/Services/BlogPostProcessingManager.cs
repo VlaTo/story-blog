@@ -2,6 +2,7 @@
 using StoryBlog.Web.Common.Application;
 using StoryBlog.Web.Common.Result;
 using System.Threading.Channels;
+using StoryBlog.Web.Microservices.Posts.Application.Extensions;
 
 namespace StoryBlog.Web.Microservices.Posts.Application.Services;
 
@@ -11,6 +12,8 @@ internal sealed class BlogPostProcessingManager : IBlogPostProcessingManager, IB
 
     private readonly ILogger<BlogPostProcessingManager> logger;
     private readonly Channel<BackgroundTask> channel;
+
+    public bool HasPendingTasks => channel.Reader is { CanCount: true, Count: > 0 };
 
     public BlogPostProcessingManager(ILogger<BlogPostProcessingManager> logger)
     {
@@ -27,7 +30,9 @@ internal sealed class BlogPostProcessingManager : IBlogPostProcessingManager, IB
     public async Task<IBackgroundTask> QueuePostProcessingTaskAsync(Guid postKey, CancellationToken cancellationToken)
     {
         var backgroundTask = new BackgroundTask(Guid.NewGuid(), postKey);
-        
+
+        logger.QueuePostProcessingTask(backgroundTask);
+
         await channel.Writer.WriteAsync(backgroundTask, cancellationToken);
         
         return backgroundTask;

@@ -24,6 +24,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\Identity\StoryBlog.Web.Identity.Client\StoryBlog.Web.Identity.Client.csproj" />
+    <ProjectReference Include="..\..\..\Identity\StoryBlog.Web.Identity.DependencyInjection\StoryBlog.Web.Identity.DependencyInjection.csproj" />
     <ProjectReference Include="..\..\..\Identity\StoryBlog.Web.Identity\StoryBlog.Web.Identity.csproj" />
     <ProjectReference Include="..\..\..\MessageHub\StoryBlog.Web.MessageHub.Client\StoryBlog.Web.MessageHub.Client.csproj" />
     <ProjectReference Include="..\..\Posts\StoryBlog.Web.Microservices.Posts.Events\StoryBlog.Web.Microservices.Posts.Events.csproj" />
@@ -36,6 +37,7 @@
   <ItemGroup>
     <Folder Include="Configuration\" />
     <Folder Include="Core\" />
+    <Folder Include="Services\" />
   </ItemGroup>
 
 </Project>

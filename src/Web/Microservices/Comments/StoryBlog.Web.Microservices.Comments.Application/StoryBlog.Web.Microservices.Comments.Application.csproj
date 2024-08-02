@@ -19,7 +19,6 @@
     <Folder Include="Handlers\GetComment\" />
     <Folder Include="Contexts\" />
     <Folder Include="Handlers\NewPostCreated\" />
-    <Folder Include="Services\" />
   </ItemGroup>
 
   <ItemGroup>

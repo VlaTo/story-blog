@@ -9,23 +9,12 @@ using StoryBlog.Web.Microservices.Posts.Domain.Specifications;
 
 namespace StoryBlog.Web.Microservices.Posts.Application.Services;
 
-internal sealed class BlogPostProcessingBackgroundService : BackgroundService
+internal sealed class BlogPostProcessingBackgroundService(
+    IServiceProvider serviceProvider,
+    IBlogPostProcessingQueue queue,
+    ILogger<BlogPostProcessingBackgroundService> logger)
+    : BackgroundService
 {
-
-    private readonly IServiceProvider serviceProvider;
-    private readonly IBlogPostProcessingQueue queue;
-    private readonly ILogger<BlogPostProcessingBackgroundService> logger;
-
-    public BlogPostProcessingBackgroundService(
-        IServiceProvider serviceProvider,
-        IBlogPostProcessingQueue queue,
-        ILogger<BlogPostProcessingBackgroundService> logger)
-    {
-        this.serviceProvider = serviceProvider;
-        this.queue = queue;
-        this.logger = logger;
-    }
-
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         logger.LogBackgroundProcessingStarting();
@@ -38,7 +27,10 @@ internal sealed class BlogPostProcessingBackgroundService : BackgroundService
             // main processing loop
             while (true)
             {
-                logger.LogBackgroundProcessingReady();
+                if (false == queue.HasPendingTasks)
+                {
+                    logger.LogBackgroundProcessingReady();
+                }
 
                 var result = await queue.DequeueTaskAsync(cancellationToken: stoppingToken);
 

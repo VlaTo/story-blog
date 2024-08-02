@@ -4,5 +4,5 @@ namespace StoryBlog.Web.Microservices.Comments.Application.Services;
 
 public interface IPostsApiClient
 {
-    Task<PostModel> GetPostAsync(Guid post, CancellationToken cancellationToken);
+    Task<PostModel> GetPostAsync(Guid postKey, CancellationToken cancellationToken);
 }

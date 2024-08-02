@@ -21,6 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Identity\StoryBlog.Web.Identity.DependencyInjection\StoryBlog.Web.Identity.DependencyInjection.csproj" />
     <ProjectReference Include="..\..\..\Identity\StoryBlog.Web.Identity\StoryBlog.Web.Identity.csproj" />
     <ProjectReference Include="..\..\..\MessageHub\StoryBlog.Web.MessageHub.Server\StoryBlog.Web.MessageHub.Server.csproj" />
     <ProjectReference Include="..\..\Comments\StoryBlog.Web.Microservices.Comments.Events\StoryBlog.Web.Microservices.Comments.Events.csproj" />

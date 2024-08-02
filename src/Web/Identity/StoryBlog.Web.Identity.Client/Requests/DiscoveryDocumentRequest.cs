@@ -2,13 +2,15 @@
 
 public class DiscoveryDocumentRequest : ProtocolRequest
 {
-    public string? Address
-    {
-        get;
-    }
+    public DiscoveryPolicy Policy { get; set; } = new();
 
     public DiscoveryDocumentRequest(string? address)
     {
         Address = address;
+    }
+
+    public DiscoveryDocumentRequest(ProtocolRequest request)
+        : base(request)
+    {
     }
 }

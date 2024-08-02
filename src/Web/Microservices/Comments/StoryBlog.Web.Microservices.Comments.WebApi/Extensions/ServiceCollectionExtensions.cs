@@ -1,4 +1,5 @@
 ﻿using StoryBlog.Web.Microservices.Comments.Application.Services;
+using StoryBlog.Web.Microservices.Comments.WebApi.ApiClients;
 using StoryBlog.Web.Microservices.Comments.WebApi.Configuration;
 using StoryBlog.Web.Microservices.Comments.WebApi.Core;
 using StoryBlog.Web.Microservices.Comments.WebApi.MessageBus.Consumers;
@@ -19,6 +20,8 @@ internal static class ServiceCollectionExtensions
         services
             .AddOptions<CommentLocationProviderOptions>()
             .BindConfiguration(CommentLocationProviderOptions.SectionName);
+
+        services.AddTransient<ApiAuthorizationMessageHandler>();
 
         return services;
     }

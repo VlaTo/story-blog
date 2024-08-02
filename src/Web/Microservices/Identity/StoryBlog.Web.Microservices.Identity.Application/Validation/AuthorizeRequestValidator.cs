@@ -15,7 +15,6 @@ using System.Collections.Specialized;
 using System.Security.Claims;
 using System.Text;
 using JwtClaimTypes = StoryBlog.Web.Common.Identity.Permission.JwtClaimTypes;
-using OidcConstants = StoryBlog.Web.Common.Identity.Permission.OidcConstants;
 
 namespace StoryBlog.Web.Microservices.Identity.Application.Validation;
 
@@ -414,7 +413,7 @@ internal sealed class AuthorizeRequestValidator : IAuthorizeRequestValidator
         // http://openid.net/specs/oauth-v2-multiple-response-types-1_0-03.html#terminology -
         // 'If a response type contains one of more space characters (%20), it is compared
         // as a space-delimited list of values in which the order of values does not matter.'
-        if (false == Constants.SupportedResponseTypes.Contains(responseType, responseTypeComparer))
+        if (false == IdentityServerConstants.SupportedResponseTypes.Contains(responseType, responseTypeComparer))
         {
             LogError("Response type not supported", responseType, request);
             return Invalid(request, OidcConstants.AuthorizeErrors.UnsupportedResponseType, "Response type not supported");
@@ -423,17 +422,17 @@ internal sealed class AuthorizeRequestValidator : IAuthorizeRequestValidator
         // Even though the responseType may have come in in an unconventional order,
         // we still need the request's ResponseType property to be set to the
         // conventional, supported response type.
-        request.ResponseType = Constants.SupportedResponseTypes.First(
+        request.ResponseType = IdentityServerConstants.SupportedResponseTypes.First(
             supportedResponseType => responseTypeComparer.Equals(supportedResponseType, responseType)
         );
 
-        request.GrantType = Constants.ResponseTypeToGrantTypeMapping[request.ResponseType];
-        request.ResponseMode = Constants.AllowedResponseModesForGrantType[request.GrantType].First();
+        request.GrantType = IdentityServerConstants.ResponseTypeToGrantTypeMapping[request.ResponseType];
+        request.ResponseMode = IdentityServerConstants.AllowedResponseModesForGrantType[request.GrantType].First();
 
         //////////////////////////////////////////////////////////
         // check if flow is allowed at authorize endpoint
         //////////////////////////////////////////////////////////
-        if (false == Constants.AllowedGrantTypesForAuthorizeEndpoint.Contains(request.GrantType))
+        if (false == IdentityServerConstants.AllowedGrantTypesForAuthorizeEndpoint.Contains(request.GrantType))
         {
             LogError("Invalid grant type", request.GrantType, request);
             return Invalid(request, description: "Invalid response_type");
@@ -466,9 +465,9 @@ internal sealed class AuthorizeRequestValidator : IAuthorizeRequestValidator
 
         if (responseMode.IsPresent())
         {
-            if (Constants.SupportedResponseModes.Contains(responseMode))
+            if (IdentityServerConstants.SupportedResponseModes.Contains(responseMode))
             {
-                if (Constants.AllowedResponseModesForGrantType[request.GrantType].Contains(responseMode))
+                if (IdentityServerConstants.AllowedResponseModesForGrantType[request.GrantType].Contains(responseMode))
                 {
                     request.ResponseMode = responseMode;
                 }
@@ -551,7 +550,7 @@ internal sealed class AuthorizeRequestValidator : IAuthorizeRequestValidator
             logger.LogDebug($"Missing code_challenge_method, assuming defaulting {codeChallengeMethod}");
         }
 
-        if (false == Constants.SupportedCodeChallengeMethods.Contains(codeChallengeMethod))
+        if (false == IdentityServerConstants.SupportedCodeChallengeMethods.Contains(codeChallengeMethod))
         {
             LogError("Unsupported code_challenge_method", codeChallengeMethod, request);
             fail.ErrorDescription = "Transform algorithm not supported";
@@ -593,7 +592,7 @@ internal sealed class AuthorizeRequestValidator : IAuthorizeRequestValidator
         request.RequestedScopes = scope.FromSpaceSeparatedString().Distinct().ToList();
         request.IsOpenIdRequest = request.RequestedScopes.Contains(OidcConstants.StandardScopes.OpenId);
 
-        var requirement = Constants.ResponseTypeToScopeRequirement[request.ResponseType];
+        var requirement = IdentityServerConstants.ResponseTypeToScopeRequirement[request.ResponseType];
 
         if (requirement is Constants.ScopeRequirement.Identity or Constants.ScopeRequirement.IdentityOnly)
         {
@@ -738,7 +737,7 @@ internal sealed class AuthorizeRequestValidator : IAuthorizeRequestValidator
         {
             var prompts = prompt.Split(' ', StringSplitOptions.RemoveEmptyEntries);
 
-            if (prompts.All(p => Constants.SupportedPromptModes.Contains(p)))
+            if (prompts.All(p => IdentityServerConstants.SupportedPromptModes.Contains(p)))
             {
                 if (prompts.Contains(OidcConstants.PromptModes.None) && prompts.Length > 1)
                 {
@@ -754,12 +753,12 @@ internal sealed class AuthorizeRequestValidator : IAuthorizeRequestValidator
             }
         }
 
-        var suppressed_prompt = request.Raw?.Get(Constants.SuppressedPrompt);
+        var suppressedPrompt = request.Raw?.Get(IdentityServerConstants.SuppressedPrompt);
 
-        if (suppressed_prompt.IsPresent())
+        if (suppressedPrompt.IsPresent())
         {
-            var prompts = suppressed_prompt.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-            if (prompts.All(p => Constants.SupportedPromptModes.Contains(p)))
+            var prompts = suppressedPrompt.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+            if (prompts.All(IdentityServerConstants.SupportedPromptModes.Contains))
             {
                 if (prompts.Contains(OidcConstants.PromptModes.None) && prompts.Length > 1)
                 {
@@ -794,7 +793,7 @@ internal sealed class AuthorizeRequestValidator : IAuthorizeRequestValidator
 
         if (display.IsPresent())
         {
-            if (Constants.SupportedDisplayModes.Contains(display))
+            if (IdentityServerConstants.SupportedDisplayModes.Contains(display))
             {
                 request.DisplayMode = display;
             }

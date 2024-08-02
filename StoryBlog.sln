@@ -115,6 +115,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StoryBlog.Web.Identity.Clie
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StoryBlog.Web.Common.Identity.Permission", "src\Web\Common\StoryBlog.Web.Common.Identity.Permission\StoryBlog.Web.Common.Identity.Permission.csproj", "{24286B09-E2B0-46FC-934C-16444938AC4B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StoryBlog.Web.Identity.DependencyInjection", "src\Web\Identity\StoryBlog.Web.Identity.DependencyInjection\StoryBlog.Web.Identity.DependencyInjection.csproj", "{F93A8FF2-5391-49F1-9E27-BA02E7233339}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -281,6 +283,10 @@ Global
 		{24286B09-E2B0-46FC-934C-16444938AC4B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{24286B09-E2B0-46FC-934C-16444938AC4B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{24286B09-E2B0-46FC-934C-16444938AC4B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F93A8FF2-5391-49F1-9E27-BA02E7233339}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F93A8FF2-5391-49F1-9E27-BA02E7233339}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F93A8FF2-5391-49F1-9E27-BA02E7233339}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F93A8FF2-5391-49F1-9E27-BA02E7233339}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -334,6 +340,7 @@ Global
 		{2923FDE3-9B29-4D4E-988A-B3A219243371} = {CC9FD65D-640E-4040-9434-F3B664F9C7C1}
 		{3870A97A-222A-444C-BB2C-C7163804DC2F} = {5B6E0961-2C8C-49B7-8CEE-72E248418304}
 		{24286B09-E2B0-46FC-934C-16444938AC4B} = {9D593EF7-B4BD-40A7-9D40-B03DDA4D92E8}
+		{F93A8FF2-5391-49F1-9E27-BA02E7233339} = {5B6E0961-2C8C-49B7-8CEE-72E248418304}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D7123581-6A53-434A-BD68-656AB44693B4}

@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
-using StoryBlog.Web.Common.Identity.Permission;
+using StoryBlog.Web.Identity;
 using StoryBlog.Web.Microservices.Identity.Application.Core;
 using StoryBlog.Web.Microservices.Identity.Application.Extensions;
 using StoryBlog.Web.Microservices.Identity.Application.Models.Requests;

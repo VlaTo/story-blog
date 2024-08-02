@@ -2,7 +2,7 @@
 using System.Text.Json;
 using Microsoft.AspNetCore.Http;
 
-namespace StoryBlog.Web.Identity.Extensions;
+namespace StoryBlog.Web.Identity.DependencyInjection.Extensions;
 
 internal static class HttpResponseExtensions
 {

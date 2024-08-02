@@ -1,18 +1,16 @@
 ﻿using System.Diagnostics;
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using StoryBlog.Web.Common.Result;
-using StoryBlog.Web.Identity.Configuration;
-using System.Security.Claims;
-using System.Text;
-using System.Net.Mime;
-using System.Text.Json;
+using StoryBlog.Web.Identity.DependencyInjection.Configuration;
 
-namespace StoryBlog.Web.Identity.Extensions;
+namespace StoryBlog.Web.Identity.DependencyInjection.Extensions;
 
 public static class ServiceCollectionExtensions
 {

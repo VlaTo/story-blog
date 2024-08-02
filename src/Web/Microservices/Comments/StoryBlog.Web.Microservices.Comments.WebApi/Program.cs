@@ -4,7 +4,6 @@ using Microsoft.IdentityModel.Logging;
 using SlimMessageBus.Host;
 using SlimMessageBus.Host.RabbitMQ;
 using SlimMessageBus.Host.Serialization.SystemTextJson;
-using StoryBlog.Web.Identity.Extensions;
 using StoryBlog.Web.Microservices.Comments.Application.Contexts;
 using StoryBlog.Web.Microservices.Comments.Application.Extensions;
 using StoryBlog.Web.Microservices.Comments.Events;
@@ -16,8 +15,12 @@ using StoryBlog.Web.Microservices.Comments.WebApi.MessageBus.Consumers;
 using StoryBlog.Web.Microservices.Posts.Events;
 using System.Diagnostics.Tracing;
 using System.Net.Mime;
+using StoryBlog.Web.Identity.Client.Extensions;
+using StoryBlog.Web.Identity.DependencyInjection.Extensions;
+using StoryBlog.Web.Microservices.Comments.Application.Services;
 using CommentPublishedEvent = StoryBlog.Web.Microservices.Comments.Events.CommentPublishedEvent;
 using PostPublishedEvent = StoryBlog.Web.Microservices.Posts.Events.PostPublishedEvent;
+using StoryBlog.Web.Microservices.Comments.WebApi.ApiClients;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -107,14 +110,15 @@ builder.Services
         options.SubstituteApiVersionInUrl = true;
         options.SubstitutionFormat = "VVVV";
     });
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
 builder.Services
-    .AddHttpClient("test", httpClient =>
+    .AddHttpClientAuthorization()
+    .AddHttpClient<IPostsApiClient, PostsApiClient>((serviceProvider, httpClient) =>
     {
         ;
-    });
+    })
+    .AddHttpMessageHandler<ApiAuthorizationMessageHandler>();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 builder.Services.ConfigureOptions<ConfigureSwaggerOptions>();
 

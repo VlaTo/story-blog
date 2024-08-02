@@ -44,7 +44,7 @@ public class CorsOptions
 
     public CorsOptions()
     {
-        CorsPolicyName = Constants.IdentityServerName;
+        CorsPolicyName = IdentityServerConstants.IdentityServerName;
         CorsPaths = Constants.ProtocolRoutePaths.CorsPaths
             .Select(x => new PathString(x.EnsureLeadingSlash()))
             .ToList();

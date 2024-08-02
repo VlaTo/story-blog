@@ -324,13 +324,13 @@ public class DefaultDiscoveryResponseGenerator : IDiscoveryResponseGenerator
         // response types
         if (Options.Discovery.ShowResponseTypes)
         {
-            entries.Add(OidcConstants.Discovery.ResponseTypesSupported, Constants.SupportedResponseTypes.ToArray());
+            entries.Add(OidcConstants.Discovery.ResponseTypesSupported, IdentityServerConstants.SupportedResponseTypes.ToArray());
         }
 
         // response modes
         if (Options.Discovery.ShowResponseModes)
         {
-            entries.Add(OidcConstants.Discovery.ResponseModesSupported, Constants.SupportedResponseModes.ToArray());
+            entries.Add(OidcConstants.Discovery.ResponseModesSupported, IdentityServerConstants.SupportedResponseModes.ToArray());
         }
 
         // misc

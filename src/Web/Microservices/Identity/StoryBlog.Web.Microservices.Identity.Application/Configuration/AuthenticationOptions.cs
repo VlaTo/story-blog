@@ -105,7 +105,7 @@ public class AuthenticationOptions
 
     public AuthenticationOptions()
     {
-        CookieLifetime = Constants.DefaultCookieTimeSpan;
+        CookieLifetime = IdentityServerConstants.DefaultCookieTimeSpan;
         CookieSlidingExpiration = false;
         CookieSameSiteMode = SameSiteMode.None;
         RequireAuthenticatedUserForSignOutMessage = false;

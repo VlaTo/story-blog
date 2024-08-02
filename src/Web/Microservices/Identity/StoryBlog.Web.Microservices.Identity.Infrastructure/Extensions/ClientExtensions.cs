@@ -30,7 +30,15 @@ internal static class ClientExtensions
 
     public static void UseClaims(this Application.Storage.Client client, IList<ClientClaim> claims)
     {
-        ;
+        var collection = new Application.Storage.ClientClaim[claims.Count];
+
+        for (var index = 0; claims.Count > index; index++)
+        {
+            var claim = claims[index];
+            collection[index] = new Application.Storage.ClientClaim(claim.Type, claim.Value);
+        }
+
+        client.Claims = collection;
     }
 
     public static Application.Storage.Client UseClientSecrets(this Application.Storage.Client client, IList<ClientSecret> secrets)
