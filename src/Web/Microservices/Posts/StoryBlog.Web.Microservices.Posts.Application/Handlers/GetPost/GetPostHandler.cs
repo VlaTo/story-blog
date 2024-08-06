@@ -9,21 +9,10 @@ using StoryBlog.Web.Microservices.Posts.Domain.Entities;
 
 namespace StoryBlog.Web.Microservices.Posts.Application.Handlers.GetPost;
 
-public class GetPostHandler : PostHandlerBase, MediatR.IRequestHandler<GetPostQuery, Result<Models.Post>>
+public class GetPostHandler(IAsyncUnitOfWork context, IMapper mapper, ILogger<GetPostHandler> logger)
+    : PostHandlerBase(logger),
+    MediatR.IRequestHandler<GetPostQuery, Result<Models.Post>>
 {
-    private readonly IAsyncUnitOfWork context;
-    private readonly IMapper mapper;
-
-    public GetPostHandler(
-        IAsyncUnitOfWork context,
-        IMapper mapper,
-        ILogger<GetPostHandler> logger)
-        : base(logger)
-    {
-        this.context = context;
-        this.mapper = mapper;
-    }
-
     public async Task<Result<Models.Post>> Handle(GetPostQuery request, CancellationToken cancellationToken)
     {
         var authenticated = request.CurrentUser.IsAuthenticated();
