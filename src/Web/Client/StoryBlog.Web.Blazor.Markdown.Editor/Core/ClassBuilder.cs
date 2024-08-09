@@ -140,72 +140,34 @@ public class ClassBuilder<TComponent> : ClassBuilder where TComponent : Componen
         return this;
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    private class ClassDefinition
-    {
-        public string? Prefix
-        {
-            get;
-        }
-
-        public Func<TComponent, string>? Accessor
-        {
-            get;
-        }
-
-        public IReadOnlyList<ClassModifier> Modifiers
-        {
-            get;
-        }
-
-        public Predicate<TComponent> Condition
-        {
-            get;
-        }
-
-        public string PrefixSeparator
-        {
-            get;
-        }
-
-        public ClassDefinition(
-            string? prefix,
-            Func<TComponent, string>? accessor,
-            IList<ClassModifier> modifiers,
-            Predicate<TComponent> condition,
-            string prefixSeparator)
-        {
-            Prefix = prefix;
-            Accessor = accessor;
-            Modifiers = new ReadOnlyCollection<ClassModifier>(modifiers);
-            Condition = condition;
-            PrefixSeparator = prefixSeparator;
-        }
-    }
+    #region ClassDefinition
 
     /// <summary>
     /// 
     /// </summary>
-    private class ClassModifier
-    {
-        public Func<TComponent, string> Accessor
-        {
-            get;
-        }
+    private sealed record ClassDefinition(
+        string? Prefix,
+        Func<TComponent, string>? Accessor,
+        IReadOnlyList<ClassModifier> Modifiers,
+        Predicate<TComponent> Condition,
+        string PrefixSeparator
+    );
 
-        public Predicate<TComponent> Condition
-        {
-            get;
-        }
+    #endregion
 
-        public ClassModifier(Func<TComponent, string> accessor, Predicate<TComponent> condition)
-        {
-            Accessor = accessor;
-            Condition = condition;
-        }
-    }
+    #region ClassModifier
+
+    /// <summary>
+    /// 
+    /// </summary>
+    private sealed record ClassModifier(
+        Func<TComponent, string> Accessor,
+        Predicate<TComponent> Condition
+    );
+
+    #endregion
+
+    #region InternalClassBuilder
 
     /// <summary>
     /// 
@@ -215,13 +177,7 @@ public class ClassBuilder<TComponent> : ClassBuilder where TComponent : Componen
         private bool noPrefix;
         private Predicate<TComponent>? condition;
         private Func<TComponent, string>? accessor;
-        private readonly IList<ClassModifier> modifiers;
-
-        public InternalClassBuilder()
-        {
-            noPrefix = false;
-            modifiers = new List<ClassModifier>();
-        }
+        private readonly IList<ClassModifier> modifiers = new List<ClassModifier>();
 
         public IClassBuilder<TComponent> NoPrefix()
         {
@@ -258,7 +214,7 @@ public class ClassBuilder<TComponent> : ClassBuilder where TComponent : Componen
             return new ClassDefinition(
                 false == noPrefix ? prefix : null,
                 accessor,
-                modifiers,
+                new ReadOnlyCollection<ClassModifier>(modifiers),
                 condition ?? True,
                 DashSeparator
             );
@@ -266,4 +222,6 @@ public class ClassBuilder<TComponent> : ClassBuilder where TComponent : Componen
 
         private static bool True(TComponent _) => true;
     }
+
+    #endregion
 }

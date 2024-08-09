@@ -9,6 +9,7 @@ namespace StoryBlog.Web.Blazor.Markdown.Editor;
 public partial class MarkdownEditor
 {
     private static readonly ClassBuilder<MarkdownEditor> classBuilder;
+    private static readonly StyleBuilder<MarkdownEditor> styleBuilder;
 
     private ElementReference editorElement;
     private IJavaScriptMarkdownEditor? editor; 
@@ -41,6 +42,20 @@ public partial class MarkdownEditor
         set;
     }
 
+    [Parameter]
+    public string? MinHeight
+    {
+        get;
+        set;
+    }
+
+    [Parameter]
+    public string? MaxHeight
+    {
+        get;
+        set;
+    }
+
     [Parameter(CaptureUnmatchedValues = true)]
     public Dictionary<string, object?> UserAttributes
     {
@@ -68,7 +83,7 @@ public partial class MarkdownEditor
         private set;
     }
 
-    protected string Style
+    protected string EditorStyle
     {
         get;
         private set;
@@ -77,7 +92,6 @@ public partial class MarkdownEditor
     public MarkdownEditor()
     {
         Toolbar = DefaultToolbar;
-        Style = "height: 600px;";
         TextChanged = EventCallback<string?>.Empty;
     }
 
@@ -86,6 +100,24 @@ public partial class MarkdownEditor
         classBuilder = ClassBuilder
             .CreateFor<MarkdownEditor>()
             .DefineClass(builder => builder.Name("md-editor").NoPrefix());
+        styleBuilder = StyleBuilder
+            .CreateFor<MarkdownEditor>()
+            .DefineProperty(property => property
+                .Name("overflow-y")
+                .Value("scroll")
+            )
+            .DefineProperty(property => property
+                .Name("height")
+                .ValueIfExists(x => x.Height)
+            )
+            .DefineProperty(property => property
+                .Name("min-height")
+                .ValueIfExists(x => x.MinHeight)
+            )
+            .DefineProperty(property => property
+                .Name("max-height")
+                .ValueIfExists(x => x.MaxHeight)
+            );
     }
 
     public async ValueTask SetTextAsync(string value)
@@ -102,7 +134,8 @@ public partial class MarkdownEditor
 
     public override ValueTask DisposeAsync()
     {
-        return EditorJavaScriptInterop.DisposeAsync();
+        return editor?.DisposeAsync() ?? ValueTask.CompletedTask;
+        //return EditorJavaScriptInterop.DisposeAsync();
     }
 
     protected override async Task OnInitializedAsync()
@@ -176,6 +209,7 @@ public partial class MarkdownEditor
     protected virtual void UpdateState()
     {
         Classname = classBuilder.Build(this);
+        EditorStyle = styleBuilder.Build(this);
     }
 
     private RenderFragment DefaultToolbar => (builder =>

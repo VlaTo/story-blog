@@ -18,4 +18,9 @@ internal sealed class JavaScriptMarkdownEditor : IJavaScriptMarkdownEditor
 
     public ValueTask<string> GetTextAsync() =>
         jsRuntime.InvokeAsync<string>(identifier + ".getText");
+
+    public ValueTask DisposeAsync()
+    {
+        return ValueTask.CompletedTask;
+    }
 }

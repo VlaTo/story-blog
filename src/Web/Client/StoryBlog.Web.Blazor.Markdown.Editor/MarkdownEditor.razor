@@ -15,7 +15,7 @@
              aria-label="Editor editing area"
              contenteditable="true"
              spellcheck="false"
-             style=@Style
+             style=@EditorStyle
              @onblur=@(async e => await OnBlurAsync(e))
              @onfocus=@(async e => await OnFocusAsync(e))
              @oninput=@(async e => await OnInputAsync(e))>

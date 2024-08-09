@@ -37,7 +37,7 @@ else
                     OnAdornmentClick=@OnGenerateSlug
                 />
 
-                <MarkdownEditor Class="mt-4" AutoFocus=@true @bind-Text=@Text>
+                <MarkdownEditor Class="mt-4" AutoFocus=@true MinHeight="240px" MaxHeight="480px" @bind-Text=@Text>
                     <Toolbar>
                         <ToolbarGroup>
                             <ToolbarActionButton EditorAction=@EditorAction.Undo />
